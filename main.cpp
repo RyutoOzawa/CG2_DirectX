@@ -236,9 +236,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	{ -0.5f, -0.5f, 0.0f }, // 左下
 	{ -0.5f, +0.5f, 0.0f }, // 左上
 	{ +0.5f, -0.5f, 0.0f }, // 右下
+
+	{ -0.5f, +0.5f, 0.0f }, // 左上	
+	{+0.5f,+0.5f,0.0f},//右上
+	{ +0.5f, -0.5f, 0.0f }, // 右下
+
+
+
 	};
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB = static_cast<UINT>(sizeof(XMFLOAT3) * _countof(vertices));
+
+	//頂点データをいくつ使うか
+	int verticesMax = 3;
 
 	// 頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp{}; // ヒープ設定
@@ -403,6 +413,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	assert(SUCCEEDED(result));
 #pragma endregion
 
+	//三角形の塗りつぶし情報
+	bool fillFlag = false;
+	//前フレームのキー情報
+	BYTE oldKey[256] = {};
+
+	//キー情報
+	BYTE key[256] = {};
+
 	// ゲームループ
 	while (true) {
 
@@ -424,11 +442,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//キーボード情報の取得開始
 		keyboard->Acquire();
 
+
+
+		//keyboard->GetDeviceState(sizeof(oldKey), oldKey);
+
+		//前フレームのキー情報を保存
+		for (int i = 0; i < 256; i++) {
+			oldKey[i] = key[i];
+		}
+
 		//全キーの入力状態を取得する
-		BYTE key[256] = {};
 		keyboard->GetDeviceState(sizeof(key), key);
 
-		
+
+		//2を押したら塗りつぶしフラグ更新
+		if (key[DIK_2] && !oldKey[DIK_2]) {
+			if (fillFlag) fillFlag = false;
+			else fillFlag = true;
+		}
+
+		//1を押したら使用する頂点の数変更
+		if (key[DIK_1] && !oldKey[DIK_1]) {
+			if (verticesMax == 3)verticesMax = 6;
+			else verticesMax = 3;
+		}
+
+		//塗りつぶしフラグで塗りつぶすかどうか決める
+		if (fillFlag)pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+		else pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+		result = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+		assert(SUCCEEDED(result));
 
 		// バックバッファの番号を取得（2つなので0番か1番）
 		UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
@@ -451,12 +494,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			FLOAT	clearColor[] = { 1.0f,0.0f,1.0f,0.0f };
 			commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 		}
+
+
+
+
 		// ４．描画コマンドここから
 #pragma region グラフィックスコマンド
 // ビューポート設定コマンド
 		D3D12_VIEWPORT viewport{};
-		viewport.Width = window_width;
-		viewport.Height = window_height/2;
+		viewport.Width = window_width / 4 * 3;
+		viewport.Height = window_height / 4 * 3;
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
 		viewport.MinDepth = 0.0f;
@@ -467,7 +514,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// シザー矩形
 		D3D12_RECT scissorRect{};
 		scissorRect.left = 0; // 切り抜き座標左
-		scissorRect.right = window_width/2; // 切り抜き座標右
+		scissorRect.right = scissorRect.left + window_width; // 切り抜き座標右
 		scissorRect.top = 0; // 切り抜き座標上
 		scissorRect.bottom = scissorRect.top + window_height; // 切り抜き座標下
 		// シザー矩形設定コマンドを、コマンドリストに積む
@@ -484,8 +531,43 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		commandList->IASetVertexBuffers(0, 1, &vbView);
 
 		// 描画コマンド
-		commandList->DrawInstanced(_countof(vertices), 1, 0, 0); // 全ての頂点を使って描画
-#pragma endregion
+		commandList->DrawInstanced(verticesMax, 1, 0, 0); // 全ての頂点を使って描画
+
+		// ビューポート設定コマンド
+		viewport.Width = window_width / 4;
+		viewport.Height = window_height / 4;
+		viewport.TopLeftX = window_width / 4 * 3;
+		viewport.TopLeftY = window_height / 4 * 3;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		// ビューポート設定コマンドを、コマンドリストに積む
+		commandList->RSSetViewports(1, &viewport);
+		// 描画コマンド
+		commandList->DrawInstanced(verticesMax, 1, 0, 0); // 全ての頂点を使って描画
+
+			// ビューポート設定コマンド
+		viewport.Width = window_width / 4;
+		viewport.Height = window_height;
+		viewport.TopLeftX = window_width / 4 * 3;
+		viewport.TopLeftY = 0;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		// ビューポート設定コマンドを、コマンドリストに積む
+		commandList->RSSetViewports(1, &viewport);
+		// 描画コマンド
+		commandList->DrawInstanced(verticesMax, 1, 0, 0); // 全ての頂点を使って描画
+
+			// ビューポート設定コマンド
+		viewport.Width = window_width;
+		viewport.Height = window_height / 4;
+		viewport.TopLeftX = 0;
+		viewport.TopLeftY = window_height / 4 * 3;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		// ビューポート設定コマンドを、コマンドリストに積む
+		commandList->RSSetViewports(1, &viewport);
+		// 描画コマンド
+		commandList->DrawInstanced(verticesMax, 1, 0, 0); // 全ての頂点を使って描画
 		// ４．描画コマンドここまで
 		// ５．リソースバリアを戻す
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET; // 描画状態から
@@ -526,9 +608,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 	// ウィンドウクラスを登録解除
 	UnregisterClass(w.lpszClassName, w.hInstance);
-
-	//コンソールへの文字入力
-	OutputDebugStringA("Hello,DirectX!!");
 
 	return 0;
 }
