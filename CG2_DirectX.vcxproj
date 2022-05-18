@@ -141,8 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">
@@ -162,7 +164,9 @@
     <None Include="Basic.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectX.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="WindowsAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
