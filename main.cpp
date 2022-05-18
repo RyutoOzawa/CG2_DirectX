@@ -1,22 +1,12 @@
-﻿#include <d3d12.h>
-#include <dxgi1_6.h>
-#include <cassert>
-#include <vector>
-#include <string>
+﻿
 #include <DirectXMath.h>
 using namespace DirectX;
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
-#define DIRECTINPUT_VERSION 0x0800		//DirectInputのバージョン指定
-#include<dinput.h>
-#pragma comment(lib,"dinput8.lib")
-#pragma comment(lib,"dxguid.lib")
-
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
 #include"Input.h"
 #include<DirectXTex.h>
-#include"WindowsAPI.h"
+//#include"WindowsAPI.h"
+//#include"DirectX.h"
 
 WindowsAPI windowsAPI;
 
@@ -29,15 +19,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma region DirectX初期化処理
 // DirectX初期化処理 ここから
+	/*DirectX directX;
+	directX.Initialize(windowsAPI);*/
+	Input input;
+	
 
-#ifdef _DEBUG
-//デバッグレイヤーをオンに
+	//各種初期化用変数
 	ID3D12Debug* debugController;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
-		debugController->EnableDebugLayer();
-	}
-#endif
-
 	HRESULT result;
 	ID3D12Device* device = nullptr;
 	IDXGIFactory7* dxgiFactory = nullptr;
@@ -46,6 +34,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ID3D12GraphicsCommandList* commandList = nullptr;
 	ID3D12CommandQueue* commandQueue = nullptr;
 	ID3D12DescriptorHeap* rtvHeap = nullptr;
+	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	std::vector<ID3D12Resource*> backBuffers;
+	ID3D12Fence* fence = nullptr;
+	UINT64 fenceVal = 0;
+	
+
+#ifdef _DEBUG
+	//デバッグレイヤーをオンに
+
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+		debugController->EnableDebugLayer();
+	}
+#endif
+
 	// DXGIファクトリーの生成
 	result = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(result));
@@ -61,19 +65,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		i++) {
 		// 動的配列に追加する
 		adapters.push_back(tmpAdapter);
-	}
-	// 妥当なアダプタを選別する
-	for (size_t i = 0; i < adapters.size(); i++) {
-		DXGI_ADAPTER_DESC3 adapterDesc;
-		// アダプターの情報を取得する
-		adapters[i]->GetDesc3(&adapterDesc);
-		// ソフトウェアデバイスを回避
-		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-			// デバイスを採用してループを抜ける
-			tmpAdapter = adapters[i];
-			break;
+		// 妥当なアダプタを選別する
+		for (size_t i = 0; i < adapters.size(); i++) {
+			DXGI_ADAPTER_DESC3 adapterDesc;
+			// アダプターの情報を取得する
+			adapters[i]->GetDesc3(&adapterDesc);
+			// ソフトウェアデバイスを回避
+			if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
+				// デバイスを採用してループを抜ける
+				tmpAdapter = adapters[i];
+				break;
+			}
 		}
 	}
+
 	// 対応レベルの配列
 	D3D_FEATURE_LEVEL levels[] = {
 	D3D_FEATURE_LEVEL_12_1,
@@ -107,14 +112,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		IID_PPV_ARGS(&commandList));
 	assert(SUCCEEDED(result));
 
-	//コマンドキューの設定
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	//コマンドキューを生成
 	result = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
 	assert(SUCCEEDED(result));
-
 	// スワップチェーンの設定
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	swapChainDesc.Width = 1280;
 	swapChainDesc.Height = 720;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 色情報の書式
@@ -129,15 +130,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		(IDXGISwapChain1**)&swapChain);
 	assert(SUCCEEDED(result));
 
-	// デスクリプタヒープの設定
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	//デスクリプタヒープの設定
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー
 	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount; // 裏表の2つ
 	// デスクリプタヒープの生成
 	device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
-
 	// バックバッファ
-	std::vector<ID3D12Resource*> backBuffers;
 	backBuffers.resize(swapChainDesc.BufferCount);
 
 	// スワップチェーンの全てのバッファについて処理する
@@ -158,32 +156,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// フェンスの生成
-	ID3D12Fence* fence = nullptr;
-	UINT64 fenceVal = 0;
 	result = device->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 
-	//DirectInputの初期化
-	IDirectInput8* directInput = nullptr;
-	result = DirectInput8Create(
-		windowsAPI.w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
-		(void**)&directInput, nullptr);
-	assert(SUCCEEDED(result));
 
-	//キーボードデバイスの設定
-	IDirectInputDevice8* keyboard = nullptr;
-	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
-	assert(SUCCEEDED(result));
+	input.Initialize(result, windowsAPI);
 
-	//入力データ形式のセット
-	result = keyboard->SetDataFormat(&c_dfDIKeyboard);//標準形式
-	assert(SUCCEEDED(result));
 
-	//排他制御レベルのセット
-	result = keyboard->SetCooperativeLevel(
-		windowsAPI.hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
-	assert(SUCCEEDED(result));
-
-	// DirectX初期化処理 ここまで
 #pragma endregion 
 
 #pragma region 描画初期化処理
@@ -651,12 +629,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region DirectX毎フレーム処理
 		// DirectX毎フレーム処理 ここから
 
-		//キーボード情報の取得開始
-		keyboard->Acquire();
+		input.Update();
 
-		//全キーの入力状態を取得する
-		BYTE key[256] = {};
-		keyboard->GetDeviceState(sizeof(key), key);
+	
 
 		// バックバッファの番号を取得（2つなので0番か1番）
 		UINT bbIndex = swapChain->GetCurrentBackBufferIndex();
@@ -675,7 +650,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ３．画面クリア           R     G     B    A
 		FLOAT clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 		commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-		if (key[DIK_SPACE]) {//スペースキーが押されていたら
+		if (input.IsPress(DIK_SPACE)) {//スペースキーが押されていたら
 			FLOAT	clearColor[] = { 1.0f,0.0f,1.0f,0.0f };
 			commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 		}
