@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//windowsAPI初期化処理
 	windowsAPI.Initialize();
 
-// DirectX初期化処理
+	// DirectX初期化処理
 	DirectXInit directX;
 	directX.Initialize(windowsAPI);
 	Input input;
@@ -82,10 +82,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		assert(SUCCEEDED(result));
 		//単位行列を代入
 		constMapTransform->mat = XMMatrixIdentity();
-		constMapTransform->mat.r[0].m128_f32[0] = 2.0f / windowsAPI.winW;
-		constMapTransform->mat.r[1].m128_f32[1] = -2.0f / windowsAPI.winH;
-		constMapTransform->mat.r[3].m128_f32[0] = -1.0f;
-		constMapTransform->mat.r[3].m128_f32[1] = 1.0f;
+		constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
+			0,		//左端
+			windowsAPI.winW,		//右端
+			windowsAPI.winH,		//下端
+			0,		//上端
+			0.0f,			//前端
+			1.0f			//奥端
+		);
+
+		//透視東映返還行列の計算
+		//専用の行列を宣言
+		XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
+			XMConvertToRadians(45.0f),					//上下画角45度
+			(float)windowsAPI.winW / windowsAPI.winH,	//アスペクト比（画面横幅/画面縦幅）
+			0.1f, 1000.0f								//前橋、奥橋
+		);
+
+		//定数バッファに転送
+		constMapTransform->mat = matProjection;
 	}
 
 
@@ -151,7 +166,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
 	textureHeapProp.CPUPageProperty =
-	D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+		D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 	//リソース設定
 	D3D12_RESOURCE_DESC textureResourceDesc{};
@@ -217,10 +232,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 頂点データ
 	Vertex vertices[] = {
 		//     x     y    z       u    v
-			{{  0.0f,100.0f,0.0f} ,{0.0f,1.0f}}, // 左下
-			{{  0.0f,  0.0f,0.0f} ,{0.0f,0.0f}}, // 左上
-			{{100.0f,100.0f,0.0f} ,{1.0f,1.0f}}, // 右下
-			{{100.0f,  0.0f,0.0f} ,{1.0f,0.0f}}, // 右上
+			{{-50.0f,-50.0f,50.0f} ,{0.0f,1.0f}}, // 左下
+			{{-50.0f,50.0f,50.0f} ,{0.0f,0.0f}}, // 左上
+			{{50.0f,-50.0f,50.0f} ,{1.0f,1.0f}}, // 右下
+			{{50.0f,50.0f,50.0f} ,{1.0f,0.0f}}, // 右上
 
 	};
 
@@ -482,16 +497,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//テクスチャサンプラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
-	samplerDesc.AddressU  = D3D12_TEXTURE_ADDRESS_MODE_WRAP;				//横繰り返し（タイリング）
-	samplerDesc.AddressV  = D3D12_TEXTURE_ADDRESS_MODE_WRAP;				//縦繰り返し（タイリング）
-	samplerDesc.AddressW  = D3D12_TEXTURE_ADDRESS_MODE_WRAP;				//奥行繰り返し（タイリング）
+	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;				//横繰り返し（タイリング）
+	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;				//縦繰り返し（タイリング）
+	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;				//奥行繰り返し（タイリング）
 	samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;	//ボーダーの時は黒
 	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;					//すべてリニア補間
 	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;									//ミップマップ最大値
 	samplerDesc.MinLOD = 0.0f;												//ミップマップ最小値
-	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;				
+	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;			//ピクセルシェーダからのみ使用可能
-	
+
 	// ルートシグネチャ
 	ID3D12RootSignature* rootSignature;
 	// ルートシグネチャの設定
@@ -539,7 +554,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		input.Update();
 
-	
+
 
 		// バックバッファの番号を取得（2つなので0番か1番）
 		UINT bbIndex = directX.swapChain->GetCurrentBackBufferIndex();
