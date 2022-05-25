@@ -37,6 +37,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		XMMATRIX mat;	//3D変換行列
 	};
 
+	XMMATRIX matProjection;
+	XMMATRIX matView;
+	XMFLOAT3 eye(0, -50, -100);	//視点座標
+	XMFLOAT3 target(0, 0, 0);	//注視点座標
+	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
+	float angle = 0.0f;	//カメラの回転角
 
 	//ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
@@ -93,16 +99,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//透視東映返還行列の計算
 		//専用の行列を宣言
-		XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
+		matProjection = XMMatrixPerspectiveFovLH(
 			XMConvertToRadians(45.0f),					//上下画角45度
 			(float)windowsAPI.winW / windowsAPI.winH,	//アスペクト比（画面横幅/画面縦幅）
 			0.1f, 1000.0f								//前橋、奥橋
 		);
 
-		//定数バッファに転送
-		constMapTransform->mat = matProjection;
-	}
+		//ビュー変換行列の計算
 
+		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+		
+
+		//定数バッファに転送
+		constMapTransform->mat =matView * matProjection;
+	}
 
 	//定数バッファ
 	result = directX.device->CreateCommittedResource(
@@ -232,10 +242,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 頂点データ
 	Vertex vertices[] = {
 		//     x     y    z       u    v
-			{{-50.0f,-50.0f,50.0f} ,{0.0f,1.0f}}, // 左下
-			{{-50.0f,50.0f,50.0f} ,{0.0f,0.0f}}, // 左上
-			{{50.0f,-50.0f,50.0f} ,{1.0f,1.0f}}, // 右下
-			{{50.0f,50.0f,50.0f} ,{1.0f,0.0f}}, // 右上
+			{{-50.0f,-50.0f,0.0f} ,{0.0f,1.0f}}, // 左下
+			{{-50.0f, 50.0f,0.0f} ,{0.0f,0.0f}}, // 左上
+			{{ 50.0f,-50.0f,0.0f} ,{1.0f,1.0f}}, // 右下
+			{{ 50.0f, 50.0f,0.0f} ,{1.0f,0.0f}}, // 右上
 
 	};
 
@@ -554,7 +564,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		input.Update();
 
+		//カメラ回転処理
+		if (input.IsPress(DIK_D) || input.IsPress(DIK_A)) {
+			if (input.IsPress(DIK_D))angle += XMConvertToRadians(1.0f);
+			else if (input.IsPress(DIK_A))angle += XMConvertToRadians(1.0f);
 
+			eye.x = -100 * sinf(angle);
+			eye.z = -100 * cosf(angle);
+
+			//ビュー変換行列の再計算
+			matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+
+		}
+
+		//定数バッファに転送
+		constMapTransform->mat = matView * matProjection;
 
 		// バックバッファの番号を取得（2つなので0番か1番）
 		UINT bbIndex = directX.swapChain->GetCurrentBackBufferIndex();
