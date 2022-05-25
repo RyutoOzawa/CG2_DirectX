@@ -38,17 +38,17 @@ void Input::Update()
 	keyboard->GetDeviceState(sizeof(key), key);
 }
 
-bool Input::IsTrigger(char key_)
+bool Input::IsTrigger(unsigned char key_)
 {
 	return (key[key_] && !oldkey[key_]);
 }
 
-bool Input::IsPress(char key_)
+bool Input::IsPress(unsigned char key_)
 {
 	return key[key_];
 }
 
-bool Input::IsRelease(char key_)
+bool Input::IsRelease(unsigned char key_)
 {
 	return (!key[key_] && oldkey[key_]);
 }

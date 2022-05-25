@@ -37,12 +37,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		XMMATRIX mat;	//3D変換行列
 	};
 
+	//ワールド変換行列
+	XMMATRIX matWorld;
+
 	XMMATRIX matProjection;
 	XMMATRIX matView;
-	XMFLOAT3 eye(0, -50, -100);	//視点座標
+	XMFLOAT3 eye(0, 0, -100);	//視点座標
 	XMFLOAT3 target(0, 0, 0);	//注視点座標
 	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
 	float angle = 0.0f;	//カメラの回転角
+	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
 
 	//ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
@@ -86,33 +92,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//定数バッファのマッピング
 		result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform);//マッピング
 		assert(SUCCEEDED(result));
-		//単位行列を代入
-		constMapTransform->mat = XMMatrixIdentity();
-		constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
-			0,		//左端
-			windowsAPI.winW,		//右端
-			windowsAPI.winH,		//下端
-			0,		//上端
-			0.0f,			//前端
-			1.0f			//奥端
-		);
-
-		//透視東映返還行列の計算
-		//専用の行列を宣言
-		matProjection = XMMatrixPerspectiveFovLH(
-			XMConvertToRadians(45.0f),					//上下画角45度
-			(float)windowsAPI.winW / windowsAPI.winH,	//アスペクト比（画面横幅/画面縦幅）
-			0.1f, 1000.0f								//前橋、奥橋
-		);
-
-		//ビュー変換行列の計算
-
-		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-		
-
-		//定数バッファに転送
-		constMapTransform->mat =matView * matProjection;
 	}
+
+	//単位行列を代入
+	constMapTransform->mat = XMMatrixIdentity();
+	constMapTransform->mat = XMMatrixOrthographicOffCenterLH(
+		0,		//左端
+		windowsAPI.winW,		//右端
+		windowsAPI.winH,		//下端
+		0,		//上端
+		0.0f,			//前端
+		1.0f			//奥端
+	);
+
+	//透視東映返還行列の計算
+	//専用の行列を宣言
+	matProjection = XMMatrixPerspectiveFovLH(
+		XMConvertToRadians(45.0f),					//上下画角45度
+		(float)windowsAPI.winW / windowsAPI.winH,	//アスペクト比（画面横幅/画面縦幅）
+		0.1f, 1000.0f								//前橋、奥橋
+	);
+
+
+
+
 
 	//定数バッファ
 	result = directX.device->CreateCommittedResource(
@@ -565,20 +568,60 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		input.Update();
 
 		//カメラ回転処理
-		if (input.IsPress(DIK_D) || input.IsPress(DIK_A)) {
-			if (input.IsPress(DIK_D))angle += XMConvertToRadians(1.0f);
-			else if (input.IsPress(DIK_A))angle += XMConvertToRadians(1.0f);
+		{
+			if (input.IsPress(DIK_D) || input.IsPress(DIK_A)) {
+				if (input.IsPress(DIK_D))angle += XMConvertToRadians(1.0f);
+				else if (input.IsPress(DIK_A))angle -= XMConvertToRadians(1.0f);
 
-			eye.x = -100 * sinf(angle);
-			eye.z = -100 * cosf(angle);
+				eye.x = -100 * sinf(angle);
+				eye.z = -100 * cosf(angle);
 
-			//ビュー変換行列の再計算
-			matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-
+			}
 		}
 
-		//定数バッファに転送
-		constMapTransform->mat = matView * matProjection;
+
+
+		//オブジェクトの平行移動処理
+		{
+			//いずれかのキーを押していたら
+			if (input.IsPress(DIK_UP) || input.IsPress(DIK_DOWN) || input.IsPress(DIK_RIGHT) || input.IsPress(DIK_LEFT)) {
+				//キーで移動
+				if (input.IsPress(DIK_UP))position.z += 1.0f;
+				else if (input.IsPress(DIK_DOWN))position.z -= 1.0f;
+				if (input.IsPress(DIK_RIGHT))position.x += 1.0f;
+				else if (input.IsPress(DIK_LEFT))position.x -= 1.0f;
+
+
+			}
+		}
+
+		//ビュー変換行列の計算
+		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+
+
+		//ワールド変換行列の計算
+		XMMATRIX matScale;	//回転行列
+		matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+
+		XMMATRIX matRot;	//回転行列
+		matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));	//Z軸周りに回転
+		matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));	//X軸周りに回転
+		matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));	//Y軸周りに回転
+	
+		XMMATRIX matTrans;	//平行移動行列
+		matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+		
+		//単位行列を代入
+		matWorld = XMMatrixIdentity();
+
+		matWorld *= matScale;	//スケーリングを反映
+		matWorld *= matRot;	//回転を反映
+		matWorld *= matTrans;	//平行移動を反映
+
+
+	//定数バッファに転送
+		constMapTransform->mat = matWorld * matView * matProjection;
 
 		// バックバッファの番号を取得（2つなので0番か1番）
 		UINT bbIndex = directX.swapChain->GetCurrentBackBufferIndex();
@@ -685,8 +728,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// DirectX毎フレーム処理 ここまで
 #pragma endregion
 
-
-
 	}
 	// ウィンドウクラスを登録解除
 	UnregisterClass(windowsAPI.w.lpszClassName, windowsAPI.w.hInstance);
@@ -695,4 +736,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//OutputDebugStringA("Hello,DirectX!!");
 
 	return 0;
+}
+
+void MatrixUpdate()
+{
 }

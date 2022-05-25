@@ -12,13 +12,13 @@ public:
 	IDirectInput8* directInput = nullptr;
 	IDirectInputDevice8* keyboard = nullptr;
 
-	char key[256]{};
-	char oldkey[256]{};
+	unsigned char key[256]{};
+	unsigned char oldkey[256]{};
 public:
 	void Initialize(HRESULT result_,WindowsAPI windowsAPI_);
 	void Update();
-	bool IsTrigger(char key_);
-	bool IsPress(char key_);
-	bool IsRelease(char key_);
+	bool IsTrigger(unsigned char key_);
+	bool IsPress(unsigned char key_);
+	bool IsRelease(unsigned char key_);
 };
 
