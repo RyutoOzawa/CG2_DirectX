@@ -245,11 +245,42 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 頂点データ
 	Vertex vertices[] = {
 		//     x     y    z       u    v
-			{{-50.0f,-50.0f,0.0f} ,{0.0f,1.0f}}, // 左下
-			{{-50.0f, 50.0f,0.0f} ,{0.0f,0.0f}}, // 左上
-			{{ 50.0f,-50.0f,0.0f} ,{1.0f,1.0f}}, // 右下
-			{{ 50.0f, 50.0f,0.0f} ,{1.0f,0.0f}}, // 右上
 
+			//前
+			{{-5.0f,-5.0f,-5.0f} ,{0.0f,1.0f}}, // 左下
+			{{-5.0f, 5.0f,-5.0f} ,{0.0f,0.0f}}, // 左上
+			{{ 5.0f,-5.0f,-5.0f} ,{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f,-5.0f} ,{1.0f,0.0f}}, // 右上
+
+			//後
+			{{-5.0f,-5.0f, 5.0f} ,{0.0f,1.0f}}, // 左下
+			{{-5.0f, 5.0f, 5.0f} ,{0.0f,0.0f}}, // 左上
+			{{ 5.0f,-5.0f, 5.0f} ,{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f, 5.0f} ,{1.0f,0.0f}}, // 右上
+
+			//左
+			{{-5.0f,-5.0f,-5.0f} ,{0.0f,1.0f}}, // 左下
+			{{-5.0f,-5.0f, 5.0f} ,{0.0f,0.0f}}, // 左上
+			{{-5.0f, 5.0f,-5.0f} ,{1.0f,1.0f}}, // 右下
+			{{-5.0f, 5.0f, 5.0f} ,{1.0f,0.0f}}, // 右上
+
+			//右
+			{{ 5.0f,-5.0f,-5.0f} ,{0.0f,1.0f}}, // 左下
+			{{ 5.0f,-5.0f, 5.0f} ,{0.0f,0.0f}}, // 左上
+			{{ 5.0f, 5.0f,-5.0f} ,{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f, 5.0f} ,{1.0f,0.0f}}, // 右上
+
+			//下
+			{{-5.0f, 5.0f,-5.0f} ,{0.0f,1.0f}}, // 左下
+			{{ 5.0f, 5.0f,-5.0f} ,{0.0f,0.0f}}, // 左上
+			{{-5.0f, 5.0f, 5.0f} ,{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f, 5.0f} ,{1.0f,0.0f}}, // 右上
+
+			//上
+			{{-5.0f,-5.0f,-5.0f} ,{0.0f,1.0f}}, // 左下
+			{{ 5.0f,-5.0f,-5.0f} ,{0.0f,0.0f}}, // 左上
+			{{-5.0f,-5.0f, 5.0f} ,{1.0f,1.0f}}, // 右下
+			{{ 5.0f,-5.0f, 5.0f} ,{1.0f,0.0f}}, // 右上
 	};
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
@@ -294,8 +325,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//インデックスデータ
 	unsigned short indices[] = {
-		0,1,2,//三角形1つ目
-		1,2,3,//三角形2つ目
+		
+		//前
+		0,1,2,		//三角形1つ目
+		1,2,3,		//三角形2つ目
+		//後	
+		4,5,6,		//三角形3つ目
+		5,6,7,		//三角形4つ目
+		//左
+		8,9,10,		//三角形5つ目
+		9,10,11,	//三角形6つ目
+		//右
+		12,13,14,	//三角形7つ目
+		13,14,15,	//三角形8つ目
+		//下
+		16,17,18,	//三角形9つ目
+		17,18,19,	//三角形10つ目
+		//上
+		20,21,22,	//三角形11つ目
+		21,22,23.	//三角形12つ目
 	};
 
 	//インデックスデータ全体のサイズ
@@ -426,6 +474,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// グラフィックスパイプライン設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+
+	//デプスステンシルステートの作成
+	pipelineDesc.DepthStencilState.DepthEnable = true;	//深度テストを行う
+	pipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;	//書き込み許可
+	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;	//小さければ合格
+	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;	//深度値フォーマット
 
 	// シェーダーの設定
 	pipelineDesc.VS.pShaderBytecode = vsBlob->GetBufferPointer();
@@ -579,7 +633,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 		}
 
-
+	//	eye.y += 0.5f;
 
 		//オブジェクトの平行移動処理
 		{
@@ -608,10 +662,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));	//Z軸周りに回転
 		matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));	//X軸周りに回転
 		matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));	//Y軸周りに回転
-	
+
 		XMMATRIX matTrans;	//平行移動行列
 		matTrans = XMMatrixTranslation(position.x, position.y, position.z);
-		
+
 		//単位行列を代入
 		matWorld = XMMatrixIdentity();
 
@@ -636,10 +690,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// レンダーターゲットビューのハンドルを取得
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = directX.rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		rtvHandle.ptr += bbIndex * directX.device->GetDescriptorHandleIncrementSize(directX.rtvHeapDesc.Type);
-		directX.commandList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = directX.dsvHeap->GetCPUDescriptorHandleForHeapStart();
+		directX.commandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 		// ３．画面クリア           R     G     B    A
 		FLOAT clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 		directX.commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		directX.commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 		if (input.IsPress(DIK_SPACE)) {//スペースキーが押されていたら
 			FLOAT	clearColor[] = { 1.0f,0.0f,1.0f,0.0f };
 			directX.commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);

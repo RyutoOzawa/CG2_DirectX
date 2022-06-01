@@ -28,6 +28,13 @@ public:
 	std::vector<ID3D12Resource*> backBuffers;
 	ID3D12Fence* fence = nullptr;
 	UINT64 fenceVal = 0;
+	D3D12_RESOURCE_DESC depthResourceDesc{  };
+	D3D12_HEAP_PROPERTIES depthHeapProp{};
+	D3D12_CLEAR_VALUE depthClearValue{};
+	ID3D12Resource* depthBuff = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
+	ID3D12DescriptorHeap* dsvHeap = nullptr;
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 public:
 	//èâä˙âª
 	void Initialize(WindowsAPI windowsAPI);
