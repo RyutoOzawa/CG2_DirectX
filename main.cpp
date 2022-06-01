@@ -6,6 +6,7 @@ using namespace DirectX;
 #include<DirectXTex.h>
 //#include"WindowsAPI.h"
 //#include"DirectX.h"
+#include"Object3d.h"
 
 WindowsAPI windowsAPI;
 
@@ -32,14 +33,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		XMFLOAT4 color;//色（RGBA）
 	};
 
-	//定数バッファ用データ構造体(3D変換行列)
-	struct ConstBufferDataTransform {
-		XMMATRIX mat;	//3D変換行列
-	};
-
 	//ワールド変換行列
-	XMMATRIX matWorld0;
-	XMMATRIX matWorld1;
+//	XMMATRIX matWorld0;
+	//XMMATRIX matWorld1;
+
+	const size_t kObjCount = 50;
+	Object3d obj[kObjCount];
+
+	
 
 	XMMATRIX matProjection;
 	XMMATRIX matView;
@@ -67,84 +68,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	ID3D12Resource* constBufferDataMaterial = nullptr;
 
-	ID3D12Resource* constBuffTransform0 = nullptr;
-	ConstBufferDataTransform* constMapTransform0 = nullptr;
-	{
-		//ヒープ設定
-		D3D12_HEAP_PROPERTIES cbHeapProp{  };
-		cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//GPUへの転送用
-		//リソース設定
-		D3D12_RESOURCE_DESC cbResourceDesc{};
-		cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;	//256バイトアラインメント
-		cbResourceDesc.Height = 1;
-		cbResourceDesc.DepthOrArraySize = 1;
-		cbResourceDesc.MipLevels = 1;
-		cbResourceDesc.SampleDesc.Count = 1;
-		cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		//定数バッファの生成
-		result = directX.device->CreateCommittedResource(
-			&cbHeapProp,//ヒープ設定
-			D3D12_HEAP_FLAG_NONE,
-			&cbResourceDesc,//リソース設定
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&constBuffTransform0));
-		assert(SUCCEEDED(result));
-		//定数バッファのマッピング
-		result = constBuffTransform0->Map(0, nullptr, (void**)&constMapTransform0);//マッピング
-		assert(SUCCEEDED(result));
+
+	//配列内の全オブジェクトに対して
+	for (int i = 0; i < _countof(obj); i++) {
+		//初期化
+		obj[i].Initialize(directX.device);
+		
+		//親子構造のサンプル
+		//先頭以外なら
+		if(i>0){
+			//ひとつ前のオブジェクトを親とする
+			obj[i].parent = &obj[i - 1];
+			//親の9割の大きさ
+			obj[i].scale = { 0.9f,0.9f,0.9f };
+			//親に対してZ軸に30度回転
+			obj[i].rotation = { 0.0f,0.0f,XMConvertToRadians(30.0f) };
+			//親に対してZ方向-8.0ずらす
+			obj[i].position = { 0.0f,0.0f,-8.0f };
+		}
 	}
 
-	constMapTransform0->mat = XMMatrixIdentity();
-	constMapTransform0->mat = XMMatrixOrthographicOffCenterLH(
-		0,		//左端
-		windowsAPI.winW,		//右端
-		windowsAPI.winH,		//下端
-		0,		//上端
-		0.0f,			//前端
-		1.0f			//奥端
-	);
-
-	ID3D12Resource* constBuffTransform1 = nullptr;
-	ConstBufferDataTransform* constMapTransform1 = nullptr;
-	{
-		//ヒープ設定
-		D3D12_HEAP_PROPERTIES cbHeapProp{  };
-		cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//GPUへの転送用
-		//リソース設定
-		D3D12_RESOURCE_DESC cbResourceDesc{};
-		cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;	//256バイトアラインメント
-		cbResourceDesc.Height = 1;
-		cbResourceDesc.DepthOrArraySize = 1;
-		cbResourceDesc.MipLevels = 1;
-		cbResourceDesc.SampleDesc.Count = 1;
-		cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		//定数バッファの生成
-		result = directX.device->CreateCommittedResource(
-			&cbHeapProp,//ヒープ設定
-			D3D12_HEAP_FLAG_NONE,
-			&cbResourceDesc,//リソース設定
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&constBuffTransform1));
-		assert(SUCCEEDED(result));
-		//定数バッファのマッピング
-		result = constBuffTransform1->Map(0, nullptr, (void**)&constMapTransform1);//マッピング
-		assert(SUCCEEDED(result));
-	}
-
-	//単位行列を代入
-	constMapTransform1->mat = XMMatrixIdentity();
-	constMapTransform1->mat = XMMatrixOrthographicOffCenterLH(
-		0,		//左端
-		windowsAPI.winW,		//右端
-		windowsAPI.winH,		//下端
-		0,		//上端
-		0.0f,			//前端
-		1.0f			//奥端
-	);
+	
 
 	//透視東映返還行列の計算
 	//専用の行列を宣言
@@ -734,51 +678,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
 
-		//ワールド変換行列の計算
-		XMMATRIX matScale0;	//回転行列
-		matScale0 = XMMatrixScaling(scale.x, scale.y, scale.z);
+	////定数バッファに転送
+	//	constMapTransform1->mat = matWorld1 * matView * matProjection;
 
-		XMMATRIX matRot0;	//回転行列
-		matRot0 = XMMatrixIdentity();
-		matRot0 *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));	//Z軸周りに回転
-		matRot0 *= XMMatrixRotationX(XMConvertToRadians(rotation.x));	//X軸周りに回転
-		matRot0 *= XMMatrixRotationY(XMConvertToRadians(rotation.y));	//Y軸周りに回転
-
-		XMMATRIX matTrans0;	//平行移動行列
-		matTrans0 = XMMatrixTranslation(position.x, position.y, position.z);
-
-		//単位行列を代入
-		matWorld0 = XMMatrixIdentity();
-
-		matWorld0 *= matScale0;	//スケーリングを反映
-		matWorld0 *= matRot0;	//回転を反映
-		matWorld0 *= matTrans0;	//平行移動を反映
-
-
-	//定数バッファに転送
-		constMapTransform0->mat = matWorld0 * matView * matProjection;
-
-		//ワールド変換行列の計算
-		XMMATRIX matScale1;	//回転行列
-		matScale1 = XMMatrixScaling(1.0f,1.0f,1.0f);
-
-		XMMATRIX matRot1;	//回転行列
-		matRot1 = XMMatrixIdentity();
-		matRot1 *= XMMatrixRotationY(XM_PI/4.0f);	//X軸周りに回転
-
-		XMMATRIX matTrans1;	//平行移動行列
-		matTrans1 = XMMatrixTranslation(-20.0f,0,0);
-
-		//単位行列を代入
-		matWorld1 = XMMatrixIdentity();
-
-		matWorld1 *= matScale1;	//スケーリングを反映
-		matWorld1 *= matRot1;	//回転を反映
-		matWorld1 *= matTrans1;	//平行移動を反映
-
-
-	//定数バッファに転送
-		constMapTransform1->mat = matWorld1 * matView * matProjection;
+		for (int i = 0; i < _countof(obj); i++) {
+			obj[i].Update(matView, matProjection);
+		}
 
 		// バックバッファの番号を取得（2つなので0番か1番）
 		UINT bbIndex = directX.swapChain->GetCurrentBackBufferIndex();
@@ -843,14 +748,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-		//0番定数バッファビュー(CBV)の設定コマンド
-		directX.commandList->SetGraphicsRootConstantBufferView(2, constBuffTransform0->GetGPUVirtualAddress());
-		// 描画コマンド
-		directX.commandList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
-		//0番定数バッファビュー(CBV)の設定コマンド
-		directX.commandList->SetGraphicsRootConstantBufferView(2, constBuffTransform1->GetGPUVirtualAddress());
-		// 描画コマンド
-		directX.commandList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
+
+		//全オブジェクトについて処理
+		for (int i = 0; i < _countof(obj); i++) {
+			obj[i].Draw(directX.commandList, vbView, ibView, _countof(indices));
+		}
 #pragma endregion
 		// ４．描画コマンドここまで
 		// ５．リソースバリアを戻す
