@@ -144,7 +144,10 @@
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="math.cpp" />
     <ClCompile Include="Object3d.cpp" />
+    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +170,10 @@
   <ItemGroup>
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="math.h" />
     <ClInclude Include="Object3d.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector3.h" />
     <ClInclude Include="WindowsAPI.h" />
   </ItemGroup>
   <ItemGroup>
