@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	windowsAPI.Initialize();
 
 	// DirectX初期化処理
-	DirectXInit directX;
+	ReDirectX directX;
 	directX.Initialize(windowsAPI);
 	Input input;
 	HRESULT result{};

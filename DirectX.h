@@ -9,7 +9,7 @@
 #include"WindowsAPI.h"
 
 
-class DirectXInit
+class ReDirectX
 {
 public:
 	//Šeí‰Šú‰»—p•Ï”

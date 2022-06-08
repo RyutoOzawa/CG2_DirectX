@@ -1,7 +1,7 @@
 #include "DirectX.h"
 #include"WindowsAPI.h"
 
-void DirectXInit::Initialize(WindowsAPI windowsAPI)
+void ReDirectX::Initialize(WindowsAPI windowsAPI)
 {
 #ifdef _DEBUG
 	//デバッグレイヤーをオンに
@@ -167,7 +167,7 @@ void DirectXInit::Initialize(WindowsAPI windowsAPI)
 
 }
 
-void DirectXInit::Update()
+void ReDirectX::Update()
 {
 
 }
