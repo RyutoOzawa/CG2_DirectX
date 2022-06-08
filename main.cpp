@@ -7,6 +7,7 @@ using namespace DirectX;
 //#include"WindowsAPI.h"
 //#include"DirectX.h"
 #include"Object3d.h"
+#include <random>
 
 WindowsAPI windowsAPI;
 
@@ -25,6 +26,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//キーボード初期化処理
 	input.Initialize(result, windowsAPI);
+
+	//乱数シード生成器
+	std::random_device seedGem;
+	//メルセンヌ・ツイスターの乱数エンジン
+	std::mt19937_64 engine(seedGem());
+	//乱数範囲の指定
+	std::uniform_real_distribution<float> dist(-100, 100);
+
+	//ランダムな数値を取得
+	float value = dist(engine);
 
 #pragma region 描画初期化処理
 
@@ -76,16 +87,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 		//親子構造のサンプル
 		//先頭以外なら
-		if(i>0){
+		
 			//ひとつ前のオブジェクトを親とする
-			obj[i].parent = &obj[i - 1];
+			//obj[i].parent = &obj[i - 1];
 			//親の9割の大きさ
-			obj[i].scale = { 0.9f,0.9f,0.9f };
+			obj[i].scale = {1,1,1};
 			//親に対してZ軸に30度回転
-			obj[i].rotation = { 0.0f,0.0f,XMConvertToRadians(30.0f) };
+			obj[i].rotation = { 0.0f,0.0f,0.0f };
 			//親に対してZ方向-8.0ずらす
-			obj[i].position = { 0.0f,0.0f,-8.0f };
-		}
+			obj[i].position = { dist(engine),dist(engine),dist(engine) };
+		
 	}
 
 	
@@ -615,6 +626,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	result = directX.device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 #pragma endregion
+
+	
 
 	// ゲームループ
 	while (true) {
