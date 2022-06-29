@@ -8,6 +8,7 @@ using namespace DirectX;
 //#include"DirectX.h"
 #include"Object3d.h"
 #include <random>
+#include"Texture.h"
 
 WindowsAPI windowsAPI;
 
@@ -280,7 +281,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma endregion
 
-
+	Texture texture3;
+	texture3.LoadTexture(L"Resources/orangeBlock.png");
+	texture3.Initialize(directX);
 
 	//元データ開放
 	//delete[] imageData;
@@ -299,7 +302,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	result = directX.device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
 
-	
+
 
 	//頂点データ構造体
 	struct Vertex {
@@ -397,6 +400,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	UINT incrementSize = directX.device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	srvHandle.ptr += incrementSize;
+	
 
 	//シェーダリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};//設定構造体
@@ -408,6 +412,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
 	directX.device->CreateShaderResourceView(texBuff2, &srvDesc2, srvHandle);
+
+	srvHandle.ptr += incrementSize;
+
+	texture3.CreateSRV(directX, srvHandle);
 
 	//インデックスデータ
 	unsigned short indices[] = {
@@ -851,12 +859,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
 		//2枚目を指し示すようにしたSRVのハンドルをルートパラメータ1番に設定
 		srvGpuHandle.ptr += incrementSize;
+		srvGpuHandle.ptr += incrementSize;
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-	
-		
+
+
 
 		//全オブジェクトについて処理
 		for (int i = 0; i < _countof(obj); i++) {
