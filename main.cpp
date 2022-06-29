@@ -51,7 +51,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	const size_t kObjCount = 50;
 	Object3d obj[kObjCount];
 
-	
+
 
 	XMMATRIX matProjection;
 	XMMATRIX matView;
@@ -84,22 +84,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	for (int i = 0; i < _countof(obj); i++) {
 		//初期化
 		obj[i].Initialize(directX.device);
-		
+
 		//親子構造のサンプル
 		//先頭以外なら
-		
+
 			//ひとつ前のオブジェクトを親とする
 			//obj[i].parent = &obj[i - 1];
 			//親の9割の大きさ
-			obj[i].scale = {1,1,1};
-			//親に対してZ軸に30度回転
-			obj[i].rotation = { 0.0f,0.0f,0.0f };
-			//親に対してZ方向-8.0ずらす
-			obj[i].position = { dist(engine),dist(engine),dist(engine) };
-		
+		obj[i].scale = { 1,1,1 };
+		//親に対してZ軸に30度回転
+		obj[i].rotation = { 0.0f,0.0f,0.0f };
+		//親に対してZ方向-8.0ずらす
+		obj[i].position = { dist(engine),dist(engine),dist(engine) };
+
 	}
 
-	
+
 
 	//透視東映返還行列の計算
 	//専用の行列を宣言
@@ -157,6 +157,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		&metadata, scratchImg
 	);
 
+
 	ScratchImage mipChain{};
 	//ミップマップ生成
 	result = GenerateMipMaps(
@@ -212,6 +213,75 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		assert(SUCCEEDED(result));
 	}
 
+#pragma region 2枚目のテクスチャ関係
+
+	//2枚目のテクスチャ用変数
+	TexMetadata metadata2{};
+	ScratchImage scratchImg2{};
+	//WICテクスチャのロード
+	result = LoadFromWICFile(
+		L"Resources/reimu.png",
+		WIC_FLAGS_NONE,
+		&metadata2, scratchImg2);
+
+	ScratchImage mipChain2{};
+	//ミップマップ生成
+	result = GenerateMipMaps(
+		scratchImg2.GetImages(), scratchImg2.GetImageCount(), scratchImg2.GetMetadata(),
+		TEX_FILTER_DEFAULT, 0, mipChain2);
+	if (SUCCEEDED(result)) {
+		scratchImg2 = std::move(mipChain2);
+		metadata2 = scratchImg2.GetMetadata();
+	}
+
+	//読み込んだディフューズテクスチャをSRGBとして扱う
+	metadata2.format = MakeSRGB(metadata2.format);
+
+	//ヒープ設定
+	D3D12_HEAP_PROPERTIES textureHeapProp2{};
+	textureHeapProp2.Type = D3D12_HEAP_TYPE_CUSTOM;
+	textureHeapProp2.CPUPageProperty =
+		D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	textureHeapProp2.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	//リソース設定
+	D3D12_RESOURCE_DESC textureResourceDesc2{};
+	textureResourceDesc2.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	textureResourceDesc2.Format = metadata2.format;
+	textureResourceDesc2.Width = metadata2.width;	// 幅
+	textureResourceDesc2.Height = (UINT)metadata2.height;	// 高さ
+	textureResourceDesc2.DepthOrArraySize = (UINT16)metadata2.arraySize;
+	textureResourceDesc2.MipLevels = (UINT16)metadata2.mipLevels;
+	textureResourceDesc2.SampleDesc.Count = 1;
+
+	//テクスチャバッファの生成
+	ID3D12Resource* texBuff2 = nullptr;
+	result = directX.device->CreateCommittedResource(
+		&textureHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&textureResourceDesc2,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&texBuff2));
+
+	//全ミップマップについて
+	for (size_t i = 0; i < metadata2.mipLevels; i++) {
+		//ミップマップレベルを指定してイメージを取得
+		const Image* img = scratchImg2.GetImage(i, 0, 0);
+		//テクスチャバッファにデータ転送
+		result = texBuff2->WriteToSubresource(
+			(UINT)i,
+			nullptr,				//全領域へコピー
+			img->pixels,			//元データアドレス
+			(UINT)img->rowPitch,	//1ラインサイズ
+			(UINT)img->slicePitch	//全サイズ
+		);
+		assert(SUCCEEDED(result));
+	}
+
+#pragma endregion
+
+
+
 	//元データ開放
 	//delete[] imageData;
 
@@ -229,8 +299,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	result = directX.device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
 
-	//SRVヒープの先頭ハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+	
 
 	//頂点データ構造体
 	struct Vertex {
@@ -308,6 +377,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(result));
 
+	//SRVヒープの先頭ハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+
+
 	//シェーダリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};//設定構造体
 	srvDesc.Format = resDesc.Format;//RGBA float
@@ -319,6 +392,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//ハンドルの指す位置にシェーダーリソースビュー作成
 	directX.device->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
 
+	//GetDescriptorHandIncrementSizeの引数はD3D12_DESCRIPTOR_HEAP_TYPE
+	//Heapの種類によってDescriptorのサイズは異なる(異なってもいいという仕様)
+	UINT incrementSize = directX.device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	srvHandle.ptr += incrementSize;
+
+	//シェーダリソースビュー設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2{};//設定構造体
+	srvDesc2.Format = textureResourceDesc2.Format;//RGBA float
+	srvDesc2.Shader4ComponentMapping =
+		D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc2.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
+	srvDesc2.Texture2D.MipLevels = textureResourceDesc2.MipLevels;
+
+	//ハンドルの指す位置にシェーダーリソースビュー作成
+	directX.device->CreateShaderResourceView(texBuff2, &srvDesc2, srvHandle);
 
 	//インデックスデータ
 	unsigned short indices[] = {
@@ -403,7 +492,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
 
-	
+
 
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
 	Vertex* vertMap = nullptr;
@@ -627,7 +716,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	assert(SUCCEEDED(result));
 #pragma endregion
 
-	
+
 
 	// ゲームループ
 	while (true) {
@@ -663,13 +752,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			eye.y = 25.0f;
 
 			if (input.IsPress(DIK_SPACE)) {
-			 eye.y *= -1.0f;
+				eye.y *= -1.0f;
 
-				
+
 			}
 		}
 
-		
+
 
 
 
@@ -691,8 +780,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
 
-	////定数バッファに転送
-	//	constMapTransform1->mat = matWorld1 * matView * matProjection;
+		////定数バッファに転送
+		//	constMapTransform1->mat = matWorld1 * matView * matProjection;
 
 		for (int i = 0; i < _countof(obj); i++) {
 			obj[i].Update(matView, matProjection);
@@ -757,10 +846,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX.commandList->SetGraphicsRootConstantBufferView(0, constBufferDataMaterial->GetGPUVirtualAddress());
 		//SRVヒープの設定コマンド
 		directX.commandList->SetDescriptorHeaps(1, &srvHeap);
-		//SRVヒープの先頭ハンドルを取得
+
+		////SRVヒープの先頭ハンドルを取得
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
+		//2枚目を指し示すようにしたSRVのハンドルをルートパラメータ1番に設定
+		srvGpuHandle.ptr += incrementSize;
+
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
+	
+		
 
 		//全オブジェクトについて処理
 		for (int i = 0; i < _countof(obj); i++) {
