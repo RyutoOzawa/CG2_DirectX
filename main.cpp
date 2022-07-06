@@ -10,6 +10,7 @@ using namespace DirectX;
 #include <random>
 #include"Texture.h"
 
+
 WindowsAPI windowsAPI;
 
 
@@ -78,13 +79,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	ID3D12Resource* constBufferDataMaterial = nullptr;
+	ComPtr<ID3D12Resource> constBufferDataMaterial;
 
 
 	//配列内の全オブジェクトに対して
 	for (int i = 0; i < _countof(obj); i++) {
 		//初期化
-		obj[i].Initialize(directX.device);
+		obj[i].Initialize(directX.device.Get());
 
 		//親子構造のサンプル
 		//先頭以外なら
@@ -190,7 +191,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	textureResourceDesc.SampleDesc.Count = 1;
 
 	//テクスチャバッファの生成
-	ID3D12Resource* texBuff = nullptr;
+	ComPtr<ID3D12Resource> texBuff;
 	result = directX.device->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -255,7 +256,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	textureResourceDesc2.SampleDesc.Count = 1;
 
 	//テクスチャバッファの生成
-	ID3D12Resource* texBuff2 = nullptr;
+	ComPtr<ID3D12Resource> texBuff2;
 	result = directX.device->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -298,7 +299,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	srvHeapDesc.NumDescriptors = kMaxSRVCount;
 
 	//設定をもとにSRV用デスクリプタヒープを生成
-	ID3D12DescriptorHeap* srvHeap = nullptr;
+	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	result = directX.device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
 
@@ -370,7 +371,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
 
 	// 頂点バッファの生成
-	ID3D12Resource* vertBuff = nullptr;
+	ComPtr<ID3D12Resource> vertBuff;
 	result = directX.device->CreateCommittedResource(
 		&heapProp, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
@@ -393,7 +394,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	srvDesc.Texture2D.MipLevels = resDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	directX.device->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
+	directX.device->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
 
 	//GetDescriptorHandIncrementSizeの引数はD3D12_DESCRIPTOR_HEAP_TYPE
 	//Heapの種類によってDescriptorのサイズは異なる(異なってもいいという仕様)
@@ -411,7 +412,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	srvDesc2.Texture2D.MipLevels = textureResourceDesc2.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	directX.device->CreateShaderResourceView(texBuff2, &srvDesc2, srvHandle);
+	directX.device->CreateShaderResourceView(texBuff2.Get(), &srvDesc2, srvHandle);
 
 	srvHandle.ptr += incrementSize;
 
@@ -475,7 +476,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//インデックスバッファの生成
-	ID3D12Resource* indexBuff = nullptr;
+	ComPtr<ID3D12Resource> indexBuff;
 	result = directX.device->CreateCommittedResource(
 		&heapProp,//ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
@@ -698,7 +699,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;			//ピクセルシェーダからのみ使用可能
 
 	// ルートシグネチャ
-	ID3D12RootSignature* rootSignature;
+	ComPtr<ID3D12RootSignature> rootSignature;
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
@@ -714,12 +715,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	result = directX.device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(result));
-	rootSigBlob->Release();
+	
 	// パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootSignature;
+	pipelineDesc.pRootSignature = rootSignature.Get();
 
 	// パイプランステートの生成
-	ID3D12PipelineState* pipelineState = nullptr;
+	ComPtr<ID3D12PipelineState> pipelineState;
 	result = directX.device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 #pragma endregion
@@ -800,7 +801,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// １．リソースバリアで書き込み可能に変更
 		D3D12_RESOURCE_BARRIER barrierDesc{};
-		barrierDesc.Transition.pResource = directX.backBuffers[bbIndex]; // バックバッファを指定
+		barrierDesc.Transition.pResource = directX.backBuffers[bbIndex].Get(); // バックバッファを指定
 		barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;      // 表示状態から
 		barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // 描画状態へ
 		directX.commandList->ResourceBarrier(1, &barrierDesc);
@@ -838,8 +839,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX.commandList->RSSetScissorRects(1, &scissorRect);
 
 		// パイプラインステートとルートシグネチャの設定コマンド
-		directX.commandList->SetPipelineState(pipelineState);
-		directX.commandList->SetGraphicsRootSignature(rootSignature);
+		directX.commandList->SetPipelineState(pipelineState.Get());
+		directX.commandList->SetGraphicsRootSignature(rootSignature.Get());
 
 		// プリミティブ形状の設定コマンド
 		directX.commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
@@ -852,8 +853,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//定数バッファビュー(CBV)の設定コマンド
 		directX.commandList->SetGraphicsRootConstantBufferView(0, constBufferDataMaterial->GetGPUVirtualAddress());
+		ID3D12DescriptorHeap* srvheaps = { srvHeap.Get() };
 		//SRVヒープの設定コマンド
-		directX.commandList->SetDescriptorHeaps(1, &srvHeap);
+		directX.commandList->SetDescriptorHeaps(1, &srvheaps);
 
 		////SRVヒープの先頭ハンドルを取得
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
@@ -869,7 +871,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//全オブジェクトについて処理
 		for (int i = 0; i < _countof(obj); i++) {
-			obj[i].Draw(directX.commandList, vbView, ibView, _countof(indices));
+			obj[i].Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
 		}
 #pragma endregion
 		// ４．描画コマンドここまで
@@ -882,7 +884,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		result = directX.commandList->Close();
 		assert(SUCCEEDED(result));
 		// コマンドリストの実行
-		ID3D12CommandList* commandLists[] = { directX.commandList };
+		ID3D12CommandList* commandLists[] = { directX.commandList.Get()};
 		directX.commandQueue->ExecuteCommandLists(1, commandLists);
 
 		// 画面に表示するバッファをフリップ（裏表の入替え）
@@ -890,7 +892,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		assert(SUCCEEDED(result));
 
 		// コマンドの実行完了を待つ
-		directX.commandQueue->Signal(directX.fence, ++directX.fenceVal);
+		directX.commandQueue->Signal(directX.fence.Get(), ++directX.fenceVal);
 		if (directX.fence->GetCompletedValue() != directX.fenceVal) {
 			HANDLE event = CreateEvent(nullptr, false, false, nullptr);
 			directX.fence->SetEventOnCompletion(directX.fenceVal, event);
@@ -902,7 +904,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		result = directX.commandAllocator->Reset();
 		assert(SUCCEEDED(result));
 		// 再びコマンドリストを貯める準備
-		result = directX.commandList->Reset(directX.commandAllocator, nullptr);
+		result = directX.commandList->Reset(directX.commandAllocator.Get(), nullptr);
 		assert(SUCCEEDED(result));
 		// DirectX毎フレーム処理 ここまで
 #pragma endregion

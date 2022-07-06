@@ -81,5 +81,5 @@ void Texture::CreateSRV(ReDirectX& directX, D3D12_CPU_DESCRIPTOR_HANDLE& srvHand
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	directX.device->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
+	directX.device->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
 }

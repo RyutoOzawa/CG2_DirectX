@@ -1,6 +1,6 @@
 #include<DirectXTex.h>
 #include"DirectX.h"
-
+#include<wrl.h>
 
 class Texture {
 public:
@@ -10,7 +10,7 @@ public:
 	DirectX::ScratchImage mipChain{};
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	D3D12_RESOURCE_DESC textureResourceDesc{};
-	ID3D12Resource* texBuff = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
 
 public:
