@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include<string.h>
 #include<cassert>
+using namespace DirectX;
 
 
 void Texture::LoadTexture(const wchar_t texture[])

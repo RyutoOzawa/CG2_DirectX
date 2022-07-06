@@ -1,13 +1,13 @@
 #include<DirectXTex.h>
 #include"DirectX.h"
-using namespace DirectX;
+
 
 class Texture {
 public:
 	bool isLoadTexture = false;
-	TexMetadata metadata{};
-	ScratchImage scratchImg{};
-	ScratchImage mipChain{};
+	DirectX::TexMetadata metadata{};
+	DirectX::ScratchImage scratchImg{};
+	DirectX::ScratchImage mipChain{};
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	D3D12_RESOURCE_DESC textureResourceDesc{};
 	ID3D12Resource* texBuff = nullptr;
