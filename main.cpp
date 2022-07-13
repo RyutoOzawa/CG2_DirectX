@@ -358,6 +358,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
 	};
 
+
+
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
 
@@ -564,8 +566,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		assert(0);
 	}
 
-	GpPipeline pipeline1;
-	pipeline1.SetPipeline(vsBlob,psBlob,BLEND_INV);
+
+	const int pipelineMax = 5;
+
+	GpPipeline pipeline[pipelineMax];
+	pipeline[BLEND_NOBLEND].SetPipeline(vsBlob, psBlob);
+	pipeline[BLEND_ALPHA].SetPipeline(vsBlob, psBlob, BLEND_ALPHA);
+	pipeline[BLEND_ADD].SetPipeline(vsBlob, psBlob, BLEND_ADD);
+	pipeline[BLEND_SUB].SetPipeline(vsBlob, psBlob, BLEND_SUB);
+	pipeline[BLEND_INV].SetPipeline(vsBlob, psBlob, BLEND_INV);
 
 
 	//デスクリプタレンジの設定
@@ -622,14 +631,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	result = directX.device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(result));
-	
+
 	// パイプラインにルートシグネチャをセット
-	pipeline1.desc.pRootSignature = rootSignature.Get();
+	for (int i = 0; i < pipelineMax; i++) {
+		pipeline[i].desc.pRootSignature = rootSignature.Get();
+	}
+
 
 	// パイプランステートの生成
 	ComPtr<ID3D12PipelineState> pipelineState;
-	result = directX.device->CreateGraphicsPipelineState(&pipeline1.desc, IID_PPV_ARGS(&pipelineState));
-	assert(SUCCEEDED(result));
+	pipeline[0].SetPipelineState(directX.device, pipelineState);
+	//pipelineState = pipeline1.state;
+	/*result = directX.device->CreateGraphicsPipelineState(&pipeline1.desc, IID_PPV_ARGS(&pipelineState));
+	assert(SUCCEEDED(result));*/
 #pragma endregion
 
 
@@ -747,6 +761,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// シザー矩形設定コマンドを、コマンドリストに積む
 		directX.commandList->RSSetScissorRects(1, &scissorRect);
 
+		if (input.IsTrigger(DIK_1)) {
+			pipeline[0].SetPipelineState(directX.device, pipelineState);
+		}
+		else if (input.IsTrigger(DIK_2)) {
+			pipeline[1].SetPipelineState(directX.device, pipelineState);
+		}
+		else if (input.IsTrigger(DIK_3)) {
+			pipeline[2].SetPipelineState(directX.device, pipelineState);
+		}
+		else if (input.IsTrigger(DIK_4)) {
+			pipeline[3].SetPipelineState(directX.device, pipelineState);
+		}
+		else if (input.IsTrigger(DIK_5)) {
+			pipeline[4].SetPipelineState(directX.device, pipelineState);
+		}
+
+
 		// パイプラインステートとルートシグネチャの設定コマンド
 		directX.commandList->SetPipelineState(pipelineState.Get());
 		directX.commandList->SetGraphicsRootSignature(rootSignature.Get());
@@ -772,12 +803,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	/*	srvGpuHandle.ptr += incrementSize;
 		srvGpuHandle.ptr += incrementSize;*/
 
-		if (input.IsPress(DIK_1)) {
-			srvGpuHandle.ptr += incrementSize;
-		}
-		else if (input.IsPress(DIK_2)) {
-			srvGpuHandle.ptr += incrementSize * 2;
-		}
+
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
@@ -802,7 +828,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		result = directX.commandList->Close();
 		assert(SUCCEEDED(result));
 		// コマンドリストの実行
-		ID3D12CommandList* commandLists[] = { directX.commandList.Get()};
+		ID3D12CommandList* commandLists[] = { directX.commandList.Get() };
 		directX.commandQueue->ExecuteCommandLists(1, commandLists);
 
 		// 画面に表示するバッファをフリップ（裏表の入替え）

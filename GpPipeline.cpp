@@ -4,6 +4,8 @@
 
 void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode)
 {
+
+
 	inputLayout.push_back(
 		{
 		"POSITION",										//セマンティック名
@@ -121,6 +123,17 @@ void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode)
 	desc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 
+}
+
+void GpPipeline::SetPipelineState(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12PipelineState>& pipelineState_)
+{
+	HRESULT result;
+
+	//パイプラインステートに設定を反映
+	result = device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&state));
+	assert(SUCCEEDED(result));
+
+	pipelineState_ = state;
 }
 
 void GpPipeline::SetBlendAlpha()
