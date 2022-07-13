@@ -142,10 +142,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DirectX.cpp" />
+    <ClCompile Include="DrawInfo.cpp" />
     <ClCompile Include="GpPipeline.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="math.cpp" />
+    <ClCompile Include="MathInfo.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -172,9 +173,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectX.h" />
+    <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="GpPipeline.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="math.h" />
+    <ClInclude Include="MathInfo.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Vector2.h" />

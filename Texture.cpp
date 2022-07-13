@@ -72,6 +72,11 @@ void Texture::Initialize(ReDirectX& directX)
 
 void Texture::CreateSRV(ReDirectX& directX, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
 {
+	UINT incrementSize = directX.device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+
+	//SRV‚ğì‚éêŠ‚ğˆê‚Â•ªƒCƒ“ƒNƒŠƒƒ“ƒg
+	srvHandle.ptr += incrementSize;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = textureResourceDesc.Format;//RGBA float
