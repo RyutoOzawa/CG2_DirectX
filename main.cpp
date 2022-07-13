@@ -369,26 +369,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	};
 
 	//法線の計算
-	//for (int i = 0; i < _countof(indices) / 3; i++) {
-	//	unsigned short indices0 = indices[i * 3 + 0];
-	//	unsigned short indices1 = indices[i * 3 + 1];
-	//	unsigned short indices2 = indices[i * 3 + 2];
-	//	//三角形を構成する頂点座標をベクトルに代入
-	//	XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-	//	XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-	//	XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
-	//	//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
-	//	XMVECTOR v1 = XMVectorSubtract(p1, p0);
-	//	XMVECTOR v2 = XMVectorSubtract(p2, p0);
-	//	//外積は両方から垂直なベクトル
-	//	XMVECTOR normal = XMVector3Cross(v1, v2);
-	//	//正規化
-	//	normal = XMVector3Normalize(normal);
-	//	//求めた法線を頂点データに代入
-	//	XMStoreFloat3(&vertices[indices0].normal, normal);
-	//	XMStoreFloat3(&vertices[indices1].normal, normal);
-	//	XMStoreFloat3(&vertices[indices2].normal, normal);
-	//}
+	for (int i = 0; i < _countof(indices) / 3; i++) {
+		unsigned short indices0 = indices[i * 3 + 0];
+		unsigned short indices1 = indices[i * 3 + 1];
+		unsigned short indices2 = indices[i * 3 + 2];
+		//三角形を構成する頂点座標をベクトルに代入
+		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
+		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
+		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+		//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
+		XMVECTOR v1 = XMVectorSubtract(p1, p0);
+		XMVECTOR v2 = XMVectorSubtract(p2, p0);
+		//外積は両方から垂直なベクトル
+		XMVECTOR normal = XMVector3Cross(v1, v2);
+		//正規化
+		normal = XMVector3Normalize(normal);
+		//求めた法線を頂点データに代入
+		XMStoreFloat3(&vertices[indices0].normal, normal);
+		XMStoreFloat3(&vertices[indices1].normal, normal);
+		XMStoreFloat3(&vertices[indices2].normal, normal);
+	}
 
 	//インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
@@ -668,7 +668,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = directX.dsvHeap->GetCPUDescriptorHandleForHeapStart();
 		directX.commandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 		// ３．画面クリア           R     G     B    A
-		FLOAT clearColor[] = { 0.1f,0.25f, 0.5f,0.5f }; // 青っぽい色
+		FLOAT clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 		directX.commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 		directX.commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
