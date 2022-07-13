@@ -1,6 +1,8 @@
 #include "GpPipeline.h"
 
-void GpPipeline::Initialize(ID3DBlob* vsBlob, ID3DBlob* psBlob)
+
+
+void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode)
 {
 	inputLayout.push_back(
 		{
@@ -55,6 +57,37 @@ void GpPipeline::Initialize(ID3DBlob* vsBlob, ID3DBlob* psBlob)
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;		//ソースの値を100%使う
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;	//デストの値を  0%使う
 
+
+	//
+	//引数でブレンド設定を変更
+	switch (blendmode) {
+	case BLEND_NOBLEND: {
+		//ブレンド設定のフラグを下す
+		blenddesc.BlendEnable = false;
+		break;
+	}
+	case BLEND_ALPHA: {
+		SetBlendAlpha();
+		break;
+	}
+	case BLEND_ADD: {
+		SetBlendAdd();
+		break;
+	}
+	case BLEND_SUB: {
+		SetBlendSub();
+		break;
+	}
+	case BLEND_INV: {
+		SetBlendInv();
+		break;
+	}
+
+	default: {
+		break;
+	}
+	}
+
 	////加算合成
 	//blenddesc.BlendOp = D3D12_BLEND_OP_ADD;	//加算
 	//blenddesc.SrcBlend = D3D12_BLEND_ONE;	//ソースの値を100%使う
@@ -87,5 +120,38 @@ void GpPipeline::Initialize(ID3DBlob* vsBlob, ID3DBlob* psBlob)
 	desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
 	desc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
-	
+
+}
+
+void GpPipeline::SetBlendAlpha()
+{
+	//半透明合成（アルファブレンド）
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;				//加算
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;			//ソースのアルファ値
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;	//1.0f-ソースのアルファ値
+}
+
+void GpPipeline::SetBlendAdd()
+{
+	//加算合成
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;	//加算
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;	//ソースの値を100%使う
+	blenddesc.DestBlend = D3D12_BLEND_ONE;	//デストの値を100%使う
+}
+
+void GpPipeline::SetBlendSub()
+{
+	//減算合成
+	blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;	//デストからソースを減算
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;				//ソースの値を100%使う
+	blenddesc.DestBlend = D3D12_BLEND_ONE;				//デストの値を100%使う
+
+}
+
+void GpPipeline::SetBlendInv()
+{
+	//色反転
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;				//加算
+	blenddesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR;	//1.0f-デストカラーの色
+	blenddesc.DestBlend = D3D12_BLEND_ZERO;				//使わない
 }

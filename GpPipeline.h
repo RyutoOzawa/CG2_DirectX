@@ -2,6 +2,12 @@
 #include<d3d12.h>
 #include<vector>
 
+#define BLEND_NOBLEND	(0)	//ブレンド無し
+#define BLEND_ALPHA		(1)	//αブレンド
+#define BLEND_ADD		(2)	//加算ブレンド
+#define BLEND_SUB		(3)	//減算ブレンド
+#define BLEND_INV		(4)	//反転ブレンド
+
 class GpPipeline
 {
 public:
@@ -11,9 +17,11 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
 
 public: 
-	void Initialize(ID3DBlob* vsBlob,ID3DBlob* psBlob);
-	//void SetBlend();
-
+	void SetPipeline(ID3DBlob* vsBlob,ID3DBlob* psBlob, int blendmode = BLEND_NOBLEND);
+	void SetBlendAlpha();
+	void SetBlendAdd();
+	void SetBlendSub();
+	void SetBlendInv();
 
 };
 

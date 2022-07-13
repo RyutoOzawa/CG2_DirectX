@@ -565,7 +565,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	GpPipeline pipeline1;
-	pipeline1.Initialize(vsBlob,psBlob);
+	pipeline1.SetPipeline(vsBlob,psBlob,BLEND_INV);
 
 
 	//デスクリプタレンジの設定
