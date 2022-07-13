@@ -216,73 +216,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		assert(SUCCEEDED(result));
 	}
 
-#pragma region 2枚目のテクスチャ関係
-
-	////2枚目のテクスチャ用変数
-	//TexMetadata metadata2{};
-	//ScratchImage scratchImg2{};
-	////WICテクスチャのロード
-	//result = LoadFromWICFile(
-	//	L"Resources/reimu.png",
-	//	WIC_FLAGS_NONE,
-	//	&metadata2, scratchImg2);
-
-	//ScratchImage mipChain2{};
-	////ミップマップ生成
-	//result = GenerateMipMaps(
-	//	scratchImg2.GetImages(), scratchImg2.GetImageCount(), scratchImg2.GetMetadata(),
-	//	TEX_FILTER_DEFAULT, 0, mipChain2);
-	//if (SUCCEEDED(result)) {
-	//	scratchImg2 = std::move(mipChain2);
-	//	metadata2 = scratchImg2.GetMetadata();
-	//}
-
-	////読み込んだディフューズテクスチャをSRGBとして扱う
-	//metadata2.format = MakeSRGB(metadata2.format);
-
-	////ヒープ設定
-	//D3D12_HEAP_PROPERTIES textureHeapProp2{};
-	//textureHeapProp2.Type = D3D12_HEAP_TYPE_CUSTOM;
-	//textureHeapProp2.CPUPageProperty =
-	//	D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	//textureHeapProp2.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	////リソース設定
-	//D3D12_RESOURCE_DESC textureResourceDesc2{};
-	//textureResourceDesc2.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	//textureResourceDesc2.Format = metadata2.format;
-	//textureResourceDesc2.Width = metadata2.width;	// 幅
-	//textureResourceDesc2.Height = (UINT)metadata2.height;	// 高さ
-	//textureResourceDesc2.DepthOrArraySize = (UINT16)metadata2.arraySize;
-	//textureResourceDesc2.MipLevels = (UINT16)metadata2.mipLevels;
-	//textureResourceDesc2.SampleDesc.Count = 1;
-
-	////テクスチャバッファの生成
-	//ComPtr<ID3D12Resource> texBuff2;
-	//result = directX.device->CreateCommittedResource(
-	//	&textureHeapProp,
-	//	D3D12_HEAP_FLAG_NONE,
-	//	&textureResourceDesc2,
-	//	D3D12_RESOURCE_STATE_GENERIC_READ,
-	//	nullptr,
-	//	IID_PPV_ARGS(&texBuff2));
-
-	////全ミップマップについて
-	//for (size_t i = 0; i < metadata2.mipLevels; i++) {
-	//	//ミップマップレベルを指定してイメージを取得
-	//	const Image* img = scratchImg2.GetImage(i, 0, 0);
-	//	//テクスチャバッファにデータ転送
-	//	result = texBuff2->WriteToSubresource(
-	//		(UINT)i,
-	//		nullptr,				//全領域へコピー
-	//		img->pixels,			//元データアドレス
-	//		(UINT)img->rowPitch,	//1ラインサイズ
-	//		(UINT)img->slicePitch	//全サイズ
-	//	);
-	//	assert(SUCCEEDED(result));
-	//}
-
-#pragma endregion
-
 	Texture texture2;
 	texture2.LoadTexture(L"Resources/reimu.png");
 	texture2.Initialize(directX);
@@ -328,34 +261,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			{{ 5.0f, 5.0f,-5.0f}, {},{1.0f,0.0f}}, // 右上
 
 			//後
-			{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+			//{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
+			//{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
+			//{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+			//{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
 
-			//左
-			{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-			{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-			{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-			{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+			////左
+			//{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+			//{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+			//{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+			//{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
 
-			//右
-			{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-			{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-			{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+			////右
+			//{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+			//{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+			//{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+			//{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
 
-			//下
-			{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+			////下
+			//{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+			//{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+			//{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+			//{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
 
-			//上
-			{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+			////上
+			//{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+			//{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+			//{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+			//{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
 	};
 
 
@@ -419,43 +352,43 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		0,1,2,		//三角形1つ目
 		2,1,3,		//三角形2つ目
 		//後	
-		5,4,7,		//三角形3つ目
-		7,4,6,		//三角形4つ目
-		//左
-		8,9,10,		//三角形5つ目
-		10,9,11,	//三角形6つ目
-		//右
-		13,12,15,	//三角形7つ目
-		15,12,14,	//三角形8つ目
-		//下
-		17,16,19,	//三角形9つ目
-		19,16,18,	//三角形10つ目
-		//上
-		20,21,22,	//三角形11つ目
-		22,21,23.	//三角形12つ目
+		//5,4,7,		//三角形3つ目
+		//7,4,6,		//三角形4つ目
+		////左
+		//8,9,10,		//三角形5つ目
+		//10,9,11,	//三角形6つ目
+		////右
+		//13,12,15,	//三角形7つ目
+		//15,12,14,	//三角形8つ目
+		////下
+		//17,16,19,	//三角形9つ目
+		//19,16,18,	//三角形10つ目
+		////上
+		//20,21,22,	//三角形11つ目
+		//22,21,23.	//三角形12つ目
 	};
 
 	//法線の計算
-	for (int i = 0; i < _countof(indices) / 3; i++) {
-		unsigned short indices0 = indices[i * 3 + 0];
-		unsigned short indices1 = indices[i * 3 + 1];
-		unsigned short indices2 = indices[i * 3 + 2];
-		//三角形を構成する頂点座標をベクトルに代入
-		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
-		//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
-		XMVECTOR v1 = XMVectorSubtract(p1, p0);
-		XMVECTOR v2 = XMVectorSubtract(p2, p0);
-		//外積は両方から垂直なベクトル
-		XMVECTOR normal = XMVector3Cross(v1, v2);
-		//正規化
-		normal = XMVector3Normalize(normal);
-		//求めた法線を頂点データに代入
-		XMStoreFloat3(&vertices[indices0].normal, normal);
-		XMStoreFloat3(&vertices[indices1].normal, normal);
-		XMStoreFloat3(&vertices[indices2].normal, normal);
-	}
+	//for (int i = 0; i < _countof(indices) / 3; i++) {
+	//	unsigned short indices0 = indices[i * 3 + 0];
+	//	unsigned short indices1 = indices[i * 3 + 1];
+	//	unsigned short indices2 = indices[i * 3 + 2];
+	//	//三角形を構成する頂点座標をベクトルに代入
+	//	XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
+	//	XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
+	//	XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+	//	//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
+	//	XMVECTOR v1 = XMVectorSubtract(p1, p0);
+	//	XMVECTOR v2 = XMVectorSubtract(p2, p0);
+	//	//外積は両方から垂直なベクトル
+	//	XMVECTOR normal = XMVector3Cross(v1, v2);
+	//	//正規化
+	//	normal = XMVector3Normalize(normal);
+	//	//求めた法線を頂点データに代入
+	//	XMStoreFloat3(&vertices[indices0].normal, normal);
+	//	XMStoreFloat3(&vertices[indices1].normal, normal);
+	//	XMStoreFloat3(&vertices[indices2].normal, normal);
+	//}
 
 	//インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
@@ -735,7 +668,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = directX.dsvHeap->GetCPUDescriptorHandleForHeapStart();
 		directX.commandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 		// ３．画面クリア           R     G     B    A
-		FLOAT clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
+		FLOAT clearColor[] = { 0.1f,0.25f, 0.5f,0.5f }; // 青っぽい色
 		directX.commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 		directX.commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
@@ -761,19 +694,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// シザー矩形設定コマンドを、コマンドリストに積む
 		directX.commandList->RSSetScissorRects(1, &scissorRect);
 
-		if (input.IsTrigger(DIK_1)) {
+		if (input.IsPress(DIK_1)) {
 			pipeline[0].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsTrigger(DIK_2)) {
+		else if (input.IsPress(DIK_2)) {
 			pipeline[1].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsTrigger(DIK_3)) {
+		else if (input.IsPress(DIK_3)) {
 			pipeline[2].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsTrigger(DIK_4)) {
+		else if (input.IsPress(DIK_4)) {
 			pipeline[3].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsTrigger(DIK_5)) {
+		else if (input.IsPress(DIK_5)) {
 			pipeline[4].SetPipelineState(directX.device, pipelineState);
 		}
 
