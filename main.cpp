@@ -626,16 +626,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		if (input.IsPress(DIK_R)) color_.x += 0.05f;
 		else color_.x -= 0.05f;
 
-			if (input.IsPress(DIK_G)) color_.y += 0.05f;
-			else color_.y -= 0.05f;
+		if (input.IsPress(DIK_G)) color_.y += 0.05f;
+		else color_.y -= 0.05f;
 
 		if (input.IsPress(DIK_B)) color_.z += 0.05f;
 		else color_.z -= 0.05f;
-		
-
-		color_.x += 0.01f;
-		//値を書き込むと自動的に転送される
-		constMapMaterial->color = color_;
 
 		if (color_.x > 1.0f) {
 			color_.x = 1.0f;
@@ -658,7 +653,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			color_.z = 0;
 		}
 
-		
+		//値を書き込むと自動的に転送される
+		constMapMaterial->color = color_;
+
 
 		//オブジェクトの平行移動処理
 		{
