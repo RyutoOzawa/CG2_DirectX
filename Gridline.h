@@ -24,7 +24,7 @@ public:
 
 	void Initialize(ReDirectX directX, int lineNum, Microsoft::WRL::ComPtr<ID3D12Resource> texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 
-	void Draw(ReDirectX directX, ID3D12DescriptorHeap* srvheaps);
+	void Draw(ID3D12GraphicsCommandList* commandList, ID3D12DescriptorHeap* srvheaps);
 
 	void Update(DirectX::XMMATRIX& matView, DirectX::XMMATRIX& matProjection);
 

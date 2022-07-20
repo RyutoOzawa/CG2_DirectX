@@ -516,9 +516,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 	Gridline gridline{};
-	gridline.start = { -15.0f,-15.0f,-15.0f };
-	gridline.end = { 15.0f,15.0f,15.0f };
-	gridline.Initialize(directX, 10, texBuff,srvHandle);
+	gridline.start = { -100.0f,0.0f,-100.0f};
+	gridline.end = { 100.0f,0.0f,100.0f };
+	gridline.Initialize(directX, 30, texBuff,srvHandle);
 
 	const int pipelineMax = 5;
 
@@ -528,6 +528,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	pipeline[BLEND_ADD].SetPipeline(vsBlob, psBlob, BLEND_ADD);
 	pipeline[BLEND_SUB].SetPipeline(vsBlob, psBlob, BLEND_SUB);
 	pipeline[BLEND_INV].SetPipeline(vsBlob, psBlob, BLEND_INV);
+
+	//グリッド線描画用のパイプライン
+	GpPipeline gridPipeline;
+	gridPipeline.SetPipeline(vsBlob, psBlob,BLEND_NOBLEND,1);
+//	gridPipeline.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
 
 	//デスクリプタレンジの設定
@@ -589,6 +594,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	for (int i = 0; i < pipelineMax; i++) {
 		pipeline[i].desc.pRootSignature = rootSignature.Get();
 	}
+	gridPipeline.desc.pRootSignature = rootSignature.Get();
 
 
 	// パイプランステートの生成
@@ -752,6 +758,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		scissorRect.bottom = scissorRect.top + windowsAPI.winH; // 切り抜き座標下
 		// シザー矩形設定コマンドを、コマンドリストに積む
 		directX.commandList->RSSetScissorRects(1, &scissorRect);
+		pipeline[0].SetPipelineState(directX.device, pipelineState);
 
 		if (input.IsPress(DIK_1)) {
 			pipeline[0].SetPipelineState(directX.device, pipelineState);
@@ -795,24 +802,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	/*	srvGpuHandle.ptr += incrementSize;
 		srvGpuHandle.ptr += incrementSize;*/
 
-
-
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
-
-
 
 		//全オブジェクトについて処理
 		/*for (int i = 0; i < _countof(obj); i++) {
 			obj[i].Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
 		}*/
 
-		gridline.Draw(directX,srvheaps);
-
 		object.Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
 
-		
+		//パイプラインステートをグリッド線用に
+		gridPipeline.SetPipelineState(directX.device, pipelineState);
+		directX.commandList->SetPipelineState(pipelineState.Get());
+		directX.commandList->SetGraphicsRootSignature(rootSignature.Get());
+		gridline.Draw(directX.commandList.Get(), srvheaps);
 
 #pragma endregion
 		// ４．描画コマンドここまで

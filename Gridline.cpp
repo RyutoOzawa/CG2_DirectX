@@ -13,13 +13,13 @@ void Gridline::Initialize(ReDirectX directX, int lineNum,ComPtr<ID3D12Resource> 
 	//引数から頂点データをメンバ変数に書き込む
 	for (int i = 0; i < lineNum; i++) {
 		Vertex ver{};
-		ver.pos = { start.x + (lineSpace.x * i),start.y,center.z };
+		ver.pos = { start.x + (lineSpace.x * i),center.y,start.z };
 		vertices.push_back(ver);
-		ver.pos = { end.x + (lineSpace.x * i),end.y,center.z };
+		ver.pos = { start.x +(lineSpace.x * i) ,center.y,start.z + length.z };
 		vertices.push_back(ver);
-		ver.pos = { start.x ,start.y + (lineSpace.y * i),center.z };
+		ver.pos = { start.x ,center.y,start.z + (lineSpace.z * i)};
 		vertices.push_back(ver);
-		ver.pos = { end.x,end.y + (lineSpace.y * i),center.z };
+		ver.pos = { start.x + length.x,center.y,start.z + (lineSpace.z * i)};
 		vertices.push_back(ver);
 	}
 
@@ -93,19 +93,19 @@ void Gridline::Initialize(ReDirectX directX, int lineNum,ComPtr<ID3D12Resource> 
 	assert(SUCCEEDED(result));
 }
 
-void Gridline::Draw(ReDirectX directX, ID3D12DescriptorHeap* srvheaps)
+void Gridline::Draw(ID3D12GraphicsCommandList* commandList, ID3D12DescriptorHeap* srvheaps)
 {
 	//プリミティブトポロジーを線形リストにセット
-	//directX.commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	//頂点バッファビューの設定コマンド
-	directX.commandList->IASetVertexBuffers(0, 1, &vbview);
+	commandList->IASetVertexBuffers(0, 1, &vbview);
 
 	//0番定数バッファビュー(CBV)の設定コマンド
-	directX.commandList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
 
 	//描画コマンド
-	directX.commandList->DrawInstanced(vertices.size(), 1, 0, 0);
+	commandList->DrawInstanced(vertices.size(), 1, 0, 0);
 
 }
 

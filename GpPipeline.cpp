@@ -2,7 +2,7 @@
 
 
 
-void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode)
+void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode, int primitiveNum)
 {
 
 
@@ -97,7 +97,12 @@ void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode)
 	desc.InputLayout.NumElements = inputLayout.size();
 
 	// ê}å`ÇÃå`èÛê›íË
-	desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	if (primitiveNum == 0) {
+		desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	}
+	else {
+		desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	}
 
 	// ÇªÇÃëºÇÃê›íË
 	desc.NumRenderTargets = 1; // ï`âÊëŒè€ÇÕ1Ç¬
