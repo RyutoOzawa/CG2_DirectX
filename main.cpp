@@ -66,6 +66,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
 	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
+	XMFLOAT4 color_ = {};
 
 	//ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
@@ -80,8 +81,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	ComPtr<ID3D12Resource> constBufferDataMaterial;
 
+	ComPtr<ID3D12Resource> constBufferDataMaterial;
 
 	//配列内の全オブジェクトに対して
 	//for (int i = 0; i < _countof(obj); i++) {
@@ -132,7 +133,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	assert(SUCCEEDED(result));
 
 	//値を書き込むと自動的に転送される
-	constMapMaterial->color = XMFLOAT4(1, 1, 1, 1.0f);		//RGBAで半透明の赤
+	constMapMaterial->color = color_;		//RGBAで半透明の赤
 
 	////横方向ピクセル数
 	//const size_t textureWidth = 256;
@@ -255,40 +256,40 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//     x     y    z     法線  u    v
 
 			//前
-			{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{-5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{ 5.0f,-5.0f,-5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f,-5.0f}, {},{1.0f,0.0f}}, // 右上
-
-			//後
-			{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
-
-			//左
-			{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-			{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-			{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-			{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
-
-			//右
-			{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-			{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-			{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
-
-			//下
 			{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
 			{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+			{{ 0.0f,-5.0f,-5.0f}, {},{1.0f,1.0f}}, // 右下
+	//		{{ 5.0f, 5.0f,-5.0f}, {},{1.0f,0.0f}}, // 右上
 
-			//上
-			{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+	//		//後
+	//		{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
+	//		{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
+	//		{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+	//		{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+
+	//		//左
+	//		{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+	//		{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+	//		{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+	//		{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+	//		//右
+	//		{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+	//		{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+	//		{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+	//		{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+	//		//下
+	//		{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+	//		{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+	//		{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+	//		{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+
+	//		//上
+	//		{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+	//		{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+	//		{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+	//		{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
 	};
 
 
@@ -350,45 +351,45 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//前
 		0,1,2,		//三角形1つ目
-		2,1,3,		//三角形2つ目
-		//後	
-		5,4,7,		//三角形3つ目
-		7,4,6,		//三角形4つ目
-		//左
-		8,9,10,		//三角形5つ目
-		10,9,11,	//三角形6つ目
-		//右
-		13,12,15,	//三角形7つ目
-		15,12,14,	//三角形8つ目
-		//下
-		17,16,19,	//三角形9つ目
-		19,16,18,	//三角形10つ目
-		//上
-		20,21,22,	//三角形11つ目
-		22,21,23.	//三角形12つ目
+	//	2,1,3,		//三角形2つ目
+	//	//後	
+	//	5,4,7,		//三角形3つ目
+	//	7,4,6,		//三角形4つ目
+	//	//左
+	//	8,9,10,		//三角形5つ目
+	//	10,9,11,	//三角形6つ目
+	//	//右
+	//	13,12,15,	//三角形7つ目
+	//	15,12,14,	//三角形8つ目
+	//	//下
+	//	17,16,19,	//三角形9つ目
+	//	19,16,18,	//三角形10つ目
+	//	//上
+	//	20,21,22,	//三角形11つ目
+	//	22,21,23.	//三角形12つ目
 	};
 
 	//法線の計算
-	for (int i = 0; i < _countof(indices) / 3; i++) {
-		unsigned short indices0 = indices[i * 3 + 0];
-		unsigned short indices1 = indices[i * 3 + 1];
-		unsigned short indices2 = indices[i * 3 + 2];
-		//三角形を構成する頂点座標をベクトルに代入
-		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
-		//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
-		XMVECTOR v1 = XMVectorSubtract(p1, p0);
-		XMVECTOR v2 = XMVectorSubtract(p2, p0);
-		//外積は両方から垂直なベクトル
-		XMVECTOR normal = XMVector3Cross(v1, v2);
-		//正規化
-		normal = XMVector3Normalize(normal);
-		//求めた法線を頂点データに代入
-		XMStoreFloat3(&vertices[indices0].normal, normal);
-		XMStoreFloat3(&vertices[indices1].normal, normal);
-		XMStoreFloat3(&vertices[indices2].normal, normal);
-	}
+	//for (int i = 0; i < _countof(indices) / 3; i++) {
+	//	unsigned short indices0 = indices[i * 3 + 0];
+	//	unsigned short indices1 = indices[i * 3 + 1];
+	//	unsigned short indices2 = indices[i * 3 + 2];
+	//	//三角形を構成する頂点座標をベクトルに代入
+	//	XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
+	//	XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
+	//	XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+	//	//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
+	//	XMVECTOR v1 = XMVectorSubtract(p1, p0);
+	//	XMVECTOR v2 = XMVectorSubtract(p2, p0);
+	//	//外積は両方から垂直なベクトル
+	//	XMVECTOR normal = XMVector3Cross(v1, v2);
+	//	//正規化
+	//	normal = XMVector3Normalize(normal);
+	//	//求めた法線を頂点データに代入
+	//	XMStoreFloat3(&vertices[indices0].normal, normal);
+	//	XMStoreFloat3(&vertices[indices1].normal, normal);
+	//	XMStoreFloat3(&vertices[indices2].normal, normal);
+	//}
 
 	//インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
@@ -621,9 +622,43 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 		}
 
+		//キー操作で色を変更
+		if (input.IsPress(DIK_R)) color_.x += 0.05f;
+		else color_.x -= 0.05f;
 
+			if (input.IsPress(DIK_G)) color_.y += 0.05f;
+			else color_.y -= 0.05f;
 
+		if (input.IsPress(DIK_B)) color_.z += 0.05f;
+		else color_.z -= 0.05f;
+		
 
+		color_.x += 0.01f;
+		//値を書き込むと自動的に転送される
+		constMapMaterial->color = color_;
+
+		if (color_.x > 1.0f) {
+			color_.x = 1.0f;
+		}
+		else if (color_.x < 0) {
+			color_.x = 0;
+		}
+
+		if (color_.y > 1.0f) {
+			color_.y = 1.0f;
+		}
+		else if (color_.y < 0) {
+			color_.y = 0;
+		}
+
+		if (color_.z > 1.0f) {
+			color_.z = 1.0f;
+		}
+		else if (color_.z < 0) {
+			color_.z = 0;
+		}
+
+		
 
 		//オブジェクトの平行移動処理
 		{
