@@ -71,6 +71,8 @@ void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 
 void Object3d::Draw(ID3D12GraphicsCommandList* commandList, D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView, UINT numIndices)
 {
+	//プリミティブ形状の設定
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// 頂点バッファビューの設定コマンド
 	commandList->IASetVertexBuffers(0, 1, &vbView);
 	//インデックスバッファビューの設定コマンド

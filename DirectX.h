@@ -16,6 +16,7 @@ class ReDirectX
 public:
 	//Šeí‰Šú‰»—p•Ï”
 	ComPtr<ID3D12Debug1> debugController;
+	ComPtr<ID3D12InfoQueue> infoQueue;
 	HRESULT result;
 	ComPtr<ID3D12Device> device;
 	ComPtr<IDXGIFactory6> dxgiFactory;
@@ -37,6 +38,7 @@ public:
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
 	ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+
 public:
 	//‰Šú‰»
 	void Initialize(WindowsAPI windowsAPI);

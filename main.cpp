@@ -10,6 +10,7 @@ using namespace DirectX;
 #include <random>
 #include"Texture.h"
 #include"GpPipeline.h"
+#include"Gridline.h"
 
 
 WindowsAPI windowsAPI;
@@ -66,7 +67,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
 	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
-	XMFLOAT4 color_ = {};
+	XMFLOAT4 color_ = {1.0f,1.0f,1.0f,0.0f};
+	bool colorFlag = false;
+
+
 
 	//ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
@@ -251,45 +255,53 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		XMFLOAT2 uv;//uv座標
 	};
 
+	//3角形用の頂点データ
+	Vertex triangleVertices[]{
+		{{-5.0f, 5.0f,-10.0f}, {},{0.0f,0.0f}}, // 左下
+		{{ 5.0f, 5.0f,-10.0f}, {},{0.0f,0.0f}}, // 左上
+		{{ 0.0f,-5.0f,-10.0f}, {},{0.0f,0.0f}}, // 右下
+
+	};
+
 	// 頂点データ
 	Vertex vertices[] = {
 		//     x     y    z     法線  u    v
 
 			//前
+			{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+			{{-5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+			{{ 5.0f,-5.0f,-5.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f,-5.0f}, {},{1.0f,0.0f}}, // 右上
+
+			//後
+			{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
+			{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
+			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+
+			//左
+			{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+			{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+			{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+			{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+			//右
+			{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+			{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+			{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+			//下
 			{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
 			{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{ 0.0f,-5.0f,-5.0f}, {},{1.0f,1.0f}}, // 右下
-	//		{{ 5.0f, 5.0f,-5.0f}, {},{1.0f,0.0f}}, // 右上
+			{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
 
-	//		//後
-	//		{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
-	//		{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
-	//		{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-	//		{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
-
-	//		//左
-	//		{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-	//		{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-	//		{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-	//		{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
-
-	//		//右
-	//		{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-	//		{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-	//		{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-	//		{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
-
-	//		//下
-	//		{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-	//		{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-	//		{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-	//		{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
-
-	//		//上
-	//		{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-	//		{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-	//		{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-	//		{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+			//上
+			{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+			{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+			{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
 	};
 
 
@@ -351,45 +363,47 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//前
 		0,1,2,		//三角形1つ目
-	//	2,1,3,		//三角形2つ目
-	//	//後	
-	//	5,4,7,		//三角形3つ目
-	//	7,4,6,		//三角形4つ目
-	//	//左
-	//	8,9,10,		//三角形5つ目
-	//	10,9,11,	//三角形6つ目
-	//	//右
-	//	13,12,15,	//三角形7つ目
-	//	15,12,14,	//三角形8つ目
-	//	//下
-	//	17,16,19,	//三角形9つ目
-	//	19,16,18,	//三角形10つ目
-	//	//上
-	//	20,21,22,	//三角形11つ目
-	//	22,21,23.	//三角形12つ目
+		2,1,3,		//三角形2つ目
+		//後	
+		5,4,7,		//三角形3つ目
+		7,4,6,		//三角形4つ目
+		//左
+		8,9,10,		//三角形5つ目
+		10,9,11,	//三角形6つ目
+		//右
+		13,12,15,	//三角形7つ目
+		15,12,14,	//三角形8つ目
+		//下
+		17,16,19,	//三角形9つ目
+		19,16,18,	//三角形10つ目
+		//上
+		20,21,22,	//三角形11つ目
+		22,21,23.	//三角形12つ目
 	};
 
+
+
 	//法線の計算
-	//for (int i = 0; i < _countof(indices) / 3; i++) {
-	//	unsigned short indices0 = indices[i * 3 + 0];
-	//	unsigned short indices1 = indices[i * 3 + 1];
-	//	unsigned short indices2 = indices[i * 3 + 2];
-	//	//三角形を構成する頂点座標をベクトルに代入
-	//	XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-	//	XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-	//	XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
-	//	//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
-	//	XMVECTOR v1 = XMVectorSubtract(p1, p0);
-	//	XMVECTOR v2 = XMVectorSubtract(p2, p0);
-	//	//外積は両方から垂直なベクトル
-	//	XMVECTOR normal = XMVector3Cross(v1, v2);
-	//	//正規化
-	//	normal = XMVector3Normalize(normal);
-	//	//求めた法線を頂点データに代入
-	//	XMStoreFloat3(&vertices[indices0].normal, normal);
-	//	XMStoreFloat3(&vertices[indices1].normal, normal);
-	//	XMStoreFloat3(&vertices[indices2].normal, normal);
-	//}
+	for (int i = 0; i < _countof(indices) / 3; i++) {
+		unsigned short indices0 = indices[i * 3 + 0];
+		unsigned short indices1 = indices[i * 3 + 1];
+		unsigned short indices2 = indices[i * 3 + 2];
+		//三角形を構成する頂点座標をベクトルに代入
+		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
+		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
+		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+		//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
+		XMVECTOR v1 = XMVectorSubtract(p1, p0);
+		XMVECTOR v2 = XMVectorSubtract(p2, p0);
+		//外積は両方から垂直なベクトル
+		XMVECTOR normal = XMVector3Cross(v1, v2);
+		//正規化
+		normal = XMVector3Normalize(normal);
+		//求めた法線を頂点データに代入
+		XMStoreFloat3(&vertices[indices0].normal, normal);
+		XMStoreFloat3(&vertices[indices1].normal, normal);
+		XMStoreFloat3(&vertices[indices2].normal, normal);
+	}
 
 	//インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * _countof(indices));
@@ -500,6 +514,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		assert(0);
 	}
 
+
+	Gridline gridline{};
+	gridline.start = { -15.0f,-15.0f,-15.0f };
+	gridline.end = { 15.0f,15.0f,15.0f };
+	gridline.Initialize(directX, 10, texBuff,srvHandle);
 
 	const int pipelineMax = 5;
 
@@ -615,43 +634,49 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			eye.y = 25.0f;
 
-			if (input.IsPress(DIK_SPACE)) {
-				eye.y *= -1.0f;
+			if (input.IsTrigger(DIK_SPACE)) {
+				if (colorFlag)colorFlag = false;
+				else colorFlag = true;
 
 
 			}
 		}
 
-		//キー操作で色を変更
-		if (input.IsPress(DIK_R)) color_.x += 0.05f;
-		else color_.x -= 0.05f;
+		if (colorFlag) {
+			color_.w = 0.1f;
 
-		if (input.IsPress(DIK_G)) color_.y += 0.05f;
-		else color_.y -= 0.05f;
+			//キー操作で色を変更
+			if (input.IsPress(DIK_R)) color_.x += 0.05f;
+			else color_.x -= 0.05f;
 
-		if (input.IsPress(DIK_B)) color_.z += 0.05f;
-		else color_.z -= 0.05f;
+			if (input.IsPress(DIK_G)) color_.y += 0.05f;
+			else color_.y -= 0.05f;
 
-		if (color_.x > 1.0f) {
-			color_.x = 1.0f;
-		}
-		else if (color_.x < 0) {
-			color_.x = 0;
-		}
+			if (input.IsPress(DIK_B)) color_.z += 0.05f;
+			else color_.z -= 0.05f;
 
-		if (color_.y > 1.0f) {
-			color_.y = 1.0f;
-		}
-		else if (color_.y < 0) {
-			color_.y = 0;
-		}
+			if (color_.x > 1.0f) {
+				color_.x = 1.0f;
+			}
+			else if (color_.x < 0) {
+				color_.x = 0;
+			}
 
-		if (color_.z > 1.0f) {
-			color_.z = 1.0f;
+			if (color_.y > 1.0f) {
+				color_.y = 1.0f;
+			}
+			else if (color_.y < 0) {
+				color_.y = 0;
+			}
+
+			if (color_.z > 1.0f) {
+				color_.z = 1.0f;
+			}
+			else if (color_.z < 0) {
+				color_.z = 0;
+			}
 		}
-		else if (color_.z < 0) {
-			color_.z = 0;
-		}
+		else color_ = { 1.0f,1.0f,1.0f,0.1f };
 
 		//値を書き込むと自動的に転送される
 		constMapMaterial->color = color_;
@@ -683,6 +708,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}*/
 
 		object.Update(matView, matProjection);
+
+		gridline.Update(matView, matProjection);
 
 		// バックバッファの番号を取得（2つなので0番か1番）
 		UINT bbIndex = directX.swapChain->GetCurrentBackBufferIndex();
@@ -781,7 +808,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			obj[i].Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
 		}*/
 
+		gridline.Draw(directX,srvheaps);
+
 		object.Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
+
+		
+
 #pragma endregion
 		// ４．描画コマンドここまで
 		// ５．リソースバリアを戻す
