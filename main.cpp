@@ -53,7 +53,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//XMMATRIX matWorld1;
 
 	const size_t kObjCount = 50;
-	//Object3d obj[kObjCount];
+	Object3d obj[kObjCount];
 
 	Object3d object;
 
@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
 	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
 	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
-	XMFLOAT4 color_ = {1.0f,1.0f,1.0f,0.0f};
+	XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,0.0f };
 	bool colorFlag = false;
 
 
@@ -89,23 +89,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ComPtr<ID3D12Resource> constBufferDataMaterial;
 
 	//配列内の全オブジェクトに対して
-	//for (int i = 0; i < _countof(obj); i++) {
-	//	//初期化
-	//	obj[i].Initialize(directX.device.Get());
+	for (int i = 0; i < _countof(obj); i++) {
+		//初期化
+		obj[i].Initialize(directX.device.Get());
 
-	//	//親子構造のサンプル
-	//	//先頭以外なら
+		//親子構造のサンプル
+		//先頭以外なら
 
-	//		//ひとつ前のオブジェクトを親とする
-	//		//obj[i].parent = &obj[i - 1];
-	//		//親の9割の大きさ
-	//	obj[i].scale = { 1,1,1 };
-	//	//親に対してZ軸に30度回転
-	//	obj[i].rotation = { 0.0f,0.0f,0.0f };
-	//	//親に対してZ方向-8.0ずらす
-	//	obj[i].position = { dist(engine),dist(engine),dist(engine) };
+			//ひとつ前のオブジェクトを親とする
+			//obj[i].parent = &obj[i - 1];
+			//親の9割の大きさ
+		obj[i].scale = { 1,1,1 };
+		//親に対してZ軸に30度回転
+		obj[i].rotation = { 0.0f,0.0f,0.0f };
+		//親に対してZ方向-8.0ずらす
+		obj[i].position = { dist(engine),dist(engine),dist(engine) };
 
-	//}
+	}
 
 	object.Initialize(directX.device.Get());
 
@@ -516,9 +516,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 	Gridline gridline{};
-	gridline.start = { -100.0f,0.0f,-100.0f};
+	gridline.start = { -100.0f,0.0f,-100.0f };
 	gridline.end = { 100.0f,0.0f,100.0f };
-	gridline.Initialize(directX, 30, texBuff,srvHandle);
+	gridline.Initialize(directX, 30, texBuff, srvHandle);
 
 	const int pipelineMax = 5;
 
@@ -531,11 +531,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//グリッド線描画用のパイプライン
 	GpPipeline gridPipeline;
-	gridPipeline.SetPipeline(vsBlob, psBlob,BLEND_NOBLEND,1);
-//	gridPipeline.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	gridPipeline.SetPipeline(vsBlob, psBlob, BLEND_NOBLEND, 1);
+	//	gridPipeline.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
 
-	//デスクリプタレンジの設定
+		//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
 	descriptorRange.NumDescriptors = 1;		//一度の描画に使うテクスチャが1枚なので1
 	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -629,9 +629,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//カメラ回転処理
 		{
-			if (input.IsPress(DIK_D) || input.IsPress(DIK_A)) {
-				if (input.IsPress(DIK_D))angle += XMConvertToRadians(1.0f);
-				else if (input.IsPress(DIK_A))angle -= XMConvertToRadians(1.0f);
+			if (input.IsPress(DIK_RIGHT) || input.IsPress(DIK_LEFT)) {
+				if (input.IsPress(DIK_RIGHT))angle += XMConvertToRadians(1.0f);
+				else if (input.IsPress(DIK_LEFT))angle -= XMConvertToRadians(1.0f);
 
 				eye.x = -100 * sinf(angle);
 				eye.z = -100 * cosf(angle);
@@ -648,18 +648,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 		}
 
-		if (colorFlag) {
-			color_.w = 0.1f;
+		if (!colorFlag) {
+			color_.w = 0.5f;
+
+			const float  colorSpd = 0.01f;
+
 
 			//キー操作で色を変更
-			if (input.IsPress(DIK_R)) color_.x += 0.05f;
-			else color_.x -= 0.05f;
+			if (color_.y < 0.5f) color_.x += colorSpd;
+			else color_.x -= colorSpd;
 
-			if (input.IsPress(DIK_G)) color_.y += 0.05f;
-			else color_.y -= 0.05f;
+			if (color_.z < 0.5f) color_.y += colorSpd;
+			else color_.y -= colorSpd;
 
-			if (input.IsPress(DIK_B)) color_.z += 0.05f;
-			else color_.z -= 0.05f;
+			if (color_.x < 0.5f) color_.z += colorSpd;
+			else color_.z -= colorSpd;
 
 			if (color_.x > 1.0f) {
 				color_.x = 1.0f;
@@ -681,8 +684,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			else if (color_.z < 0) {
 				color_.z = 0;
 			}
+
+
+
+			color_.x = fmodf(color_.x, 1.0f);
+			color_.y = fmodf(color_.y, 1.0f);
+			color_.z = fmodf(color_.z, 1.0f);
+
 		}
-		else color_ = { 1.0f,1.0f,1.0f,0.1f };
+		else color_ = { 1.0f,1.0f,1.0f,0.5f };
+
+
 
 		//値を書き込むと自動的に転送される
 		constMapMaterial->color = color_;
@@ -691,14 +703,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//オブジェクトの平行移動処理
 		{
 			//いずれかのキーを押していたら
-			if (input.IsPress(DIK_UP) || input.IsPress(DIK_DOWN) || input.IsPress(DIK_RIGHT) || input.IsPress(DIK_LEFT)) {
+			if (input.IsPress(DIK_W) || input.IsPress(DIK_S) || input.IsPress(DIK_A) || input.IsPress(DIK_D)) {
 				//キーで移動
-				if (input.IsPress(DIK_UP))position.z += 1.0f;
-				else if (input.IsPress(DIK_DOWN))position.z -= 1.0f;
-				if (input.IsPress(DIK_RIGHT))position.x += 1.0f;
-				else if (input.IsPress(DIK_LEFT))position.x -= 1.0f;
+				if (input.IsPress(DIK_W))object.position.z += 1.0f;
+				else if (input.IsPress(DIK_S))object.position.z -= 1.0f;
+				if (input.IsPress(DIK_D))object.position.x += 1.0f;
+				else if (input.IsPress(DIK_A))object.position.x -= 1.0f;
 
 
+			}
+		}
+
+		//オブジェクトの回転処理
+		{
+			//いずれかのキーを押していたら
+			if (input.IsPress(DIK_Q) || input.IsPress(DIK_E)) {
+				//キーで回転
+				if (input.IsPress(DIK_Q))object.rotation.y -= 0.05f;
+				else if(input.IsPress(DIK_E))object.rotation.y += 0.05f;
 			}
 		}
 
@@ -709,9 +731,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		////定数バッファに転送
 		//	constMapTransform1->mat = matWorld1 * matView * matProjection;
 
-	/*	for (int i = 0; i < _countof(obj); i++) {
+		for (int i = 0; i < _countof(obj); i++) {
 			obj[i].Update(matView, matProjection);
-		}*/
+		}
 
 		object.Update(matView, matProjection);
 
@@ -799,16 +821,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		////SRVヒープの先頭ハンドルを取得
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
 		//2枚目を指し示すようにしたSRVのハンドルをルートパラメータ1番に設定
-	/*	srvGpuHandle.ptr += incrementSize;
-		srvGpuHandle.ptr += incrementSize;*/
+
+		//0キーで画像を変える
+		if (input.IsPress(DIK_0)) {
+			srvGpuHandle.ptr += incrementSize;
+		}
+		//srvGpuHandle.ptr += incrementSize;
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-		//全オブジェクトについて処理
-		/*for (int i = 0; i < _countof(obj); i++) {
+		//	全オブジェクトについて処理
+		for (int i = 0; i < _countof(obj); i++) {
 			obj[i].Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
-		}*/
+		}
 
 		object.Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
 

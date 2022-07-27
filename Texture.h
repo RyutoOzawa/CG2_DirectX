@@ -4,6 +4,7 @@
 
 class Texture {
 public:
+
 	bool isLoadTexture = false;
 	DirectX::TexMetadata metadata{};
 	DirectX::ScratchImage scratchImg{};

@@ -15,8 +15,6 @@ class ReDirectX
 {
 public:
 	//Šeí‰Šú‰»—p•Ï”
-	ComPtr<ID3D12Debug1> debugController;
-	ComPtr<ID3D12InfoQueue> infoQueue;
 	HRESULT result;
 	ComPtr<ID3D12Device> device;
 	ComPtr<IDXGIFactory6> dxgiFactory;
