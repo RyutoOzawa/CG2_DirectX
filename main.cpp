@@ -824,9 +824,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//0キーで画像を変える
 		if (input.IsPress(DIK_0)) {
-			srvGpuHandle.ptr += incrementSize;
+		//	srvGpuHandle.ptr += incrementSize;
 		}
-		//srvGpuHandle.ptr += incrementSize;
+		
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
@@ -835,6 +835,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		for (int i = 0; i < _countof(obj); i++) {
 			obj[i].Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
 		}
+
+		srvGpuHandle.ptr += incrementSize;
+
+		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+		directX.commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
 		object.Draw(directX.commandList.Get(), vbView, ibView, _countof(indices));
 

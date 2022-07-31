@@ -77,6 +77,8 @@ void Texture::CreateSRV(ReDirectX& directX, D3D12_CPU_DESCRIPTOR_HANDLE& srvHand
 
 	//SRVを作る場所を一つ分インクリメント
 	srvHandle.ptr += incrementSize;
+	//srvのアドレスをメンバ変数に保存
+	texAdress.ptr = srvHandle.ptr;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = textureResourceDesc.Format;//RGBA float

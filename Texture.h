@@ -11,6 +11,7 @@ public:
 	DirectX::ScratchImage mipChain{};
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	D3D12_RESOURCE_DESC textureResourceDesc{};
+	D3D12_GPU_DESCRIPTOR_HANDLE  texAdress{}; //テクスチャのGPUアドレス
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
 
