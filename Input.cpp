@@ -1,8 +1,7 @@
 #include "Input.h"
 #include<wrl.h>
 
-#pragma comment(lib,"dinput8.lib")
-#pragma comment(lib,"dxguid.lib")
+
 #include<cassert>
 using namespace Microsoft::WRL;
 
@@ -10,7 +9,6 @@ void Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 {
 	HRESULT result_;
 	//DirectInputのインスタンス生成
-	ComPtr<IDirectInput8> directInput = nullptr;
 	result_ = DirectInput8Create(
 		hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput, nullptr);
@@ -39,17 +37,17 @@ void Input::Update()
 	keyboard->GetDeviceState(sizeof(key), key);
 }
 
-bool Input::IsTrigger(unsigned char key_)
+bool Input::IsTrigger(BYTE key_)
 {
 	return (key[key_] && !oldkey[key_]);
 }
 
-bool Input::IsPress(unsigned char key_)
+bool Input::IsPress(BYTE key_)
 {
 	return key[key_];
 }
 
-bool Input::IsRelease(unsigned char key_)
+bool Input::IsRelease(BYTE key_)
 {
 	return (!key[key_] && oldkey[key_]);
 }

@@ -15,6 +15,7 @@ using namespace DirectX;
 
 WindowsAPI windowsAPI;
 
+using namespace Microsoft::WRL;
 
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -29,7 +30,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	HRESULT result{};
 
 	//キーボード初期化処理
-	Input* input = nullptr;
+	Input* input = new Input();
 	input->Initialize(windowsAPI.w.hInstance,windowsAPI.hwnd);
 
 	//乱数シード生成器
@@ -824,7 +825,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//2枚目を指し示すようにしたSRVのハンドルをルートパラメータ1番に設定
 
 		//0キーで画像を変える
-		if (input.IsPress(DIK_0)) {
+		if (input->IsPress(DIK_0)) {
 		//	srvGpuHandle.ptr += incrementSize;
 		}
 		
