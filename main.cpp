@@ -25,11 +25,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// DirectX初期化処理
 	ReDirectX directX;
 	directX.Initialize(windowsAPI);
-	Input input;
+
 	HRESULT result{};
 
 	//キーボード初期化処理
-	input.Initialize(result, windowsAPI);
+	Input* input = nullptr;
+	input->Initialize(windowsAPI.w.hInstance,windowsAPI.hwnd);
 
 	//乱数シード生成器
 	std::random_device seedGem;
@@ -625,13 +626,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region DirectX毎フレーム処理
 		// DirectX毎フレーム処理 ここから
 
-		input.Update();
+		input->Update();
 
 		//カメラ回転処理
 		{
-			if (input.IsPress(DIK_RIGHT) || input.IsPress(DIK_LEFT)) {
-				if (input.IsPress(DIK_RIGHT))angle += XMConvertToRadians(1.0f);
-				else if (input.IsPress(DIK_LEFT))angle -= XMConvertToRadians(1.0f);
+			if (input->IsPress(DIK_RIGHT) || input->IsPress(DIK_LEFT)) {
+				if (input->IsPress(DIK_RIGHT))angle += XMConvertToRadians(1.0f);
+				else if (input->IsPress(DIK_LEFT))angle -= XMConvertToRadians(1.0f);
 
 				eye.x = -100 * sinf(angle);
 				eye.z = -100 * cosf(angle);
@@ -640,7 +641,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			eye.y = 25.0f;
 
-			if (input.IsTrigger(DIK_SPACE)) {
+			if (input->IsTrigger(DIK_SPACE)) {
 				if (colorFlag)colorFlag = false;
 				else colorFlag = true;
 
@@ -703,12 +704,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//オブジェクトの平行移動処理
 		{
 			//いずれかのキーを押していたら
-			if (input.IsPress(DIK_W) || input.IsPress(DIK_S) || input.IsPress(DIK_A) || input.IsPress(DIK_D)) {
+			if (input->IsPress(DIK_W) || input->IsPress(DIK_S) || input->IsPress(DIK_A) || input->IsPress(DIK_D)) {
 				//キーで移動
-				if (input.IsPress(DIK_W))object.position.z += 1.0f;
-				else if (input.IsPress(DIK_S))object.position.z -= 1.0f;
-				if (input.IsPress(DIK_D))object.position.x += 1.0f;
-				else if (input.IsPress(DIK_A))object.position.x -= 1.0f;
+				if (input->IsPress(DIK_W))object.position.z += 1.0f;
+				else if (input->IsPress(DIK_S))object.position.z -= 1.0f;
+				if (input->IsPress(DIK_D))object.position.x += 1.0f;
+				else if (input->IsPress(DIK_A))object.position.x -= 1.0f;
 
 
 			}
@@ -717,10 +718,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//オブジェクトの回転処理
 		{
 			//いずれかのキーを押していたら
-			if (input.IsPress(DIK_Q) || input.IsPress(DIK_E)) {
+			if (input->IsPress(DIK_Q) || input->IsPress(DIK_E)) {
 				//キーで回転
-				if (input.IsPress(DIK_Q))object.rotation.y -= 0.05f;
-				else if(input.IsPress(DIK_E))object.rotation.y += 0.05f;
+				if (input->IsPress(DIK_Q))object.rotation.y -= 0.05f;
+				else if(input->IsPress(DIK_E))object.rotation.y += 0.05f;
 			}
 		}
 
@@ -782,19 +783,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX.commandList->RSSetScissorRects(1, &scissorRect);
 		pipeline[0].SetPipelineState(directX.device, pipelineState);
 
-		if (input.IsPress(DIK_1)) {
+		if (input->IsPress(DIK_1)) {
 			pipeline[0].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsPress(DIK_2)) {
+		else if (input->IsPress(DIK_2)) {
 			pipeline[1].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsPress(DIK_3)) {
+		else if (input->IsPress(DIK_3)) {
 			pipeline[2].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsPress(DIK_4)) {
+		else if (input->IsPress(DIK_4)) {
 			pipeline[3].SetPipelineState(directX.device, pipelineState);
 		}
-		else if (input.IsPress(DIK_5)) {
+		else if (input->IsPress(DIK_5)) {
 			pipeline[4].SetPipelineState(directX.device, pipelineState);
 		}
 
@@ -891,6 +892,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//コンソールへの文字入力
 	//OutputDebugStringA("Hello,DirectX!!");
+
+	delete input;
 
 	return 0;
 } 

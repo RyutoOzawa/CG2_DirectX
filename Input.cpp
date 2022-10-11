@@ -1,13 +1,25 @@
 #include "Input.h"
+#include<wrl.h>
+#define DIRECTINPUT_VERSION 0x0800		//DirectInputのバージョン指定
+#include<dinput.h>
+#pragma comment(lib,"dinput8.lib")
+#pragma comment(lib,"dxguid.lib")
+#include<cassert>
+using namespace Microsoft::WRL;
 
-
-void Input::Initialize(HRESULT result_,WindowsAPI windowsAPI_)
+void Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 {
+	HRESULT result_;
+
+	//DirectInputのインスタンス生成
+	ComPtr<IDirectInput8> directInput = nullptr;
 	result_ = DirectInput8Create(
-		windowsAPI_.w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
+		hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result_));
 
+	//キーボードデバイス生成
+	ComPtr<IDirectInputDevice8> keyboard;
 	result_ = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	assert(SUCCEEDED(result_));
 
@@ -17,7 +29,7 @@ void Input::Initialize(HRESULT result_,WindowsAPI windowsAPI_)
 
 	//排他制御レベルのセット
 	result_ = keyboard->SetCooperativeLevel(
-		windowsAPI_.hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+		hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result_));
 }
 
