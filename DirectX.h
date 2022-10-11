@@ -8,7 +8,7 @@
 #pragma comment(lib, "dxgi.lib")
 #include"WindowsAPI.h"
 #include<wrl.h>
-using namespace Microsoft::WRL;
+//using namespace Microsoft::WRL;
 
 
 class ReDirectX
@@ -16,6 +16,10 @@ class ReDirectX
 public:
 	//Šeí‰Šú‰»—p•Ï”
 	HRESULT result;
+
+	//namespaceÈ—ª
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 	ComPtr<ID3D12Device> device;
 	ComPtr<IDXGIFactory6> dxgiFactory;
 	ComPtr<IDXGISwapChain4> swapChain;
