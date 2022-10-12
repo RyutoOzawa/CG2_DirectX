@@ -5,12 +5,15 @@
 #include<cassert>
 using namespace Microsoft::WRL;
 
-void Input::Initialize(HINSTANCE hInstance, HWND hwnd)
+void Input::Initialize(WindowsAPI* windowsApi)
 {
 	HRESULT result_;
+	//借りてきたWinAppのインスタンスを記録
+	this->windowsApi = windowsApi;
+
 	//DirectInputのインスタンス生成
 	result_ = DirectInput8Create(
-		hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
+		windowsApi->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput, nullptr);
 	assert(SUCCEEDED(result_));
 	//キーボードデバイス生成
@@ -21,7 +24,7 @@ void Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	assert(SUCCEEDED(result_));
 	//排他制御レベルのセット
 	result_ = keyboard->SetCooperativeLevel(
-		hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+		windowsApi->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result_));
 }
 

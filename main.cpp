@@ -13,7 +13,7 @@ using namespace DirectX;
 #include"Gridline.h"
 
 
-WindowsAPI windowsAPI;
+
 
 using namespace Microsoft::WRL;
 
@@ -21,17 +21,18 @@ using namespace Microsoft::WRL;
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//windowsAPI初期化処理
-	windowsAPI.Initialize();
+	WindowsAPI* windowsAPI = new WindowsAPI();
+	windowsAPI->Initialize();
 
 	// DirectX初期化処理
 	ReDirectX directX;
-	directX.Initialize(windowsAPI);
+	directX.Initialize(windowsAPI->GetHwnd());
 
 	HRESULT result{};
 
 	//キーボード初期化処理
 	Input* input = new Input();
-	input->Initialize(windowsAPI.w.hInstance,windowsAPI.hwnd);
+	input->Initialize(windowsAPI);
 
 	//乱数シード生成器
 	std::random_device seedGem;
@@ -115,7 +116,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//専用の行列を宣言
 	matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),					//上下画角45度
-		(float)windowsAPI.winW / windowsAPI.winH,	//アスペクト比（画面横幅/画面縦幅）
+		(float)WindowsAPI::winW / WindowsAPI::winH,	//アスペクト比（画面横幅/画面縦幅）
 		0.1f, 1000.0f								//前橋、奥橋
 	);
 
@@ -612,17 +613,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ゲームループ
 	while (true) {
 
-#pragma region ウィンドウメッセージ処理
-		// メッセージがある?
-		if (PeekMessage(&windowsAPI.msg, nullptr, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&windowsAPI.msg); // キー入力メッセージの処理
-			DispatchMessage(&windowsAPI.msg); // プロシージャにメッセージを送る
-		}
-		// ✖ボタンで終了メッセージが来たらゲームループを抜ける
-		if (windowsAPI.msg.message == WM_QUIT) {
+		//windowsのメッセージ処理
+		if (windowsAPI->ProcessMessage()) {
+			//ループを抜ける
 			break;
 		}
-#pragma endregion
 
 #pragma region DirectX毎フレーム処理
 		// DirectX毎フレーム処理 ここから
@@ -765,8 +760,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region グラフィックスコマンド
 // ビューポート設定コマンド
 		D3D12_VIEWPORT viewport{};
-		viewport.Width = windowsAPI.winW;
-		viewport.Height = windowsAPI.winH;
+		viewport.Width = WindowsAPI::winW;
+		viewport.Height = WindowsAPI::winH;
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
 		viewport.MinDepth = 0.0f;
@@ -777,9 +772,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// シザー矩形
 		D3D12_RECT scissorRect{};
 		scissorRect.left = 0; // 切り抜き座標左
-		scissorRect.right = scissorRect.left + windowsAPI.winW; // 切り抜き座標右
+		scissorRect.right = scissorRect.left + WindowsAPI::winW; // 切り抜き座標右
 		scissorRect.top = 0; // 切り抜き座標上
-		scissorRect.bottom = scissorRect.top + windowsAPI.winH; // 切り抜き座標下
+		scissorRect.bottom = scissorRect.top + WindowsAPI::winH; // 切り抜き座標下
 		// シザー矩形設定コマンドを、コマンドリストに積む
 		directX.commandList->RSSetScissorRects(1, &scissorRect);
 		pipeline[0].SetPipelineState(directX.device, pipelineState);
@@ -888,12 +883,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
 	}
-	// ウィンドウクラスを登録解除
-	UnregisterClass(windowsAPI.w.lpszClassName, windowsAPI.w.hInstance);
+	
+	//WindowsAPI終了処理
+	windowsAPI->Finalize();
 
-	//コンソールへの文字入力
-	//OutputDebugStringA("Hello,DirectX!!");
-
+	delete windowsAPI;
 	delete input;
 
 	return 0;

@@ -43,7 +43,7 @@ public:
 
 public:
 	//初期化
-	void Initialize(WindowsAPI windowsAPI);
+	void Initialize(HWND hwnd);
 	//更新処理(毎フレーム処理)
 	void Update();
 };

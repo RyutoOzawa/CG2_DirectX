@@ -1,7 +1,7 @@
 #include "DirectX.h"
 #include"WindowsAPI.h"
 
-void ReDirectX::Initialize(WindowsAPI windowsAPI)
+void ReDirectX::Initialize(HWND hwnd)
 {
 #ifdef _DEBUG
 	//デバッグレイヤーをオンに
@@ -100,7 +100,7 @@ void ReDirectX::Initialize(WindowsAPI windowsAPI)
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
 		commandQueue.Get(),
-		windowsAPI.hwnd,
+		hwnd,
 		&swapChainDesc, 
 		nullptr, nullptr,
 		(IDXGISwapChain1**)&swapChain1);
@@ -137,8 +137,8 @@ void ReDirectX::Initialize(WindowsAPI windowsAPI)
 
 
 	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthResourceDesc.Width = windowsAPI.winW;	//レンダーターゲットに合わせる
-	depthResourceDesc.Height = windowsAPI.winH;	//レンダーターゲットに合わせる
+	depthResourceDesc.Width =WindowsAPI::winW;	//レンダーターゲットに合わせる
+	depthResourceDesc.Height = WindowsAPI::winH;	//レンダーターゲットに合わせる
 	depthResourceDesc.DepthOrArraySize = 1;
 	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT;	//	深度値フォーマット
 	depthResourceDesc.SampleDesc.Count = 1;

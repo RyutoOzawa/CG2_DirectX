@@ -54,3 +54,24 @@ void WindowsAPI::Initialize()
 		// ウィンドウを表示状態にする
 	ShowWindow(hwnd, SW_SHOW);
 }
+
+
+void WindowsAPI::Finalize() {
+	// ウィンドウクラスを登録解除
+	UnregisterClass(w.lpszClassName, w.hInstance);
+}
+
+bool WindowsAPI::ProcessMessage() {
+	MSG msg{};//メッセージ
+
+	// メッセージがある?
+	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+		TranslateMessage(&msg); // キー入力メッセージの処理
+		DispatchMessage(&msg); // プロシージャにメッセージを送る
+	}
+	// ?ボタンで終了メッセージが来たらゲームループを抜ける
+	if (msg.message == WM_QUIT) {
+		return true;
+	}
+	return false;
+}
