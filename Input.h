@@ -13,11 +13,10 @@
 class Input
 {
 public:
-	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-	ComPtr<IDirectInput8> directInput = nullptr;
-	ComPtr<IDirectInputDevice8> keyboard;
+	Microsoft::WRL::ComPtr<IDirectInput8> directInput = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard;
 	BYTE key[256]{};
 	BYTE oldkey[256]{};
 

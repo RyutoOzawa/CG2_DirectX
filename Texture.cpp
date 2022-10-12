@@ -2,6 +2,7 @@
 #include<string.h>
 #include<cassert>
 using namespace DirectX;
+using namespace Microsoft::WRL;
 
 
 void Texture::LoadTexture(const wchar_t texture[])
@@ -14,7 +15,7 @@ void Texture::LoadTexture(const wchar_t texture[])
 	if (!isLoadTexture)isLoadTexture = true;
 }
 
-void Texture::Initialize(ReDirectX& directX)
+void Texture::Initialize(ComPtr<ID3D12Device> device)
 {
 	if (isLoadTexture) {
 		HRESULT result;
@@ -31,11 +32,13 @@ void Texture::Initialize(ReDirectX& directX)
 		metadata.format = MakeSRGB(metadata.format);
 
 		//ヒープ設定
+		D3D12_HEAP_PROPERTIES textureHeapProp{};
 		textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
 		textureHeapProp.CPUPageProperty =
 			D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 		textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 		//リソース設定
+	
 		textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 		textureResourceDesc.Format = metadata.format;
 		textureResourceDesc.Width = metadata.width;	// 幅
@@ -44,7 +47,7 @@ void Texture::Initialize(ReDirectX& directX)
 		textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
 		textureResourceDesc.SampleDesc.Count = 1;
 
-		result = directX.device->CreateCommittedResource(
+		result = device->CreateCommittedResource(
 			&textureHeapProp,
 			D3D12_HEAP_FLAG_NONE,
 			&textureResourceDesc,
@@ -70,9 +73,9 @@ void Texture::Initialize(ReDirectX& directX)
 	}
 }
 
-void Texture::CreateSRV(ReDirectX& directX, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
+void Texture::CreateSRV(ComPtr<ID3D12Device> device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
 {
-	UINT incrementSize = directX.device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 
 	//SRVを作る場所を一つ分インクリメント
@@ -88,5 +91,5 @@ void Texture::CreateSRV(ReDirectX& directX, D3D12_CPU_DESCRIPTOR_HANDLE& srvHand
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	directX.device->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
+	device->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
 }

@@ -9,7 +9,7 @@ public:
 	DirectX::TexMetadata metadata{};
 	DirectX::ScratchImage scratchImg{};
 	DirectX::ScratchImage mipChain{};
-	D3D12_HEAP_PROPERTIES textureHeapProp{};
+
 	D3D12_RESOURCE_DESC textureResourceDesc{};
 	D3D12_GPU_DESCRIPTOR_HANDLE  texAdress{}; //テクスチャのGPUアドレス
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
@@ -17,6 +17,6 @@ public:
 
 public:
 	void LoadTexture(const wchar_t texture[]);
-	void Initialize(ReDirectX& directX);
-	void CreateSRV(ReDirectX& directX, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
+	void Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
+	void CreateSRV(Microsoft::WRL::ComPtr<ID3D12Device> device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 };

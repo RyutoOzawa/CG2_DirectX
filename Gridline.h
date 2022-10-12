@@ -16,13 +16,13 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform;	//定数バッファマップ（行列用）
 	ConstBufferDataTransform* constMapTransform = nullptr;	//定数バッファマップ（行列用）
 
-	ComPtr<ID3D12Resource> vertBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;
 
 	std::vector<Vertex> vertices;	//頂点データ
 
 	D3D12_VERTEX_BUFFER_VIEW vbview{};	//頂点バッファビュー
 
-	void Initialize(ReDirectX directX, int lineNum, Microsoft::WRL::ComPtr<ID3D12Resource> texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
+	void Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device, int lineNum, Microsoft::WRL::ComPtr<ID3D12Resource> texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 
 	void Draw(ID3D12GraphicsCommandList* commandList, ID3D12DescriptorHeap* srvheaps);
 

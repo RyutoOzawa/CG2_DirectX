@@ -1,7 +1,7 @@
 #include "Gridline.h"
 using namespace Microsoft::WRL;
 
-void Gridline::Initialize(ReDirectX directX, int lineNum,ComPtr<ID3D12Resource> texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
+void Gridline::Initialize(ComPtr<ID3D12Device> device, int lineNum,ComPtr<ID3D12Resource> texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
 {
 	HRESULT result;
 
@@ -40,7 +40,7 @@ void Gridline::Initialize(ReDirectX directX, int lineNum,ComPtr<ID3D12Resource> 
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
 
 	// 頂点バッファの生成
-	result = directX.device->CreateCommittedResource(
+	result = device->CreateCommittedResource(
 		&heapProp, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc, // リソース設定
@@ -80,7 +80,7 @@ void Gridline::Initialize(ReDirectX directX, int lineNum,ComPtr<ID3D12Resource> 
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//定数バッファの生成
-	result = directX.device->CreateCommittedResource(
+	result =device->CreateCommittedResource(
 		&cbHeapProp,//ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
 		&cbResourceDesc,//リソース設定

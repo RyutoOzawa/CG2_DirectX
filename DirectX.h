@@ -1,14 +1,10 @@
 #pragma once
 #include <d3d12.h>
 #include <dxgi1_6.h>
-#include <cassert>
-#include <vector>
-#include <string>
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
-#include"WindowsAPI.h"
 #include<wrl.h>
-using namespace Microsoft::WRL;
+#include"WindowsAPI.h"
+#include<vector>
+
 
 
 class ReDirectX
@@ -17,34 +13,48 @@ public:
 	//各種初期化用変数
 	HRESULT result;
 
-	//namespace省略
-	//template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-	ComPtr<ID3D12Device> device;
-	ComPtr<IDXGIFactory6> dxgiFactory;
-	ComPtr<IDXGISwapChain4> swapChain;
-	ComPtr<ID3D12CommandAllocator> commandAllocator;
-	ComPtr<ID3D12GraphicsCommandList> commandList;
-	ComPtr<ID3D12CommandQueue> commandQueue;
-	ComPtr<ID3D12DescriptorHeap> rtvHeap;
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
+	Microsoft::WRL::ComPtr<ID3D12Device> device;
+	Microsoft::WRL::ComPtr<IDXGIFactory6> dxgiFactory;
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue;
+	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
-	std::vector<ComPtr<ID3D12Resource>> backBuffers;
-	ComPtr<ID3D12Fence> fence;
-	UINT64 fenceVal = 0;
-	D3D12_RESOURCE_DESC depthResourceDesc{  };
-	D3D12_HEAP_PROPERTIES depthHeapProp{};
-	D3D12_CLEAR_VALUE depthClearValue{};
-	ComPtr<ID3D12Resource> depthBuff;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap;
+	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff;
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
-	ComPtr<ID3D12DescriptorHeap> dsvHeap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+	UINT64 fenceVal = 0;
+private:
+	//WIndowsAPI
+	WindowsAPI* windowsAPI = nullptr;
+
 
 public:
 	//初期化
-	void Initialize(HWND hwnd);
-	//更新処理(毎フレーム処理)
-	void Update();
+	void Initialize(WindowsAPI* windowsAPI);
+
+	//描画前処理(毎フレーム処理)
+	void BeginDraw();
+
+	//描画後処理(舞フレーム処理)
+	void EndDraw();
+
+	//デバイス取得
+	ID3D12Device* GetDevice() { return device.Get(); }
+	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
+private:
+	void InitializeDevice();
+	void InitializeCommand();
+	void InitializeSwapChain();
+	void InitializeRTV();
+	void InitializeDepthBuff();
+	void InitializeFence();
+
 };
 

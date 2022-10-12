@@ -1,5 +1,5 @@
 #include "GpPipeline.h"
-
+#include<cassert>
 
 
 void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode, int primitiveNum)
@@ -90,7 +90,7 @@ void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode, 
 	}
 	}
 
-	
+
 
 	// 頂点レイアウトの設定
 	desc.InputLayout.pInputElementDescs = inputLayout.data();
