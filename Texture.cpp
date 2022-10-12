@@ -1,6 +1,8 @@
 #include "Texture.h"
 #include<string.h>
 #include<cassert>
+#include"Util.h"
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -12,13 +14,18 @@ void Texture::LoadTexture(const wchar_t texture[])
 		texture,
 		WIC_FLAGS_NONE,
 		&metadata, scratchImg);
-	if (!isLoadTexture)isLoadTexture = true;
+
+	if (result == S_OK) {
+		if (!isLoadTexture)isLoadTexture = true;
+	}
+
 }
 
 void Texture::Initialize(ComPtr<ID3D12Device> device)
 {
+	HRESULT result;
 	if (isLoadTexture) {
-		HRESULT result;
+	
 		//ミップマップ生成
 		result = GenerateMipMaps(
 			scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
@@ -38,7 +45,6 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 			D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 		textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 		//リソース設定
-	
 		textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 		textureResourceDesc.Format = metadata.format;
 		textureResourceDesc.Width = metadata.width;	// 幅
@@ -70,6 +76,58 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 			assert(SUCCEEDED(result));
 		}
 
+	}
+	else {
+		//画像が読み込まれて以内なら256*256のランダムの色のピクセルの画像データを入れる	////横方向ピクセル数
+		const size_t textureWidth = 256;
+		//縦方向ピクセル数
+		const size_t textureHeight = 256;
+		//配列の要素数
+		const size_t imageDataCount = textureWidth * textureHeight;
+		//画像イメージデータ配列
+		XMFLOAT4* imageData = new XMFLOAT4[imageDataCount]; //※必ず後で開放する
+
+		//全ピクセルの色を初期化
+		for (size_t i = 0; i < imageDataCount; i++) {
+			imageData[i].x =Random(0.0f,1.0f);	// R
+			imageData[i].y =Random(0.0f,1.0f); // G
+			imageData[i].z =Random(0.0f,1.0f); // B
+			imageData[i].w =Random(0.0f,1.0f); // A
+		}
+
+		//ヒープ設定
+		D3D12_HEAP_PROPERTIES textureHeapProp{};
+		textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+		textureHeapProp.CPUPageProperty =
+			D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+		textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+		//リソース設定
+		textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		textureResourceDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		textureResourceDesc.Width = textureWidth;	// 幅
+		textureResourceDesc.Height = textureHeight;	// 高さ
+		textureResourceDesc.DepthOrArraySize = 1;
+		textureResourceDesc.MipLevels = 1;
+		textureResourceDesc.SampleDesc.Count = 1;
+
+		result = device->CreateCommittedResource(
+			&textureHeapProp,
+			D3D12_HEAP_FLAG_NONE,
+			&textureResourceDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&texBuff));
+
+		//テクスチャバッファにデータ転送
+		result = texBuff->WriteToSubresource(
+			0,
+			nullptr,				//全領域へコピー
+			imageData,			//元データアドレス
+			sizeof(XMFLOAT4) *textureWidth,	//1ラインサイズ
+			sizeof(XMFLOAT4) *imageDataCount 	//全サイズ
+		);
+
+		delete[] imageData;
 	}
 }
 

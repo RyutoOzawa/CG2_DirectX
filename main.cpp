@@ -7,11 +7,11 @@ using namespace DirectX;
 //#include"WindowsAPI.h"
 //#include"DirectX.h"
 #include"Object3d.h"
-#include <random>
+#include"Util.h"
 #include"Texture.h"
 #include"GpPipeline.h"
 #include"Gridline.h"
-
+#include<string>
 
 
 
@@ -34,15 +34,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Input* input = new Input();
 	input->Initialize(windowsAPI);
 
-	//乱数シード生成器
-	std::random_device seedGem;
-	//メルセンヌ・ツイスターの乱数エンジン
-	std::mt19937_64 engine(seedGem());
-	//乱数範囲の指定
-	std::uniform_real_distribution<float> dist(-100, 100);
+
 
 	//ランダムな数値を取得
-	float value = dist(engine);
+	float randValue = Random(-100,100);
 
 #pragma region 描画初期化処理
 
@@ -106,7 +101,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//親に対してZ軸に30度回転
 		obj[i].rotation = { 0.0f,0.0f,0.0f };
 		//親に対してZ方向-8.0ずらす
-		obj[i].position = { dist(engine),dist(engine),dist(engine) };
+		obj[i].position = { Random(-100, 100),Random(-100, 100),Random(-100, 100) };
 
 	}
 
@@ -139,22 +134,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//値を書き込むと自動的に転送される
 	constMapMaterial->color = color_;		//RGBAで半透明の赤
 
-	////横方向ピクセル数
-	//const size_t textureWidth = 256;
-	////縦方向ピクセル数
-	//const size_t textureHeight = 256;
-	////配列の要素数
-	//const size_t imageDataCount = textureWidth * textureHeight;
-	////画像イメージデータ配列
-	//XMFLOAT4* imageData = new XMFLOAT4[imageDataCount]; //※必ず後で開放する
 
-	////全ピクセルの色を初期化
-	//for (size_t i = 0; i < imageDataCount; i++) {
-	//	imageData[i].x = 1.0f;	// R
-	//	imageData[i].y = 0.0f;	// G
-	//	imageData[i].z = 0.0f;	// B
-	//	imageData[i].w = 1.0f;	// A
-	//}
 
 	TexMetadata metadata{  };
 	ScratchImage scratchImg{};
@@ -245,9 +225,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	result = directX->GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
-
-
-
 	//頂点データ構造体
 	struct Vertex {
 		XMFLOAT3 pos;//xyz座標
