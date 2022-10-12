@@ -136,70 +136,75 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-	TexMetadata metadata{  };
-	ScratchImage scratchImg{};
-	//WICテクスチャのロード
-	result = LoadFromWICFile(
-		L"Resources/mario.jpg",	//「Resourcesq」フォルダの「mario.jpg」
-		WIC_FLAGS_NONE,
-		&metadata, scratchImg
-	);
+	//TexMetadata metadata{  };
+	//ScratchImage scratchImg{};
+	////WICテクスチャのロード
+	//result = LoadFromWICFile(
+	//	L"Resources/mario.jpg",	//「Resourcesq」フォルダの「mario.jpg」
+	//	WIC_FLAGS_NONE,
+	//	&metadata, scratchImg
+	//);
 
 
-	ScratchImage mipChain{};
-	//ミップマップ生成
-	result = GenerateMipMaps(
-		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-		TEX_FILTER_DEFAULT, 0, mipChain);
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
-	}
+	//ScratchImage mipChain{};
+	////ミップマップ生成
+	//result = GenerateMipMaps(
+	//	scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+	//	TEX_FILTER_DEFAULT, 0, mipChain);
+	//if (SUCCEEDED(result)) {
+	//	scratchImg = std::move(mipChain);
+	//	metadata = scratchImg.GetMetadata();
+	//}
 
-	//読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata.format = MakeSRGB(metadata.format);
+	////読み込んだディフューズテクスチャをSRGBとして扱う
+	//metadata.format = MakeSRGB(metadata.format);
 
 
-	//ヒープ設定
-	D3D12_HEAP_PROPERTIES textureHeapProp{};
-	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
-	textureHeapProp.CPUPageProperty =
-		D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	//リソース設定
-	D3D12_RESOURCE_DESC textureResourceDesc{};
-	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	textureResourceDesc.Format = metadata.format;
-	textureResourceDesc.Width = metadata.width;	// 幅
-	textureResourceDesc.Height = (UINT)metadata.height;	// 高さ
-	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
-	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
-	textureResourceDesc.SampleDesc.Count = 1;
+	////ヒープ設定
+	//D3D12_HEAP_PROPERTIES textureHeapProp{};
+	//textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	//textureHeapProp.CPUPageProperty =
+	//	D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	//textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	////リソース設定
+	//D3D12_RESOURCE_DESC textureResourceDesc{};
+	//textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	//textureResourceDesc.Format = metadata.format;
+	//textureResourceDesc.Width = metadata.width;	// 幅
+	//textureResourceDesc.Height = (UINT)metadata.height;	// 高さ
+	//textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
+	//textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
+	//textureResourceDesc.SampleDesc.Count = 1;
 
-	//テクスチャバッファの生成
-	ComPtr<ID3D12Resource> texBuff;
-	result = directX->GetDevice()->CreateCommittedResource(
-		&textureHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&textureResourceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&texBuff));
+	////テクスチャバッファの生成
+	//ComPtr<ID3D12Resource> texBuff;
+	//result = directX->GetDevice()->CreateCommittedResource(
+	//	&textureHeapProp,
+	//	D3D12_HEAP_FLAG_NONE,
+	//	&textureResourceDesc,
+	//	D3D12_RESOURCE_STATE_GENERIC_READ,
+	//	nullptr,
+	//	IID_PPV_ARGS(&texBuff));
 
-	//全ミップマップについて
-	for (size_t i = 0; i < metadata.mipLevels; i++) {
-		//ミップマップレベルを指定してイメージを取得
-		const Image* img = scratchImg.GetImage(i, 0, 0);
-		//テクスチャバッファにデータ転送
-		result = texBuff->WriteToSubresource(
-			(UINT)i,
-			nullptr,				//全領域へコピー
-			img->pixels,			//元データアドレス
-			(UINT)img->rowPitch,	//1ラインサイズ
-			(UINT)img->slicePitch	//全サイズ
-		);
-		assert(SUCCEEDED(result));
-	}
+	////全ミップマップについて
+	//for (size_t i = 0; i < metadata.mipLevels; i++) {
+	//	//ミップマップレベルを指定してイメージを取得
+	//	const Image* img = scratchImg.GetImage(i, 0, 0);
+	//	//テクスチャバッファにデータ転送
+	//	result = texBuff->WriteToSubresource(
+	//		(UINT)i,
+	//		nullptr,				//全領域へコピー
+	//		img->pixels,			//元データアドレス
+	//		(UINT)img->rowPitch,	//1ラインサイズ
+	//		(UINT)img->slicePitch	//全サイズ
+	//	);
+	//	assert(SUCCEEDED(result));
+	//}
+
+
+	Texture texture1;
+	texture1.LoadTexture(L"Resources/mario.jpg");
+	texture1.Initialize(directX->GetDevice());
 
 	Texture texture2;
 	texture2.LoadTexture(L"Resources/reimu.png");
@@ -208,6 +213,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Texture texture3;
 	texture3.LoadTexture(L"Resources/orangeBlock.png");
 	texture3.Initialize(directX->GetDevice());
+
+	ComPtr<ID3D12Resource> texBuff;
+	texBuff = texture1.texBuff;
 
 	//元データ開放
 	//delete[] imageData;
@@ -329,7 +337,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//GetDescriptorHandIncrementSizeの引数はD3D12_DESCRIPTOR_HEAP_TYPE
 	//Heapの種類によってDescriptorのサイズは異なる(異なってもいいという仕様)
 	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+	texture1.CreateSRV(directX->GetDevice(), srvHandle);
 	//srvHandle.ptr += incrementSize;
 	texture2.CreateSRV(directX->GetDevice(), srvHandle);
 	//srvHandle.ptr += incrementSize;
@@ -492,7 +500,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Gridline gridline{};
 	gridline.start = { -100.0f,0.0f,-100.0f };
 	gridline.end = { 100.0f,0.0f,100.0f };
-	gridline.Initialize(directX->GetDevice(), 30, texBuff, srvHandle);
+	gridline.Initialize(directX->GetDevice(), 30, srvHandle);
 
 	const int pipelineMax = 5;
 

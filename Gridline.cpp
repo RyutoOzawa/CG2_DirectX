@@ -1,7 +1,7 @@
 #include "Gridline.h"
 using namespace Microsoft::WRL;
 
-void Gridline::Initialize(ComPtr<ID3D12Device> device, int lineNum,ComPtr<ID3D12Resource> texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
+void Gridline::Initialize(ComPtr<ID3D12Device> device, int lineNum, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
 {
 	HRESULT result;
 
