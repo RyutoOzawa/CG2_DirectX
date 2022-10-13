@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 	//ランダムな数値を取得
-	float randValue = Random(-100,100);
+	float randValue = Random(-100, 100);
 
 #pragma region 描画初期化処理
 
@@ -91,18 +91,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//初期化
 		obj[i].Initialize(directX->GetDevice());
 
-		//親子構造のサンプル
-		//先頭以外なら
-
-			//ひとつ前のオブジェクトを親とする
-			//obj[i].parent = &obj[i - 1];
-			//親の9割の大きさ
 		obj[i].scale = { 1,1,1 };
-		//親に対してZ軸に30度回転
 		obj[i].rotation = { 0.0f,0.0f,0.0f };
-		//親に対してZ方向-8.0ずらす
 		obj[i].position = { Random(-100, 100),Random(-100, 100),Random(-100, 100) };
-
 	}
 
 	object.Initialize(directX->GetDevice());
@@ -135,73 +126,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	constMapMaterial->color = color_;		//RGBAで半透明の赤
 
 
-
-	//TexMetadata metadata{  };
-	//ScratchImage scratchImg{};
-	////WICテクスチャのロード
-	//result = LoadFromWICFile(
-	//	L"Resources/mario.jpg",	//「Resourcesq」フォルダの「mario.jpg」
-	//	WIC_FLAGS_NONE,
-	//	&metadata, scratchImg
-	//);
-
-
-	//ScratchImage mipChain{};
-	////ミップマップ生成
-	//result = GenerateMipMaps(
-	//	scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-	//	TEX_FILTER_DEFAULT, 0, mipChain);
-	//if (SUCCEEDED(result)) {
-	//	scratchImg = std::move(mipChain);
-	//	metadata = scratchImg.GetMetadata();
-	//}
-
-	////読み込んだディフューズテクスチャをSRGBとして扱う
-	//metadata.format = MakeSRGB(metadata.format);
-
-
-	////ヒープ設定
-	//D3D12_HEAP_PROPERTIES textureHeapProp{};
-	//textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
-	//textureHeapProp.CPUPageProperty =
-	//	D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	//textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	////リソース設定
-	//D3D12_RESOURCE_DESC textureResourceDesc{};
-	//textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	//textureResourceDesc.Format = metadata.format;
-	//textureResourceDesc.Width = metadata.width;	// 幅
-	//textureResourceDesc.Height = (UINT)metadata.height;	// 高さ
-	//textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
-	//textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
-	//textureResourceDesc.SampleDesc.Count = 1;
-
-	////テクスチャバッファの生成
-	//ComPtr<ID3D12Resource> texBuff;
-	//result = directX->GetDevice()->CreateCommittedResource(
-	//	&textureHeapProp,
-	//	D3D12_HEAP_FLAG_NONE,
-	//	&textureResourceDesc,
-	//	D3D12_RESOURCE_STATE_GENERIC_READ,
-	//	nullptr,
-	//	IID_PPV_ARGS(&texBuff));
-
-	////全ミップマップについて
-	//for (size_t i = 0; i < metadata.mipLevels; i++) {
-	//	//ミップマップレベルを指定してイメージを取得
-	//	const Image* img = scratchImg.GetImage(i, 0, 0);
-	//	//テクスチャバッファにデータ転送
-	//	result = texBuff->WriteToSubresource(
-	//		(UINT)i,
-	//		nullptr,				//全領域へコピー
-	//		img->pixels,			//元データアドレス
-	//		(UINT)img->rowPitch,	//1ラインサイズ
-	//		(UINT)img->slicePitch	//全サイズ
-	//	);
-	//	assert(SUCCEEDED(result));
-	//}
-
-
 	Texture texture1;
 	texture1.LoadTexture(L"Resources/mario.jpg");
 	texture1.Initialize(directX->GetDevice());
@@ -216,9 +140,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	ComPtr<ID3D12Resource> texBuff;
 	texBuff = texture1.texBuff;
-
-	//元データ開放
-	//delete[] imageData;
 
 	//SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
@@ -238,14 +159,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		XMFLOAT3 pos;//xyz座標
 		XMFLOAT3 normal;//法線ベクトル
 		XMFLOAT2 uv;//uv座標
-	};
-
-	//3角形用の頂点データ
-	Vertex triangleVertices[]{
-		{{-5.0f, 5.0f,-10.0f}, {},{0.0f,0.0f}}, // 左下
-		{{ 5.0f, 5.0f,-10.0f}, {},{0.0f,0.0f}}, // 左上
-		{{ 0.0f,-5.0f,-10.0f}, {},{0.0f,0.0f}}, // 右下
-
 	};
 
 	// 頂点データ
@@ -694,7 +607,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (input->IsPress(DIK_Q) || input->IsPress(DIK_E)) {
 				//キーで回転
 				if (input->IsPress(DIK_Q))object.rotation.y -= 0.05f;
-				else if(input->IsPress(DIK_E))object.rotation.y += 0.05f;
+				else if (input->IsPress(DIK_E))object.rotation.y += 0.05f;
 			}
 		}
 
@@ -742,7 +655,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
 
 		// 頂点バッファビューの設定コマンド
-		directX->GetCommandList() ->IASetVertexBuffers(0, 1, &vbView);
+		directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 
 		//インデックスバッファビューの設定コマンド
 		directX->GetCommandList()->IASetIndexBuffer(&ibView);
@@ -759,7 +672,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//0キーで画像を変える
 		if (input->IsPress(DIK_0)) {
-		//	srvGpuHandle.ptr += incrementSize;
+			//	srvGpuHandle.ptr += incrementSize;
 		}
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
@@ -791,7 +704,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
 	}
-	
+
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
 
@@ -800,7 +713,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete directX;
 
 	return 0;
-} 
+}
 
 void MatrixUpdate()
 {
