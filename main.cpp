@@ -12,10 +12,20 @@ using namespace DirectX;
 #include"GpPipeline.h"
 #include"Gridline.h"
 #include<string>
-
-
-
 using namespace Microsoft::WRL;
+
+
+//パイプラインステートとルートシグネチャのセット
+struct PipelineSet {
+	//パイプラインステートオブジェクト
+	ComPtr<ID3D12PipelineState> pipelineState;
+	//ルートシグネチャ
+	ComPtr<ID3D12RootSignature> rootsignature;
+};
+
+PipelineSet CreatepipeLine3D(ID3D12Device* dev);
+
+
 
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -363,6 +373,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ID3DBlob* vsBlob = nullptr; // 頂点シェーダオブジェクト
 	ID3DBlob* psBlob = nullptr; // ピクセルシェーダオブジェクト
 	ID3DBlob* errorBlob = nullptr; // エラーオブジェクト
+
+
+	//-----ココからスプライトと3Dオブジェクトでコピーを作る-----//
+
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
 		L"Resources/shaders/BasicVS.hlsl", // シェーダファイル名
@@ -385,6 +399,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
+
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -498,6 +513,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//pipelineState = pipeline1.state;
 	/*result = directX->device->CreateGraphicsPipelineState(&pipeline1.desc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));*/
+
+	//-----ココまでスプライトと3Dオブジェクトでコピーを作る-----//
+
 #pragma endregion
 
 
@@ -717,4 +735,66 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 void MatrixUpdate()
 {
+}
+
+PipelineSet CreatepipeLine3D(ID3D12Device* dev)
+{
+
+	HRESULT result;
+
+	ComPtr<ID3DBlob> vsBlob;		// 頂点シェーダオブジェクト
+	ComPtr<ID3DBlob> psBlob;		// ピクセルシェーダオブジェクト
+	ComPtr<ID3DBlob> errorBlob;	// エラーオブジェクト
+
+	// 頂点シェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/BasicVS.hlsl", // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "vs_5_0", // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&vsBlob, &errorBlob);
+	// エラーなら
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+
+
+	// ピクセルシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/BasicPS.hlsl", // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&psBlob, &errorBlob);
+	// エラーなら
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+
+
+
+
+	return PipelineSet();
 }
