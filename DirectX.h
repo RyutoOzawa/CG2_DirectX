@@ -49,6 +49,8 @@ public:
 	ID3D12Device* GetDevice() { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
 private:
+
+	//Šeí‰Šú‰»ŠÖ”
 	void InitializeDevice();
 	void InitializeCommand();
 	void InitializeSwapChain();
@@ -56,5 +58,9 @@ private:
 	void InitializeDepthBuff();
 	void InitializeFence();
 
+	//FPS‰Šú‰»
+	void InitializeFixFPS();
+	//FPSXV
+	void UpdateFixFPS();
 };
 

@@ -7,6 +7,8 @@ using namespace Microsoft::WRL;
 
 void ReDirectX::Initialize(WindowsAPI* windowsAPI)
 {
+	//FPS‰Šú‰»
+	//InitializeFixFPS();
 
 	assert(windowsAPI);
 	this->windowsAPI = windowsAPI;
@@ -294,5 +296,14 @@ void ReDirectX::InitializeDepthBuff() {
 void ReDirectX::InitializeFence() {
 	// ƒtƒFƒ“ƒX‚Ì¶¬
 	result = device->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+
+}
+
+void ReDirectX::InitializeFixFPS()
+{
+}
+
+void ReDirectX::UpdateFixFPS() 
+{
 
 }
