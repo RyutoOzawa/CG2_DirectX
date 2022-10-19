@@ -53,6 +53,7 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 		textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
 		textureResourceDesc.SampleDesc.Count = 1;
 
+		//テクスチャバッファの生成
 		result = device->CreateCommittedResource(
 			&textureHeapProp,
 			D3D12_HEAP_FLAG_NONE,
