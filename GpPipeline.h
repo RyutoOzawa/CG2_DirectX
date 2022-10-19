@@ -20,7 +20,7 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
 
 public:
-	void SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode = BLEND_NOBLEND,int primitiveNum = 0);
+	void SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout_, int blendmode = BLEND_NOBLEND,int primitiveNum = 0);
 	void SetPipelineState(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12PipelineState>& pipelineState_);
 	void SetBlendAlpha();
 	void SetBlendAdd();

@@ -127,10 +127,10 @@
     <FxCompile Include="Resources\shaders\BasicVS.hlsl">
       <Filter>シェーダーファイル</Filter>
     </FxCompile>
-    <FxCompile Include="SpritePixelShader.hlsl">
+    <FxCompile Include="Resources\shaders\SpritePixelShader.hlsl">
       <Filter>シェーダーファイル</Filter>
     </FxCompile>
-    <FxCompile Include="SpriteVertexShader.hlsl">
+    <FxCompile Include="Resources\shaders\SpriteVertexShader.hlsl">
       <Filter>シェーダーファイル</Filter>
     </FxCompile>
   </ItemGroup>
@@ -138,7 +138,7 @@
     <None Include="Resources\shaders\Basic.hlsli">
       <Filter>シェーダーファイル</Filter>
     </None>
-    <None Include="Sprite.hlsli">
+    <None Include="Resources\shaders\Sprite.hlsli">
       <Filter>シェーダーファイル</Filter>
     </None>
   </ItemGroup>
