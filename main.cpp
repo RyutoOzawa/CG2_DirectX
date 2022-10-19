@@ -14,15 +14,9 @@ using namespace DirectX;
 #include<string>
 #include<vector>
 using namespace Microsoft::WRL;
+#include"Sprite.h"
 
 
-//パイプラインステートとルートシグネチャのセット
-struct PipelineSet {
-	//パイプラインステートオブジェクト
-	ComPtr<ID3D12PipelineState> pipelineState;
-	//ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootSignature;
-};
 
 PipelineSet CreatepipeLine3D(ID3D12Device* dev);
 
@@ -45,7 +39,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Input* input = new Input();
 	input->Initialize(windowsAPI);
 
-
+	Sprite sprite;
+	sprite.Create(directX->GetDevice(), WindowsAPI::winW, WindowsAPI::winH);
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -746,9 +741,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 		gridline.Draw(directX->GetCommandList(), srvheaps);
 
+
+		//スプライト用描画
+		sprite.BeginDraw(directX->GetCommandList(), SpritePipelineSet, srvheaps);
+
+		sprite.Draw(directX->GetCommandList());
+
 #pragma endregion
 		// ４．描画コマンドここまで
 		directX->EndDraw();
+
 
 		// DirectX毎フレーム処理 ここまで
 #pragma endregion
