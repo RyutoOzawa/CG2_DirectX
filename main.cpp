@@ -135,7 +135,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//値を書き込むと自動的に転送される
 	constMapMaterial->color = color_;		//RGBAで半透明の赤
-
+		//ビュー変換行列の計算
+	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
 	Texture texture1;
 	texture1.LoadTexture(L"Resources/mario.jpg");
@@ -517,156 +518,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//-----ココまでスプライトと3Dオブジェクトでコピーを作る-----//
 
-#pragma endregion　描画初期化処理
-
-
-
+#pragma endregion 描画初期化処理
 	// ゲームループ
 	while (true) {
 
+#pragma region 基盤システム初期化
 		//windowsのメッセージ処理
 		if (windowsAPI->ProcessMessage()) {
 			//ループを抜ける
 			break;
 		}
 
-#pragma region DirectX毎フレーム処理
-		// DirectX毎フレーム処理 ここから
-
 		input->Update();
+#pragma endregion 基盤システム初期化
+#pragma region シーン更新処理
 
-		//カメラ回転処理
-		{
-			if (input->IsPress(DIK_RIGHT) || input->IsPress(DIK_LEFT)) {
-				if (input->IsPress(DIK_RIGHT))angle += XMConvertToRadians(1.0f);
-				else if (input->IsPress(DIK_LEFT))angle -= XMConvertToRadians(1.0f);
-
-				eye.x = -100 * sinf(angle);
-				eye.z = -100 * cosf(angle);
-
-			}
-
-			eye.y = 25.0f;
-
-			if (input->IsTrigger(DIK_SPACE)) {
-				if (colorFlag)colorFlag = false;
-				else colorFlag = true;
-
-
-			}
-		}
-
-		if (!colorFlag) {
-			color_.w = 0.5f;
-
-			const float  colorSpd = 0.01f;
-
-
-			//キー操作で色を変更
-			if (color_.y < 0.5f) color_.x += colorSpd;
-			else color_.x -= colorSpd;
-
-			if (color_.z < 0.5f) color_.y += colorSpd;
-			else color_.y -= colorSpd;
-
-			if (color_.x < 0.5f) color_.z += colorSpd;
-			else color_.z -= colorSpd;
-
-			if (color_.x > 1.0f) {
-				color_.x = 1.0f;
-			}
-			else if (color_.x < 0) {
-				color_.x = 0;
-			}
-
-			if (color_.y > 1.0f) {
-				color_.y = 1.0f;
-			}
-			else if (color_.y < 0) {
-				color_.y = 0;
-			}
-
-			if (color_.z > 1.0f) {
-				color_.z = 1.0f;
-			}
-			else if (color_.z < 0) {
-				color_.z = 0;
-			}
-
-
-
-			color_.x = fmodf(color_.x, 1.0f);
-			color_.y = fmodf(color_.y, 1.0f);
-			color_.z = fmodf(color_.z, 1.0f);
-
-		}
-		else color_ = { 1.0f,1.0f,1.0f,0.5f };
-
-
-
-		//値を書き込むと自動的に転送される
-		constMapMaterial->color = color_;
-
-
-		//オブジェクトの平行移動処理
-		{
-			//いずれかのキーを押していたら
-			if (input->IsPress(DIK_W) || input->IsPress(DIK_S) || input->IsPress(DIK_A) || input->IsPress(DIK_D)) {
-				//キーで移動
-				if (input->IsPress(DIK_W))object.position.z += 1.0f;
-				else if (input->IsPress(DIK_S))object.position.z -= 1.0f;
-				if (input->IsPress(DIK_D))object.position.x += 1.0f;
-				else if (input->IsPress(DIK_A))object.position.x -= 1.0f;
-			}
-		}
-
-		//オブジェクトの回転処理
-		{
-			//いずれかのキーを押していたら
-			if (input->IsPress(DIK_Q) || input->IsPress(DIK_E)) {
-				//キーで回転
-				if (input->IsPress(DIK_Q))object.rotation.y -= 0.05f;
-				else if (input->IsPress(DIK_E))object.rotation.y += 0.05f;
-			}
-		}
-
-		//ビュー変換行列の計算
-		matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-
-		////定数バッファに転送
-		//	constMapTransform1->mat = matWorld1 * matView * matProjection;
-
-		for (int i = 0; i < _countof(obj); i++) {
-			obj[i].Update(matView, matProjection);
-		}
-
-		object.Update(matView, matProjection);
-
-		gridline.Update(matView, matProjection);
+#pragma endregion シーン更新処理
 
 		//描画前処理
 		directX->BeginDraw();
 
-#pragma region 描画処理
-
-		pipeline[0].SetPipelineState(directX->GetDevice(), pipelineState);
-
-		if (input->IsPress(DIK_1)) {
-			pipeline[0].SetPipelineState(directX->GetDevice(), pipelineState);
-		}
-		else if (input->IsPress(DIK_2)) {
-			pipeline[1].SetPipelineState(directX->GetDevice(), pipelineState);
-		}
-		else if (input->IsPress(DIK_3)) {
-			pipeline[2].SetPipelineState(directX->GetDevice(), pipelineState);
-		}
-		else if (input->IsPress(DIK_4)) {
-			pipeline[3].SetPipelineState(directX->GetDevice(), pipelineState);
-		}
-		else if (input->IsPress(DIK_5)) {
-			pipeline[4].SetPipelineState(directX->GetDevice(), pipelineState);
-		}
-
+#pragma region シーン描画処理
 
 		// パイプラインステートとルートシグネチャの設定コマンド
 		directX->GetCommandList()->SetPipelineState(pipelineState.Get());
@@ -699,23 +571,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-		//	全オブジェクトについて処理
-		for (int i = 0; i < _countof(obj); i++) {
-			obj[i].Draw(directX->GetCommandList(), vbView, ibView, _countof(indices));
-		}
-
 		srvGpuHandle.ptr += incrementSize;
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-		object.Draw(directX->GetCommandList(), vbView, ibView, _countof(indices));
-
-		//パイプラインステートをグリッド線用に
-		gridPipeline.SetPipelineState(directX->GetDevice(), pipelineState);
-		directX->GetCommandList()->SetPipelineState(pipelineState.Get());
-		directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
-		gridline.Draw(directX->GetCommandList(), srvheaps);
+		//object.Draw(directX->GetCommandList(), vbView, ibView, _countof(indices));
 
 #pragma endregion 描画処理
 
@@ -723,16 +584,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->EndDraw();
 
 		// DirectX毎フレーム処理 ここまで
-#pragma endregion
-
 	}
 
+#pragma region シーン終了処理
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
 
 	delete windowsAPI;
 	delete input;
 	delete directX;
+
+#pragma endregion シーン終了処理
 
 	return 0;
 }
@@ -796,9 +658,5 @@ PipelineSet CreatepipeLine3D(ID3D12Device* dev)
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
-
-
-
-
 	return PipelineSet();
 }
