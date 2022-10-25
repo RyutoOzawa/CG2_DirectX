@@ -528,7 +528,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//ループを抜ける
 			break;
 		}
-
 		input->Update();
 #pragma endregion 基盤システム初期化
 #pragma region シーン更新処理
@@ -537,7 +536,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//描画前処理
 		directX->BeginDraw();
-
 #pragma region シーン描画処理
 
 		// パイプラインステートとルートシグネチャの設定コマンド
@@ -578,14 +576,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//object.Draw(directX->GetCommandList(), vbView, ibView, _countof(indices));
 
-#pragma endregion 描画処理
-
+#pragma endregion シーン描画処理
 		// ４．描画コマンドここまで
 		directX->EndDraw();
-
 		// DirectX毎フレーム処理 ここまで
 	}
-
 #pragma region シーン終了処理
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
