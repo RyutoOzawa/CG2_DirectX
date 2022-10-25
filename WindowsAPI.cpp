@@ -1,4 +1,5 @@
 #include "WindowsAPI.h"
+#pragma comment(lib,"winmm.lib")
 
 WindowsAPI::WindowsAPI()
 {
@@ -27,6 +28,8 @@ LRESULT WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam
 
 void WindowsAPI::Initialize()
 {
+	//システムタイマーの分解能を上げる
+	timeBeginPeriod(1);
 
 	w.cbSize = sizeof(WNDCLASSEX);
 	w.lpfnWndProc = (WNDPROC)WindowProc; // ウィンドウプロシージャを設定

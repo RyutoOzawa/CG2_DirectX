@@ -22,7 +22,7 @@ public:
 
 	D3D12_VERTEX_BUFFER_VIEW vbview{};	//頂点バッファビュー
 
-	void Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device, int lineNum, Microsoft::WRL::ComPtr<ID3D12Resource> texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
+	void Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device, int lineNum, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 
 	void Draw(ID3D12GraphicsCommandList* commandList, ID3D12DescriptorHeap* srvheaps);
 

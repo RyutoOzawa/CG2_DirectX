@@ -4,6 +4,7 @@
 #include<wrl.h>
 #include"WindowsAPI.h"
 #include<vector>
+#include<chrono>
 
 
 
@@ -34,7 +35,8 @@ private:
 	//WIndowsAPI
 	WindowsAPI* windowsAPI = nullptr;
 
-
+	//記録時間(FPS固定用)
+	std::chrono::steady_clock::time_point reference_;
 public:
 	//初期化
 	void Initialize(WindowsAPI* windowsAPI);
@@ -49,12 +51,19 @@ public:
 	ID3D12Device* GetDevice() { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
 private:
+
+	//各種初期化関数
 	void InitializeDevice();
 	void InitializeCommand();
 	void InitializeSwapChain();
 	void InitializeRTV();
 	void InitializeDepthBuff();
 	void InitializeFence();
+
+	//FPS初期化
+	void InitializeFixFPS();
+	//FPS更新
+	void UpdateFixFPS();
 
 };
 

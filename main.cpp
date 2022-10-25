@@ -7,19 +7,30 @@ using namespace DirectX;
 //#include"WindowsAPI.h"
 //#include"DirectX.h"
 #include"Object3d.h"
-#include <random>
+#include"Util.h"
 #include"Texture.h"
 #include"GpPipeline.h"
 #include"Gridline.h"
-
-
-
-
+#include<string>
 using namespace Microsoft::WRL;
+
+
+//パイプラインステートとルートシグネチャのセット
+struct PipelineSet {
+	//パイプラインステートオブジェクト
+	ComPtr<ID3D12PipelineState> pipelineState;
+	//ルートシグネチャ
+	ComPtr<ID3D12RootSignature> rootsignature;
+};
+
+PipelineSet CreatepipeLine3D(ID3D12Device* dev);
+
+
 
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
+#pragma region 基盤システム初期化
 	//windowsAPI初期化処理
 	WindowsAPI* windowsAPI = new WindowsAPI();
 	windowsAPI->Initialize();
@@ -34,15 +45,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Input* input = new Input();
 	input->Initialize(windowsAPI);
 
-	//乱数シード生成器
-	std::random_device seedGem;
-	//メルセンヌ・ツイスターの乱数エンジン
-	std::mt19937_64 engine(seedGem());
-	//乱数範囲の指定
-	std::uniform_real_distribution<float> dist(-100, 100);
-
 	//ランダムな数値を取得
-	float value = dist(engine);
+	float randValue = Random(-100, 100);
+
+#pragma endregion 基盤システム初期化
 
 #pragma region 描画初期化処理
 
@@ -96,18 +102,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//初期化
 		obj[i].Initialize(directX->GetDevice());
 
-		//親子構造のサンプル
-		//先頭以外なら
-
-			//ひとつ前のオブジェクトを親とする
-			//obj[i].parent = &obj[i - 1];
-			//親の9割の大きさ
 		obj[i].scale = { 1,1,1 };
-		//親に対してZ軸に30度回転
 		obj[i].rotation = { 0.0f,0.0f,0.0f };
-		//親に対してZ方向-8.0ずらす
-		obj[i].position = { dist(engine),dist(engine),dist(engine) };
-
+		obj[i].position = { Random(-100, 100),Random(-100, 100),Random(-100, 100) };
 	}
 
 	object.Initialize(directX->GetDevice());
@@ -139,87 +136,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//値を書き込むと自動的に転送される
 	constMapMaterial->color = color_;		//RGBAで半透明の赤
 
-	////横方向ピクセル数
-	//const size_t textureWidth = 256;
-	////縦方向ピクセル数
-	//const size_t textureHeight = 256;
-	////配列の要素数
-	//const size_t imageDataCount = textureWidth * textureHeight;
-	////画像イメージデータ配列
-	//XMFLOAT4* imageData = new XMFLOAT4[imageDataCount]; //※必ず後で開放する
 
-	////全ピクセルの色を初期化
-	//for (size_t i = 0; i < imageDataCount; i++) {
-	//	imageData[i].x = 1.0f;	// R
-	//	imageData[i].y = 0.0f;	// G
-	//	imageData[i].z = 0.0f;	// B
-	//	imageData[i].w = 1.0f;	// A
-	//}
-
-	TexMetadata metadata{  };
-	ScratchImage scratchImg{};
-	//WICテクスチャのロード
-	result = LoadFromWICFile(
-		L"Resources/mario.jpg",	//「Resourcesq」フォルダの「mario.jpg」
-		WIC_FLAGS_NONE,
-		&metadata, scratchImg
-	);
-
-
-	ScratchImage mipChain{};
-	//ミップマップ生成
-	result = GenerateMipMaps(
-		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-		TEX_FILTER_DEFAULT, 0, mipChain);
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
-	}
-
-	//読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata.format = MakeSRGB(metadata.format);
-
-
-	//ヒープ設定
-	D3D12_HEAP_PROPERTIES textureHeapProp{};
-	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
-	textureHeapProp.CPUPageProperty =
-		D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	//リソース設定
-	D3D12_RESOURCE_DESC textureResourceDesc{};
-	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	textureResourceDesc.Format = metadata.format;
-	textureResourceDesc.Width = metadata.width;	// 幅
-	textureResourceDesc.Height = (UINT)metadata.height;	// 高さ
-	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
-	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
-	textureResourceDesc.SampleDesc.Count = 1;
-
-	//テクスチャバッファの生成
-	ComPtr<ID3D12Resource> texBuff;
-	result = directX->GetDevice()->CreateCommittedResource(
-		&textureHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&textureResourceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&texBuff));
-
-	//全ミップマップについて
-	for (size_t i = 0; i < metadata.mipLevels; i++) {
-		//ミップマップレベルを指定してイメージを取得
-		const Image* img = scratchImg.GetImage(i, 0, 0);
-		//テクスチャバッファにデータ転送
-		result = texBuff->WriteToSubresource(
-			(UINT)i,
-			nullptr,				//全領域へコピー
-			img->pixels,			//元データアドレス
-			(UINT)img->rowPitch,	//1ラインサイズ
-			(UINT)img->slicePitch	//全サイズ
-		);
-		assert(SUCCEEDED(result));
-	}
+	Texture texture1;
+	texture1.LoadTexture(L"Resources/mario.jpg");
+	texture1.Initialize(directX->GetDevice());
 
 	Texture texture2;
 	texture2.LoadTexture(L"Resources/reimu.png");
@@ -229,8 +149,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	texture3.LoadTexture(L"Resources/orangeBlock.png");
 	texture3.Initialize(directX->GetDevice());
 
-	//元データ開放
-	//delete[] imageData;
+	ComPtr<ID3D12Resource> texBuff;
+	texBuff = texture1.texBuff;
 
 	//SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
@@ -245,22 +165,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	result = directX->GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
-
-
-
 	//頂点データ構造体
 	struct Vertex {
 		XMFLOAT3 pos;//xyz座標
 		XMFLOAT3 normal;//法線ベクトル
 		XMFLOAT2 uv;//uv座標
-	};
-
-	//3角形用の頂点データ
-	Vertex triangleVertices[]{
-		{{-5.0f, 5.0f,-10.0f}, {},{0.0f,0.0f}}, // 左下
-		{{ 5.0f, 5.0f,-10.0f}, {},{0.0f,0.0f}}, // 左上
-		{{ 0.0f,-5.0f,-10.0f}, {},{0.0f,0.0f}}, // 右下
-
 	};
 
 	// 頂点データ
@@ -352,7 +261,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//GetDescriptorHandIncrementSizeの引数はD3D12_DESCRIPTOR_HEAP_TYPE
 	//Heapの種類によってDescriptorのサイズは異なる(異なってもいいという仕様)
 	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+	texture1.CreateSRV(directX->GetDevice(), srvHandle);
 	//srvHandle.ptr += incrementSize;
 	texture2.CreateSRV(directX->GetDevice(), srvHandle);
 	//srvHandle.ptr += incrementSize;
@@ -465,6 +374,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ID3DBlob* vsBlob = nullptr; // 頂点シェーダオブジェクト
 	ID3DBlob* psBlob = nullptr; // ピクセルシェーダオブジェクト
 	ID3DBlob* errorBlob = nullptr; // エラーオブジェクト
+
+
+	//-----ココからスプライトと3Dオブジェクトでコピーを作る-----//
+
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
 		L"Resources/shaders/BasicVS.hlsl", // シェーダファイル名
@@ -487,6 +400,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
+
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -515,7 +429,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Gridline gridline{};
 	gridline.start = { -100.0f,0.0f,-100.0f };
 	gridline.end = { 100.0f,0.0f,100.0f };
-	gridline.Initialize(directX->GetDevice(), 30, texBuff, srvHandle);
+	gridline.Initialize(directX->GetDevice(), 30, srvHandle);
 
 	const int pipelineMax = 5;
 
@@ -600,7 +514,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//pipelineState = pipeline1.state;
 	/*result = directX->device->CreateGraphicsPipelineState(&pipeline1.desc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));*/
-#pragma endregion
+
+	//-----ココまでスプライトと3Dオブジェクトでコピーを作る-----//
+
+#pragma endregion　描画初期化処理
 
 
 
@@ -709,7 +626,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (input->IsPress(DIK_Q) || input->IsPress(DIK_E)) {
 				//キーで回転
 				if (input->IsPress(DIK_Q))object.rotation.y -= 0.05f;
-				else if(input->IsPress(DIK_E))object.rotation.y += 0.05f;
+				else if (input->IsPress(DIK_E))object.rotation.y += 0.05f;
 			}
 		}
 
@@ -729,6 +646,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//描画前処理
 		directX->BeginDraw();
+
+#pragma region 描画処理
 
 		pipeline[0].SetPipelineState(directX->GetDevice(), pipelineState);
 
@@ -757,7 +676,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
 
 		// 頂点バッファビューの設定コマンド
-		directX->GetCommandList() ->IASetVertexBuffers(0, 1, &vbView);
+		directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 
 		//インデックスバッファビューの設定コマンド
 		directX->GetCommandList()->IASetIndexBuffer(&ibView);
@@ -774,7 +693,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//0キーで画像を変える
 		if (input->IsPress(DIK_0)) {
-		//	srvGpuHandle.ptr += incrementSize;
+			//	srvGpuHandle.ptr += incrementSize;
 		}
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
@@ -798,7 +717,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 		gridline.Draw(directX->GetCommandList(), srvheaps);
 
-#pragma endregion
+#pragma endregion 描画処理
+
 		// ４．描画コマンドここまで
 		directX->EndDraw();
 
@@ -806,7 +726,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
 	}
-	
+
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
 
@@ -815,8 +735,70 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete directX;
 
 	return 0;
-} 
+}
 
 void MatrixUpdate()
 {
+}
+
+PipelineSet CreatepipeLine3D(ID3D12Device* dev)
+{
+
+	HRESULT result;
+
+	ComPtr<ID3DBlob> vsBlob;		// 頂点シェーダオブジェクト
+	ComPtr<ID3DBlob> psBlob;		// ピクセルシェーダオブジェクト
+	ComPtr<ID3DBlob> errorBlob;	// エラーオブジェクト
+
+	// 頂点シェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/BasicVS.hlsl", // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "vs_5_0", // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&vsBlob, &errorBlob);
+	// エラーなら
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+
+
+	// ピクセルシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/BasicPS.hlsl", // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&psBlob, &errorBlob);
+	// エラーなら
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
+
+
+
+
+	return PipelineSet();
 }
