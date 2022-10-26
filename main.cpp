@@ -12,6 +12,8 @@ using namespace DirectX;
 #include"GpPipeline.h"
 #include"Gridline.h"
 #include<string>
+#include"SpriteManager.h"
+#include"Sprite.h"
 using namespace Microsoft::WRL;
 
 
@@ -45,12 +47,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Input* input = new Input();
 	input->Initialize(windowsAPI);
 
-	//ランダムな数値を取得
-	float randValue = Random(-100, 100);
+	SpriteManager* spriteManager = nullptr;
+	//スプライト共通部の初期化
+	spriteManager = new SpriteManager;
+	spriteManager->Initialize(directX,WindowsAPI::winW,WindowsAPI::winH);
 
 #pragma endregion 基盤システム初期化
 
 #pragma region 描画初期化処理
+
+	//スプライト一枚の初期化
+	Sprite* sprite = new Sprite();
+	sprite->Initialize(spriteManager);
+
+
+	//ランダムな数値を取得
+	float randValue = Random(-100, 100);
 
 	//定数バッファ用データ構造体(マテリアル)
 	struct ConstBufferDataMaterial {
@@ -434,17 +446,42 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	const int pipelineMax = 5;
 
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+
+	inputLayout.push_back(
+		{
+		"POSITION",										//セマンティック名
+		0,												//同じセマンティック名が複数ある時に使うインデックス（0でよい）
+		DXGI_FORMAT_R32G32B32_FLOAT,					//要素数とビット数を表す（XYZの3つでfloat型なのでR32G32B32_FLOAT）
+		0,												//入力スロットインデックス(0でよい)
+		D3D12_APPEND_ALIGNED_ELEMENT,					//データのオフセット値(D3D12_APPEND_ALIGNED_ELEMENTだと自動設定)
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		//入力データ種別(標準はD3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA)
+		0												//一度に描画するインスタンス数(0でよい)
+		});
+
+	inputLayout.push_back(
+		{//法線ベクトル
+		"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+		D3D12_APPEND_ALIGNED_ELEMENT,
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		});
+	inputLayout.push_back({//uv座標
+		"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+		D3D12_APPEND_ALIGNED_ELEMENT,
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		});
+
 	GpPipeline pipeline[pipelineMax];
-	pipeline[BLEND_NOBLEND].SetPipeline(vsBlob, psBlob);
-	pipeline[BLEND_ALPHA].SetPipeline(vsBlob, psBlob, BLEND_ALPHA);
-	pipeline[BLEND_ADD].SetPipeline(vsBlob, psBlob, BLEND_ADD);
-	pipeline[BLEND_SUB].SetPipeline(vsBlob, psBlob, BLEND_SUB);
-	pipeline[BLEND_INV].SetPipeline(vsBlob, psBlob, BLEND_INV);
+	pipeline[BLEND_NOBLEND].SetPipeline(vsBlob, psBlob, inputLayout);
+	pipeline[BLEND_ALPHA].SetPipeline(vsBlob, psBlob, inputLayout, BLEND_ALPHA);
+	pipeline[BLEND_ADD].SetPipeline(vsBlob, psBlob,inputLayout, BLEND_ADD);
+	pipeline[BLEND_SUB].SetPipeline(vsBlob, psBlob,inputLayout, BLEND_SUB);
+	pipeline[BLEND_INV].SetPipeline(vsBlob, psBlob,inputLayout, BLEND_INV);
 
 	//グリッド線描画用のパイプライン
 	GpPipeline gridPipeline;
-	gridPipeline.SetPipeline(vsBlob, psBlob, BLEND_NOBLEND, 1);
-	//	gridPipeline.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	gridPipeline.SetPipeline(vsBlob, psBlob, inputLayout, BLEND_NOBLEND, 1);
+		gridPipeline.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
 
 		//デスクリプタレンジの設定
@@ -585,9 +622,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
 
+	delete sprite;
+
 	delete windowsAPI;
 	delete input;
 	delete directX;
+	delete spriteManager;
 
 #pragma endregion シーン終了処理
 

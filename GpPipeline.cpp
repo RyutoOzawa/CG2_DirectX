@@ -2,32 +2,13 @@
 #include<cassert>
 
 
-void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, int blendmode, int primitiveNum)
+void GpPipeline::SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout_, int blendmode, int primitiveNum)
 {
 
 
-	inputLayout.push_back(
-		{
-		"POSITION",										//セマンティック名
-		0,												//同じセマンティック名が複数ある時に使うインデックス（0でよい）
-		DXGI_FORMAT_R32G32B32_FLOAT,					//要素数とビット数を表す（XYZの3つでfloat型なのでR32G32B32_FLOAT）
-		0,												//入力スロットインデックス(0でよい)
-		D3D12_APPEND_ALIGNED_ELEMENT,					//データのオフセット値(D3D12_APPEND_ALIGNED_ELEMENTだと自動設定)
-		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		//入力データ種別(標準はD3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA)
-		0												//一度に描画するインスタンス数(0でよい)
-		});
 
-	inputLayout.push_back(
-		{//法線ベクトル
-		"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
-		D3D12_APPEND_ALIGNED_ELEMENT,
-		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		});
-	inputLayout.push_back({//uv座標
-		"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
-		D3D12_APPEND_ALIGNED_ELEMENT,
-		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		});
+
+	inputLayout = inputLayout_;
 
 	//デプスステンシルステートの作成
 	desc.DepthStencilState.DepthEnable = true;	//深度テストを行う

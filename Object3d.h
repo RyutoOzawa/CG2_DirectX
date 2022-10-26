@@ -10,7 +10,13 @@
 class Object3d
 {
 public:
- Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform;	//定数バッファマップ（行列用）
+
+	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
+	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
+	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;
+//static Microsoft::WRL::ComPtr<>
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform;	//定数バッファマップ（行列用）
 	ConstBufferDataTransform* constMapTransform = nullptr;	//定数バッファマップ（行列用）
 	DirectX::XMFLOAT3 scale = { 1,1,1 };	//アフィン変換情報
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };	//アフィン変換情報

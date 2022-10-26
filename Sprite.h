@@ -1,12 +1,12 @@
 #pragma once
-#include<DirectXMath.h>
 
-struct VertexPosUv {
-	DirectX::XMFLOAT3 pos;	//xyzç¿ïW
-	DirectX::XMFLOAT2 uv;	//uvç¿ïW
-};
+#include"SpriteManager.h"
+
+
 
 class Sprite
 {
+public:
+	void Initialize(SpriteManager* spriteManager);
 };
 
