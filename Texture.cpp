@@ -61,6 +61,7 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&texBuff));
+		assert(SUCCEEDED(result));
 
 		//全ミップマップについて
 		for (size_t i = 0; i < metadata.mipLevels; i++) {
@@ -118,6 +119,7 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&texBuff));
+		assert(SUCCEEDED(result));
 
 		//テクスチャバッファにデータ転送
 		result = texBuff->WriteToSubresource(
@@ -127,6 +129,7 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 			sizeof(XMFLOAT4) *textureWidth,	//1ラインサイズ
 			sizeof(XMFLOAT4) *imageDataCount 	//全サイズ
 		);
+		assert(SUCCEEDED(result));
 
 		delete[] imageData;
 	}
@@ -135,7 +138,6 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 void Texture::CreateSRV(ComPtr<ID3D12Device> device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
 {
 	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
 
 	//SRVを作る場所を一つ分インクリメント
 	srvHandle.ptr += incrementSize;

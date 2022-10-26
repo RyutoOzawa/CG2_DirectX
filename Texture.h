@@ -3,6 +3,7 @@
 #include<wrl.h>
 
 class Texture {
+
 public:
 
 	bool isLoadTexture = false;
@@ -13,7 +14,6 @@ public:
 	D3D12_RESOURCE_DESC textureResourceDesc{};
 	D3D12_GPU_DESCRIPTOR_HANDLE  texAdress{}; //テクスチャのGPUアドレス
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
-
 
 public:
 	void LoadTexture(const wchar_t texture[]);

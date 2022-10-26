@@ -40,7 +40,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	input->Initialize(windowsAPI);
 
 	Sprite sprite[3];
-	Sprite::Create(directX->GetDevice(), WindowsAPI::winW, WindowsAPI::winH);
+	Sprite::StaticInitialize(directX->GetDevice(), WindowsAPI::winW, WindowsAPI::winH);
+	for (int i = 0; i < 3; i++) {
+		sprite[i].Initialize(directX->GetDevice(), WindowsAPI::winW, WindowsAPI::winH);
+	}
 	sprite[0].LoadTexture(0, L"Resources/mario.jpg", directX->GetDevice());
 	sprite[1].LoadTexture(1, L"Resources/reimu.png", directX->GetDevice());
 	sprite[2].LoadTexture(2, L"Resources/orangeBlock.png", directX->GetDevice());
@@ -144,7 +147,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	texture2.Initialize(directX->GetDevice());
 
 	Texture texture3;
-	texture3.LoadTexture(L"Resources/");
+	texture3.LoadTexture(L"Resources/orangeBlock.png");
 	texture3.Initialize(directX->GetDevice());
 
 	ComPtr<ID3D12Resource> texBuff;
@@ -569,28 +572,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (input->IsPress(DIK_RIGHT) || input->IsPress(DIK_LEFT)) {
 				if (input->IsPress(DIK_RIGHT))angle += XMConvertToRadians(1.0f);
 				else if (input->IsPress(DIK_LEFT))angle -= XMConvertToRadians(1.0f);
-
 				eye.x = -100 * sinf(angle);
 				eye.z = -100 * cosf(angle);
-
 			}
-
 			eye.y = 25.0f;
-
 			if (input->IsTrigger(DIK_SPACE)) {
 				if (colorFlag)colorFlag = false;
 				else colorFlag = true;
-
-
 			}
 		}
-
 		if (!colorFlag) {
 			color_.w = 0.5f;
-
 			const float  colorSpd = 0.01f;
-
-
 			//キー操作で色を変更
 			if (color_.y < 0.5f) color_.x += colorSpd;
 			else color_.x -= colorSpd;
@@ -622,21 +615,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				color_.z = 0;
 			}
 
-
-
 			color_.x = fmodf(color_.x, 1.0f);
 			color_.y = fmodf(color_.y, 1.0f);
 			color_.z = fmodf(color_.z, 1.0f);
-
 		}
 		else color_ = { 1.0f,1.0f,1.0f,0.5f };
-
-
-
 		//値を書き込むと自動的に転送される
 		constMapMaterial->color = color_;
-
-
 		//オブジェクトの平行移動処理
 		{
 			//いずれかのキーを押していたら
@@ -746,7 +731,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 		//スプライト用描画
-		Sprite::BeginDraw(directX->GetCommandList(), directX->GetDevice(), srvheaps);
+		Sprite::BeginDraw(directX->GetCommandList());
 
 		sprite[0].rotatiton = 45;
 		sprite[0].position = {1280 / 2,720 / 2,0};
@@ -754,7 +739,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		sprite[2].position = { 900,600,0 };
 
 		for (int i = 0; i < 3; i++) {
-			sprite[i].Draw(directX->GetCommandList());
+			sprite[i].Draw(sprite[i],directX->GetCommandList(), directX->GetDevice());
 		}
 #pragma endregion
 		// ４．描画コマンドここまで
@@ -774,10 +759,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete directX;
 
 	return 0;
-}
-
-void MatrixUpdate()
-{
 }
 
 PipelineSet CreatepipeLine3D(ID3D12Device* dev)
@@ -810,7 +791,6 @@ PipelineSet CreatepipeLine3D(ID3D12Device* dev)
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
-
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
