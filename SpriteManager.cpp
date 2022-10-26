@@ -35,7 +35,12 @@ void SpriteManager::Initialize(ReDirectX* directX, int windowWidth, int windowHe
 
 void SpriteManager::beginDraw()
 {
-
+	//パイプラインステートの設定
+	directX->GetCommandList()->SetPipelineState(pipelineState.Get());
+	//ルートシグネチャの設定
+	directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	//プリミティブ形状の設定
+	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 void SpriteManager::CreatePipeline2D(ID3D12Device* dev)
