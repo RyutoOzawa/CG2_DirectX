@@ -98,10 +98,10 @@ void GpPipeline::SetPipelineState(Microsoft::WRL::ComPtr<ID3D12Device> device, M
 	HRESULT result;
 
 	//パイプラインステートに設定を反映
-	result = device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&state));
+	result = device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&pipelineState_));
 	assert(SUCCEEDED(result));
 
-	pipelineState_ = state;
+	//pipelineState_ = state;
 }
 
 void GpPipeline::SetBlendAlpha()

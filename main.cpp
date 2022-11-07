@@ -52,6 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	spriteManager = new SpriteManager;
 	spriteManager->Initialize(directX,WindowsAPI::winW,WindowsAPI::winH);
 
+
 #pragma endregion 基盤システム初期化
 
 #pragma region 描画初期化処理
@@ -612,6 +613,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
 		//object.Draw(directX->GetCommandList(), vbView, ibView, _countof(indices));
+
+		//スプライト描画処理
+		spriteManager->beginDraw();
+		sprite->Draw();
 
 #pragma endregion シーン描画処理
 		// ４．描画コマンドここまで

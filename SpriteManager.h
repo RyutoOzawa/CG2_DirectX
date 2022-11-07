@@ -13,7 +13,7 @@ struct VertexPosUv {
 class SpriteManager
 {
 	
-
+public:
 	ReDirectX* directX = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;		//パイプラインステート
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
