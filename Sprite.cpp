@@ -13,11 +13,12 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	//頂点データ
 	XMFLOAT3 vertices_[] = {
 		{-0.5f,-0.5f,0.0f},//左下
-		{-0.5f,+0.5f,0.0f},//左上
+		{-0.5f,+0.5f,0.0f},//左上si
 		{+0.5f,-0.5f,0.0f},//右下
+		{+0.5f,+0.5f,0.0f},//右上
 	};
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < _countof(vertices_); i++) {
 		vertices[i] = vertices_[i];
 	}
 
@@ -38,7 +39,6 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//頂点バッファ生成
-	ComPtr<ID3D12Resource> vertBuff = nullptr;
 	result = dev.Get()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
