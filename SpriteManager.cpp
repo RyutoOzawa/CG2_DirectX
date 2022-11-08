@@ -135,13 +135,13 @@ void SpriteManager::CreatePipeline2D(ID3D12Device* dev)
 	//descriptorRange.BaseShaderRegister = 0;	//テクスチャレジスタ0番
 	//descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	////ルートパラメータの設定
-	//D3D12_ROOT_PARAMETER rootParams[2] = {};
-	////定数バッファ0番
-	//rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
-	//rootParams[0].Descriptor.ShaderRegister = 0;					//定数バッファ番号
-	//rootParams[0].Descriptor.RegisterSpace = 0;						//デフォルト値
-	//rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+	//ルートパラメータの設定
+	D3D12_ROOT_PARAMETER rootParams[1] = {};
+	//定数バッファ0番
+	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
+	rootParams[0].Descriptor.ShaderRegister = 0;					//定数バッファ番号
+	rootParams[0].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 	////テクスチャレジスタ0番
 	//rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
 	//rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange;			//デスクリプタレンジ
@@ -168,8 +168,8 @@ void SpriteManager::CreatePipeline2D(ID3D12Device* dev)
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	//rootSignatureDesc.pParameters = rootParams;	//ルートパラメータの先頭アドレス
-	//rootSignatureDesc.NumParameters = _countof(rootParams);		//ルートパラメータ数
+	rootSignatureDesc.pParameters = rootParams;	//ルートパラメータの先頭アドレス
+	rootSignatureDesc.NumParameters = _countof(rootParams);		//ルートパラメータ数
 	//rootSignatureDesc.pStaticSamplers = &samplerDesc;
 	//rootSignatureDesc.NumStaticSamplers = 1;
 	// ルートシグネチャのシリアライズ

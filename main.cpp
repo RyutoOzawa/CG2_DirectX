@@ -14,6 +14,7 @@ using namespace DirectX;
 #include<string>
 #include"SpriteManager.h"
 #include"Sprite.h"
+#include"Material.h"
 using namespace Microsoft::WRL;
 
 
@@ -65,10 +66,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
 
-	//定数バッファ用データ構造体(マテリアル)
-	struct ConstBufferDataMaterial {
-		XMFLOAT4 color;//色（RGBA）
-	};
+	////定数バッファ用データ構造体(マテリアル)
+	//struct ConstBufferDataMaterial {
+	//	XMFLOAT4 color;//色（RGBA）
+	//};
 
 	//ワールド変換行列
 //	XMMATRIX matWorld0;

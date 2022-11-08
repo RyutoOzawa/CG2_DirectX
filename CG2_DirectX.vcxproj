@@ -148,6 +148,7 @@
     <ClCompile Include="GpPipeline.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="MathInfo.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="GpPipeline.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="MathInfo.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="Sphere.h" />
