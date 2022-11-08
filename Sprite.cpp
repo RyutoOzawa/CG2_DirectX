@@ -11,11 +11,12 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	ComPtr<ID3D12Device> dev = spriteManager->directX->GetDevice();
 
 	//頂点データ
-	XMFLOAT3 vertices_[] = {
-		{-0.5f,-0.5f,0.0f},//左下
-		{-0.5f,+0.5f,0.0f},//左上si
-		{+0.5f,-0.5f,0.0f},//右下
-		{+0.5f,+0.5f,0.0f},//右上
+	VertexPosUv vertices_[] = {
+		//x    y     z   
+		{{-0.5f,-0.5f,0.0f},{0.0f,1.0f}},//左下
+		{{-0.5f,+0.5f,0.0f},{0.0f,0.0f}},//左上
+		{{+0.5f,-0.5f,0.0f},{1.0f,1.0f}},//右下
+		{{+0.5f,+0.5f,0.0f},{1.0f,0.0f}},//右上
 	};
 
 	for (int i = 0; i < _countof(vertices_); i++) {
@@ -23,7 +24,7 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	}
 
 	//頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データ要素数
-	UINT sizeVB = static_cast<UINT>(sizeof(XMFLOAT3) * _countof(vertices_));
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosUv) * _countof(vertices_));
 
 	//頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp{};		//ヒープ設定
@@ -49,7 +50,7 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	assert(SUCCEEDED(result));
 
 	//GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
-	XMFLOAT3* vertMap = nullptr;
+	VertexPosUv* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	//全頂点に対して
@@ -65,7 +66,7 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	//頂点バッファのサイズ
 	vbView.SizeInBytes = sizeVB;
 	//頂点１つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(XMFLOAT3);
+	vbView.StrideInBytes = sizeof(VertexPosUv);
 
 	//定数バッファの設定
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
