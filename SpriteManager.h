@@ -10,8 +10,14 @@ struct VertexPosUv {
 	DirectX::XMFLOAT2 uv;	//uvç¿ïW
 };
 
+struct ConstBufferData {
+	DirectX::XMFLOAT4 color;
+	DirectX::XMMATRIX mat;
+};
+
 class SpriteManager
 {
+
 	
 public:
 	ReDirectX* directX = nullptr;

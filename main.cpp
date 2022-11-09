@@ -60,7 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager, L"Resources/sumario.jpg");
+	sprite->Initialize(spriteManager, L"Resources/mario.jpg");
 
 
 	//ランダムな数値を取得

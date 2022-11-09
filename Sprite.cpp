@@ -2,8 +2,8 @@
 using namespace DirectX;
 #include<wrl.h>
 using namespace Microsoft::WRL;
-
 using namespace std;
+#include"WindowsAPI.h"
 
 void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 {
@@ -15,10 +15,10 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 	//頂点データ
 	VertexPosUv vertices_[] = {
 		//x    y     z   
-		{{-0.5f,-0.5f,0.0f},{0.0f,1.0f}},//左下
-		{{-0.5f,+0.5f,0.0f},{0.0f,0.0f}},//左上
-		{{+0.5f,-0.5f,0.0f},{1.0f,1.0f}},//右下
-		{{+0.5f,+0.5f,0.0f},{1.0f,0.0f}},//右上
+		{{  0.0f,100.0f,0.0f},{0.0f,1.0f}},//左下
+		{{  0.0f,  0.0f,0.0f},{0.0f,0.0f}},//左上
+		{{100.0f,100.0f,0.0f},{1.0f,1.0f}},//右下
+		{{100.0f,  0.0f,0.0f},{1.0f,0.0f}},//右上
 	};
 
 	for (int i = 0; i < _countof(vertices_); i++) {
@@ -76,7 +76,7 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 	//リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff;
+	cbResourceDesc.Width = (sizeof(ConstBufferData) + 0xff) & ~0xff;
 	cbResourceDesc.Height = 1;
 	cbResourceDesc.DepthOrArraySize = 1;
 	cbResourceDesc.MipLevels = 1;
@@ -93,12 +93,19 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 	assert(SUCCEEDED(result));
 
 	//定数バッファのマッピング
-	result = constBuff->Map(0, nullptr, (void**)&constMapMaterial);
+	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	assert(SUCCEEDED(result));
 
 	//値を書き込むと自動的に転送される
-	constMapMaterial->color = XMFLOAT4(1, 1, 1, 1);
+	constMap->color = XMFLOAT4(1, 1, 1, 1);
 
+	//行列にはとりあえず単位行列を代入
+	constMap->mat = XMMatrixIdentity();
+
+	constMap->mat.r[0].m128_f32[0] = 2.0f / WindowsAPI::winW;
+	constMap->mat.r[1].m128_f32[1] = -2.0f / WindowsAPI::winH;
+	constMap->mat.r[3].m128_f32[0] = -1.0;
+	constMap->mat.r[3].m128_f32[1] = 1.0f;
 
 	//画像ファイルの読み込み
 	texture.LoadTexture(filename);
@@ -117,8 +124,7 @@ void Sprite::Draw()
 {
 	//頂点バッファビューの設定
 	spriteManager->directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
-	//定数バッファビュー
-	spriteManager->directX->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+	
 	//デスクリプタヒープの配列をセットするコマンド
 	ID3D12DescriptorHeap* ppHeaps[] = { spriteManager->descHeap.Get()};
 	spriteManager->directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
@@ -126,12 +132,17 @@ void Sprite::Draw()
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->descHeap->GetGPUDescriptorHandleForHeapStart();
 	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	spriteManager->directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
-
+	//定数バッファビュー
+	spriteManager->directX->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 	//描画コマンド
 	spriteManager->directX->GetCommandList()->DrawInstanced(_countof(vertices), 1, 0, 0);
 }
 
 void Sprite::SetColor(DirectX::XMFLOAT4 color_)
 {
-	constMapMaterial->color = color_;
+	constMap->color = color_;
+}
+
+void Sprite::CreateConstBuff()
+{
 }

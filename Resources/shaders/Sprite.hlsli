@@ -9,7 +9,7 @@
 cbuffer constBufferDataMaterial : register(b0)
 {
 	float4 color;
-	//matrix mat;
+	matrix mat;
 };
 
 //頂点シェーダ―の出力構造体
