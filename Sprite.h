@@ -7,12 +7,20 @@
 #include<string>
 #include"Vector3.h"
 
+enum VertexNumber {
+	LB,	//左下
+	LT,	//左上
+	RB,	//右下
+	RT,	//右上
+};
+
 class Sprite
 {
 	//マネージャクラスのポインタ
 	SpriteManager* spriteManager = nullptr;
 
 public:	//メンバ変数
+
 	VertexPosUv vertices[4] = {};		//頂点座標データ
 	D3D12_VERTEX_BUFFER_VIEW vbView{};	//頂点バッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;	//頂点バッファ
@@ -23,21 +31,37 @@ public:	//メンバ変数
 	ConstBufferData* constMap = nullptr;
 
 	DirectX::XMMATRIX matWorld;	//ワールド変換行列
-	DirectX::XMFLOAT3 rotation;	//回転角
-	DirectX::XMFLOAT2 position = {0.0f,0.0f};	//座標
-
+	float rotation;	//回転角
+	DirectX::XMFLOAT2 position = { 0.0f,0.0f };	//座標
+	DirectX::XMFLOAT4 color = { 1,1,1,1 };	//座標
+	DirectX::XMFLOAT2 size = { 100.0f,100.0f };//スプライトサイズ
+	DirectX::XMFLOAT2 anchorPoint = { 0.0f,0.0f };//アンカーポイント(座標変換の基準点)
+	bool isFlipX = false;	//左右反転フラグ
+	bool isFlipY = false;	//上下反転フラグ
+	bool isInvisible = false;	//非表示フラグ
 
 public: //メンバ関数
 	void Initialize(SpriteManager* spriteManager, const wchar_t filename[]);
 
 	void Draw();
-
-	void SetColor(DirectX::XMFLOAT4 color_);
+	void SetColor(const DirectX::XMFLOAT4& color_) { color = color_; }
 	void SetPos(const DirectX::XMFLOAT2& pos) { position = pos; }
-	//void SetRotation(float rotation);
+	void SetRotation(float rotation) { this->rotation = rotation; }
+	void SetSize(const DirectX::XMFLOAT2& size_) { size = size_; }
+	void SetAnchorPoint(const DirectX::XMFLOAT2& point) { anchorPoint = point; }
+	void SetFlipX(bool flipX) { isFlipX = flipX; }
+	void SetFlipY(bool flipY) { isFlipY = flipY; }
+	void SetInvisible(bool flag) { isInvisible = flag; }
 
 	const DirectX::XMFLOAT2& GetPosition()const { return position; }
+	float GetRotation()const { return rotation; }
+	const DirectX::XMFLOAT4 GetColor()const { return color; }
+	const DirectX::XMFLOAT2 GetSize()const { return size; }
+	const DirectX::XMFLOAT2 GetAnchorPoint()const { return anchorPoint; }
+	bool GetIsFlipX()const { return isFlipX; }
+	bool GetIsFlipY()const { return isFlipY; }
+	bool GetIsInvisible()const { return isInvisible; }
 
-
+	void Update();
 };
 

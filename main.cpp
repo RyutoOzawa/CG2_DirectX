@@ -62,6 +62,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sprite* sprite = new Sprite();
 	sprite->Initialize(spriteManager, L"Resources/mario.jpg");
 
+	Sprite* sprite2 = new Sprite();
+	sprite2->Initialize(spriteManager, L"Resources/mario.jpg");
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -572,6 +574,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region シーン更新処理
 
 		sprite->SetPos({ 100, 100 });
+		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
 
 #pragma endregion シーン更新処理
 
@@ -620,6 +623,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//スプライト描画処理
 		spriteManager->beginDraw();
 		sprite->Draw();
+		sprite2->Draw();
 
 #pragma endregion シーン描画処理
 		// ４．描画コマンドここまで

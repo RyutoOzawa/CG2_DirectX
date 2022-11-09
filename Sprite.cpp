@@ -56,8 +56,8 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	//全頂点に対して
-	for (int i = 0; i < _countof(vertices_); i++) {
-		vertMap[i] = vertices_[i];
+	for (int i = 0; i < _countof(vertices); i++) {
+		vertMap[i] = vertices[i];
 	}
 	//つながりを解除
 	vertBuff->Unmap(0, nullptr);
@@ -124,28 +124,12 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 
 void Sprite::Draw()
 {
-	matWorld = XMMatrixIdentity();
-	XMMATRIX matRot = XMMatrixIdentity();
-	XMMATRIX matTrans = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotation.z);
-	matRot *= XMMatrixRotationZ(rotation.x);
-	matRot *= XMMatrixRotationZ(rotation.y);
-	matTrans = XMMatrixTranslation(position.x, position.y,0.0f);
-	matWorld *= matRot;
-	matWorld *= matTrans;
+	//非表示なら処理終了
+	if (isInvisible) {
+		return;
+	}
 
-	
-
-	XMMATRIX matProjection = XMMatrixIdentity();
-
-	matProjection.r[0].m128_f32[0] = 2.0f / WindowsAPI::winW;
-	matProjection.r[1].m128_f32[1] = -2.0f / WindowsAPI::winH;
-	matProjection.r[3].m128_f32[0] = -1.0f;
-	matProjection.r[3].m128_f32[1] = 1.0f;
-
-	matWorld *= matProjection;
-
-	constMap->mat = matWorld;
+	Update();
 
 	//頂点バッファビューの設定
 	spriteManager->directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
@@ -163,8 +147,66 @@ void Sprite::Draw()
 	spriteManager->directX->GetCommandList()->DrawInstanced(_countof(vertices), 1, 0, 0);
 }
 
-void Sprite::SetColor(DirectX::XMFLOAT4 color_)
+void Sprite::Update()
 {
-	constMap->color = color_;
+	HRESULT result;
+
+	//頂点データをメンバ変数で計算
+	float left = (0.0f - anchorPoint.x) * size.x;
+	float right = (1.0f - anchorPoint.x) * size.x;
+	float top = (0.0f - anchorPoint.y) * size.y;
+	float bottom = (1.0f - anchorPoint.y) * size.y;
+
+	//左右反転
+	if (isFlipX) {
+		left = -left;
+		right = -right;
+	}
+
+	//上下反転
+	if (isFlipY) {
+		top = -top;
+		bottom = -bottom;
+	}
+
+	vertices[LB].pos = {left,bottom,0.0f };
+	vertices[LT].pos = {left,top,0.0f };
+	vertices[RB].pos = {right,bottom,0.0f };
+	vertices[RT].pos = {right,top,0.0f };
+
+	//頂点バッファにデータ転送
+	VertexPosUv* vertMap = nullptr;
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	assert(SUCCEEDED(result));
+	//全頂点に対して
+	for (int i = 0; i < _countof(vertices); i++) {
+		vertMap[i] = vertices[i];
+	}
+	//つながりを解除
+	vertBuff->Unmap(0, nullptr);
+
+	matWorld = XMMatrixIdentity();
+	XMMATRIX matRot = XMMatrixIdentity();
+	XMMATRIX matTrans = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(rotation);
+	matTrans = XMMatrixTranslation(position.x, position.y, 0.0f);
+	matWorld *= matRot;
+	matWorld *= matTrans;
+
+	XMMATRIX matProjection = XMMatrixIdentity();
+
+	matProjection.r[0].m128_f32[0] = 2.0f / WindowsAPI::winW;
+	matProjection.r[1].m128_f32[1] = -2.0f / WindowsAPI::winH;
+	matProjection.r[3].m128_f32[0] = -1.0f;
+	matProjection.r[3].m128_f32[1] = 1.0f;
+
+	matWorld *= matProjection;
+
+	constMap->mat = matWorld;
+
+	//色を転送
+	constMap->color = color;
 }
+
+
 
