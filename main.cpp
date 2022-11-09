@@ -571,6 +571,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion 基盤システム初期化
 #pragma region シーン更新処理
 
+		sprite->SetPos({ 100, 100 });
+
 #pragma endregion シーン更新処理
 
 		//描画前処理

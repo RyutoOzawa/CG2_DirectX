@@ -104,8 +104,10 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 
 	constMap->mat.r[0].m128_f32[0] = 2.0f / WindowsAPI::winW;
 	constMap->mat.r[1].m128_f32[1] = -2.0f / WindowsAPI::winH;
-	constMap->mat.r[3].m128_f32[0] = -1.0;
+	constMap->mat.r[3].m128_f32[0] = -1.0f;
 	constMap->mat.r[3].m128_f32[1] = 1.0f;
+	matWorld = XMMatrixIdentity();
+	constMap->mat = matWorld;
 
 	//画像ファイルの読み込み
 	texture.LoadTexture(filename);
@@ -122,6 +124,29 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 
 void Sprite::Draw()
 {
+	matWorld = XMMatrixIdentity();
+	XMMATRIX matRot = XMMatrixIdentity();
+	XMMATRIX matTrans = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(rotation.z);
+	matRot *= XMMatrixRotationZ(rotation.x);
+	matRot *= XMMatrixRotationZ(rotation.y);
+	matTrans = XMMatrixTranslation(position.x, position.y,0.0f);
+	matWorld *= matRot;
+	matWorld *= matTrans;
+
+	
+
+	XMMATRIX matProjection = XMMatrixIdentity();
+
+	matProjection.r[0].m128_f32[0] = 2.0f / WindowsAPI::winW;
+	matProjection.r[1].m128_f32[1] = -2.0f / WindowsAPI::winH;
+	matProjection.r[3].m128_f32[0] = -1.0f;
+	matProjection.r[3].m128_f32[1] = 1.0f;
+
+	matWorld *= matProjection;
+
+	constMap->mat = matWorld;
+
 	//頂点バッファビューの設定
 	spriteManager->directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 	
@@ -143,6 +168,3 @@ void Sprite::SetColor(DirectX::XMFLOAT4 color_)
 	constMap->color = color_;
 }
 
-void Sprite::CreateConstBuff()
-{
-}
