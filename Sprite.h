@@ -3,6 +3,8 @@
 #include"SpriteManager.h"
 #include<DirectXMath.h>
 #include"Material.h"
+#include"Texture.h"
+#include<string>
 
 class Sprite
 {
@@ -13,10 +15,12 @@ public:
 	D3D12_VERTEX_BUFFER_VIEW vbView{};	//頂点バッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff = nullptr;	//定数バッファ
+	Texture texture;	//画像データ
+	UINT texNum;
 
 	ConstBufferDataMaterial* constMapMaterial = nullptr;	//色データ
 public:
-	void Initialize(SpriteManager* spriteManager);
+	void Initialize(SpriteManager* spriteManager, const wchar_t filename[]);
 
 	void Draw();
 

@@ -1,3 +1,4 @@
+#pragma once
 #include<DirectXTex.h>
 #include"DirectX.h"
 #include<wrl.h>
@@ -17,6 +18,6 @@ public:
 
 public:
 	void LoadTexture(const wchar_t texture[]);
-	void Initialize(Microsoft::WRL::ComPtr<ID3D12Device> device);
-	void CreateSRV(Microsoft::WRL::ComPtr<ID3D12Device> device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
+	void Initialize(ID3D12Device* device);
+	void CreateSRV(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 };

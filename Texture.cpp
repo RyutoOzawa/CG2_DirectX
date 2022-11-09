@@ -21,7 +21,7 @@ void Texture::LoadTexture(const wchar_t texture[])
 
 }
 
-void Texture::Initialize(ComPtr<ID3D12Device> device)
+void Texture::Initialize(ID3D12Device* device)
 {
 	HRESULT result;
 	if (isLoadTexture) {
@@ -131,13 +131,13 @@ void Texture::Initialize(ComPtr<ID3D12Device> device)
 	}
 }
 
-void Texture::CreateSRV(ComPtr<ID3D12Device> device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
+void Texture::CreateSRV(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
 {
 	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 
 	//SRVを作る場所を一つ分インクリメント
-	srvHandle.ptr += incrementSize;
+	//srvHandle.ptr += incrementSize;
 	//srvのアドレスをメンバ変数に保存
 	texAdress.ptr = srvHandle.ptr;
 

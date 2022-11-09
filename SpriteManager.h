@@ -21,7 +21,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Resource> texbuff[spriteSRVCount];	//テクスチャリソースの配列
 	DirectX::XMMATRIX matProjection;//射影行列
 
-
+	
 public:
 	//初期化
 	void Initialize(ReDirectX* directX,int windowWidth,int windowHeight);

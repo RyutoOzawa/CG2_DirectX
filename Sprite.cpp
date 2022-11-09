@@ -3,7 +3,9 @@ using namespace DirectX;
 #include<wrl.h>
 using namespace Microsoft::WRL;
 
-void Sprite::Initialize(SpriteManager* spriteManager)
+using namespace std;
+
+void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 {
 	this->spriteManager = spriteManager;
 	HRESULT result;
@@ -96,6 +98,19 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 
 	//値を書き込むと自動的に転送される
 	constMapMaterial->color = XMFLOAT4(1, 1, 1, 1);
+
+
+	//画像ファイルの読み込み
+	texture.LoadTexture(filename);
+
+	//テクスチャの初期化
+	texture.Initialize(dev.Get());
+
+	//マネージャークラスのSRVヒープの先頭を取得
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = this->spriteManager->descHeap->GetCPUDescriptorHandleForHeapStart();
+
+	//SRV作成
+	texture.CreateSRV(dev.Get(), srvHandle);
 }
 
 void Sprite::Draw()
@@ -104,6 +119,14 @@ void Sprite::Draw()
 	spriteManager->directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 	//定数バッファビュー
 	spriteManager->directX->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+	//デスクリプタヒープの配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { spriteManager->descHeap.Get()};
+	spriteManager->directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	//SRVヒープの先頭ハンドル取得
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->descHeap->GetGPUDescriptorHandleForHeapStart();
+	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+	spriteManager->directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
 	//描画コマンド
 	spriteManager->directX->GetCommandList()->DrawInstanced(_countof(vertices), 1, 0, 0);
 }

@@ -60,7 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager);
+	sprite->Initialize(spriteManager, L"Resources/sumario.jpg");
 
 
 	//ランダムな数値を取得
@@ -277,9 +277,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//Heapの種類によってDescriptorのサイズは異なる(異なってもいいという仕様)
 	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	texture1.CreateSRV(directX->GetDevice(), srvHandle);
-	//srvHandle.ptr += incrementSize;
+	srvHandle.ptr += incrementSize;
 	texture2.CreateSRV(directX->GetDevice(), srvHandle);
-	//srvHandle.ptr += incrementSize;
+	srvHandle.ptr += incrementSize;
 	texture3.CreateSRV(directX->GetDevice(), srvHandle);
 
 	//インデックスデータ
