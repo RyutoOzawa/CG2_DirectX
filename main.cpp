@@ -64,11 +64,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager);
+	sprite->Initialize(spriteManager,0);
 
 	Sprite* sprite2 = new Sprite();
-	sprite2->Initialize(spriteManager);
-	sprite2->SetTextureNum(1);
+	sprite2->Initialize(spriteManager,1);
+	//sprite2->SetTextureNum(1);
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);

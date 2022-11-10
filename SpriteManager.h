@@ -52,6 +52,9 @@ public:
 	/// <param name="dev"></param>
 	void SetTextureCommand(uint32_t index);
 
+	//指定番号のテクスチャバッファを取得
+	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return texBuffuers[index].Get(); }
+
 private:
 	//スプライト用パイプラインステートとルートシグネチャの生成
 	void CreatePipeline2D(ID3D12Device* dev);

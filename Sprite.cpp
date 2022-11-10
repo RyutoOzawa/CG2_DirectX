@@ -5,12 +5,19 @@ using namespace Microsoft::WRL;
 using namespace std;
 #include"WindowsAPI.h"
 
-void Sprite::Initialize(SpriteManager* spriteManager)
+void Sprite::Initialize(SpriteManager* spriteManager,uint32_t textureNum)
 {
-	this->spriteManager = spriteManager;
 	HRESULT result;
 
+	this->spriteManager = spriteManager;
 	ComPtr<ID3D12Device> dev = spriteManager->directX->GetDevice();
+
+	if (textureNum != UINT32_MAX) {
+		textureIndex = textureNum;
+		AdjustTextureSize();
+		//テクスチャサイズをスプライトのサイズに適用
+		size = textureSize;
+	}
 
 	//頂点データ
 	VertexPosUv vertices_[] = {
@@ -136,8 +143,8 @@ void Sprite::Draw()
 
 	//頂点バッファビューの設定
 	spriteManager->directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
-	
-	
+
+
 	////SRVヒープの先頭ハンドル取得
 	//D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->descHeap->GetGPUDescriptorHandleForHeapStart();
 	////SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
@@ -170,10 +177,29 @@ void Sprite::Update()
 		bottom = -bottom;
 	}
 
-	vertices[LB].pos = {left,bottom,0.0f };
-	vertices[LT].pos = {left,top,0.0f };
-	vertices[RB].pos = {right,bottom,0.0f };
-	vertices[RT].pos = {right,top,0.0f };
+	vertices[LB].pos = { left,bottom,0.0f };
+	vertices[LT].pos = { left,top,0.0f };
+	vertices[RB].pos = { right,bottom,0.0f };
+	vertices[RT].pos = { right,top,0.0f };
+
+	//テクスチャバッファ取得
+	ID3D12Resource* textureBuffer = spriteManager->GetTextureBuffer(textureIndex);
+	//指定番号のテクスチャが読み込み済みなら
+	if (textureBuffer) {
+		//テクスチャ情報取得
+		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
+
+		float tex_left = textureLeftTop.x / resDesc.Width;
+		float tex_right = (textureLeftTop.x + textureSize.x) / resDesc.Width;
+		float tex_top = textureLeftTop.y / resDesc.Height;
+		float tex_bottom = (textureLeftTop.y + textureSize.y) / resDesc.Height;
+		//頂点のUVに反映
+		vertices[LB].uv = { tex_left,tex_bottom };
+		vertices[LT].uv = { tex_left,tex_top };
+		vertices[RB].uv = { tex_right,tex_bottom };
+		vertices[RT].uv = { tex_right,tex_top };
+
+	}
 
 	//頂点バッファにデータ転送
 	VertexPosUv* vertMap = nullptr;
@@ -209,5 +235,15 @@ void Sprite::Update()
 	constMap->color = color;
 }
 
+void Sprite::AdjustTextureSize() {
+	ID3D12Resource* textureBuffer = spriteManager->GetTextureBuffer(textureIndex);
+	assert(textureBuffer);
+
+	//テクスチャ情報取得
+	D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
+
+	textureSize.x = static_cast<float>(resDesc.Width);
+	textureSize.y = static_cast<float>(resDesc.Height);
+}
 
 
