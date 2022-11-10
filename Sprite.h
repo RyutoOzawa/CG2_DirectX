@@ -25,8 +25,8 @@ public:	//メンバ変数
 	D3D12_VERTEX_BUFFER_VIEW vbView{};	//頂点バッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff = nullptr;	//定数バッファ
-	Texture texture;	//画像データ
-	UINT texNum;
+	//Texture texture;	//画像データ
+	uint32_t textureIndex = 0;
 	//定数バッファ構造体
 	ConstBufferData* constMap = nullptr;
 
@@ -41,7 +41,7 @@ public:	//メンバ変数
 	bool isInvisible = false;	//非表示フラグ
 
 public: //メンバ関数
-	void Initialize(SpriteManager* spriteManager, const wchar_t filename[]);
+	void Initialize(SpriteManager* spriteManager);
 
 	void Draw();
 	void SetColor(const DirectX::XMFLOAT4& color_) { color = color_; }
@@ -52,6 +52,7 @@ public: //メンバ関数
 	void SetFlipX(bool flipX) { isFlipX = flipX; }
 	void SetFlipY(bool flipY) { isFlipY = flipY; }
 	void SetInvisible(bool flag) { isInvisible = flag; }
+	void SetTextureNum(uint32_t index) { textureIndex = index; }
 
 	const DirectX::XMFLOAT2& GetPosition()const { return position; }
 	float GetRotation()const { return rotation; }
@@ -61,6 +62,7 @@ public: //メンバ関数
 	bool GetIsFlipX()const { return isFlipX; }
 	bool GetIsFlipY()const { return isFlipY; }
 	bool GetIsInvisible()const { return isInvisible; }
+	uint32_t GetTextureNum()const { return textureIndex; }
 
 	void Update();
 };

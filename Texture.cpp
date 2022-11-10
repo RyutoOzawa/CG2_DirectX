@@ -7,11 +7,11 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 
 
-void Texture::LoadTexture(const wchar_t texture[])
+void Texture::LoadTexture(const wchar_t* fileName)
 {
 	HRESULT result;
 	result = LoadFromWICFile(
-		texture,
+		fileName,
 		WIC_FLAGS_NONE,
 		&metadata, scratchImg);
 

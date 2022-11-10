@@ -17,7 +17,7 @@ public:
 
 
 public:
-	void LoadTexture(const wchar_t texture[]);
+	void LoadTexture(const wchar_t*fileName);
 	void Initialize(ID3D12Device* device);
 	void CreateSRV(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 };

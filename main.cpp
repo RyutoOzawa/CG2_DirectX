@@ -58,12 +58,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma region 描画初期化処理
 
+	//画像読み込み
+	spriteManager->LoadTexture(0, L"Resources/mario.jpg");
+	spriteManager->LoadTexture(1, L"Resources/reimu.png");
+
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager, L"Resources/mario.jpg");
+	sprite->Initialize(spriteManager);
 
 	Sprite* sprite2 = new Sprite();
-	sprite2->Initialize(spriteManager, L"Resources/mario.jpg");
+	sprite2->Initialize(spriteManager);
+	sprite2->SetTextureNum(1);
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);

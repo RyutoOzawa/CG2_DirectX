@@ -2,8 +2,10 @@
 #include<d3d12.h>
 #include"DirectX.h"
 #include<DirectXMath.h>
+#include<array>
+#include<string>
 
-const int spriteSRVCount = 512;
+
 
 struct VertexPosUv {
 	DirectX::XMFLOAT3 pos;	//xyz座標
@@ -20,11 +22,14 @@ class SpriteManager
 
 	
 public:
+	static const size_t spriteSRVCount = 2056;
+	static std::string defaultTextureDirectoryPath;
+
 	ReDirectX* directX = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;		//パイプラインステート
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;			//デスクリプタヒープ
-	Microsoft::WRL::ComPtr<ID3D12Resource> texbuff[spriteSRVCount];	//テクスチャリソースの配列
+	std::array< Microsoft::WRL::ComPtr<ID3D12Resource>,spriteSRVCount >texBuffuers;	//テクスチャバッファ
 	DirectX::XMMATRIX matProjection;//射影行列
 
 	
@@ -34,6 +39,19 @@ public:
 
 	//描画前処理
 	void beginDraw();
+
+	/// <summary>
+	/// テクスチャのロード
+	/// </summary>
+	/// <param name="index"></param>
+	void LoadTexture(uint32_t index, const wchar_t* fileName);
+
+	/// <summary>
+	/// テクスチャコマンドの発行
+	/// </summary>
+	/// <param name="dev"></param>
+	void SetTextureCommand(uint32_t index);
+
 private:
 	//スプライト用パイプラインステートとルートシグネチャの生成
 	void CreatePipeline2D(ID3D12Device* dev);

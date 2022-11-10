@@ -5,7 +5,7 @@ using namespace Microsoft::WRL;
 using namespace std;
 #include"WindowsAPI.h"
 
-void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
+void Sprite::Initialize(SpriteManager* spriteManager)
 {
 	this->spriteManager = spriteManager;
 	HRESULT result;
@@ -109,17 +109,17 @@ void Sprite::Initialize(SpriteManager* spriteManager, const wchar_t filename[])
 	matWorld = XMMatrixIdentity();
 	constMap->mat = matWorld;
 
-	//画像ファイルの読み込み
-	texture.LoadTexture(filename);
+	////画像ファイルの読み込み
+	//texture.LoadTexture(filename);
 
-	//テクスチャの初期化
-	texture.Initialize(dev.Get());
+	////テクスチャの初期化
+	//texture.Initialize(dev.Get());
 
-	//マネージャークラスのSRVヒープの先頭を取得
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = this->spriteManager->descHeap->GetCPUDescriptorHandleForHeapStart();
+	////マネージャークラスのSRVヒープの先頭を取得
+	//D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = this->spriteManager->descHeap->GetCPUDescriptorHandleForHeapStart();
 
-	//SRV作成
-	texture.CreateSRV(dev.Get(), srvHandle);
+	////SRV作成
+	//texture.CreateSRV(dev.Get(), srvHandle);
 }
 
 void Sprite::Draw()
@@ -129,18 +129,19 @@ void Sprite::Draw()
 		return;
 	}
 
+	//テクスチャの設定コマンド
+	spriteManager->SetTextureCommand(textureIndex);
+
 	Update();
 
 	//頂点バッファビューの設定
 	spriteManager->directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 	
-	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { spriteManager->descHeap.Get()};
-	spriteManager->directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	//SRVヒープの先頭ハンドル取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->descHeap->GetGPUDescriptorHandleForHeapStart();
-	//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	spriteManager->directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	
+	////SRVヒープの先頭ハンドル取得
+	//D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->descHeap->GetGPUDescriptorHandleForHeapStart();
+	////SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+	//spriteManager->directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	//定数バッファビュー
 	spriteManager->directX->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 	//描画コマンド

@@ -5,6 +5,9 @@ using namespace Microsoft::WRL;
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 #include"GpPipeline.h"
+#include"Texture.h"
+
+std::string SpriteManager::defaultTextureDirectoryPath = "Resources/";
 
 void SpriteManager::Initialize(ReDirectX* directX, int windowWidth, int windowHeight)
 {
@@ -41,6 +44,50 @@ void SpriteManager::beginDraw()
 	directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//デスクリプタヒープの配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
+	directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+}
+
+void SpriteManager::LoadTexture(uint32_t index, const wchar_t* fileName)
+{
+	////ディレクトリパスと引数ファイル名を連結してフルパスを得る
+	//std::string fullPath = defaultTextureDirectoryPath + fileName;
+
+	////ワイド文字列に変換した際の文字列バッファサイズを計算
+	//int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+
+	////ワイド文字列に変換
+	//std::vector<wchar_t> wfilePath(filePathBufferSize);
+	//MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+
+	//新しいテクスチャを生成
+
+	Texture* newTexture = new Texture();
+	//画像読み込み
+	newTexture->LoadTexture(fileName);
+	//テクスチャバッファの生成とデータ転送
+	newTexture->Initialize(directX->GetDevice());
+	//メンバのテクスチャバッファ配列index番目にテクスチャバッファをコピー
+	texBuffuers[index] = newTexture->texBuff;
+	//ハンドルをindex分進めたところにSRV作成
+	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = descHeap->GetCPUDescriptorHandleForHeapStart();
+	srvHandle.ptr += incrementSize * index;
+	newTexture->CreateSRV(directX->GetDevice(), srvHandle);
+	//新しいテクスチャのテクスチャバッファをindex番目のテクスチャバッファにコピー
+	texBuffuers[index] = newTexture->texBuff;
+}
+
+void SpriteManager::SetTextureCommand(uint32_t index) {
+	//SRVヒープの先頭ハンドル取得
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = descHeap->GetGPUDescriptorHandleForHeapStart();
+	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	srvGpuHandle.ptr += incrementSize * index;
+	//SRVのハンドルをルートパラメータ1番に設定
+	directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
 }
 
 void SpriteManager::CreatePipeline2D(ID3D12Device* dev)
