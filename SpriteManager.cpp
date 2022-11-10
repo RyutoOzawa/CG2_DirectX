@@ -13,15 +13,10 @@ void SpriteManager::Initialize(ReDirectX* directX, int windowWidth, int windowHe
 {
 	//nullチェック
 	assert(directX);
-
 	//引数をメンバに渡す
 	this->directX = directX;
-
-
-
 	//パイプラインステート生成
 	CreatePipeline2D(this->directX->GetDevice());
-
 	//デスクリプタヒープ生成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
