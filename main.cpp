@@ -164,18 +164,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//ビュー変換行列の計算
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
-	/*Texture texture1;
-	texture1.LoadTexture(L"Resources/mario.jpg");
-	texture1.Initialize(directX->GetDevice());
-
-	Texture texture2;
-	texture2.LoadTexture(L"Resources/reimu.png");
-	texture2.Initialize(directX->GetDevice());
-
-	Texture texture3;
-	texture3.LoadTexture(L"Resources/orangeBlock.png");
-	texture3.Initialize(directX->GetDevice());*/
-
 	ComPtr<ID3D12Resource> texBuff;
 	//texBuff = texture1.texBuff;
 

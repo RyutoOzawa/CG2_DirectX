@@ -39,12 +39,6 @@ public:
 	void beginDraw();
 
 	/// <summary>
-	/// テクスチャのロード
-	/// </summary>
-	/// <param name="index"></param>
-	void LoadTexture(uint32_t index, const wchar_t* fileName);
-
-	/// <summary>
 	/// テクスチャコマンドの発行
 	/// </summary>
 	/// <param name="dev"></param>
