@@ -48,10 +48,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Input* input = new Input();
 	input->Initialize(windowsAPI);
 
+	//テクスチャマネージャーの初期化
+	Texture::Initialize(directX->GetDevice());
+
 	SpriteManager* spriteManager = nullptr;
 	//スプライト共通部の初期化
 	spriteManager = new SpriteManager;
 	spriteManager->Initialize(directX,WindowsAPI::winW,WindowsAPI::winH);
+
+	
 
 
 #pragma endregion 基盤システム初期化
@@ -59,15 +64,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region 描画初期化処理
 
 	//画像読み込み
-	spriteManager->LoadTexture(0, L"Resources/mario.jpg");
-	spriteManager->LoadTexture(1, L"Resources/reimu.png");
+	uint32_t marioGraph = Texture::LoadTexture(L"Resources/mario.jpg");
+	uint32_t reimuGraph = Texture::LoadTexture(L"Resources/reimu.png");
 
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager,0);
+	sprite->Initialize(spriteManager,marioGraph);
 
 	Sprite* sprite2 = new Sprite();
-	sprite2->Initialize(spriteManager,1);
+	sprite2->Initialize(spriteManager,reimuGraph);
 	//sprite2->SetTextureNum(1);
 
 	//ランダムな数値を取得
@@ -159,7 +164,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//ビュー変換行列の計算
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
-	Texture texture1;
+	/*Texture texture1;
 	texture1.LoadTexture(L"Resources/mario.jpg");
 	texture1.Initialize(directX->GetDevice());
 
@@ -169,10 +174,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Texture texture3;
 	texture3.LoadTexture(L"Resources/orangeBlock.png");
-	texture3.Initialize(directX->GetDevice());
+	texture3.Initialize(directX->GetDevice());*/
 
 	ComPtr<ID3D12Resource> texBuff;
-	texBuff = texture1.texBuff;
+	//texBuff = texture1.texBuff;
 
 	//SRVの最大個数
 	const size_t kMaxSRVCount = 2056;
@@ -278,16 +283,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	srvDesc.Texture2D.MipLevels = resDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	directX->GetDevice()->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
+	//directX->GetDevice()->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
 
 	//GetDescriptorHandIncrementSizeの引数はD3D12_DESCRIPTOR_HEAP_TYPE
 	//Heapの種類によってDescriptorのサイズは異なる(異なってもいいという仕様)
-	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	texture1.CreateSRV(directX->GetDevice(), srvHandle);
-	srvHandle.ptr += incrementSize;
-	texture2.CreateSRV(directX->GetDevice(), srvHandle);
-	srvHandle.ptr += incrementSize;
-	texture3.CreateSRV(directX->GetDevice(), srvHandle);
+	//UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	//texture1.CreateSRV(directX->GetDevice(), srvHandle);
+	//srvHandle.ptr += incrementSize;
+	//texture2.CreateSRV(directX->GetDevice(), srvHandle);
+	//srvHandle.ptr += incrementSize;
+	//texture3.CreateSRV(directX->GetDevice(), srvHandle);
 
 	//インデックスデータ
 	unsigned short indices[] = {
@@ -618,7 +623,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 
-		srvGpuHandle.ptr += incrementSize;
+		/*srvGpuHandle.ptr += incrementSize;*/
 
 		//SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 		directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);

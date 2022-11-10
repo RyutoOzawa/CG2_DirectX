@@ -2,8 +2,7 @@
 #include<d3d12.h>
 #include"DirectX.h"
 #include<DirectXMath.h>
-#include<array>
-#include<string>
+#include"Texture.h"
 
 
 
@@ -22,14 +21,13 @@ class SpriteManager
 
 	
 public:
-	static const size_t spriteSRVCount = 2056;
+	
 	static std::string defaultTextureDirectoryPath;
 
 	ReDirectX* directX = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;		//パイプラインステート
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;			//デスクリプタヒープ
-	std::array< Microsoft::WRL::ComPtr<ID3D12Resource>,spriteSRVCount >texBuffuers;	//テクスチャバッファ
+
 	DirectX::XMMATRIX matProjection;//射影行列
 
 	
@@ -53,7 +51,7 @@ public:
 	void SetTextureCommand(uint32_t index);
 
 	//指定番号のテクスチャバッファを取得
-	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return texBuffuers[index].Get(); }
+	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return Texture::texBuffuers[index].Get(); }
 
 private:
 	//スプライト用パイプラインステートとルートシグネチャの生成

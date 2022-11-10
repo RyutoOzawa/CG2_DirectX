@@ -17,14 +17,6 @@ void SpriteManager::Initialize(ReDirectX* directX, int windowWidth, int windowHe
 	this->directX = directX;
 	//パイプラインステート生成
 	CreatePipeline2D(this->directX->GetDevice());
-	//デスクリプタヒープ生成
-	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
-	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descHeapDesc.NumDescriptors = spriteSRVCount;
-	HRESULT result = this->directX->GetDevice()->CreateDescriptorHeap(&descHeapDesc,
-		IID_PPV_ARGS(&descHeap));
-	assert(SUCCEEDED(result));
 
 	//ビュー行列作成
 	matProjection = XMMatrixOrthographicOffCenterLH(
@@ -40,7 +32,7 @@ void SpriteManager::beginDraw()
 	//プリミティブ形状の設定
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
 	directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 }
@@ -59,25 +51,25 @@ void SpriteManager::LoadTexture(uint32_t index, const wchar_t* fileName)
 
 	//新しいテクスチャを生成
 
-	Texture* newTexture = new Texture();
-	//画像読み込み
-	newTexture->LoadTexture(fileName);
-	//テクスチャバッファの生成とデータ転送
-	newTexture->Initialize(directX->GetDevice());
-	//メンバのテクスチャバッファ配列index番目にテクスチャバッファをコピー
-	texBuffuers[index] = newTexture->texBuff;
-	//ハンドルをindex分進めたところにSRV作成
-	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = descHeap->GetCPUDescriptorHandleForHeapStart();
-	srvHandle.ptr += incrementSize * index;
-	newTexture->CreateSRV(directX->GetDevice(), srvHandle);
-	//新しいテクスチャのテクスチャバッファをindex番目のテクスチャバッファにコピー
-	texBuffuers[index] = newTexture->texBuff;
+	//Texture* newTexture = new Texture();
+	////画像読み込み
+	//newTexture->LoadTexture(fileName);
+	////テクスチャバッファの生成とデータ転送
+	//newTexture->Initialize(directX->GetDevice());
+	////メンバのテクスチャバッファ配列index番目にテクスチャバッファをコピー
+	//texBuffuers[index] = newTexture->texBuff;
+	////ハンドルをindex分進めたところにSRV作成
+	//UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	//D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = descHeap->GetCPUDescriptorHandleForHeapStart();
+	//srvHandle.ptr += incrementSize * index;
+	//newTexture->CreateSRV(directX->GetDevice(), srvHandle);
+	////新しいテクスチャのテクスチャバッファをindex番目のテクスチャバッファにコピー
+	//texBuffuers[index] = newTexture->texBuff;
 }
 
 void SpriteManager::SetTextureCommand(uint32_t index) {
 	//SRVヒープの先頭ハンドル取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = descHeap->GetGPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
 	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	srvGpuHandle.ptr += incrementSize * index;
 	//SRVのハンドルをルートパラメータ1番に設定

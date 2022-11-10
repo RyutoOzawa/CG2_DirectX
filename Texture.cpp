@@ -7,25 +7,27 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 
 
-void Texture::LoadTexture(const wchar_t* fileName)
+ComPtr<ID3D12DescriptorHeap>Texture::descHeap;			//デスクリプタヒープ
+std::array<ComPtr<ID3D12Resource>, Texture::spriteSRVCount >Texture::texBuffuers;	//テクスチャバッファ
+D3D12_RESOURCE_DESC Texture::textureResourceDesc{};
+ComPtr<ID3D12Device> Texture::dev = nullptr;
+
+uint32_t Texture::LoadTexture(const wchar_t* fileName)
 {
+	DirectX::TexMetadata metadata{};
+	DirectX::ScratchImage scratchImg{};
+	DirectX::ScratchImage mipChain{};
+
 	HRESULT result;
 	result = LoadFromWICFile(
 		fileName,
 		WIC_FLAGS_NONE,
 		&metadata, scratchImg);
 
-	if (result == S_OK) {
-		if (!isLoadTexture)isLoadTexture = true;
-	}
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
-}
-
-void Texture::Initialize(ID3D12Device* device)
-{
-	HRESULT result;
-	if (isLoadTexture) {
-	
+	//ファイルが見つかったら通常のファイル読み込み
+	if (fileName != L"NULL") {
 		//ミップマップ生成
 		result = GenerateMipMaps(
 			scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
@@ -34,10 +36,8 @@ void Texture::Initialize(ID3D12Device* device)
 			scratchImg = std::move(mipChain);
 			metadata = scratchImg.GetMetadata();
 		}
-
 		// 読み込んだディフューズテクスチャをSRGBとして扱う
 		metadata.format = MakeSRGB(metadata.format);
-
 		//ヒープ設定
 		D3D12_HEAP_PROPERTIES textureHeapProp{};
 		textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
@@ -52,15 +52,13 @@ void Texture::Initialize(ID3D12Device* device)
 		textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
 		textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
 		textureResourceDesc.SampleDesc.Count = 1;
-
-		result = device->CreateCommittedResource(
+		result = dev->CreateCommittedResource(
 			&textureHeapProp,
 			D3D12_HEAP_FLAG_NONE,
 			&textureResourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&texBuff));
-
 		//全ミップマップについて
 		for (size_t i = 0; i < metadata.mipLevels; i++) {
 			//ミップマップレベルを指定してイメージを取得
@@ -75,10 +73,9 @@ void Texture::Initialize(ID3D12Device* device)
 			);
 			assert(SUCCEEDED(result));
 		}
-
 	}
-	else {
-		//画像が読み込まれて以内なら256*256のランダムの色のピクセルの画像データを入れる	////横方向ピクセル数
+	else {	//ファイルが見つからないorファイル名が読み込まれていないなら256*256のランダムの色のピクセルの画像データを入れる
+		////横方向ピクセル数
 		const size_t textureWidth = 256;
 		//縦方向ピクセル数
 		const size_t textureHeight = 256;
@@ -89,10 +86,10 @@ void Texture::Initialize(ID3D12Device* device)
 
 		//全ピクセルの色を初期化
 		for (size_t i = 0; i < imageDataCount; i++) {
-			imageData[i].x =Random(0.0f,1.0f);	// R
-			imageData[i].y =Random(0.0f,1.0f); // G
-			imageData[i].z =Random(0.0f,1.0f); // B
-			imageData[i].w =Random(0.0f,1.0f); // A
+			imageData[i].x = Random(0.0f, 1.0f);	// R
+			imageData[i].y = Random(0.0f, 1.0f); // G
+			imageData[i].z = Random(0.0f, 1.0f); // B
+			imageData[i].w = Random(0.0f, 1.0f); // A
 		}
 
 		//ヒープ設定
@@ -110,7 +107,7 @@ void Texture::Initialize(ID3D12Device* device)
 		textureResourceDesc.MipLevels = 1;
 		textureResourceDesc.SampleDesc.Count = 1;
 
-		result = device->CreateCommittedResource(
+		result = dev->CreateCommittedResource(
 			&textureHeapProp,
 			D3D12_HEAP_FLAG_NONE,
 			&textureResourceDesc,
@@ -123,24 +120,47 @@ void Texture::Initialize(ID3D12Device* device)
 			0,
 			nullptr,				//全領域へコピー
 			imageData,			//元データアドレス
-			sizeof(XMFLOAT4) *textureWidth,	//1ラインサイズ
-			sizeof(XMFLOAT4) *imageDataCount 	//全サイズ
+			sizeof(XMFLOAT4) * textureWidth,	//1ラインサイズ
+			sizeof(XMFLOAT4) * imageDataCount 	//全サイズ
 		);
-
 		delete[] imageData;
+	}
+
+	for (int i = 0; i < texBuffuers.size(); i++) {
+
+		//まだテクスチャ情報が割り当てられていないところにテクスチャ情報を入れる
+		if (!texBuffuers[i]) {
+			texBuffuers[i] = texBuff;
+			//SRV作成
+			UINT incrementSize = dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = descHeap->GetCPUDescriptorHandleForHeapStart();
+			srvHandle.ptr += incrementSize * i;
+			CreateSRV(texBuff.Get(), srvHandle);
+			//iを戻り値として返す
+			return i;
+		}
 	}
 }
 
-void Texture::CreateSRV(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
+void Texture::Initialize(ID3D12Device* device)
 {
-	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	HRESULT result;
+	//デバイスのインスタンスを借りる
+	dev = device;
 
+	//デスクリプタヒープ生成
+	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
+	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descHeapDesc.NumDescriptors = spriteSRVCount;
+	result = dev->CreateDescriptorHeap(&descHeapDesc,
+		IID_PPV_ARGS(&descHeap));
+	assert(SUCCEEDED(result));
 
-	//SRVを作る場所を一つ分インクリメント
-	//srvHandle.ptr += incrementSize;
-	//srvのアドレスをメンバ変数に保存
-	texAdress.ptr = srvHandle.ptr;
+}
 
+void Texture::CreateSRV(ID3D12Resource* texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle)
+{
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = textureResourceDesc.Format;//RGBA float
 	srvDesc.Shader4ComponentMapping =
@@ -149,5 +169,5 @@ void Texture::CreateSRV(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE& srvHa
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	device->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
+	dev->CreateShaderResourceView(texBuff, &srvDesc, srvHandle);
 }
