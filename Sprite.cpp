@@ -115,18 +115,6 @@ void Sprite::Initialize(SpriteManager* spriteManager,uint32_t textureNum)
 	constMap->mat.r[3].m128_f32[1] = 1.0f;
 	matWorld = XMMatrixIdentity();
 	constMap->mat = matWorld;
-
-	////画像ファイルの読み込み
-	//texture.LoadTexture(filename);
-
-	////テクスチャの初期化
-	//texture.Initialize(dev.Get());
-
-	////マネージャークラスのSRVヒープの先頭を取得
-	//D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = this->spriteManager->descHeap->GetCPUDescriptorHandleForHeapStart();
-
-	////SRV作成
-	//texture.CreateSRV(dev.Get(), srvHandle);
 }
 
 void Sprite::Draw()
@@ -143,12 +131,6 @@ void Sprite::Draw()
 
 	//頂点バッファビューの設定
 	spriteManager->directX->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
-
-
-	////SRVヒープの先頭ハンドル取得
-	//D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = spriteManager->descHeap->GetGPUDescriptorHandleForHeapStart();
-	////SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	//spriteManager->directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	//定数バッファビュー
 	spriteManager->directX->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 	//描画コマンド
