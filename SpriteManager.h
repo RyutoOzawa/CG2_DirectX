@@ -23,7 +23,6 @@ class SpriteManager
 public:
 	
 	static std::string defaultTextureDirectoryPath;
-
 	ReDirectX* directX = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;		//パイプラインステート
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
