@@ -6,6 +6,7 @@
 #include"Transform.h"
 #include"DirectX.h"
 #include<vector>
+#include<string>
 
 class Object3d
 {
@@ -55,7 +56,7 @@ public:
 	static void StaticInitialize(ReDirectX* directX_);
 	static void BeginDraw();
 
-	void CreateModel();
+	void CreateModel(std::string filename = "NULL");
 	void Initialize();
 	void Update(DirectX::XMMATRIX& matView, DirectX::XMMATRIX& matProjection);
 	void Draw();

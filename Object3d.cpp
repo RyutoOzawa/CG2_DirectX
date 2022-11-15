@@ -9,6 +9,11 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "d3dcompiler.lib")
 #include"GpPipeline.h"
 #include"Texture.h"
+#include<fstream>
+#include<sstream>
+
+#include<vector>
+using namespace std;
 
 //静的メンバ変数
 ComPtr<ID3D12PipelineState> Object3d::pipelineState;
@@ -49,55 +54,145 @@ void Object3d::BeginDraw()
 	directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 }
 
-void Object3d::CreateModel()
+void Object3d::CreateModel(std::string filename)
 {
 	HRESULT result;
 
-	//頂点データと頂点バッファビューの生成
-	// 頂点データ
-	Vertex vertices_[] = {
-		//     x     y    z     法線  u    v
+	if (filename != "NULL") {
+		HRESULT result = S_FALSE;
+
+		//ファイルストリーム
+		ifstream file;
+		//.objファイルを開く
+		file.open("Resources/triangle/triangle.obj");
+		//ファイルオープン失敗をチェック
+		if (file.fail()) {
+			assert(0);
+		}
+
+		vector<XMFLOAT3> positions;	//頂点座標
+		vector<XMFLOAT3> normals;	//法線ベクトル
+		vector<XMFLOAT2> texcords;	//テクスチャUV
+		//1行ずつ読み込む
+		string line;
+		while (getline(file, line)) {
+
+			//1行分の文字列をストリームに変換して解析しやすくする
+			istringstream line_stream(line);
+
+			//半角スペース区切りで行の先頭文字列を取得
+			string key;
+			getline(line_stream, key, ' ');
+
+			//先頭文字列がvなら頂点座標
+			if (key == "v") {
+				//X,Y,Z座標読み込み
+				XMFLOAT3 position{};
+				line_stream >> position.x;
+				line_stream >> position.y;
+				line_stream >> position.z;
+				//座標データに追加
+				positions.emplace_back(position);
+				//頂点データに追加
+				Vertex vertex{};
+				vertex.pos = position;
+				vertices.emplace_back(vertex);
+			}
+			//先頭文字列がfならポリゴン(三角形)
+			if (key == "f") {
+				//半角スペース区切りで行の続きを読み込む
+				string index_string;
+				while (getline(line_stream, index_string, ' ')) {
+					//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
+					istringstream index_stream(index_string);
+					unsigned short indexPosition;
+					index_stream >> indexPosition;
+					//頂点インデックスに追加
+					indices.emplace_back(indexPosition - 1);
+				}
+
+			}
+		}
+		//ファイルを閉じる
+		file.close();
+
+	}
+	else {
+		//頂点データと頂点バッファビューの生成
+		// 頂点データ
+		Vertex vertices_[] = {
+			//     x     y    z     法線  u    v
+
+				//前
+				{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+				{{-5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+				{{ 5.0f,-5.0f,-5.0f}, {},{1.0f,1.0f}}, // 右下
+				{{ 5.0f, 5.0f,-5.0f}, {},{1.0f,0.0f}}, // 右上
+
+				//後
+				{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
+				{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
+				{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+				{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+
+				//左
+				{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+				{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+				{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+				{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+				//右
+				{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
+				{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
+				{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
+				{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+				//下
+				{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+				{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+				{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+				{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+
+				//上
+				{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
+				{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
+				{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
+				{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
+		};
+		for (int i = 0; i < _countof(vertices_); i++) {
+			vertices.push_back(vertices_[i]);
+		}
+
+		//インデックスデータ
+		unsigned short indices_[] = {
 
 			//前
-			{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{-5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{ 5.0f,-5.0f,-5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f,-5.0f}, {},{1.0f,0.0f}}, // 右上
-
-			//後
-			{{-5.0f,-5.0f, 5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{-5.0f, 5.0f, 5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
-
+			0,1,2,		//三角形1つ目
+			2,1,3,		//三角形2つ目
+			//後	
+			5,4,7,		//三角形3つ目
+			7,4,6,		//三角形4つ目
 			//左
-			{{-5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-			{{-5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-			{{-5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-			{{-5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
-
+			8,9,10,		//三角形5つ目
+			10,9,11,	//三角形6つ目
 			//右
-			{{ 5.0f,-5.0f,-5.0f}, {} ,{0.0f,1.0f}}, // 左下
-			{{ 5.0f,-5.0f, 5.0f}, {} ,{0.0f,0.0f}}, // 左上
-			{{ 5.0f, 5.0f,-5.0f}, {} ,{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {} ,{1.0f,0.0f}}, // 右上
-
+			13,12,15,	//三角形7つ目
+			15,12,14,	//三角形8つ目
 			//下
-			{{-5.0f, 5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{ 5.0f, 5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{-5.0f, 5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f, 5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
-
+			17,16,19,	//三角形9つ目
+			19,16,18,	//三角形10つ目
 			//上
-			{{-5.0f,-5.0f,-5.0f}, {},{0.0f,1.0f}}, // 左下
-			{{ 5.0f,-5.0f,-5.0f}, {},{0.0f,0.0f}}, // 左上
-			{{-5.0f,-5.0f, 5.0f}, {},{1.0f,1.0f}}, // 右下
-			{{ 5.0f,-5.0f, 5.0f}, {},{1.0f,0.0f}}, // 右上
-	};
+			20,21,22,	//三角形11つ目
+			22,21,23,	//三角形12つ目
+		};
 
-	for (int i = 0; i < _countof(vertices_); i++) {
-		vertices.push_back(vertices_[i]);
+		for (int i = 0; i < _countof(indices_); i++) {
+			indices.push_back(indices_[i]);
+		}
+
 	}
+
+
 
 	//頂点データ全体のサイズ
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
@@ -145,32 +240,9 @@ void Object3d::CreateModel()
 	// 頂点1つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
-	//インデックスデータ
-	unsigned short indices_[] = {
+	
 
-		//前
-		0,1,2,		//三角形1つ目
-		2,1,3,		//三角形2つ目
-		//後	
-		5,4,7,		//三角形3つ目
-		7,4,6,		//三角形4つ目
-		//左
-		8,9,10,		//三角形5つ目
-		10,9,11,	//三角形6つ目
-		//右
-		13,12,15,	//三角形7つ目
-		15,12,14,	//三角形8つ目
-		//下
-		17,16,19,	//三角形9つ目
-		19,16,18,	//三角形10つ目
-		//上
-		20,21,22,	//三角形11つ目
-		22,21,23,	//三角形12つ目
-	};
 
-	for (int i = 0; i < _countof(indices_); i++) {
-		indices.push_back(indices_[i]);
-	}
 
 	//法線の計算
 	for (int i = 0; i < indices.size() / 3; i++) {
@@ -229,6 +301,8 @@ void Object3d::CreateModel()
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
+
+
 }
 
 void Object3d::Initialize()
@@ -262,7 +336,7 @@ void Object3d::Initialize()
 	assert(SUCCEEDED(result));
 
 	//モデルの生成
-	CreateModel();
+	CreateModel("a");
 	XMMATRIX matrix = XMMatrixIdentity();
 	constMap->mat = matrix;
 

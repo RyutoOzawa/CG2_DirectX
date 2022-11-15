@@ -152,8 +152,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
 		sprite->SetSize({ 64,64 });
 
-	
-
 		if (input->IsPress(DIK_A)) {
 			object1.rotation.z+= 0.1f;
 		}
@@ -166,6 +164,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		else if (input->IsPress(DIK_S)) {
 			object1.rotation.y -= 0.1f;
 		}
+
+		object1.scale = { 50,50,50 };
 
 		object1.Update(matView, matProjection);
 
