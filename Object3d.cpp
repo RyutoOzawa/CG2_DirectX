@@ -19,6 +19,8 @@ using namespace std;
 ComPtr<ID3D12PipelineState> Object3d::pipelineState;
 ComPtr<ID3D12RootSignature> Object3d::rootSignature;
 ReDirectX* Object3d::directX = nullptr;
+Object3d::Material Object3d::material;
+
 
 Object3d::Object3d()
 {
@@ -46,25 +48,25 @@ void Object3d::BeginDraw()
 	directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
-	directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
-	directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	
 }
 
-void Object3d::CreateModel(std::string filename)
+void Object3d::CreateModel(const std::string& modelname)
 {
 	HRESULT result;
 
-	if (filename != "NULL") {
+	if (modelname != "NULL") {
 		HRESULT result = S_FALSE;
 
 		//ファイルストリーム
 		ifstream file;
 		//.objファイルを開く
-		file.open("Resources/triangle/triangle.obj");
+		//file.open("Resources/triangle/triangle.obj");
+	//	const string modelname = "triangle_mat";
+		const string filename = modelname + ".obj";
+		const string directoryPath = "Resources/" + modelname + "/";
+		file.open(directoryPath + filename);
+
 		//ファイルオープン失敗をチェック
 		if (file.fail()) {
 			assert(0);
@@ -84,6 +86,14 @@ void Object3d::CreateModel(std::string filename)
 			string key;
 			getline(line_stream, key, ' ');
 
+			//先頭文字列がmtllibならマテリアル
+			if (key == "mtllib") {
+				//マテリアルのファイル名読み込み
+				string filename;
+				line_stream >> filename;
+				//マテリアル読み込み
+				LoadMaterial(directoryPath,filename);
+			}
 			//先頭文字列がvなら頂点座標
 			if (key == "v") {
 				//X,Y,Z座標読み込み
@@ -94,9 +104,30 @@ void Object3d::CreateModel(std::string filename)
 				//座標データに追加
 				positions.emplace_back(position);
 				//頂点データに追加
-				Vertex vertex{};
+			/*	Vertex vertex{};
 				vertex.pos = position;
-				vertices.emplace_back(vertex);
+				vertices.emplace_back(vertex);*/
+			}
+			//先頭文字列がvtならテクスチャ
+			if (key == "vt") {
+				//U,V成分読み込み
+				XMFLOAT2 texcoord{};
+				line_stream >> texcoord.x;
+				line_stream >> texcoord.y;
+				//V方向反転
+				texcoord.y = 1.0f - texcoord.y;
+				//テクスチャ座標データに追加
+				texcords.emplace_back(texcoord);
+			}
+			//先頭文字列がvnなら法線ベクトル
+			if (key == "vn") {
+				//X,Y,Z成分読み込み
+				XMFLOAT3 normal{};
+				line_stream >> normal.x;
+				line_stream >> normal.y;
+				line_stream >> normal.z;
+				//法線ベクトルデータに追加
+				normals.emplace_back(normal);
 			}
 			//先頭文字列がfならポリゴン(三角形)
 			if (key == "f") {
@@ -105,16 +136,29 @@ void Object3d::CreateModel(std::string filename)
 				while (getline(line_stream, index_string, ' ')) {
 					//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
 					istringstream index_stream(index_string);
-					unsigned short indexPosition;
+					unsigned short indexPosition,indexNormal,indexTexcoord;
 					index_stream >> indexPosition;
+					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+					index_stream >> indexTexcoord;
+					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+					index_stream >> indexNormal;
+					//頂点データの追加
+					Vertex vertex{};
+					vertex.pos = positions[indexPosition - 1];
+					vertex.normal = normals[indexNormal - 1];
+					vertex.uv = texcords[indexTexcoord - 1];
+					vertices.emplace_back(vertex);
 					//頂点インデックスに追加
-					indices.emplace_back(indexPosition - 1);
+					indices.emplace_back((unsigned short)indices.size());
 				}
 
 			}
+	
 		}
 		//ファイルを閉じる
 		file.close();
+
+
 
 	}
 	else {
@@ -190,6 +234,28 @@ void Object3d::CreateModel(std::string filename)
 			indices.push_back(indices_[i]);
 		}
 
+		//法線の計算
+		for (int i = 0; i < indices.size() / 3; i++) {
+			unsigned short indices0 = indices[i * 3 + 0];
+			unsigned short indices1 = indices[i * 3 + 1];
+			unsigned short indices2 = indices[i * 3 + 2];
+			//三角形を構成する頂点座標をベクトルに代入
+			XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
+			XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
+			XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
+			//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
+			XMVECTOR v1 = XMVectorSubtract(p1, p0);
+			XMVECTOR v2 = XMVectorSubtract(p2, p0);
+			//外積は両方から垂直なベクトル
+			XMVECTOR normal = XMVector3Cross(v1, v2);
+			//正規化
+			normal = XMVector3Normalize(normal);
+			//求めた法線を頂点データに代入
+			XMStoreFloat3(&vertices[indices0].normal, normal);
+			XMStoreFloat3(&vertices[indices1].normal, normal);
+			XMStoreFloat3(&vertices[indices2].normal, normal);
+		}
+
 	}
 
 
@@ -244,27 +310,7 @@ void Object3d::CreateModel(std::string filename)
 
 
 
-	//法線の計算
-	for (int i = 0; i < indices.size() / 3; i++) {
-		unsigned short indices0 = indices[i * 3 + 0];
-		unsigned short indices1 = indices[i * 3 + 1];
-		unsigned short indices2 = indices[i * 3 + 2];
-		//三角形を構成する頂点座標をベクトルに代入
-		XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-		XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-		XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
-		//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
-		XMVECTOR v1 = XMVectorSubtract(p1, p0);
-		XMVECTOR v2 = XMVectorSubtract(p2, p0);
-		//外積は両方から垂直なベクトル
-		XMVECTOR normal = XMVector3Cross(v1, v2);
-		//正規化
-		normal = XMVector3Normalize(normal);
-		//求めた法線を頂点データに代入
-		XMStoreFloat3(&vertices[indices0].normal, normal);
-		XMStoreFloat3(&vertices[indices1].normal, normal);
-		XMStoreFloat3(&vertices[indices2].normal, normal);
-	}
+
 
 	//インデックスデータ全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(indices[0]) * indices.size());
@@ -305,7 +351,7 @@ void Object3d::CreateModel(std::string filename)
 
 }
 
-void Object3d::Initialize()
+void Object3d::Initialize(const std::string& filename)
 {
 	ID3D12Device* device = directX->GetDevice();
 
@@ -329,19 +375,37 @@ void Object3d::Initialize()
 		&cbResourceDesc,//リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffTransform));
+		IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
 	//定数バッファのマッピング
-	result = constBuffTransform->Map(0, nullptr, (void**)&constMap);//マッピング
+	result = constBuffB0->Map(0, nullptr, (void**)&constMap);//マッピング
 	assert(SUCCEEDED(result));
 
+	cbResourceDesc.Width = (sizeof(ConstBufferDatab1) + 0xff) & ~0xff;	//256バイトアラインメント
+	//定数バッファの生成
+	result = device->CreateCommittedResource(
+		&cbHeapProp,//ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc,//リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffB1));
+	assert(SUCCEEDED(result));
+	//定数バッファへデータ転送
+	ConstBufferDatab1* constMapB1 = nullptr;
+	result = constBuffB1->Map(0, nullptr, (void**)&constMapB1);
+	constMapB1->ambient = material.ambient;
+	constMapB1->diffuse = material.diffuse;
+	constMapB1->specular = material.specular;
+	constMapB1->alpha = material.alpha;
+	constBuffB1->Unmap(0, nullptr);
+
 	//モデルの生成
-	CreateModel("a");
+	CreateModel(filename);
 	XMMATRIX matrix = XMMatrixIdentity();
 	constMap->mat = matrix;
 
-	//色を転送
-	constMap->color = XMFLOAT4(1,1,1,1);
+
 }
 
 void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
@@ -357,6 +421,7 @@ void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	matWorld = XMMatrixIdentity();
+	matWorld = XMMatrixIdentity();
 
 	matWorld *= matScale;	//スケーリングを反映
 	matWorld *= matRot;	//回転を反映
@@ -368,25 +433,31 @@ void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 
 	//定数バッファに転送
 	constMap->mat = matWorld * matView * matProjection;
-	constMap->color = color;
-
 }
 
 void Object3d::Draw()
 {
 	ID3D12GraphicsCommandList* commandList = directX->GetCommandList();
 
-	//プリミティブ形状の設定
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// 頂点バッファビューの設定コマンド
 	commandList->IASetVertexBuffers(0, 1, &vbView);
 	//インデックスバッファビューの設定コマンド
 	commandList->IASetIndexBuffer(&ibView);
-	//0番定数バッファビュー(CBV)の設定コマンド
-	commandList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootConstantBufferView(0, constBuffTransform->GetGPUVirtualAddress());
+	//h定数バッファビュー(CBV)の設定コマンド
+	commandList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
+
+	//デスクリプタヒープの配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
+	directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
+	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	srvGpuHandle.ptr += incrementSize * textureIndex;
+	directX->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+
 	// 描画コマンド
-	commandList->DrawIndexedInstanced(indices.size(), 1, 0, 0, 0);
+	commandList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 
 }
 
@@ -402,7 +473,7 @@ void Object3d::CreatePipeline3D()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicVS.hlsl", // シェーダファイル名
+		L"Resources/shaders/ObjVertexShader.hlsl", // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -426,7 +497,7 @@ void Object3d::CreatePipeline3D()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicPS.hlsl", // シェーダファイル名
+		L"Resources/shaders/ObjPixelShader.hlsl", // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -533,4 +604,78 @@ void Object3d::CreatePipeline3D()
 
 	//パイプラインステートの生成
 	pipeline3D.SetPipelineState(dev, pipelineState);
+}
+
+void Object3d::LoadMaterial(const std::string& directoryPath, const std::string& filename) {
+	//ファイルストリーム
+	ifstream file;
+	//マテリアルファイルを開く
+	file.open(directoryPath + filename);
+	//ファイルオープン失敗をチェック
+	if (file.fail()) {
+		assert(0);
+	}
+
+	//1行ずつ読み込む
+	string line;
+	while (getline(file, line)) {
+
+		//1行分の文字列をストリームに変換
+		istringstream line_stream(line);
+
+		//半角スペース区切りで行の先頭文字列を取得
+		string key;
+		getline(line_stream, key, ' ');
+
+		//先頭のタブ文字は無視する
+		if (key[0] == '\t') {
+			key.erase(key.begin());
+		}
+
+		//先頭文字列がnewmtlならマテリアル名
+		if (key == "newmtl") {
+			//マテリアル名読み込み
+			line_stream >> material.name;
+		}
+		//先頭文字列がKaならアンビエント色
+		if (key == "Ka") {
+			line_stream >> material.ambient.x;
+			line_stream >> material.ambient.y;
+			line_stream >> material.ambient.z;
+		}
+		//先頭文字列がKdならディフューズ色
+		if (key == "Kd") {
+			line_stream >> material.diffuse.x;
+			line_stream >> material.diffuse.y;
+			line_stream >> material.diffuse.z;
+		}
+		//先頭文字列がKsならスペキュラー色
+		if (key == "Ks") {
+			line_stream >> material.specular.x;
+			line_stream >> material.specular.y;
+			line_stream >> material.specular.z;
+		}
+		//先頭文字列がmap_Kdならテクスチャファイル名
+		if (key == "map_Kd") {
+			//テクスチャのファイル名読み込み
+			line_stream >> material.textureFileName;
+			//テクスチャ読み込み
+			LoadTexture(directoryPath, material.textureFileName);
+		}
+	}
+	//ファイルを閉じる
+	file.close();
+}
+
+void Object3d::LoadTexture(const std::string& directoryPath, const std::string& filename) {
+
+	//ファイルパスを結合
+	string filePath = directoryPath + filename;
+
+	//ユニコード文字列に変換する
+	wchar_t wfilepath[128];
+	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, wfilepath, _countof(wfilepath));
+	
+	textureIndex = Texture::LoadTexture(wfilepath);
+
 }

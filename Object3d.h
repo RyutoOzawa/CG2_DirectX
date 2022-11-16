@@ -21,8 +21,35 @@ public:
 	};
 
 	struct ConstBufferData {
-		DirectX::XMFLOAT4 color;
+		//DirectX::XMFLOAT4 color;
 		DirectX::XMMATRIX mat;
+	};
+
+	//定数バッファ用データ構造体b1
+	struct ConstBufferDatab1 {
+		DirectX::XMFLOAT3 ambient;	//アンビエント係数
+		float pad1;			//パディング
+		DirectX::XMFLOAT3 diffuse;	//ディフューズ係数
+		float pad2;			//パディング
+		DirectX::XMFLOAT3 specular;	//スペキュラー係数
+		float alpha;		//アルファ
+	};
+
+	//マテリアル
+	struct Material {
+		std::string name;	//マテリアル名
+		DirectX::XMFLOAT3 ambient;	//アンビエント影響度
+		DirectX::XMFLOAT3 diffuse;	//ディフューズ影響度
+		DirectX::XMFLOAT3 specular;	//スペキュラー影響度
+		float alpha;		//アルファ
+		std::string textureFileName;//テクスチャファイル名
+		//コンストラクタ
+		Material() {
+			ambient = { 0.3f,0.3f,0.3f };
+			diffuse = { 0.0f,0.0f,0.0f };
+			specular = { 0.0f,0.0f,0.0f };
+			alpha = 1.0f;
+		}
 	};
 
 	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
@@ -34,9 +61,10 @@ public:
 	std::vector<unsigned short>indices;	//頂点インデックスデータ
 	D3D12_VERTEX_BUFFER_VIEW vbView;	//頂点バッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;	//定数バッファマップ（行列用）
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff = nullptr;	//定数バッファマップ（行列用）
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffTransform = nullptr;	//定数バッファマップ（行列用）
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff; 	//定数バッファマップ（行列用）
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//定数バッファマップ（行列用）
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;	//定数バッファマップ（行列用））
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;	//定数バッファマップ（行列用））
 	//ConstBufferDataTransform* constMapTransform = nullptr;	//定数バッファマップ（行列用）
 
 	ConstBufferData* constMap = nullptr;
@@ -47,7 +75,10 @@ public:
 	DirectX::XMFLOAT3 position = { 0,0,0 };	//アフィン変換情報
 	DirectX::XMMATRIX matWorld;	//ワールド変換行列
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ
+	uint32_t textureIndex = 0;
+	static Material material;	//マテリアル
 
+	
 public:
 	Object3d();
 	~Object3d();
@@ -56,10 +87,13 @@ public:
 	static void StaticInitialize(ReDirectX* directX_);
 	static void BeginDraw();
 
-	void CreateModel(std::string filename = "NULL");
-	void Initialize();
+	void CreateModel(const std::string& modelname);
+	void Initialize(const std::string& filename = "NULL");
 	void Update(DirectX::XMMATRIX& matView, DirectX::XMMATRIX& matProjection);
 	void Draw();
+	void LoadTexture(const std::string& directoryPath,const std::string& filename);
+
+	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
 private:
 	static void CreatePipeline3D();

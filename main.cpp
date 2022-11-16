@@ -77,7 +77,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//sprite2->SetTextureNum(1);
 
 	Object3d object1;
-	object1.Initialize();
+	object1.Initialize("skydome");
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -98,7 +98,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	XMMATRIX matProjection;
 	XMMATRIX matView;
-	XMFLOAT3 eye(0, 0, -100);	//視点座標
+	XMFLOAT3 eye(0, 0, 10);	//視点座標
 	XMFLOAT3 target(0, 0, 0);	//注視点座標
 	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
 	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
