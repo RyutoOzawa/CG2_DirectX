@@ -74,6 +74,10 @@ void WorldTransform::TransferMatrix()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
+	if (parent != nullptr) {
+		matWorld *= parent->matWorld;
+	}
+
 	//定数バッファに転送
 	constMap->matWorld = matWorld;
 
