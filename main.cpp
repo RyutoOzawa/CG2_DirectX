@@ -52,6 +52,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	WorldTransform w;
 	w.StaticInitialize(directX);
 	w.Initialise();
+
+	WorldTransform objPos;
+	objPos.Initialise();
+	objPos.translation = Vector3(0, 0, 50);
+	objPos.TransferMatrix();
+
 	ViewProjection view;
 	view.StaticInitialize(directX);
 	view.Initialize();
@@ -70,6 +76,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Object3d object1;
 	object1.Initialize("skydome");
+
+	Object3d obj2;
+	obj2.Initialize("Medama");
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -103,6 +112,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//ビュー変換行列の計算
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
+	//w.TransferMatrix();
+	//view.UpdateMatrix();
+
 #pragma endregion 描画初期化処理
 	// ゲームループ
 	while (true) {
@@ -134,8 +146,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			object1.rotation.y -= 0.1f;
 		}
 
-		w.TransferMatrix();
-		view.UpdateMatrix();
+		//view.eye = Vector3(0,0,-100)
+		
 
 #pragma endregion シーン更新処理
 
@@ -145,7 +157,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//3Dオブジェクト描画処理
 		Object3d::BeginDraw();
-		object1.Draw(w,view);
+		//object1.Draw(w,view);
+		obj2.Draw(objPos, view);
 
 		//スプライト描画処理
 		spriteManager->beginDraw();
