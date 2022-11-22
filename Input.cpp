@@ -54,3 +54,86 @@ bool Input::IsRelease(BYTE key_)
 {
 	return (!key[key_] && oldkey[key_]);
 }
+
+//パッド用関数
+
+DWORD Input::Updatekeypad(DWORD dwUserIndex)
+{
+	oldGamePad = gamePad;
+
+	return XInputGetState(
+		dwUserIndex,//複数つながれてるときの選択
+		&gamePad);//この変数に入力状況が格納される
+}
+
+float Input::PadAnalogStickLX()
+{
+	return (float)gamePad.Gamepad.sThumbLX / SHRT_MAX;
+}
+
+float Input::PadAnalogStickLY()
+{
+	return (float)gamePad.Gamepad.sThumbLY / SHRT_MAX;
+}
+
+float Input::PadAnalogStickRX()
+{
+	return (float)gamePad.Gamepad.sThumbRX / SHRT_MAX;
+}
+
+float Input::PadAnalogStickRY()
+{
+	return (float)gamePad.Gamepad.sThumbRY / SHRT_MAX;
+}
+
+float Input::PadLTrigger()
+{
+	return (float)gamePad.Gamepad.bLeftTrigger / 255;
+}
+
+float Input::PadRTrigger()
+{
+	return (float)gamePad.Gamepad.bRightTrigger / 255;
+}
+
+bool Input::PadKey(int button)
+{
+	return gamePad.Gamepad.wButtons & button;
+}
+
+float Input::OldPadAnalogStickLX()
+{
+	return (float)oldGamePad.Gamepad.sThumbLX / SHRT_MAX;
+}
+
+float Input::OldPadAnalogStickLY()
+{
+	return (float)oldGamePad.Gamepad.sThumbLY / SHRT_MAX;
+}
+
+float Input::OldPadAnalogStickRX()
+{
+	return (float)oldGamePad.Gamepad.sThumbRX / SHRT_MAX;
+}
+
+float Input::OldPadAnalogStickRY()
+{
+	return (float)oldGamePad.Gamepad.sThumbRY / SHRT_MAX;
+}
+
+float Input::OldPadLTrigger()
+{
+	return (float)oldGamePad.Gamepad.bLeftTrigger / 255;
+}
+
+float Input::OldPadRTrigger()
+{
+	return (float)oldGamePad.Gamepad.bRightTrigger / 255;
+}
+
+bool Input::TriggerPadKey(int button)
+{
+
+	return ((gamePad.Gamepad.wButtons & button) == button && (oldGamePad.Gamepad.wButtons & button) != button);
+}
+
