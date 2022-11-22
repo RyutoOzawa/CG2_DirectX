@@ -55,7 +55,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	WorldTransform objPos;
 	objPos.Initialise();
-	objPos.translation = Vector3(0, 0, 50);
+	objPos.translation = { 0, 0, 0 };
+	objPos.scale = { 1,1,1 };
 	objPos.TransferMatrix();
 
 	ViewProjection view;
@@ -134,20 +135,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		sprite->SetSize({ 64,64 });
 
 		if (input->IsPress(DIK_A)) {
-			object1.rotation.z+= 0.1f;
+			objPos.rotation.y += 0.1f;
 		}
 		else if (input->IsPress(DIK_D)) {
-			object1.rotation.z -= 0.1f;
+			objPos.rotation.y -= 0.1f;
 		}
-		if (input->IsPress(DIK_W)) {
-			object1.rotation.y += 0.1f;
+		if (input->IsTrigger(DIK_W)) {
+			objPos.translation.x += 0.1f;
 		}
-		else if (input->IsPress(DIK_S)) {
-			object1.rotation.y -= 0.1f;
+		else if (input->IsTrigger(DIK_S)) {
+			objPos.translation.x -= 0.1f;
 		}
 
 		//view.eye = Vector3(0,0,-100)
-		
+		objPos.TransferMatrix();
 
 #pragma endregion シーン更新処理
 
@@ -175,6 +176,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	windowsAPI->Finalize();
 
 	delete sprite;
+
 
 	delete windowsAPI;
 	delete input;

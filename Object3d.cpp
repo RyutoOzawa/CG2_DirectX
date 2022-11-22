@@ -430,13 +430,13 @@ void Object3d::Draw(const WorldTransform& worldTransform, const ViewProjection& 
 	//ワールド変換行列のCBVをルートパラメータ0番に設定
 	commandList->SetGraphicsRootConstantBufferView(0, worldTransform.constBuff->GetGPUVirtualAddress());
 
-
+	//ここにビュープロジェクションクラスから持ってきたCBVをルートパラメータ1番に設定
+	commandList->SetGraphicsRootConstantBufferView(2, viewProjection.constBuff_->GetGPUVirtualAddress());
 
 	//作ったマテリアルのCBVをルートパラメータ2番に設定
-	commandList->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(3, constBuffB1->GetGPUVirtualAddress());
 
-	//ここにビュープロジェクションクラスから持ってきたCBVをルートパラメータ1番に設定
-	commandList->SetGraphicsRootConstantBufferView(3, viewProjection.constBuff_->GetGPUVirtualAddress());
+	
 
 
 	//デスクリプタヒープの配列をセットするコマンド

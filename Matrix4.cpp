@@ -1,6 +1,7 @@
 #include "Matrix4.h"
 #include <cmath>
 
+const float EPSILON = 0.000001f;
 Matrix4::Matrix4()
 {
 	float result[4][4]
@@ -41,107 +42,85 @@ Matrix4 Matrix4::identity()
 		0.0f,0.0f,0.0f,1.0f,
 	};
 
+	*this = result;
+
 	return *this;
 }
 
 Matrix4 Matrix4::MakeInverse()
 {
-	//掃き出し法を行う行列
-	float sweep[4][8]{};
-	//定数倍用
-	float constTimes = 0.0f;
-	//許容する誤差
-	float MAX_ERR = 1e-10f;
-	//戻り値用
-	Matrix4 retMat;
+	Matrix4 temp;
+	float mat[4][8] = { 0 };
 
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			//weepの左側に逆行列を求める行列をセット
-			sweep[i][j] = this->m[i][j];
-
-			//sweepの右側に単位行列をセット
-			sweep[i][4 + j] = identity().m[i][j];
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			mat[i][j] = m[i][j];
 		}
 	}
 
-	//全ての列の対角成分に対する繰り返し
-	for (int i = 0; i < 4; i++)
-	{
-		//最大の絶対値を注目対角成分の絶対値と仮定
-		float max = std::fabs(sweep[i][i]);
-		int maxIndex = i;
+	mat[0][4] = 1;
+	mat[1][5] = 1;
+	mat[2][6] = 1;
+	mat[3][7] = 1;
 
-		//i列目が最大の絶対値となる行を探す
-		for (int j = i + 1; j < 4; j++)
-		{
-			if (std::fabs(sweep[j][i]) > max)
-			{
-				max = std::fabs(sweep[j][i]);
-				maxIndex = j;
+	for (int n = 0; n < 4; n++) {
+		//最大の絶対値を探索する(とりあえず対象成分を最大と仮定しておく)
+		float max = abs(mat[n][n]);
+		int maxIndex = n;
+
+		for (int i = n + 1; i < 4; i++) {
+			if (abs(mat[i][n]) > max) {
+				max = abs(mat[i][n]);
+				maxIndex = i;
 			}
 		}
 
-		if (fabs(sweep[maxIndex][i]) <= MAX_ERR)
-		{
-			//逆行列は求められない
-			return identity();
+		//最大の絶対値が0だったら逆行列は求められない
+		if (abs(mat[maxIndex][n]) <= EPSILON) {
+			return temp; //とりあえず単位行列返しちゃう
 		}
 
-		//操作(1):i行目とmaxIndex行目を入れ替える
-		if (i != maxIndex)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				float tmp = sweep[maxIndex][j];
-				sweep[maxIndex][j] = sweep[i][j];
-				sweep[i][j] = tmp;
+		//入れ替え
+		if (n != maxIndex) {
+			for (int i = 0; i < 8; i++) {
+				float f = mat[maxIndex][i];
+				mat[maxIndex][i] = mat[n][i];
+				mat[n][i] = f;
 			}
 		}
 
-		//sweep[i][i]に掛けると1になる値を求める
-		constTimes = 1 / sweep[i][i];
+		//掛けたら1になる値を算出
+		float mul = 1 / mat[n][n];
 
-		//操作(2):p行目をa倍する
-		for (int j = 0; j < 8; j++)
-		{
-			//これによりsweep[i][i]が1になる
-			sweep[i][j] *= constTimes;
+		//掛ける
+		for (int i = 0; i < 8; i++) {
+			mat[n][i] *= mul;
 		}
 
-		//操作(3)によりi行目以外の行のi列目を0にする
-		for (int j = 0; j < 4; j++)
-		{
-			if (j == i)
-			{
-				//i行目はそのまま
+		//他全部0にする
+		for (int i = 0; i < 4; i++) {
+			if (n == i) {
 				continue;
 			}
 
-			//i行目に掛ける値を求める
-			constTimes = -sweep[j][i];
+			float mul = -mat[i][n];
 
-			for (int k = 0; k < 8; k++)
-			{
-				//j行目にi行目をa倍した行を足す
-				//これによりsweep[j][i]が0になる
-				sweep[j][k] += sweep[i][k] * constTimes;
+			for (int j = 0; j < 8; j++) {
+				mat[i][j] += mat[n][j] * mul;
 			}
 		}
 	}
 
-	//sweepの右半分がmatの逆行列
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) 
 		{
-			retMat.m[i][j] = sweep[i][4 + j];
+			temp.m[i][j] = mat[i][j + 4];
 		}
 	}
 
-	*this = retMat;
+	*this = temp;
+
+	
 
 	return *this;
 }
@@ -184,7 +163,7 @@ Matrix4 Matrix4::rotateX(float angle)
 	// 代入
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			m[i][j] = result[i][j];
+			this->m[i][j] = result[i][j];
 		}
 	}
 
@@ -267,7 +246,7 @@ Matrix4 Matrix4::translate(const Vector3& t)
 {
 	float result[4][4]
 	{
-		1.0f,1.0f,0.0f,0.0f,
+		1.0f,0.0f,0.0f,0.0f,
 		0.0f,1.0f,0.0f,0.0f,
 		0.0f,0.0f,1.0f,0.0f,
 		t.x ,t.y ,t.z ,1.0f
@@ -322,7 +301,7 @@ Matrix4 Matrix4::ViewMat(Vector3 eye, Vector3 target, Vector3 up)
 
 Matrix4 Matrix4::ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, float farZ)
 {
-	float h = 1 / tan(fovAngleY * 0.5);
+	float h = 1 / tanf(fovAngleY / 2);
 	float w = h / aspectRatio;
 	float a = farZ / (farZ - nearZ);
 	float b = (-nearZ * farZ) / (farZ - nearZ);

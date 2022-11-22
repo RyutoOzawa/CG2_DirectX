@@ -57,19 +57,21 @@ void WorldTransform::Map()
 void WorldTransform::TransferMatrix()
 {
 	Matrix4 matScale, matRot, matTrans;
+	Matrix4 matRotX, matRotY, matRotZ;
+	matScale.identity();
+	
+	matTrans.identity();
 
 	//äeçsóÒåvéZ
-	matScale = matScale.identity();
-	matRot = matRot.identity();
-	matTrans = matTrans.identity();
-	matWorld = matWorld.identity();
+	matScale.scale(scale);
+	matRot.identity();
+	matRotZ.rotateZ(rotation.z);
+	matRotX.rotateX(rotation.x);
+	matRotY.rotateY(rotation.y);
+	matRot = matRotZ * matRotX * matRotY;
+	matTrans.translate(translation);
 
-	matScale = matScale.scale(scale);
-	matRot *= matRot.rotateZ(rotation.z);
-	matRot *= matRot.rotateX(rotation.x);
-	matRot *= matRot.rotateY(rotation.y);
-	matTrans = matTrans.translate(translation);
-
+	matWorld.identity();
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
