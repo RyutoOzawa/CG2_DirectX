@@ -362,26 +362,13 @@ void Object3d::Initialize(const std::string& filename)
 	//リソース設定
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferData) + 0xff) & ~0xff;	//256バイトアラインメント
+	cbResourceDesc.Width = (sizeof(ConstBufferDatab1) + 0xff) & ~0xff;	//256バイトアラインメント
 	cbResourceDesc.Height = 1;
 	cbResourceDesc.DepthOrArraySize = 1;
 	cbResourceDesc.MipLevels = 1;
 	cbResourceDesc.SampleDesc.Count = 1;
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//定数バッファの生成
-	result = device->CreateCommittedResource(
-		&cbHeapProp,//ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,//リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBuffB0));
-	assert(SUCCEEDED(result));
-	//定数バッファのマッピング
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap);//マッピング
-	assert(SUCCEEDED(result));
 
-	cbResourceDesc.Width = (sizeof(ConstBufferDatab1) + 0xff) & ~0xff;	//256バイトアラインメント
 	//定数バッファの生成
 	result = device->CreateCommittedResource(
 		&cbHeapProp,//ヒープ設定
@@ -402,40 +389,37 @@ void Object3d::Initialize(const std::string& filename)
 
 	//モデルの生成
 	CreateModel(filename);
-	XMMATRIX matrix = XMMatrixIdentity();
-	constMap->mat = matrix;
 
 
 }
 
 void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 {
-	XMMATRIX matScale, matRot, matTrans;
+	//XMMATRIX matScale, matRot, matTrans;
 
-	//各行列計算
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotation.z);	//Z軸周りに回転
-	matRot *= XMMatrixRotationX(rotation.x);	//X軸周りに回転
-	matRot *= XMMatrixRotationY(rotation.y);	//Y軸周りに回転
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+	////各行列計算
+	//matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	//matRot = XMMatrixIdentity();
+	//matRot *= XMMatrixRotationZ(rotation.z);	//Z軸周りに回転
+	//matRot *= XMMatrixRotationX(rotation.x);	//X軸周りに回転
+	//matRot *= XMMatrixRotationY(rotation.y);	//Y軸周りに回転
+	//matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
-	matWorld = XMMatrixIdentity();
-	matWorld = XMMatrixIdentity();
+	//matWorld = XMMatrixIdentity();
 
-	matWorld *= matScale;	//スケーリングを反映
-	matWorld *= matRot;	//回転を反映
-	matWorld *= matTrans;	//平行移動を反映
+	//matWorld *= matScale;	//スケーリングを反映
+	//matWorld *= matRot;	//回転を反映
+	//matWorld *= matTrans;	//平行移動を反映
 
-	if (parent != nullptr) {
-		matWorld *= parent->matWorld;
-	}
+	//if (parent != nullptr) {
+	//	matWorld *= parent->matWorld;
+	//}
 
-	//定数バッファに転送
-	constMap->mat = matWorld * matView * matProjection;
+	////定数バッファに転送
+	//constMap->mat = matWorld * matView * matProjection;
 }
 
-void Object3d::Draw()
+void Object3d::Draw(const WorldTransform& worldTransform)
 {
 	ID3D12GraphicsCommandList* commandList = directX->GetCommandList();
 
@@ -443,8 +427,12 @@ void Object3d::Draw()
 	commandList->IASetVertexBuffers(0, 1, &vbView);
 	//インデックスバッファビューの設定コマンド
 	commandList->IASetIndexBuffer(&ibView);
-	//h定数バッファビュー(CBV)の設定コマンド
-	commandList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	//ワールド変換行列のCBVをルートパラメータ0番に設定
+	commandList->SetGraphicsRootConstantBufferView(0, worldTransform.constBuff->GetGPUVirtualAddress());
+
+	//ここにビュープロジェクションクラスから持ってきたCBVをルートパラメータ1番に設定
+
+	//作ったマテリアルのCBVをルートパラメータ2番に設定
 	commandList->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
 
 	//デスクリプタヒープの配列をセットするコマンド
