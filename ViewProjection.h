@@ -20,14 +20,23 @@ static const float PI = 3.141592f;
 /// </summary>
 class ViewProjection
 {
+public:
 	//directXのインスタンス
 	static ReDirectX* directX;
 
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
-	// マッピング済みアドレス
-	ConstBufferDataViewProjection* constMap = nullptr;
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
+
+	/// <summary>
+	/// 行列を更新する
+	/// </summary>
+	void UpdateMatrix();
 #pragma region ビュー行列の設定
 	// 視点座標
 	Vector3 eye = { 0, 0, -50.0f };
@@ -36,6 +45,12 @@ class ViewProjection
 	// 上方向ベクトル
 	Vector3 up = { 0, 1, 0 };
 #pragma endregion
+
+private:
+	// マッピング済みアドレス
+	ConstBufferDataViewProjection* constMap = nullptr;
+
+
 
 #pragma region 射影行列の設定
 	// 垂直方向視野角
@@ -55,10 +70,7 @@ class ViewProjection
 
 	static void StaticInitialize(ReDirectX* directX_);
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
+
 	/// <summary>
 	/// 定数バッファ生成
 	/// </summary>
@@ -67,10 +79,7 @@ class ViewProjection
 	/// マッピングする
 	/// </summary>
 	void Map();
-	/// <summary>
-	/// 行列を更新する
-	/// </summary>
-	void UpdateMatrix();
+
 
 	
 	float ToRadian(float angle) { return angle * (PI / 180); }

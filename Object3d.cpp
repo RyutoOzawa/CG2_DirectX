@@ -419,7 +419,7 @@ void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 	//constMap->mat = matWorld * matView * matProjection;
 }
 
-void Object3d::Draw(const WorldTransform& worldTransform)
+void Object3d::Draw(const WorldTransform& worldTransform, const ViewProjection& viewProjection)
 {
 	ID3D12GraphicsCommandList* commandList = directX->GetCommandList();
 
@@ -431,6 +431,8 @@ void Object3d::Draw(const WorldTransform& worldTransform)
 	commandList->SetGraphicsRootConstantBufferView(0, worldTransform.constBuff->GetGPUVirtualAddress());
 
 	//ここにビュープロジェクションクラスから持ってきたCBVをルートパラメータ1番に設定
+	commandList->SetGraphicsRootConstantBufferView(1, viewProjection.constBuff_->GetGPUVirtualAddress());
+
 
 	//作ったマテリアルのCBVをルートパラメータ2番に設定
 	commandList->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());

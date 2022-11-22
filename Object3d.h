@@ -8,7 +8,7 @@
 #include<vector>
 #include<string>
 #include"WorldTransform.h"
-
+#include "ViewProjection.h"
 class Object3d
 {
 public:
@@ -89,7 +89,7 @@ public:
 	void CreateModel(const std::string& modelname);
 	void Initialize(const std::string& filename = "NULL");
 	void Update(DirectX::XMMATRIX& matView, DirectX::XMMATRIX& matProjection);
-	void Draw(const WorldTransform& worldTransform);
+	void Draw(const WorldTransform& worldTransform,const ViewProjection &viewProjection);
 	void LoadTexture(const std::string& directoryPath,const std::string& filename);
 
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
