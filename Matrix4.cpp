@@ -44,7 +44,7 @@ Matrix4 Matrix4::identity()
 	return *this;
 }
 
-Matrix4 Matrix4::MakeInverse(const Matrix4* mat)
+Matrix4 Matrix4::MakeInverse()
 {
 	//掃き出し法を行う行列
 	float sweep[4][8]{};
@@ -60,7 +60,7 @@ Matrix4 Matrix4::MakeInverse(const Matrix4* mat)
 		for (int j = 0; j < 4; j++)
 		{
 			//weepの左側に逆行列を求める行列をセット
-			sweep[i][j] = mat->m[i][j];
+			sweep[i][j] = this->m[i][j];
 
 			//sweepの右側に単位行列をセット
 			sweep[i][4 + j] = identity().m[i][j];
@@ -141,7 +141,9 @@ Matrix4 Matrix4::MakeInverse(const Matrix4* mat)
 		}
 	}
 
-	return retMat;
+	*this = retMat;
+
+	return *this;
 }
 
 //拡大縮小行列を求める
@@ -237,6 +239,29 @@ Matrix4 Matrix4::rotateZ(float angle)
 	return *this;
 }
 
+Matrix4 Matrix4::rotation(Vector3 angle)
+{
+	Matrix4 Rot,RotX, RotY, RotZ;
+
+	RotZ.identity();
+	RotZ.rotateZ(angle.z);
+
+	RotX.identity();
+	RotX.rotateX(angle.x);
+
+	RotY.identity();
+	RotY.rotateY(angle.y);
+	
+	Rot.identity();
+	Rot *= RotZ;
+	Rot *= RotX;
+	Rot *= RotY;
+
+	*this *= Rot;
+
+	return *this;
+}
+
 // 平行移動行列を求める
 Matrix4 Matrix4::translate(const Vector3& t)
 {
@@ -270,6 +295,48 @@ Vector3 Matrix4::transform(const Vector3& v, const Matrix4& m)
 	};
 
 	return result;
+}
+
+Matrix4 Matrix4::ViewMat(Vector3 eye, Vector3 target, Vector3 up)
+{
+	Vector3 zaxis = target - eye;
+	zaxis.normalize();
+	Vector3 xaxis = up.cross(zaxis);
+	xaxis.normalize();
+	Vector3 yaxis = zaxis.cross(xaxis);
+	yaxis.normalize();
+
+	Matrix4 LookAt = {
+		xaxis.x,	xaxis.y,	xaxis.z,	0,
+		yaxis.x,	yaxis.y,	yaxis.z,	0,
+		zaxis.x,	zaxis.y,	zaxis.z,	0,
+		eye.x,		eye.y,		eye.z,		1
+	};
+
+	LookAt.MakeInverse();
+
+	*this = LookAt;
+
+	return *this;
+}
+
+Matrix4 Matrix4::ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, float farZ)
+{
+	float h = 1 / tan(fovAngleY * 0.5);
+	float w = h / aspectRatio;
+	float a = farZ / (farZ - nearZ);
+	float b = (-nearZ * farZ) / (farZ - nearZ);
+
+	Matrix4 perspectiveFovLH = {
+		w,		 0,		 0,		 0,
+		0,		 h,		 0,		 0,
+		0,		 0,		 a,		 1,
+		0,		 0,		 b,		 0
+	};
+
+	*this = perspectiveFovLH;
+
+	return Matrix4();
 }
 
 // 代入演算子　*=　オーバーロード関数（行列と行列の積）
