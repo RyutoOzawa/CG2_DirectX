@@ -15,6 +15,7 @@ struct ConstBufferDataWorldTransform {
 /// </summary>
 class WorldTransform
 {
+public:
 	//directXのインスタンス
 	static ReDirectX* directX;
 	// 定数バッファ

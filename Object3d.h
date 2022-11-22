@@ -7,6 +7,7 @@
 #include"DirectX.h"
 #include<vector>
 #include<string>
+#include"WorldTransform.h"
 
 class Object3d
 {
@@ -63,11 +64,9 @@ public:
 	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff; 	//定数バッファマップ（行列用）
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//定数バッファマップ（行列用）
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;	//定数バッファマップ（行列用））
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;	//定数バッファマップ（行列用））
 	//ConstBufferDataTransform* constMapTransform = nullptr;	//定数バッファマップ（行列用）
 
-	ConstBufferData* constMap = nullptr;
 
 	DirectX::XMFLOAT4 color = { 1,1,1,1 };
 	DirectX::XMFLOAT3 scale = { 1,1,1 };	//アフィン変換情報
@@ -90,7 +89,7 @@ public:
 	void CreateModel(const std::string& modelname);
 	void Initialize(const std::string& filename = "NULL");
 	void Update(DirectX::XMMATRIX& matView, DirectX::XMMATRIX& matProjection);
-	void Draw();
+	void Draw(const WorldTransform& worldTransform);
 	void LoadTexture(const std::string& directoryPath,const std::string& filename);
 
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
