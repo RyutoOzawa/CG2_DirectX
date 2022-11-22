@@ -14,7 +14,7 @@ void WorldTransform::StaticInitialize(ReDirectX* directX_)
 	directX = directX_;
 }
 
-void WorldTransform::Initialise()
+void WorldTransform::Initialize()
 {
 	CreateConstBuffer();
 	Map();
@@ -63,24 +63,24 @@ void WorldTransform::TransferMatrix()
 	matTrans.identity();
 
 	//各行列計算
-	matScale.scale(scale);
+	matScale.scale(scale_);
 	matRot.identity();
-	matRotZ.rotateZ(rotation.z);
-	matRotX.rotateX(rotation.x);
-	matRotY.rotateY(rotation.y);
+	matRotZ.rotateZ(rotation_.z);
+	matRotX.rotateX(rotation_.x);
+	matRotY.rotateY(rotation_.y);
 	matRot = matRotZ * matRotX * matRotY;
-	matTrans.translate(translation);
+	matTrans.translate(translation_);
 
-	matWorld.identity();
-	matWorld *= matScale;
-	matWorld *= matRot;
-	matWorld *= matTrans;
+	matWorld_.identity();
+	matWorld_ *= matScale;
+	matWorld_ *= matRot;
+	matWorld_ *= matTrans;
 
-	if (parent != nullptr) {
-		matWorld *= parent->matWorld;
+	if (parent_ != nullptr) {
+		matWorld_ *= parent_->matWorld_;
 	}
 
 	//定数バッファに転送
-	constMap->matWorld = matWorld;
+	constMap->matWorld = matWorld_;
 
 }

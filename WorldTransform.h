@@ -23,22 +23,22 @@ public:
 	// マッピング済みアドレス
 	ConstBufferDataWorldTransform* constMap = nullptr;
 	// ローカルスケール
-	Vector3 scale = { 1, 1, 1 };
+	Vector3 scale_ = { 1, 1, 1 };
 	// X,Y,Z軸回りのローカル回転角
-	Vector3 rotation = { 0, 0, 0 };
+	Vector3 rotation_ = { 0, 0, 0 };
 	// ローカル座標
-	Vector3 translation = { 0, 0, 0 };
+	Vector3 translation_ = { 0, 0, 0 };
 	// ローカル → ワールド変換行列
-	Matrix4 matWorld;
+	Matrix4 matWorld_;
 	// 親となるワールド変換へのポインタ
-	const WorldTransform* parent = nullptr;
+	const WorldTransform* parent_ = nullptr;
 
 	static void StaticInitialize(ReDirectX* directX_);
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialise();
+	void Initialize();
 
 	/// <summary>
 	/// 定数バッファ生成

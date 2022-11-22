@@ -16,6 +16,30 @@
     <Filter Include="シェーダーファイル">
       <UniqueIdentifier>{4a6f0499-feeb-4a22-9168-a6c1a7a41583}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Boss">
+      <UniqueIdentifier>{58019845-cda4-4400-a4e0-82372770a39b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\affine">
+      <UniqueIdentifier>{fd5db00e-4db8-4812-b7ce-99a7663b8490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Boss">
+      <UniqueIdentifier>{b9ad5366-f8aa-48fb-9909-517f742f046c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\affine">
+      <UniqueIdentifier>{a223e4d1-fbf4-4028-b50f-e0730a544729}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Player">
+      <UniqueIdentifier>{fc4fa374-97b7-436c-8058-bc46ca5d6175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Player">
+      <UniqueIdentifier>{5962a4e5-9090-4a26-b62b-cbc93d8d8fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Camera">
+      <UniqueIdentifier>{02d68c08-900a-476f-93f6-35c2a8e9df37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Camera">
+      <UniqueIdentifier>{1f5586ce-f5a1-41fa-84b0-53a5b9a0ea95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -84,6 +108,18 @@
     <ClCompile Include="ViewProjection.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="playerBullet.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="railCamera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="affine.cpp">
+      <Filter>ソース ファイル\affine</Filter>
+    </ClCompile>
+    <ClCompile Include="sky.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
@@ -147,6 +183,18 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ViewProjection.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="playerBullet.h">
+      <Filter>ヘッダー ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="railCamera.h">
+      <Filter>ヘッダー ファイル\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="affine.h">
+      <Filter>ヘッダー ファイル\affine</Filter>
+    </ClInclude>
+    <ClInclude Include="sky.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

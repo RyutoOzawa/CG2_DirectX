@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="affine.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Gridline.cpp" />
     <ClCompile Include="DrawInfo.cpp" />
@@ -152,6 +153,9 @@
     <ClCompile Include="MathInfo.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Object3d.cpp" />
+    <ClCompile Include="playerBullet.cpp" />
+    <ClCompile Include="railCamera.cpp" />
+    <ClCompile Include="sky.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
@@ -166,6 +170,7 @@
     <ClCompile Include="WorldTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="affine.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Gridline.h" />
     <ClInclude Include="DrawInfo.h" />
@@ -175,6 +180,9 @@
     <ClInclude Include="MathInfo.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Object3d.h" />
+    <ClInclude Include="playerBullet.h" />
+    <ClInclude Include="railCamera.h" />
+    <ClInclude Include="sky.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />

@@ -51,12 +51,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region 描画初期化処理
 	WorldTransform w;
 	w.StaticInitialize(directX);
-	w.Initialise();
+	w.Initialize();
 
 	WorldTransform objPos;
-	objPos.Initialise();
-	objPos.translation = { 0, 0, 0 };
-	objPos.scale = { 1,1,1 };
+	objPos.Initialize();
+	objPos.translation_ = { 0, 0, 0 };
+	objPos.scale_ = { 1,1,1 };
 	objPos.TransferMatrix();
 
 	ViewProjection view;
@@ -135,16 +135,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		sprite->SetSize({ 64,64 });
 
 		if (input->IsPress(DIK_A)) {
-			objPos.rotation.y += 0.1f;
+			objPos.rotation_.y += 0.1f;
 		}
 		else if (input->IsPress(DIK_D)) {
-			objPos.rotation.y -= 0.1f;
+			objPos.rotation_.y -= 0.1f;
 		}
 		if (input->IsTrigger(DIK_W)) {
-			objPos.translation.x += 0.1f;
+			objPos.translation_.x += 0.1f;
 		}
 		else if (input->IsTrigger(DIK_S)) {
-			objPos.translation.x -= 0.1f;
+			objPos.translation_.x -= 0.1f;
 		}
 
 		//view.eye = Vector3(0,0,-100)
