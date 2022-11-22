@@ -49,6 +49,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion 基盤システム初期化
 
 #pragma region 描画初期化処理
+	WorldTransform w;
+	w.StaticInitialize(directX);
+	w.Initialise();
+	ViewProjection view;
+	view.StaticInitialize(directX);
+	view.Initialize();
 
 	//画像読み込み
 	uint32_t marioGraph = Texture::LoadTexture(L"Resources/mario.jpg");
@@ -128,9 +134,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			object1.rotation.y -= 0.1f;
 		}
 
-		object1.scale = { 50,50,50 };
-
-		object1.Update(matView, matProjection);
+		w.TransferMatrix();
+		view.UpdateMatrix();
 
 #pragma endregion シーン更新処理
 
@@ -140,7 +145,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//3Dオブジェクト描画処理
 		Object3d::BeginDraw();
-		object1.Draw();
+		object1.Draw(w,view);
 
 		//スプライト描画処理
 		spriteManager->beginDraw();

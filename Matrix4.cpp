@@ -336,7 +336,7 @@ Matrix4 Matrix4::ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, 
 
 	*this = perspectiveFovLH;
 
-	return Matrix4();
+	return *this;
 }
 
 // 代入演算子　*=　オーバーロード関数（行列と行列の積）

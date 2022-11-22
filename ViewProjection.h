@@ -24,6 +24,8 @@ public:
 	//directXのインスタンス
 	static ReDirectX* directX;
 
+	// 一度インスタンスを借りる
+	static void StaticInitialize(ReDirectX* directX_);
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
@@ -68,7 +70,7 @@ private:
 	// 射影行列
 	Matrix4 matProjection;
 
-	static void StaticInitialize(ReDirectX* directX_);
+	
 
 
 	/// <summary>
