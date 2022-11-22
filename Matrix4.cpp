@@ -120,8 +120,6 @@ Matrix4 Matrix4::MakeInverse()
 
 	*this = temp;
 
-	
-
 	return *this;
 }
 
