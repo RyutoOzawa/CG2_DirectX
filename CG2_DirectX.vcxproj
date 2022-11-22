@@ -150,6 +150,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MathInfo.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="WindowsAPI.cpp" />
+    <ClCompile Include="WorldTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectX.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MathInfo.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
@@ -181,6 +184,7 @@
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="WindowsAPI.h" />
+    <ClInclude Include="WorldTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

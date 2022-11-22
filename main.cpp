@@ -18,21 +18,9 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 
 
-//パイプラインステートとルートシグネチャのセット
-struct PipelineSet {
-	//パイプラインステートオブジェクト
-	ComPtr<ID3D12PipelineState> pipelineState;
-	//ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootsignature;
-};
-
-void CreatepipeLine3D(ID3D12Device* dev);
-
-
-
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-
+	HRESULT result{};
 #pragma region 基盤システム初期化
 	//windowsAPI初期化処理
 	WindowsAPI* windowsAPI = new WindowsAPI();
@@ -42,8 +30,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ReDirectX* directX = new ReDirectX();
 	directX->Initialize(windowsAPI);
 
-	HRESULT result{};
-
 	//キーボード初期化処理
 	Input* input = new Input();
 	input->Initialize(windowsAPI);
@@ -51,8 +37,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//テクスチャマネージャーの初期化
 	Texture::Initialize(directX->GetDevice());
 
-	SpriteManager* spriteManager = nullptr;
 	//スプライト共通部の初期化
+	SpriteManager* spriteManager = nullptr;
 	spriteManager = new SpriteManager;
 	spriteManager->Initialize(directX,WindowsAPI::winW,WindowsAPI::winH);
 
@@ -82,15 +68,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
 
-	////定数バッファ用データ構造体(マテリアル)
-	//struct ConstBufferDataMaterial {
-	//	XMFLOAT4 color;//色（RGBA）
-	//};
-
-	//ワールド変換行列
-//	XMMATRIX matWorld0;
-	//XMMATRIX matWorld1;
-
 	const size_t kObjCount = 50;
 	Object3d obj[kObjCount];
 
@@ -109,18 +86,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	XMFLOAT3 pos{};
 
 
-	////配列内の全オブジェクトに対して
-	//for (int i = 0; i < _countof(obj); i++) {
-	//	//初期化
-	//	obj[i].Initialize(directX->GetDevice());
-
-	//	obj[i].scale = { 1,1,1 };
-	//	obj[i].rotation = { 0.0f,0.0f,0.0f };
-	//	obj[i].position = { Random(-100, 100),Random(-100, 100),Random(-100, 100) };
-	//}
-
-	//object.Initialize(directX->GetDevice());
-
 	//透視東映返還行列の計算
 	//専用の行列を宣言
 	matProjection = XMMatrixPerspectiveFovLH(
@@ -131,8 +96,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//ビュー変換行列の計算
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-
-
 
 #pragma endregion 描画初期化処理
 	// ゲームループ
@@ -205,12 +168,4 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	return 0;
 }
 
-void MatrixUpdate()
-{
-}
 
-void CreatepipeLine3D(ID3D12Device* dev)
-{
-
-
-}
