@@ -48,7 +48,7 @@ void Object3d::BeginDraw()
 	directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	
+
 }
 
 void Object3d::CreateModel(const std::string& modelname)
@@ -92,7 +92,7 @@ void Object3d::CreateModel(const std::string& modelname)
 				string filename;
 				line_stream >> filename;
 				//マテリアル読み込み
-				LoadMaterial(directoryPath,filename);
+				LoadMaterial(directoryPath, filename);
 			}
 			//先頭文字列がvなら頂点座標
 			if (key == "v") {
@@ -136,7 +136,7 @@ void Object3d::CreateModel(const std::string& modelname)
 				while (getline(line_stream, index_string, ' ')) {
 					//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
 					istringstream index_stream(index_string);
-					unsigned short indexPosition,indexNormal,indexTexcoord;
+					unsigned short indexPosition, indexNormal, indexTexcoord;
 					index_stream >> indexPosition;
 					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
 					index_stream >> indexTexcoord;
@@ -153,7 +153,7 @@ void Object3d::CreateModel(const std::string& modelname)
 				}
 
 			}
-	
+
 		}
 		//ファイルを閉じる
 		file.close();
@@ -306,7 +306,7 @@ void Object3d::CreateModel(const std::string& modelname)
 	// 頂点1つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
-	
+
 
 
 
@@ -542,7 +542,7 @@ void Object3d::CreatePipeline3D()
 	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータの設定
-	D3D12_ROOT_PARAMETER rootParams[3] = {};
+	D3D12_ROOT_PARAMETER rootParams[4] = {};
 	//定数バッファ0番
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
 	rootParams[0].Descriptor.ShaderRegister = 0;					//定数バッファ番号
@@ -555,9 +555,15 @@ void Object3d::CreatePipeline3D()
 	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//すべてのシェーダから見える
 	//定数バッファ1番
 	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[2].Descriptor.ShaderRegister = 1;					//デスクリプタレンジ
-	rootParams[2].Descriptor.RegisterSpace = 0;						//デスクリプタレンジ数
-	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見えるバッファE
+	rootParams[2].Descriptor.ShaderRegister = 1;					//定数バッファ番号
+	rootParams[2].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+		//定数バッファ2番
+	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
+	rootParams[3].Descriptor.ShaderRegister = 2;					//定数バッファ番号
+	rootParams[3].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+
 
 	//テクスチャサンプラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
@@ -663,7 +669,7 @@ void Object3d::LoadTexture(const std::string& directoryPath, const std::string& 
 	//ユニコード文字列に変換する
 	wchar_t wfilepath[128];
 	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, wfilepath, _countof(wfilepath));
-	
+
 	textureIndex = Texture::LoadTexture(wfilepath);
 
 }
