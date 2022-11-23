@@ -339,6 +339,14 @@ void BossPhase_2::Rset()
 	for (int i = 1; i < 19; i++) {
 		worldTransform_[i].parent_ = &worldTransform_[0];
 	}
+
+	beamFlag = false;
+	beamOBJSetFlag = false;
+	beamSound.StopWave();
+	upBoomerangSound.StopWave();
+	downBoomerangSound.StopWave();
+
+	beamWorldTransform_.scale_ = { 0.0f,0.0f,0.0f };
 	beamWorldTransform_.parent_ = &worldTransform_[0];
 	medamaWT.parent_ = &worldTransform_[0];
 
