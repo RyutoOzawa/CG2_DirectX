@@ -1,4 +1,5 @@
 #include "BossPhase_1.h"
+#include"Util.h"
 
 
 BossPhase_1::~BossPhase_1()
@@ -6,6 +7,7 @@ BossPhase_1::~BossPhase_1()
 	delete model_;
 	delete spriteHP;
 	delete spriteHPBar;
+	delete medamaModel;
 }
 
 void BossPhase_1::Initialize(SpriteManager* spriteManager)
@@ -85,6 +87,13 @@ void BossPhase_1::Initialize(SpriteManager* spriteManager)
 	for (int i = 1; i < 27; i++) {
 		worldTransform_[i].parent_ = &worldTransform_[0];
 	}
+
+	//形態変化で使う目玉用初期化
+	medamaModel = new Object3d();
+	medamaModel->Initialize("Medama");
+	medamaWorldTransform.Initialize();
+	medamaWorldTransform.translation_ = worldTransform_[0].translation_;
+	medamaWorldTransform.TransferMatrix();
 }
 
 void BossPhase_1::Update(Vector3 playerPos)
@@ -108,6 +117,87 @@ void BossPhase_1::Update(Vector3 playerPos)
 
 	/*debugText_->SetPos(10,70);
 	debugText_->Printf("boss1HP%d",HP);*/
+}
+
+void BossPhase_1::ChangeUpdate(float animationTimer, float animationMax)
+{
+	//8つの欠片の飛んでいく速度
+	float breakSpdTemp = 0.25f;
+	Vector3 cornerBreakSpd[8]{
+		{ +breakSpdTemp, +breakSpdTemp, -breakSpdTemp},	//10
+		{ -breakSpdTemp, +breakSpdTemp, -breakSpdTemp},	//12
+		{ -breakSpdTemp, +breakSpdTemp, +breakSpdTemp},	//14
+		{ +breakSpdTemp, +breakSpdTemp, +breakSpdTemp},	//16
+		{ +breakSpdTemp, -breakSpdTemp, -breakSpdTemp},	//19
+		{ -breakSpdTemp, -breakSpdTemp, -breakSpdTemp},	//21
+		{ -breakSpdTemp, -breakSpdTemp, +breakSpdTemp},	//23
+		{ +breakSpdTemp, -breakSpdTemp, +breakSpdTemp},	//25
+	};
+
+	//速度をワールド行列と掛け算し、速度として加算と行列転送
+	for (int i = 0; i < 8; i++) {
+		cornerBreakSpd[i] = affine::MatVector(worldTransform_[0].matWorld_, cornerBreakSpd[i]);
+		//速度をほんの少しランダムに増減
+		float temp = breakSpdTemp / 2.0f;
+		cornerBreakSpd[i].x += Random(-temp, temp);
+		cornerBreakSpd[i].y += Random(-temp, temp);
+		cornerBreakSpd[i].z += Random(-temp, temp);
+
+		switch (i)
+		{
+		case 0:
+			worldTransform_[10].translation_ += cornerBreakSpd[i];
+			worldTransform_[10].TransferMatrix();
+			break;
+		case 1:
+			worldTransform_[12].translation_ += cornerBreakSpd[i];
+			worldTransform_[12].TransferMatrix();
+			break;
+		case 2:
+			worldTransform_[14].translation_ += cornerBreakSpd[i];
+			worldTransform_[14].TransferMatrix();
+			break;
+		case 3:
+			worldTransform_[16].translation_ += cornerBreakSpd[i];
+			worldTransform_[16].TransferMatrix();
+			break;
+		case 4:
+			worldTransform_[19].translation_ += cornerBreakSpd[i];
+			worldTransform_[19].TransferMatrix();
+			break;
+		case 5:
+			worldTransform_[21].translation_ += cornerBreakSpd[i];
+			worldTransform_[21].TransferMatrix();
+			break;
+		case 6:
+			worldTransform_[23].translation_ += cornerBreakSpd[i];
+			worldTransform_[23].TransferMatrix();
+			break;
+		case 7:
+			worldTransform_[25].translation_ += cornerBreakSpd[i];
+			worldTransform_[25].TransferMatrix();
+			break;
+		default:
+			break;
+		}
+	}
+
+	float ease = animationTimer / animationMax*2;
+	if (ease >= 1.0f) {
+		ease = 1;
+	}
+
+	//目玉の座標を線形補完する
+	Vector3 trans{}, afterPos;
+	afterPos = { 0,0,-3.2f };
+	afterPos = affine::MatVector(worldTransform_[0].matWorld_, afterPos);
+	afterPos += worldTransform_[0].translation_;
+	trans = trans.lerp(worldTransform_[0].translation_, afterPos, ease);
+	medamaWorldTransform.translation_ = trans;
+//	medamaWorldTransform.translation_ = afterPos;
+	medamaWorldTransform.TransferMatrix();
+
+	float frontBlockAlpha = 0;
 }
 
 void BossPhase_1::TitleUpdate()
@@ -139,6 +229,11 @@ void BossPhase_1::Draw(ViewProjection viewprojection)
 	}
 }
 
+void BossPhase_1::MedamaDraw(ViewProjection viewprojection)
+{
+	medamaModel->Draw(medamaWorldTransform, viewprojection);
+}
+
 void BossPhase_1::DrawUI()
 {
 	spriteHP->Draw();
@@ -157,6 +252,17 @@ void BossPhase_1::Rset()
 	worldTransform_[0].rotation_ = { 0,0,0 };
 
 
+	// 上の段
+	worldTransform_[10].translation_ = { +2,+2,-2 };
+	worldTransform_[12].translation_ = { -2,+2,-2 };
+	worldTransform_[14].translation_ = { -2,+2,+2 };
+	worldTransform_[16].translation_ = { +2,+2,+2 };
+	// 下の段
+	worldTransform_[19].translation_ = { +2,-2,-2 };
+	worldTransform_[21].translation_ = { -2,-2,-2 };
+	worldTransform_[23].translation_ = { -2,-2,+2 };
+	worldTransform_[25].translation_ = { +2,-2,+2 };
+
 	worldTransform_[randomBlock].scale_ = { 1.0f,1.0f,1.0f };
 	AnnihilationFlag[randomBlock] = false;
 	randomBlock = 0;
@@ -174,6 +280,12 @@ void BossPhase_1::Rset()
 
 	worldTransform_[randomBlock].scale_ = { 1,1,1 };
 	AnnihilationFlag[randomBlock] = false;
+}
+
+void BossPhase_1::SetRotation(Vector3 rotation)
+{
+	worldTransform_[0].rotation_ = rotation;
+	TransferMat();
 }
 
 void BossPhase_1::FlyBlocks(Vector3 playerPos)

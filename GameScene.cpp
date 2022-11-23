@@ -36,6 +36,7 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	resultUISprite = new Sprite;
 	GameOverSprite = new Sprite;
 	resultSprite = new Sprite;
+	vignetteEffect = new Sprite;
 
 	model_ = new Object3d;
 
@@ -125,12 +126,14 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	GameOverSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 	resultSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 
+	vignetteEffect->Initialize(spriteManager, vignetteTexture);
+	vignetteEffect->SetSize({ WindowsAPI::winW, WindowsAPI::winH });
+
 	// 音関連の初期化
 	sound_.Initialize();
 	gameBGM = sound_.SoundLoadWave("Resources/Sound/Satans Servant.wav");
 
-	vignetteEffect->Initialize(spriteManager, vignetteTexture);
-	vignetteEffect->SetSize({ WindowsAPI::winW, WindowsAPI::winH });
+
 
 
 }
@@ -194,6 +197,8 @@ void GameScene::Update()
 				cameraShakeCount = 49;
 				viewProjection = &titleCamera;
 				bossTrans = BossTrans::Boss1To2;
+				//ボスの角度をデフォルトに
+				bossPhase_1->SetRotation({ 0,0,0 });
 			}
 			if (player_->GetHP() <= 0)
 			{
@@ -206,16 +211,16 @@ void GameScene::Update()
 			break;
 		case BossTrans::Boss1To2:
 			//// ボスフェーズ1の描画
-			if (animeTimer < 50)
+			if (animeTimer < changeAnimeTime)
 			{
-				bossPhase_1->TitleUpdate();
+				bossPhase_1->ChangeUpdate(animeTimer, changeAnimeTime);
 			}
 			else
 			{
 				bossPhase_2->TitleUpdate();
 			}
 			AnimationCameraUpdate();
-			if (animeTimer - 52 >= 0)
+			if (animeTimer - changeAnimeTime + 2 >= 0)
 			{
 				viewProjection = &railCamera_->GetViewProjection();
 				bossTrans = BossTrans::Boss2;
@@ -344,11 +349,12 @@ void GameScene::ModelDraw() {
 			break;
 		case BossTrans::Boss1To2:
 			//// ボスフェーズ1の描画
-			if (animeTimer < 50)
+			if (animeTimer < changeAnimeTime)
 			{
 				bossPhase_1->Draw(*viewProjection);
+				bossPhase_1->MedamaDraw(*viewProjection);
 			}
-			if (animeTimer >= 50)
+			if (animeTimer >= changeAnimeTime)
 			{
 				bossPhase_2->Draw(*viewProjection);
 			}
@@ -420,6 +426,7 @@ void GameScene::FrontSpriteDraw()
 			playGuideSprite->Draw();
 			bossPhase_2->DrawUI();
 			player_->DrawUI();
+			vignetteEffect->Draw();
 			break;
 		case BossTrans::GameToResult:
 			break;
@@ -661,18 +668,22 @@ void GameScene::AnimationCameraUpdate()
 
 	}
 	else if (animetionPhase == Boss1To2) {
-		if (animeTimer < 50.0f) {
+		//線形補完開始のタイマー
+		float startLeprTime = changeAnimeTime;
+
+
+		if (animeTimer < startLeprTime) {
 			animeTimer++;
 			titleCamera.eye = Shake(cameraPos[GameBossTrans], cameraShakeCount);
 			titleCamera.target = bossPhase_1->GetWorldTransformP().translation_;
 		}
-		else if (animeTimer >= 50.0f) {
+		else if (animeTimer >= startLeprTime) {
 			animeTimer += 0.025f;
-			if (animeTimer >= 53) {
-				animeTimer = 53;
+			if (animeTimer >= changeAnimeTime + 3.0f) {
+				animeTimer = changeAnimeTime + 3.0f;
 			}
 			Vector3 pos;
-			float easeTime = animeTimer - 52;
+			float easeTime = animeTimer - changeAnimeTime - 2.0f;
 			if (easeTime >= 0) {
 				pos = pos.lerp(cameraPos[GameBossTrans], cameraPos[GameStart], easeTime);
 				titleCamera.eye = pos;
@@ -681,11 +692,6 @@ void GameScene::AnimationCameraUpdate()
 		titleCamera.target = Vector3(titleCamera.eye.x, titleCamera.eye.y, titleCamera.eye.z + 5.0f);
 	}
 	else if (animetionPhase == Phase::GameToResult) {
-		//プレイヤーを敵に向かせる
-		float playerRota = bossPhase_2->GetPos().rotation_.y + 180.0f;
-
-		//プレイヤーのY軸回転を設定する
-		//player_->
 
 		if (animeTimer < 425) {
 			animeTimer++;

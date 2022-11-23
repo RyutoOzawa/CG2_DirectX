@@ -150,6 +150,7 @@ class GameScene {
 	SoundData gameBGM;
 	bool gameBgmFlag = false;
 
+	float changeAnimeTime = 150.0f;
 
 	GameLoop gameLoop=GameLoop::Title;
 	BossTrans bossTrans = BossTrans::TitleToGame;
