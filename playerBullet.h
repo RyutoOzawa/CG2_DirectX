@@ -3,8 +3,9 @@
 #include "WorldTransform.h"
 class playerBullet
 {
-	~playerBullet();
 public:
+	~playerBullet();
+
 	void Initialize(const Vector3& position, Vector3 Rot, const Vector3& velocity);
 	/// <summary>
 	/// çXêV

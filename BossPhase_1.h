@@ -11,9 +11,10 @@
 
 class BossPhase_1
 {
-	~BossPhase_1();
 
 public:// ƒƒ“ƒoŠÖ”
+	~BossPhase_1();
+
 	// ‰Šú‰»ŠÖ”
 	void Initialize(SpriteManager* spriteManager);
 

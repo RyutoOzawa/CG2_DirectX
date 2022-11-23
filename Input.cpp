@@ -56,9 +56,17 @@ bool Input::IsRelease(BYTE key_)
 }
 
 //パッド用関数
+void Input::InitializePad()
+{
+	XInputGetState(
+		0,//複数つながれてるときの選択
+		&gamePad);//この変数に入力状況が格納される
+}
+
 
 DWORD Input::Updatekeypad(DWORD dwUserIndex)
 {
+
 	oldGamePad = gamePad;
 
 	return XInputGetState(

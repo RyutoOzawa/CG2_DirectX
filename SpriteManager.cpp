@@ -121,8 +121,7 @@ void SpriteManager::CreatePipeline2D(ID3D12Device* dev)
 		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		});
 
-	pipeline.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
-
+	pipeline.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout, BLEND_ALPHA);
 	//スプライトでは背面カリングしない
 	pipeline.desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	pipeline.desc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;

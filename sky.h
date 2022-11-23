@@ -3,8 +3,8 @@
 #include"WorldTransform.h"
 class sky
 {
-	~sky();
 public:
+	~sky();
 
 	/// <summary>
 	/// ‰Šú‰»

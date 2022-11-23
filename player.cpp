@@ -7,9 +7,11 @@ player::~player()
 	{
 		delete spriteHP[i];
 	}
+	delete input_;
 }
 void player::Initialize(SpriteManager* spriteManager) {
-	//シングルトンインスタンスを取得する
+	input_ = new Input;
+
 	model_ = new Object3d;
 
 	model_->Initialize("player");
@@ -57,16 +59,13 @@ void player::Update() {
 	Vector3 move = { 0,0,0 };
 	Vector3 rot = { 0,0,0 };
 	////プレイヤー移動処理
-	XINPUT_STATE gamePad;
-	if (input_->Updatekeypad(0))
-	{
+	input_->Updatekeypad(0);
 		////プレイヤー移動処理
 		move.x += input_->PadAnalogStickLX() * vectorX.x;
 		move.z += input_->PadAnalogStickLX() * vectorX.z;
 		move.x += input_->PadAnalogStickLY() * vectorZ.x;
 		move.z += input_->PadAnalogStickLY() * vectorZ.z;
 		rot.y =  input_->PadAnalogStickRX();
-	}
 
 	float AR;
 	float BR;
@@ -88,7 +87,7 @@ void player::Update() {
 	//範囲を超えない処理
 	worldTransform_.rotation_.x = max(worldTransform_.rotation_.x, -kRotLimit);
 	worldTransform_.rotation_.x = min(worldTransform_.rotation_.x, +kRotLimit);
-		if(input_->TriggerPadKey(XINPUT_GAMEPAD_A))
+		if(input_->TriggerPadKey(XINPUT_GAMEPAD_A)&&jumpFlag==false)
 		{
 			jumpFlag = 1;
 		}

@@ -9,7 +9,6 @@
 
 class BossPhase_2
 {
-	~BossPhase_2();
 
 public:// サブクラス
 	enum class Motion {
@@ -27,6 +26,8 @@ public:// サブクラス
 	};
 
 public:// メンバ関数
+
+	~BossPhase_2();
 	// 初期化関数
 	void Initialize(SpriteManager* spriteManager);
 

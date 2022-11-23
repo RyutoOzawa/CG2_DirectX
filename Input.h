@@ -34,6 +34,8 @@ private://パッド用メンバ変数
 	XINPUT_STATE oldGamePad;
 
 public://パッド用メンバ関数
+	void InitializePad();
+
 	/// <summary>
 	/// コントローラーの状況の取得（毎フレームする）
 	/// </summary>
