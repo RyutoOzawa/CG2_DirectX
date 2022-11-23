@@ -122,6 +122,7 @@ class GameScene {
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+	uint32_t vignetteTexture = 0;
 
 	//カメラ座標
 	Vector3 cameraPos[PositionIndexCount];
@@ -140,14 +141,29 @@ class GameScene {
 	Sprite* resultUISprite = nullptr;
 	Sprite* resultSprite = nullptr;
 	Sprite* GameOverSprite = nullptr;
+	Sprite* vignetteEffect = nullptr;
 
 	ViewProjection *viewProjection=nullptr;
 
 	// 音関連
+	// BGM
+	Sound TitleBgm;
 	Sound gameBGM;
-	Sound Mokugyo;
+	Sound ClearBgm;
+	Sound OverBgm;
+
+	// SE
+	Sound SelectSe;
+	
+	
+
+
+	bool titleBgmFlag = false;
+	bool overBgmFlag = false;
+	bool clearBgmFlag = false;
 	bool gameBgmFlag = false;
 
+	float changeAnimeTime = 150.0f;
 
 	GameLoop gameLoop=GameLoop::Title;
 	BossTrans bossTrans = BossTrans::TitleToGame;

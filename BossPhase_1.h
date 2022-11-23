@@ -22,12 +22,18 @@ public:// メンバ関数
 	void Update(Vector3 playerPos);
 
 	/// <summary>
+	/// 形態変化の更新
+	/// </summary>
+	void ChangeUpdate(float animationTimer,float animationMax);
+
+	/// <summary>
 	/// タイトルシーン～ゲームシーンへ遷移するようの更新処理
 	/// </summary>
 	void TitleUpdate();
 
 	// 描画処理
 	void Draw(ViewProjection viewprojection);
+	void MedamaDraw(ViewProjection viewprojection);
 
 	// 描画処理
 	void DrawUI();
@@ -44,6 +50,8 @@ public:// メンバ関数
 	int GetHP() { return HP; }
 
 	void Rset();
+
+	void SetRotation(Vector3 rotation);
 
 private:// 静的メンバ関数
 
@@ -64,12 +72,14 @@ private:// メンバ変数
 
 	//ワールド変換データ
 	WorldTransform worldTransform_[27];
+	WorldTransform medamaWorldTransform;
 
 	// インプット
 	Input* input_ = nullptr;
 
 	//モデル
 	Object3d* model_ = nullptr;
+	Object3d* medamaModel = nullptr;
 
 	//デスフラグ
 	bool isDead_ = false;
