@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "Audio.h"
-#include "DirectXCommon.h"
-#include "DebugText.h"
+#include "DirectX.h"
+
 #include "Input.h"
-#include "Model.h"
-#include "SafeDelete.h"
+#include "Object3d.h"
+
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -13,9 +13,10 @@
 #include"playerBullet.h"
 #include"railCamera.h"
 #include"sky.h"
+#include "SpriteManager.h"
 #include "BossPhase_1.h"
 #include "BossPhase_2.h"
-#include "BossPhase_3.h"
+
 #include<sstream>
 
 enum PositionIndex {
@@ -71,7 +72,7 @@ class GameScene {
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi);
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -81,7 +82,10 @@ class GameScene {
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void ModelDraw();
+
+	// 前景スプライトの描画
+	void FrontSpriteDraw();
 
 	/// <summary>
 	/// タイトル更新処理
@@ -101,20 +105,20 @@ class GameScene {
 	Vector3 Shake(const Vector3& firstPos, int& shakeCount);
 
   private: // メンバ変数
-	DirectXCommon* dxCommon_ = nullptr;
+	ReDirectX* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
-	Audio* audio_ = nullptr;
-	DebugText* debugText_ = nullptr;
+	SoundManager* audio_ = nullptr;
+	
 
 	std::unique_ptr<player> player_;
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 	std::unique_ptr<sky> sky_=nullptr;
 
-	Model* model_ = nullptr;
+	Object3d* model_ = nullptr;
 	WorldTransform worldTransform;
 	std::unique_ptr<BossPhase_1> bossPhase_1;
 	std::unique_ptr<BossPhase_2> bossPhase_2;
-	std::unique_ptr<BossPhase_3> bossPhase_3;
+	
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;

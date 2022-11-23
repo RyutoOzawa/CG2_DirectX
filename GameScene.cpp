@@ -1,8 +1,9 @@
 ﻿#include "GameScene.h"
 #include "Texture.h"
 #include <cassert>
-#include"affine.h"
-#include<random>
+#include "affine.h"
+#include <random>
+#include "WindowsAPI.h"
 using namespace std;
 
 GameScene::GameScene() {}
@@ -13,16 +14,16 @@ GameScene::~GameScene() {
 	delete titleUISprite;
 }
 
-void GameScene::Initialize() {
+void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi) {
 
-	dxCommon_ = DirectXCommon::GetInstance();
-	input_ = Input::GetInstance();
-	audio_ = Audio::GetInstance();
-	debugText_ = DebugText::GetInstance();
 
-	model_ = new Model;
+	input_->Initialize(windowsApi);
+	audio_->Initialize();
 
-	model_ = Model::CreateFromOBJ("stage");
+
+	model_ = new Object3d;
+
+	model_->Initialize("stage");
 
 	worldTransform.Initialize();
 
@@ -38,8 +39,7 @@ void GameScene::Initialize() {
 	bossPhase_1->Initialize();
 	bossPhase_2 = std::make_unique<BossPhase_2>();
 	bossPhase_2->Initialize();
-	bossPhase_3 = std::make_unique<BossPhase_3>();
-	bossPhase_3->Initialize();
+
 
 	player_ = std::make_unique<player>();
 	railCamera_ = std::make_unique<RailCamera>();
@@ -71,52 +71,63 @@ void GameScene::Initialize() {
 
 	//タイトル用テクスチャ読み込み
 	titleTexture = Texture::LoadTexture(L"Resources/Title.png");
-	titleUITexture = TextureManager::Load("PressAStart.png");
-	int texturePlayGuido = TextureManager::Load("Sousa.png");
-	int texturerRisultUI = TextureManager::Load("PressATitle.png");
-	int gameOverTexture = TextureManager::Load("GameOver.png");
-	int resultTexture = TextureManager::Load("GameCLEAR.png");
+	titleUITexture = Texture::LoadTexture(L"Resources/PressAStart.png");
+	int texturePlayGuido = Texture::LoadTexture(L"Resources/Sousa.png");
+	int texturerRisultUI = Texture::LoadTexture(L"Resources/PressATitle.png");
+	int gameOverTexture = Texture::LoadTexture(L"Resources/GameOver.png");
+	int resultTexture = Texture::LoadTexture(L"Resources/GameCLEAR.png");
 
 	//スプライト生成
-	titleSprite = Sprite::Create(titleTexture, { WinApp::kWindowWidth / 2,256 });
-	titleUISprite = Sprite::Create(titleUITexture, { WinApp::kWindowWidth / 2,WinApp::kWindowHeight - 64 });
-	playGuideSprite = Sprite::Create(texturePlayGuido,{30,490},{1,1,1,1},{0,0});
-	resultUISprite = Sprite::Create(texturerRisultUI,{ WinApp::kWindowWidth / 2,WinApp::kWindowHeight - 64 },{1,1,1,1},{0.5,1});
-	GameOverSprite = Sprite::Create(gameOverTexture,{ WinApp::kWindowWidth / 2,180 },{1,1,1,1}, Vector2(0.5f, 0.3f));
-	resultSprite = Sprite::Create(resultTexture, { WinApp::kWindowWidth / 2,180 }, { 1,1,1,1 }, Vector2(0.5f, 0.3f));
+	titleSprite->Initialize(spriteManager, titleTexture);
+	titleSprite->SetPos({ WindowsAPI::winW / 2, 256 });
+	titleUISprite->Initialize(spriteManager, titleUITexture);
+	titleUISprite->SetPos({ WindowsAPI::winW / 2,WindowsAPI::winH - 64 });
+	playGuideSprite->Initialize(spriteManager, texturePlayGuido);
+	playGuideSprite->SetPos({ 30,490 });
+	playGuideSprite->SetColor({ 1,1,1,1 });
+	playGuideSprite->SetAnchorPoint({ 0,0 });
+	resultUISprite->Initialize(spriteManager, texturerRisultUI);
+	resultUISprite->SetPos({ WindowsAPI::winW / 2, WindowsAPI::winH - 64 });
+	resultUISprite->SetColor({ 1,1,1,1 });
+	resultUISprite->SetAnchorPoint({ 0.5,1 });
+	GameOverSprite->Initialize(spriteManager, gameOverTexture);
+	GameOverSprite->SetPos({ WindowsAPI::winW / 2, 180 });
+	GameOverSprite->SetColor({ 1,1,1,1 });
+	GameOverSprite->SetAnchorPoint({ 0.5f, 0.3f });
+	resultSprite->Initialize(spriteManager, resultTexture);
+	resultSprite->SetPos({ WindowsAPI::winW / 2,180 });
+	resultSprite->SetColor({ 1,1,1,1 });
+	resultSprite->SetAnchorPoint({ 0.5f, 0.3f });
 
-	titleSprite->SetAnchorPoint(Vector2(0.5f, 0.3f));
-	titleUISprite->SetAnchorPoint(Vector2(0.5f, 1));
-	titleUISprite->SetSize(Vector2(784 * 3 / 10, 288 * 3 / 10));
-	titleSprite->SetSize(Vector2(688 * 9 / 10, 336 * 9 / 10));
+	titleSprite->SetAnchorPoint({ 0.5f, 0.3f });
+	titleUISprite->SetAnchorPoint({ 0.5f, 1 });
+	titleUISprite->SetSize({ 784 * 3 / 10, 288 * 3 / 10 });
+	titleSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 	playGuideSprite->SetSize({212,212});
-	resultUISprite->SetSize(Vector2(784 * 3 / 10, 288 * 3 / 10));
-	GameOverSprite->SetSize(Vector2(688 * 9 / 10, 336 * 9 / 10));
-	resultSprite->SetSize(Vector2(688 * 9 / 10, 336 * 9 / 10));
+	resultUISprite->SetSize({ 784 * 3 / 10, 288 * 3 / 10 });
+	GameOverSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
+	resultSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 }
 
-void GameScene::Update() {
-
-	if (input_->TriggerKey(DIK_0))
+void GameScene::Update() 
+{
+	input_->Update();
+	if (input_->IsTrigger(DIK_0))
 	{
 		viewProjection = &railCamera_->GetViewProjection();
 	}
-	if (input_->TriggerKey(DIK_5))
+	if (input_->IsTrigger(DIK_5))
 	{
 		viewProjection = &titleCamera;
 	}
 
-	XINPUT_STATE gamePad;
-	XINPUT_STATE oldGamePad;
-	input_->GetInstance()->GetJoystickStatePrevious(0, oldGamePad);
-	input_->GetInstance()->GetJoystickState(0, gamePad);
-	int A = (gamePad.Gamepad.wButtons & XINPUT_GAMEPAD_A);
-	int oldA = (oldGamePad.Gamepad.wButtons & XINPUT_GAMEPAD_A);
+	input_->Updatekeypad(0);
+
 	switch (gameLoop)
 	{
 	case GameLoop::Title:
 		bossPhase_1->TitleUpdate();
-		if (A == 4096 &&oldA== 0)
+		if (input_->TriggerPadKey(XINPUT_GAMEPAD_A))
 		{
 			gameLoop = GameLoop::Game;
 				player_->TransformRset(false);
@@ -219,7 +230,7 @@ void GameScene::Update() {
 		{
 			bossPhase_2->Update(player_->GetworldPosition());
 		}
-		if (A == 4096 && oldA == 0)
+		if (input_->TriggerPadKey(XINPUT_GAMEPAD_A))
 		{
 			animeTimer = 0;
 			animetionPhase = TitleToGame;
@@ -236,7 +247,7 @@ void GameScene::Update() {
 		}
 		break;
 	case GameLoop::Result:
-		if (A == 4096 && oldA == 0)
+		if (input_->TriggerPadKey(XINPUT_GAMEPAD_A))
 		{
 			animeTimer = 0;
 			animetionPhase = TitleToGame;
@@ -269,28 +280,14 @@ void GameScene::Update() {
 	debugText_->Printf("%d",oldA);*/
 }
 
-void GameScene::Draw() {
+void GameScene::ModelDraw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
-#pragma region 背景スプライト描画
-	// 背景スプライト描画前処理
-	Sprite::PreDraw(commandList);
-
-	/// <summary>
-	/// ここに背景スプライトの描画処理を追加できる
-	/// </summary>
-
-	// スプライト描画後処理
-	Sprite::PostDraw();
-	// 深度バッファクリア
-	dxCommon_->ClearDepthBuffer();
-#pragma endregion
-
-#pragma region 3Dオブジェクト描画
+#pragma region ３Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
-	Model::PreDraw(commandList);
+
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
@@ -352,12 +349,19 @@ void GameScene::Draw() {
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
-	Model::PostDraw();
+
 #pragma endregion
 
+
+
+
+}
+
+void GameScene::FrontSpriteDraw()
+{
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
-	Sprite::PreDraw(commandList);
+
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
@@ -402,11 +406,7 @@ void GameScene::Draw() {
 	}
 
 
-	// デバッグテキストの描画
-	debugText_->DrawAll(commandList);
-	//
-	// スプライト描画後処理
-	Sprite::PostDraw();
+
 
 #pragma endregion
 }
@@ -594,18 +594,18 @@ bool GameScene::calcRaySphere(
 
 void GameScene::AnimationCameraUpdate()
 {
-	if (input_->PushKey(DIK_8)) {
+	if (input_->IsPress(DIK_8)) {
 		animeTimer = 0;
 		animetionPhase = TitleToGame;
 	}
 
-	if (input_->PushKey(DIK_9)) {
+	if (input_->IsPress(DIK_9)) {
 		animeTimer = 0;
 		animetionPhase = Phase::Boss1To2;
 		cameraShakeCount = 49;
 	}
 
-	if (input_->PushKey(DIK_7)) {
+	if (input_->IsPress(DIK_7)) {
 		animeTimer = 0;
 		animetionPhase = Phase::GameToResult;
 		player_->SetEndMoveRotation(bossPhase_2->GetPos().translation_);
@@ -665,10 +665,10 @@ void GameScene::AnimationCameraUpdate()
 			//注視点はボス2に
 			target = bossPhase_2->GetPos().translation_;
 			//目を45度回転
-			eye.z -= cos(MathUtility::PI / 180 * cameraRotation) * cameraDistance;
-			eye.x -= sin(MathUtility::PI / 180 * cameraRotation) * cameraDistance;
+			eye.z -= cos(affine::Deg2Rad * cameraRotation) * cameraDistance;
+			eye.x -= sin(affine::Deg2Rad * cameraRotation) * cameraDistance;
 			//ボス2の座標を使ってワールド座標返還
-			eye = MathUtility::Vector3Transform(eye, boss2Mat);
+			eye = affine::MatVector(boss2Mat,eye);
 			//使うカメラに代入
 			titleCamera.eye = eye;
 			titleCamera.target = bossPhase_2->GetPos().translation_;
@@ -678,10 +678,10 @@ void GameScene::AnimationCameraUpdate()
 			//2つめの座標(補間の終点)はプレイヤー座標参照
 			float rota2 = 75.0f;
 			Vector3 nextEye{
-				-cos(MathUtility::PI / 180 * rota2) * cameraDistance / 2 ,
+				-cos(affine::Deg2Rad * rota2) * cameraDistance / 2 ,
 				0,
-				-sin(MathUtility::PI / 180 * rota2) * cameraDistance / 2 };
-			cameraPos[GameBossDeath2] = MathUtility::Vector3Transform(nextEye, player_->GetWorldTransform()->matWorld_);
+				-sin(affine::Deg2Rad * rota2) * cameraDistance / 2 };
+			cameraPos[GameBossDeath2] = affine::MatVector(player_->GetWorldTransform()->matWorld_,nextEye);
 		}
 		else {
 			animeTimer += 0.0125f;

@@ -1,6 +1,6 @@
 #include "BossBullet.h"
 
-void BossBullet::Initialize(Model* model, const WorldTransform worldTransform, const Vector3& OyaPos, const Vector3& rotaAngle)
+void BossBullet::Initialize(Object3d* model, const WorldTransform worldTransform, const Vector3& OyaPos, const Vector3& rotaAngle)
 {
 	// NULLポインタチェック
 	assert(model);
@@ -19,7 +19,7 @@ void BossBullet::Initialize(Model* model, const WorldTransform worldTransform, c
 
 	worldTransform_.rotation_ = rotaAngle;
 
-	debugText_ = DebugText::GetInstance();
+	
 
 	FloatBlockFlagM = false;
 	FloatBlockFlagP = false;
@@ -128,8 +128,7 @@ void BossBullet::FlyBlocks(Vector3 playerPos)
 		}
 	}
 	
-	/*debugText_->SetPos(20, 60);
-	debugText_->Printf("飛ぶやつ:%f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);*/
+	
 }
 
 void BossBullet::Reset()

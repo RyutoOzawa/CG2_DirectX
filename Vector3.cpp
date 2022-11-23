@@ -35,6 +35,16 @@ Vector3 Vector3::cross(const Vector3& v) const
 					x * v.y - y * v.x );
 }
 
+const Vector3 Vector3::lerp(const Vector3& start, const Vector3& end, const float Timer)
+{
+	Vector3 pos;
+	pos.x = start.x * (1.0f - Timer) + end.x * Timer;
+	pos.y = start.y * (1.0f - Timer) + end.y * Timer;
+	pos.z = start.z * (1.0f - Timer) + end.z * Timer;
+
+	return pos;
+}
+
 Vector3 Vector3::operator+() const
 {
 	return*this;
