@@ -1,5 +1,13 @@
 #include "Audio.h"
 
+SoundManager::~SoundManager()
+{
+	// xaudio2の解放
+	xAudio2.Reset();
+
+
+}
+
 void SoundManager::Initialize()
 {
 	result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
@@ -76,6 +84,13 @@ SoundData SoundManager::SoundLoadWave(const char* filename) {
 		//再読み込み
 		file.read((char*)&data, sizeof(data));
 	}
+	//LISTチャンクを検出した場合
+	if (strncmp(data.id, "LIST", 4) == 0) {
+		//読み込み位置をJUNKチャンクの終わるまで進める
+		file.seekg(data.size, std::ios_base::cur);
+		//再読み込み
+		file.read((char*)&data, sizeof(data));
+	}
 
 	if (strncmp(data.id, "data", 4) != 0) {
 		assert(0);
@@ -120,20 +135,23 @@ void SoundManager::SoundUnload(SoundData* soundData) {
 void SoundManager::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, bool loop, float volume) {
 
 	//波形フォーマットを元にSourceVoiceの生成
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
+	//IXAudio2SourceVoice* pSourceVoice = nullptr;
 	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
 	assert(SUCCEEDED(result));
 
 	//再生する波形データの設定
-	XAUDIO2_BUFFER buf{};
+	//XAUDIO2_BUFFER buf{};
 	buf.pAudioData = soundData.pBuffer;
 	buf.AudioBytes = soundData.bufferSize;
+
+	pSourceVoice->SetVolume(volume);
 
 	if (loop)
 	{
 		buf.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
 	buf.Flags = XAUDIO2_END_OF_STREAM;
+
 
 	//波形データの再生
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
@@ -144,18 +162,10 @@ void SoundManager::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, 
 //----------音声ストップ------------//
 void SoundManager::StopWave(const SoundData& soundData)
 {
-	//波形フォーマットを元にSourceVoiceの生成
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
-	assert(SUCCEEDED(result));
-
-	XAUDIO2_VOICE_STATE state;
-	pSourceVoice->GetState(&state);
-	if (state.BuffersQueued == 0)
+	if (pSourceVoice != nullptr)
 	{
-		return;
+		result = pSourceVoice->Stop();
+		result = pSourceVoice->FlushSourceBuffers();
+		result = pSourceVoice->SubmitSourceBuffer(&buf);
 	}
-	result = pSourceVoice->Stop(0);
-	result = pSourceVoice->FlushSourceBuffers();
-	result = pSourceVoice->SubmitSourceBuffer(&buf);
 }
