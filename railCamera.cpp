@@ -1,6 +1,7 @@
 #include"RailCamera.h"
 #include"affine.h"
 #include<assert.h>
+#include <random>
 void RailCamera::Initialize(Vector3 trans, Vector3 rot,const WorldTransform* worldTransform) {
 
 	//ワールドトランスフォームの初期設定
@@ -15,7 +16,14 @@ void RailCamera::Update() {
 
 	affine::makeMatIdentity(worldTransform_.matWorld_);
 	affine::makeMatRot(worldTransform_.matWorld_, worldTransform_.rotation_);
-	affine::makeMatTrans(worldTransform_.matWorld_, worldTransform_.translation_);
+	if (shakeFrg==true)
+	{
+		affine::makeMatTrans(worldTransform_.matWorld_, Shake());
+	}
+	else
+	{
+		affine::makeMatTrans(worldTransform_.matWorld_, worldTransform_.translation_);
+	}
 	worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
 	viewProjection_.eye =Vector3(worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1], worldTransform_.matWorld_.m[3][2]);
 	//ワールド前方ベクトル
@@ -34,4 +42,38 @@ void RailCamera::Update() {
 
 	/*debugText_->SetPos(0.0f, 0.0f);
 	debugText_->Printf("eye=%f,%f,%f", viewProjection_.target.x, viewProjection_.target.y, viewProjection_.target.z);*/
+}
+
+Vector3 RailCamera::Shake()
+{
+
+	std::random_device seed_gem;
+	std::mt19937_64 engine(seed_gem());
+	std::uniform_real_distribution<float> rand(-2, 2);
+
+
+	//それ以外なら初期座標をランダムに増減して返す
+	Vector3 pos =worldTransform_.translation_;
+	pos.x += rand(engine);
+	pos.y += rand(engine);
+	pos.z += rand(engine);
+
+	shakeCount--;
+	if (shakeCount <= 0)
+	{
+		shakeFrg=false;
+	}
+
+	return pos;
+}
+
+void RailCamera::PlayerOnCollision()
+{
+	shakeFrg = true;
+	shakeCount = maxShakeCount;
+}
+
+void RailCamera::Rset()
+{
+	shakeFrg = false;
 }

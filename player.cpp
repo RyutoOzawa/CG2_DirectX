@@ -146,27 +146,27 @@ void player::Attack() {
 	{
 		return;
 	}*/
-	
-		//íeÇÃë¨ìx
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
-		velocity = affine::MatVector(worldTransform_.matWorld_, velocity);
-		float len = sqrt(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
-		if (len != 0)
-		{
-			velocity /= len;
-		}
-		velocity *= kBulletSpeed;
 
-		//íeÇÃê∂ê¨ÇµÅAèâä˙âª
-		std::unique_ptr<playerBullet> newBullet = std::make_unique<playerBullet>();
-		newBullet->Initialize(bulletModel_, worldTransform_.translation_, worldTransform_.rotation_, velocity);
+	//íeÇÃë¨ìx
+	const float kBulletSpeed = 1.0f;
+	Vector3 velocity(0, 0, kBulletSpeed);
+	velocity = affine::MatVector(worldTransform_.matWorld_, velocity);
+	float len = sqrt(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
+	if (len != 0)
+	{
+		velocity /= len;
+	}
+	velocity *= kBulletSpeed;
 
-		//íeÇÃìoò^Ç∑ÇÈ
-		bullets_.push_back(std::move(newBullet));
+	//íeÇÃê∂ê¨ÇµÅAèâä˙âª
+	std::unique_ptr<playerBullet> newBullet = std::make_unique<playerBullet>();
+	newBullet->Initialize(bulletModel_, worldTransform_.translation_, worldTransform_.rotation_, velocity);
 
-		AttackSound.SoundPlayWave(false, 0.3f);
-	
+	//íeÇÃìoò^Ç∑ÇÈ
+	bullets_.push_back(std::move(newBullet));
+
+	AttackSound.SoundPlayWave(false, 0.3f);
+
 }
 
 void player::Draw(ViewProjection& viewProjection_) {
@@ -248,19 +248,16 @@ void player::Rset()
 }
 void player::OnCollision()
 {
-	if (isDamageInterval == false)
+	HP--;
+	isDamageInterval = true;
+	damageInterval = maxDamageInterval;
+	if (HP > 0)
 	{
-		HP--;
-		isDamageInterval = true;
-		damageInterval = 60 * 5;
-		if (HP > 0)
-		{
-			damageSound.SoundPlayWave(false);
-		}
-		else
-		{
-			deadSound.SoundPlayWave(false);
-		}
+		damageSound.SoundPlayWave(false);
+	}
+	else
+	{
+		deadSound.SoundPlayWave(false);
 	}
 }
 void player::jump()

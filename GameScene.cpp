@@ -329,6 +329,8 @@ void GameScene::Update()
 			animeTimer = 0;
 			animetionPhase = TitleToGame;
 			player_->Rset();
+			railCamera_->Rset();
+			railCamera_->Update();
 			bossPhase_2->Rset();
 			bossPhase_1->Rset();
 			gameLoop = GameLoop::Title;
@@ -545,10 +547,15 @@ void GameScene::CheckAllCollisions()
 
 	if (A <= B)
 	{
-		//ボス1の衝突時コールバックを呼び出す
-		player_->OnCollision();
-		//敵弾の衝突時コールバックを呼び出す
-		bossBullet_->OnCollision();
+		if (player_->GetIsDamageInterval()==false)
+		{
+			//プレイヤーの衝突時コールバックを呼び出す
+			player_->OnCollision();
+			//プレイヤーが衝突時にセットで呼び出す
+			railCamera_->PlayerOnCollision();
+			//敵弾の衝突時コールバックを呼び出す
+			bossBullet_->OnCollision();
+		}
 	}
 
 #pragma endregion
@@ -563,8 +570,13 @@ void GameScene::CheckAllCollisions()
 		{
 			if (BeamTransform.scale_.z > 40)
 			{
-				//ボス1の衝突時コールバックを呼び出す
-				player_->OnCollision();
+				if (player_->GetIsDamageInterval() == false)
+				{
+					//ボス1の衝突時コールバックを呼び出す
+					player_->OnCollision();
+					//プレイヤーが衝突時にセットで呼び出す
+					railCamera_->PlayerOnCollision();
+				}
 			}
 		}
 	}
@@ -583,13 +595,15 @@ void GameScene::CheckAllCollisions()
 
 	}
 
-
-
-
 	if (A <= B)
 	{
-		//ボス1の衝突時コールバックを呼び出す
-		player_->OnCollision();
+		if (player_->GetIsDamageInterval() == false)
+		{
+			//ボス1の衝突時コールバックを呼び出す
+			player_->OnCollision();
+			//プレイヤーが衝突時にセットで呼び出す
+			railCamera_->PlayerOnCollision();
+		}
 	}
 
 #pragma endregion
@@ -603,8 +617,13 @@ void GameScene::CheckAllCollisions()
 
 	if (A <= B)
 	{
-		//ボス1の衝突時コールバックを呼び出す
-		player_->OnCollision();
+		if (player_->GetIsDamageInterval() == false)
+		{
+			//ボス1の衝突時コールバックを呼び出す
+			player_->OnCollision();
+			//プレイヤーが衝突時にセットで呼び出す
+			railCamera_->PlayerOnCollision();
+		}
 	}
 #pragma endregion
 
@@ -623,8 +642,13 @@ void GameScene::CheckAllCollisions()
 			if (playerPos.y - playerR < boss2.translation_.y + boss2.scale_.y &&
 				playerPos.y + playerR < boss2.translation_.y - boss2.scale_.y)
 			{
-				//ボス1の衝突時コールバックを呼び出す
-				player_->OnCollision();
+				if (player_->GetIsDamageInterval() == false)
+				{
+					//ボス1の衝突時コールバックを呼び出す
+					player_->OnCollision();
+					//プレイヤーが衝突時にセットで呼び出す
+					railCamera_->PlayerOnCollision();
+				}
 			}
 		}
 	}

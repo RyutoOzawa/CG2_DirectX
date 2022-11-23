@@ -64,6 +64,8 @@ public:
 	void Rset();
 
 	int GetHP() { return HP; }
+
+	bool GetIsDamageInterval() {return isDamageInterval ; }
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -94,8 +96,9 @@ private:
 	const int maxHP = 3;
 	int HP = maxHP;
 
-	bool isDamageInterval;
+	bool isDamageInterval=false;
 
+	const int maxDamageInterval = 60 * 3;
 	int damageInterval;
 
 	

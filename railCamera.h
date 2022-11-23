@@ -18,6 +18,13 @@ public:
 	/// </summary>
 	void Update();
 
+	//シェイク関数
+	Vector3 Shake();
+
+	void PlayerOnCollision();
+
+	void Rset();
+
 	ViewProjection& GetViewProjection() { return viewProjection_; };
 
 	WorldTransform* GetWorldTransform() { return &worldTransform_; };
@@ -30,4 +37,9 @@ private:
 	Input* input_ = nullptr;
 
 	float PI = 3.1415927f;
+
+	const int maxShakeCount=5;
+	int shakeCount= maxShakeCount;
+
+	bool shakeFrg = false;
 };
