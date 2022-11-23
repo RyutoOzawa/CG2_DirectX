@@ -2,26 +2,32 @@
 #include <math.h>
 #include <time.h>
 #include<stdlib.h>
+#include<cmath>
 float PI = 3.1415926;
 
-void BossPhase_2::Initialize()
+void BossPhase_2::Initialize(SpriteManager* spriteManager)
 {
-	input_ = Input::GetInstance();
-	debugText_ = DebugText::GetInstance();
-	model_ = Model::CreateFromOBJ("BossCube");
-	torunedoModel_ = Model::CreateFromOBJ("Torunedo");
-	beamModel_ = Model::CreateFromOBJ("beam");
-	medamaModel_ = Model::CreateFromOBJ("Medama");
+	model_->Initialize("BossCube");
+	torunedoModel_->Initialize("Torunedo");
+	beamModel_->Initialize("beam");
+	medamaModel_->Initialize("Medama");
 
-	int texHP = TextureManager::Load("bossBarNaka.png");
-	int texHPBar = TextureManager::Load("bossBar.png");
+	int texHP=Texture::LoadTexture(L"Resources/bossBarNaka.png");
+	int texHPBar = Texture::LoadTexture(L"Resources/bossBar.png");
 
-	spriteHP = Sprite::Create(texHP, { 330.0f,610.0f }, { 1,1,1,1 }, { 0,0 });
+	spriteHP->Initialize(spriteManager,texHP/*, { 330.0f,610.0f }, { 1,1,1,1 }, { 0,0 }*/);
+	spriteHP->SetColor({ 1,1,1,1 });
+	spriteHP->SetAnchorPoint({ 0,0 });
+
+	spriteHP->SetPos({ 330.0f,610.0f });
 
 	spriteHP->SetSize({ 620,50 });
 
-	spriteHPBar = Sprite::Create(texHPBar, { 320,600 }, { 1,1,1,1 }, { 0,0 });
+	spriteHPBar->Initialize(spriteManager,texHPBar/*, { 320,600 }, { 1,1,1,1 }, { 0,0 }*/);
+	spriteHP->SetColor({ 1,1,1,1 });
+	spriteHP->SetAnchorPoint({ 0,0 });
 
+	spriteHP->SetPos({ 320.0f,600.0f });
 	spriteHPBar->SetSize({ 640,50 });
 
 	for (int i = 0; i < 19; i++) {
@@ -73,7 +79,7 @@ void BossPhase_2::Initialize()
 	torunedoTrans.Initialize();
 	//ã‚Ì’i
 	upBoomerangWorldTransform[0].scale_ = { kyubuScale,kyubuScale,kyubuScale };
-	torunedoTrans.scale_ = {10,35,10};
+	torunedoTrans.scale_ = { 10,35,10 };
 	upBoomerangWorldTransform[1].translation_ = { 0,0,-kyubuLengh };
 	upBoomerangWorldTransform[2].translation_ = { -kyubuLengh,0, 0 };
 	upBoomerangWorldTransform[3].translation_ = { 0,0,+kyubuLengh };
@@ -132,21 +138,21 @@ void BossPhase_2::Update(Vector3 playerPos)
 				isUpActive == false;
 				isDownActive = false;
 				rushFlag = false;
-				randAttack = rand()%4;
+				randAttack = rand() % 4;
 				//randAttack %= 100;
-				if (randAttack ==0)
+				if (randAttack == 0)
 				{
 					Attack = 1;
 				}
-				if (randAttack ==1)
+				if (randAttack == 1)
 				{
 					Attack = 2;
 				}
-				if (randAttack ==2)
+				if (randAttack == 2)
 				{
 					Attack = 3;
 				}
-				if (randAttack ==3)
+				if (randAttack == 3)
 				{
 					Attack = 4;
 				}
@@ -170,24 +176,6 @@ void BossPhase_2::Update(Vector3 playerPos)
 			}
 			isAction = Action::AttackInMotion;
 		}
-	}
-
-
-	if (input_->TriggerKey(DIK_1))
-	{
-		beamReset();
-	}
-	if (input_->TriggerKey(DIK_3))
-	{
-		rushReset();
-	}
-	if (input_->TriggerKey(DIK_6))
-	{
-		blowUpFlag = true;
-		beamFlag == false;
-		isUpActive == false;
-		isDownActive = false;
-		rushFlag = false;
 	}
 
 
@@ -231,7 +219,7 @@ void BossPhase_2::Draw(ViewProjection viewprojection)
 		}
 		if (isUpAttack)
 		{
-			torunedoModel_->Draw(torunedoTrans,viewprojection);
+			torunedoModel_->Draw(torunedoTrans, viewprojection);
 		}
 	}
 	if (isDownActive == true)
@@ -316,9 +304,9 @@ void BossPhase_2::Rset()
 	worldTransform_[18].translation_ = { +kyubuLengh,-kyubuLengh, 0 };
 
 
-	for (int i=0;i<19;i++)
+	for (int i = 0; i < 19; i++)
 	{
-		worldTransform_[i].rotation_ = {0,0,0};
+		worldTransform_[i].rotation_ = { 0,0,0 };
 	}
 
 	angle = 1.57;
@@ -619,9 +607,9 @@ void BossPhase_2::boomerangUpdate(Vector3 playerPos)
 	debugText_->Printf("translation_:%f,%f,%f", downBoomerangWorldTransform[0].translation_.x, downBoomerangWorldTransform[0].translation_.y, upBoomerangWorldTransform[0].translation_.z);*/
 }
 
-void BossPhase_2::boomerangSet(Vector3 playerPos,bool UpOrDown)
+void BossPhase_2::boomerangSet(Vector3 playerPos, bool UpOrDown)
 {
-	if (UpOrDown==true)
+	if (UpOrDown == true)
 	{
 		upBoomerangWorldTransform[0].translation_ = worldTransform_[0].translation_;
 		upBoomerangWorldTransform[0].translation_.y = worldTransform_[0].translation_.y + kyubuLengh;

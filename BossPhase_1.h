@@ -1,19 +1,20 @@
 #pragma once
-#include "Model.h"
+#include "Object3d.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include "affine.h"
 #include "Input.h"
-#include "DebugText.h"
 #include <cassert>
 #include "BossBullet.h"
+#include<sstream>
+#include"Sprite.h"
 
 class BossPhase_1
 {
 
 public:// メンバ関数
 	// 初期化関数
-	void Initialize();
+	void Initialize(SpriteManager* spriteManager);
 
 	// 更新処理
 	void Update(Vector3 playerPos);
@@ -62,14 +63,11 @@ private:// メンバ変数
 	//ワールド変換データ
 	WorldTransform worldTransform_[27];
 
-	// デバッグテキスト
-	DebugText* debugText_ = nullptr;
-
 	// インプット
 	Input* input_ = nullptr;
 
 	//モデル
-	Model* model_ = nullptr;
+	Object3d* model_ = nullptr;
 
 	//デスフラグ
 	bool isDead_ = false;

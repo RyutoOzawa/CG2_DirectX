@@ -1,29 +1,25 @@
 #include "player.h"
 #include"affine.h"
-void player::Initialize() {
+void player::Initialize(SpriteManager* spriteManager) {
 	//シングルトンインスタンスを取得する
-	input_ = Input::GetInstance();
-	debugText_ = DebugText::GetInstance();
 
-	model_ = Model::CreateFromOBJ("player");
+	model_->Initialize("player");
 
-	uint32_t texHP = TextureManager::Load("heart.png");
+	uint32_t texHP = Texture::LoadTexture(L"Resources/heart.png");
 
 	for (int i = 0; i < maxHP; i++)
 	{
-		spriteHP[i] = Sprite::Create(texHP, { 10,10 }, { 1,1,1,1 }, { 0,0 });
+		spriteHP[i]->Initialize(spriteManager, texHP);
+		spriteHP[i]->SetColor({ 1,1,1,1 });
+		spriteHP[i]->SetAnchorPoint({ 0,0 });
 
 		spriteHP[i]->SetSize({ 41.6,34.1 });
 
-		spriteHP[i]->SetPosition({ 30 + spriteHP[i]->GetSize().x * i + i * 10,30 });
+		spriteHP[i]->SetPos({ 30 + spriteHP[i]->GetSize().x * i + i * 10,30 });
 	}
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = Vector3(0.0f, 0.0f, 0.0f);
-	textureHandle_ = TextureManager::Load("uvChecker.png");
-
-	//3Dレティクルのワールドトランスフォームの初期化
-	worldTransform3DReticle_.Initialize();
 }
 
 void player::Update() {
@@ -52,14 +48,14 @@ void player::Update() {
 	Vector3 rot = { 0,0,0 };
 	////プレイヤー移動処理
 	XINPUT_STATE gamePad;
-	if (input_->GetInstance()->GetJoystickState(0, gamePad))
+	if (input_->Updatekeypad(0))
 	{
 		////プレイヤー移動処理
-		move.x += (float)gamePad.Gamepad.sThumbLX / SHRT_MAX * vectorX.x;
-		move.z += (float)gamePad.Gamepad.sThumbLX / SHRT_MAX * vectorX.z;
-		move.x += (float)gamePad.Gamepad.sThumbLY / SHRT_MAX * vectorZ.x;
-		move.z += (float)gamePad.Gamepad.sThumbLY / SHRT_MAX * vectorZ.z;
-		rot.y = (float)gamePad.Gamepad.sThumbRX / SHRT_MAX;
+		move.x += input_->PadAnalogStickLX() * vectorX.x;
+		move.z += input_->PadAnalogStickLX() * vectorX.z;
+		move.x += input_->PadAnalogStickLY() * vectorZ.x;
+		move.z += input_->PadAnalogStickLY() * vectorZ.z;
+		rot.y =  input_->PadAnalogStickRX();
 	}
 
 	float AR;
@@ -82,11 +78,10 @@ void player::Update() {
 	//範囲を超えない処理
 	worldTransform_.rotation_.x = max(worldTransform_.rotation_.x, -kRotLimit);
 	worldTransform_.rotation_.x = min(worldTransform_.rotation_.x, +kRotLimit);
-	input_->GetInstance()->GetJoystickState(0, gamePad);
-	if (gamePad.Gamepad.wButtons & XINPUT_GAMEPAD_A && jumpFlag == 0)
-	{
-		jumpFlag = 1;
-	}
+		if(input_->TriggerPadKey(XINPUT_GAMEPAD_A))
+		{
+			jumpFlag = 1;
+		}
 
 	jump();
 
@@ -116,26 +111,20 @@ void player::Attack() {
 	{
 		return;
 	}*/
-	XINPUT_STATE gamePad;
-	XINPUT_STATE oldGamePad;
-	input_->GetInstance()->GetJoystickStatePrevious(0, oldGamePad);
-	input_->GetInstance()->GetJoystickState(0, gamePad);
-	int A = (gamePad.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
-	int B = (oldGamePad.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
-	if (A == 512 && B == 0) {
+	if (input_->TriggerPadKey(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		//弾の速度
 		const float kBulletSpeed = 1.0f;
-			Vector3 velocity(0, 0, kBulletSpeed);
-			velocity = affine::MatVector(worldTransform_.matWorld_, velocity);
-			float len = sqrt(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
-			if (len != 0)
-			{
-				velocity /= len;
-			}
+		Vector3 velocity(0, 0, kBulletSpeed);
+		velocity = affine::MatVector(worldTransform_.matWorld_, velocity);
+		float len = sqrt(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
+		if (len != 0)
+		{
+			velocity /= len;
+		}
 		velocity *= kBulletSpeed;
 
-			//弾の生成し、初期化
-			std::unique_ptr<playerBullet> newBullet = std::make_unique<playerBullet>();
+		//弾の生成し、初期化
+		std::unique_ptr<playerBullet> newBullet = std::make_unique<playerBullet>();
 		newBullet->Initialize(worldTransform_.translation_, worldTransform_.rotation_, velocity);
 
 		//弾の登録する

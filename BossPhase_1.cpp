@@ -1,12 +1,10 @@
 #include "BossPhase_1.h"
 
 
-void BossPhase_1::Initialize()
+void BossPhase_1::Initialize(SpriteManager* spriteManager)
 {
 
-	input_ = Input::GetInstance();
-
-	model_ = Model::CreateFromOBJ("BossCube");
+	model_->Initialize("BossCube");
 
 	for (int i = 0; i < 27; i++) {
 
@@ -14,20 +12,27 @@ void BossPhase_1::Initialize()
 		// フラグ
 		AnnihilationFlag[i] = false;
 	}
-	int texHP = TextureManager::Load("bossBarNaka.png");
-	int texHPBar = TextureManager::Load("bossBar.png");
+	int texHP= Texture::LoadTexture(L"Resources/bossBarNaka.png");
+	int texHPBar = Texture::LoadTexture(L"Resources/bossBar.png");
 
-	spriteHP = Sprite::Create(texHP, { 330.0f,610.0f }, { 1,1,1,1 }, { 0,0 });
+	spriteHP->Initialize(spriteManager,texHP/*, { 330.0f,610.0f }, { 1,1,1,1 }, { 0,0 }*/);
 
+	spriteHP->SetColor({ 1,1,1,1 });
+	spriteHP->SetAnchorPoint({ 0,0 });
+
+	spriteHP->SetPos({ 330.0f,610.0f });
 	spriteHP->SetSize({ 620,50 });
 
-	spriteHPBar = Sprite::Create(texHPBar, { 320,600 }, { 1,1,1,1 }, { 0,0 });
+	spriteHPBar->Initialize(spriteManager,texHPBar);
 
+	spriteHPBar->SetColor({ 1,1,1,1 });
+	spriteHPBar->SetAnchorPoint({ 0,0 });
+
+	spriteHPBar->SetPos({ 320,600 });
 	spriteHPBar->SetSize({ 640,50 });
 
 	// 親
 	worldTransform_[0].translation_ = { 0,10,50 };
-	debugText_ = DebugText::GetInstance();
 
 	// ボスバレットの初期化
 	bullet = std::make_unique<BossBullet>();
@@ -73,13 +78,6 @@ void BossPhase_1::Initialize()
 
 void BossPhase_1::Update(Vector3 playerPos)
 {
-	// キューブの移動
-	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT)) {
-		if (input_->PushKey(DIK_UP)) { worldTransform_[0].translation_.y += 1.0f; }
-		else if (input_->PushKey(DIK_DOWN)) { worldTransform_[0].translation_.y -= 1.0f; }
-		if (input_->PushKey(DIK_RIGHT)) { worldTransform_[0].translation_.x += 1.0f; }
-		else if (input_->PushKey(DIK_LEFT)) { worldTransform_[0].translation_.x -= 1.0f; }
-	}
 
 	TurnBodyToPlayer(playerPos);
 
@@ -109,8 +107,8 @@ void BossPhase_1::TitleUpdate()
 		titleRadian -= 360.0f;
 	}
 
-	worldTransform_[0].rotation_.y = MathUtility::PI / 180 * titleRadian;
-	worldTransform_[0].translation_.y = (sin(MathUtility::PI / 180 * titleRadian) * 2.0f) + 12;
+	worldTransform_[0].rotation_.y =titleRadian*affine::Deg2Rad;
+	worldTransform_[0].translation_.y = (sin(affine::Deg2Rad * titleRadian) * 2.0f) + 12;
 
 	TransferMat();
 }

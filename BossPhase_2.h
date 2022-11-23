@@ -1,11 +1,11 @@
 #pragma once
-#include "Model.h"
+#include "Object3d.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include "affine.h"
 #include "Input.h"
-#include "DebugText.h"
 #include <cassert>
+#include"Sprite.h"
 
 class BossPhase_2
 {
@@ -26,7 +26,7 @@ public:// サブクラス
 
 public:// メンバ関数
 	// 初期化関数
-	void Initialize();
+	void Initialize(SpriteManager* spriteManager);
 
 	// 更新処理
 	void Update(Vector3 playerPos);
@@ -83,12 +83,12 @@ private:
 
 	float DegreeToRad(float num)
 	{
-		return num / 180 * MathUtility::PI;
+		return num / 180 * affine::PI;
 	}
 
 	float RadToDegree(float num)
 	{
-		return num / MathUtility::PI * 180;
+		return num / affine::PI * 180;
 	}
 
 	// ビーム関連のリセット
@@ -126,14 +126,11 @@ private:// メンバ変数
 	Vector3 oyaRota;
 	Matrix4 oyaRotation;
 
-	// デバッグテキスト
-	DebugText* debugText_ = nullptr;
-
 	// インプット
 	Input* input_ = nullptr;
 
 	//モデル
-	Model* model_ = nullptr;
+	Object3d* model_ = nullptr;
 
 	Vector3 playerPos_;
 
@@ -154,7 +151,7 @@ private:// メンバ変数
 	// ビームのワールドデータ
 	WorldTransform beamWorldTransform_;
 	// ビームのモデル
-	Model* beamModel_ = nullptr;
+	Object3d* beamModel_ = nullptr;
 
 	bool beamFlag = false;
 	bool beamSetFlag = false;
@@ -196,7 +193,7 @@ private:// メンバ変数
 	// 消すときのフラグ
 	bool AnnihilationFlag[27];
 
-	Model* torunedoModel_ = nullptr;
+	Object3d* torunedoModel_ = nullptr;
 
 	WorldTransform torunedoTrans;
 
@@ -283,7 +280,7 @@ private:// メンバ変数
 
 #pragma region 目玉
 	WorldTransform medamaWT;
-	Model* medamaModel_ = nullptr;
+	Object3d* medamaModel_ = nullptr;
 #pragma endregion
 
 };

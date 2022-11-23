@@ -1,25 +1,22 @@
 #pragma once
-#include "Audio.h"
-#include "DirectXCommon.h"
-#include "DebugText.h"
+#include "DirectX.h"
 #include "Input.h"
-#include "Model.h"
-#include "SafeDelete.h"
+#include "Object3d.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include"DebugCamera.h"
 #include<cassert>
 #include"playerBullet.h"
 #include<memory>
 #include<list>
+#include<cmath>
 class player
 {
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(SpriteManager *spriteManager);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -68,13 +65,11 @@ private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
 	//モデル
-	Model* model_ = nullptr;
+	Object3d* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
 	Input* input_ = nullptr;
-
-	DebugText* debugText_ = nullptr;
 
 	//弾
 	std::list<std::unique_ptr<playerBullet>>bullets_;
