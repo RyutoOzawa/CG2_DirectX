@@ -212,6 +212,8 @@ void player::SetEndMoveRotation(Vector3 Transform)
 	velocity.normalize();
 	// YŽ²Žü‚èŠp“x(ƒÆy)
 	worldTransform_.rotation_.y = std::atan2(velocity.x, velocity.z);
+
+	isDamageInterval = false;
 }
 void player::TransformRset(bool endOrStart)
 {

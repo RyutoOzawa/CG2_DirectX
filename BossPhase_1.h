@@ -54,6 +54,8 @@ public:// メンバ関数
 
 	void SetRotation(Vector3 rotation);
 
+	void DeadRset();
+
 private:// 静的メンバ関数
 
 	// ブロックを飛ばす処理

@@ -397,6 +397,9 @@ void BossPhase_2::Rset()
 	AnnihilationFlag[18] = false;
 
 	medamaWT.translation_ = { 0.0f,0.0f,-3.2f };
+
+	isUpAttack = false;
+	isDownAttack = false;
 }
 
 void BossPhase_2::beamUpdate(Vector3 playerPos)

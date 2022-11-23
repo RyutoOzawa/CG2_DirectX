@@ -294,6 +294,12 @@ void BossPhase_1::SetRotation(Vector3 rotation)
 	TransferMat();
 }
 
+void BossPhase_1::DeadRset()
+{
+	worldTransform_[randomBlock].scale_ = { 1.0f,1.0f,1.0f };
+	AnnihilationFlag[randomBlock] = false;
+}
+
 void BossPhase_1::FlyBlocks(Vector3 playerPos)
 {
 	// ƒ‰ƒ“ƒ_ƒ€‚É’Š‘I‚ğs‚¤
