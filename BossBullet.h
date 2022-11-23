@@ -7,6 +7,7 @@
 
 class BossBullet
 {
+	~BossBullet();
 public:
 	// ‰Šú‰»
 	void Initialize(Object3d* model, const WorldTransform worldTransform,const Vector3& OyaPos, const Vector3& rotaAngle);

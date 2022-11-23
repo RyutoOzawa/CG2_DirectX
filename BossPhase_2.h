@@ -9,6 +9,8 @@
 
 class BossPhase_2
 {
+	~BossPhase_2();
+
 public:// サブクラス
 	enum class Motion {
 		standby,

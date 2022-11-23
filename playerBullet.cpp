@@ -3,8 +3,15 @@
 #include<cassert>
 #include"affine.h"
 
+
+playerBullet::~playerBullet()
+{
+	delete model_;
+}
+
 void playerBullet::Initialize( const Vector3& Position,Vector3 Rot, const Vector3& velocity)
 {
+	model_ = new Object3d;
 
 	model_->Initialize();
 	//テクスチャ読み込み

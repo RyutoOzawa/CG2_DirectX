@@ -1,8 +1,13 @@
 #include "sky.h"
 #include<assert.h>
 #include"affine.h"
+sky::~sky()
+{
+	delete model_;
+}
 void sky::Initialize() {
 
+	model_ = new Object3d;
 	model_->Initialize("skydome");
 	worldTransform_.Initialize();
 

@@ -1,7 +1,16 @@
 #include "player.h"
 #include"affine.h"
+player::~player()
+{
+	delete model_;
+	for (int i = 0; i < maxHP; i++)
+	{
+		delete spriteHP[i];
+	}
+}
 void player::Initialize(SpriteManager* spriteManager) {
 	//シングルトンインスタンスを取得する
+	model_ = new Object3d;
 
 	model_->Initialize("player");
 
@@ -9,6 +18,7 @@ void player::Initialize(SpriteManager* spriteManager) {
 
 	for (int i = 0; i < maxHP; i++)
 	{
+		spriteHP[i]=new Sprite();
 		spriteHP[i]->Initialize(spriteManager, texHP);
 		spriteHP[i]->SetColor({ 1,1,1,1 });
 		spriteHP[i]->SetAnchorPoint({ 0,0 });

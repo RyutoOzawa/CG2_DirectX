@@ -1,8 +1,16 @@
 #include "BossPhase_1.h"
 
 
+BossPhase_1::~BossPhase_1()
+{
+	delete model_;
+	delete spriteHP;
+	delete spriteHPBar;
+}
+
 void BossPhase_1::Initialize(SpriteManager* spriteManager)
 {
+	model_ = new Object3d();
 
 	model_->Initialize("BossCube");
 
@@ -15,6 +23,8 @@ void BossPhase_1::Initialize(SpriteManager* spriteManager)
 	int texHP= Texture::LoadTexture(L"Resources/bossBarNaka.png");
 	int texHPBar = Texture::LoadTexture(L"Resources/bossBar.png");
 
+	spriteHP = new Sprite();
+
 	spriteHP->Initialize(spriteManager,texHP/*, { 330.0f,610.0f }, { 1,1,1,1 }, { 0,0 }*/);
 
 	spriteHP->SetColor({ 1,1,1,1 });
@@ -23,6 +33,7 @@ void BossPhase_1::Initialize(SpriteManager* spriteManager)
 	spriteHP->SetPos({ 330.0f,610.0f });
 	spriteHP->SetSize({ 620,50 });
 
+	spriteHPBar = new Sprite();
 	spriteHPBar->Initialize(spriteManager,texHPBar);
 
 	spriteHPBar->SetColor({ 1,1,1,1 });

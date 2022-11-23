@@ -5,8 +5,23 @@
 #include<cmath>
 
 
+BossPhase_2::~BossPhase_2()
+{
+	delete model_;
+	delete torunedoModel_;
+	delete beamModel_;
+	delete medamaModel_;
+	delete spriteHP;
+	delete spriteHPBar;
+}
+
 void BossPhase_2::Initialize(SpriteManager* spriteManager)
 {
+	model_ = new Object3d();
+	torunedoModel_ = new Object3d();
+	beamModel_ = new Object3d();
+	medamaModel_ = new Object3d();
+
 	model_->Initialize("BossCube");
 	torunedoModel_->Initialize("Torunedo");
 	beamModel_->Initialize("beam");
@@ -15,6 +30,7 @@ void BossPhase_2::Initialize(SpriteManager* spriteManager)
 	int texHP=Texture::LoadTexture(L"Resources/bossBarNaka.png");
 	int texHPBar = Texture::LoadTexture(L"Resources/bossBar.png");
 
+	spriteHP = new Sprite;
 	spriteHP->Initialize(spriteManager,texHP/*, { 330.0f,610.0f }, { 1,1,1,1 }, { 0,0 }*/);
 	spriteHP->SetColor({ 1,1,1,1 });
 	spriteHP->SetAnchorPoint({ 0,0 });
@@ -23,11 +39,12 @@ void BossPhase_2::Initialize(SpriteManager* spriteManager)
 
 	spriteHP->SetSize({ 620,50 });
 
+	spriteHPBar = new Sprite;
 	spriteHPBar->Initialize(spriteManager,texHPBar/*, { 320,600 }, { 1,1,1,1 }, { 0,0 }*/);
-	spriteHP->SetColor({ 1,1,1,1 });
-	spriteHP->SetAnchorPoint({ 0,0 });
+	spriteHPBar->SetColor({ 1,1,1,1 });
+	spriteHPBar->SetAnchorPoint({ 0,0 });
 
-	spriteHP->SetPos({ 320.0f,600.0f });
+	spriteHPBar->SetPos({ 320.0f,600.0f });
 	spriteHPBar->SetSize({ 640,50 });
 
 	for (int i = 0; i < 19; i++) {

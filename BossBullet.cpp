@@ -1,5 +1,10 @@
 #include "BossBullet.h"
 
+BossBullet::~BossBullet()
+{
+
+}
+
 void BossBullet::Initialize(Object3d* model, const WorldTransform worldTransform, const Vector3& OyaPos, const Vector3& rotaAngle)
 {
 	// NULLポインタチェック

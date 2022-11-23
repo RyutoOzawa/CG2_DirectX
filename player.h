@@ -13,6 +13,8 @@
 class player
 {
 public:
+	~player();
+
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>
