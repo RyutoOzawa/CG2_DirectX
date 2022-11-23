@@ -3,8 +3,6 @@
 Microsoft::WRL::ComPtr<IXAudio2>Sound::xAudio2_;
 IXAudio2MasteringVoice* Sound::masterVoice_;
 
-
-
 Sound::~Sound()
 {
 	// xaudio2‚Ì‰ð•ú
