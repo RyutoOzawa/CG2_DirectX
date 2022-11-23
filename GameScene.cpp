@@ -19,13 +19,13 @@ GameScene::~GameScene() {
 
 	delete input_;
 	delete audio_;
-	delete viewProjection;
+	
 }
 
 void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi) {
 	// 音関連の初期化
 	sound_.Initialize();
-	gameBGM = sound_.SoundLoadWave("Resources/Satans Servant.wav");
+	gameBGM = sound_.SoundLoadWave("Resources/mokugyo.wav");
 	input_ = new Input;
 	input_->Initialize(windowsApi);
 	audio_ = new SoundManager;

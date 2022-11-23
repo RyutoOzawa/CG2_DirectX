@@ -53,15 +53,31 @@ SoundData SoundManager::SoundLoadWave(const char* filename) {
 	ChunkHeader data;
 	file.read((char*)&data, sizeof(data));
 
-	//JUNKチャンクを検出した場合
-	if (strncmp(data.id, "JUNK ", 4) == 0) {
+	//bextチャンクを検出した場合
+	if (strncmp(data.id, "bext", 4) == 0) {
 		//読み込み位置をJUNKチャンクの終わるまで進める
 		file.seekg(data.size, std::ios_base::cur);
 		//再読み込み
 		file.read((char*)&data, sizeof(data));
 	}
 
-	if (strncmp(data.id, "data ", 4) != 0) {
+	//JUNKチャンクを検出した場合
+	if (strncmp(data.id, "JUNK", 4) == 0) {
+		//読み込み位置をJUNKチャンクの終わるまで進める
+		file.seekg(data.size, std::ios_base::cur);
+		//再読み込み
+		file.read((char*)&data, sizeof(data));
+	}
+
+	//JUNKチャンクを検出した場合
+	if (strncmp(data.id, "junk", 4) == 0) {
+		//読み込み位置をJUNKチャンクの終わるまで進める
+		file.seekg(data.size, std::ios_base::cur);
+		//再読み込み
+		file.read((char*)&data, sizeof(data));
+	}
+
+	if (strncmp(data.id, "data", 4) != 0) {
 		assert(0);
 	}
 
