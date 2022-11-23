@@ -129,7 +129,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	delete sprite;
 
-
+	delete gameScene;
 	delete windowsAPI;
 	delete input;
 	delete directX;
