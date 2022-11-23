@@ -49,6 +49,7 @@ public:
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice;
 	static const int kMaxSoundData = 256;
+	~SoundManager();
 
 	// 初期化
 	void Initialize();
@@ -65,6 +66,7 @@ public:
 	void End();
 
 private:
+	IXAudio2SourceVoice* pSourceVoice = nullptr;
 	std::map<std::string, SoundData> soundDatas_;
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buf{};

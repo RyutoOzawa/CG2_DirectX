@@ -6,7 +6,7 @@ class playerBullet
 public:
 	~playerBullet();
 
-	void Initialize(const Vector3& position, Vector3 Rot, const Vector3& velocity);
+	void Initialize(Object3d *model,const Vector3& position, Vector3 Rot, const Vector3& velocity);
 	/// <summary>
 	/// çXêV
 	/// </summary>

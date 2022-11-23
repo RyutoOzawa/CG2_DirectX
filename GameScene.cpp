@@ -19,13 +19,11 @@ GameScene::~GameScene() {
 
 	delete input_;
 	delete audio_;
-	delete viewProjection;
+	
 }
 
 void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi) {
-	// 音関連の初期化
-	sound_.Initialize();
-	gameBGM = sound_.SoundLoadWave("Resources/Satans Servant.wav");
+
 	input_ = new Input;
 	input_->Initialize(windowsApi);
 	audio_ = new SoundManager;
@@ -127,8 +125,14 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	GameOverSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 	resultSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 
+	// 音関連の初期化
+	sound_.Initialize();
+	gameBGM = sound_.SoundLoadWave("Resources/Sound/Satans Servant.wav");
+
 	vignetteEffect->Initialize(spriteManager, vignetteTexture);
 	vignetteEffect->SetSize({ WindowsAPI::winW, WindowsAPI::winH });
+
+
 }
 
 void GameScene::Update() 
@@ -160,7 +164,7 @@ void GameScene::Update()
 		break;
 	case GameLoop::Game:
 		if (gameBgmFlag == false) {
-			sound_.SoundPlayWave(sound_.xAudio2.Get(), gameBGM, true);
+			sound_.SoundPlayWave(sound_.xAudio2.Get(), gameBGM, true, 0.1f);
 			gameBgmFlag = true;
 		}
 
@@ -194,6 +198,9 @@ void GameScene::Update()
 			if (player_->GetHP() <= 0)
 			{
 				player_->AllBulletDelete();
+				// ゲームBGMを止める
+				sound_.StopWave(gameBGM);
+				gameBgmFlag = false;
 				gameLoop = GameLoop::GameOver;
 			}
 			break;
@@ -236,6 +243,9 @@ void GameScene::Update()
 			if (player_->GetHP() <= 0)
 			{
 				player_->AllBulletDelete();
+				// ゲームBGMを止める
+				sound_.StopWave(gameBGM);
+				gameBgmFlag = false;
 				gameLoop = GameLoop::GameOver;
 			}
 			break;
@@ -244,7 +254,9 @@ void GameScene::Update()
 			bossPhase_2->Update(player_->GetworldPosition());
 			if (bossPhase_2->GetMedamaWTTransformY() <= -10)
 			{
-
+				// ゲームBGMを止める
+				sound_.StopWave(gameBGM);
+				gameBgmFlag = false;
 				gameLoop = GameLoop::Result;
 			}
 			break;
@@ -678,9 +690,9 @@ void GameScene::AnimationCameraUpdate()
 		if (animeTimer < 425) {
 			animeTimer++;
 			//注視点からカメラの距離
-			float cameraDistance = 40.0f;
+			float cameraDistance = 30.0f;
 			//カメラ回転角
-			float cameraRotation = 30.0f;
+			float cameraRotation = 90.0f;
 			Vector3 eye{}, target;
 			//注視点はボス2に
 			target = bossPhase_2->GetPos().translation_;

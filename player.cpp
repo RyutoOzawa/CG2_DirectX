@@ -3,6 +3,7 @@
 player::~player()
 {
 	delete model_;
+	delete bulletModel_;
 	for (int i = 0; i < maxHP; i++)
 	{
 		delete spriteHP[i];
@@ -13,8 +14,10 @@ void player::Initialize(SpriteManager* spriteManager) {
 	input_ = new Input;
 
 	model_ = new Object3d;
+	bulletModel_ = new Object3d;
 
 	model_->Initialize("player");
+	bulletModel_->Initialize("playerbullet");
 
 	uint32_t texHP = Texture::LoadTexture(L"Resources/heart.png");
 
@@ -53,19 +56,23 @@ void player::Update() {
 	//自機のワールド座標から移動ベクトルを計算
 	Vector3 vectorX = { 1.0,0,0 };
 	vectorX = affine::MatVector(worldTransform_.matWorld_, vectorX);
+	vectorX.normalize();
 	Vector3 vectorZ = { 0,0,1.0 };
 	vectorZ = affine::MatVector(worldTransform_.matWorld_, vectorZ);
+	vectorZ.normalize();
 
 	Vector3 move = { 0,0,0 };
 	Vector3 rot = { 0,0,0 };
 	////プレイヤー移動処理
-	input_->Updatekeypad(0);
+	if (input_->Updatekeypad(0))
+	{
 		////プレイヤー移動処理
 		move.x += input_->PadAnalogStickLX() * vectorX.x;
 		move.z += input_->PadAnalogStickLX() * vectorX.z;
 		move.x += input_->PadAnalogStickLY() * vectorZ.x;
 		move.z += input_->PadAnalogStickLY() * vectorZ.z;
-		rot.y =  input_->PadAnalogStickRX();
+		rot.y = input_->PadAnalogStickRX();
+	}
 
 	float AR;
 	float BR;
@@ -134,7 +141,7 @@ void player::Attack() {
 
 		//弾の生成し、初期化
 		std::unique_ptr<playerBullet> newBullet = std::make_unique<playerBullet>();
-		newBullet->Initialize(worldTransform_.translation_, worldTransform_.rotation_, velocity);
+		newBullet->Initialize(bulletModel_,worldTransform_.translation_, worldTransform_.rotation_, velocity);
 
 		//弾の登録する
 		bullets_.push_back(std::move(newBullet));
