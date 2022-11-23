@@ -143,7 +143,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="affine.cpp" />
+    <ClCompile Include="BossBullet.cpp" />
+    <ClCompile Include="BossPhase_1.cpp" />
+    <ClCompile Include="BossPhase_2.cpp" />
     <ClCompile Include="DirectX.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Gridline.cpp" />
     <ClCompile Include="DrawInfo.cpp" />
     <ClCompile Include="GpPipeline.cpp" />
@@ -153,6 +157,7 @@
     <ClCompile Include="MathInfo.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Object3d.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="playerBullet.cpp" />
     <ClCompile Include="railCamera.cpp" />
     <ClCompile Include="sky.cpp" />
@@ -171,7 +176,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="affine.h" />
+    <ClInclude Include="BossBullet.h" />
+    <ClInclude Include="BossPhase_1.h" />
+    <ClInclude Include="BossPhase_2.h" />
     <ClInclude Include="DirectX.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="Gridline.h" />
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="GpPipeline.h" />
@@ -180,6 +189,7 @@
     <ClInclude Include="MathInfo.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Object3d.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="playerBullet.h" />
     <ClInclude Include="railCamera.h" />
     <ClInclude Include="sky.h" />
