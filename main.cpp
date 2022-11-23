@@ -15,6 +15,8 @@ using namespace DirectX;
 #include"SpriteManager.h"
 #include"Sprite.h"
 #include"Material.h"
+#include "GameScene.h"
+
 using namespace Microsoft::WRL;
 
 
@@ -81,40 +83,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Object3d obj2;
 	obj2.Initialize("Medama");
 
-	//ランダムな数値を取得
-	float randValue = Random(-100, 100);
+	GameScene* gameScene = nullptr;
+	gameScene = new GameScene;
+	gameScene->Initialize(spriteManager,windowsAPI);
 
-	const size_t kObjCount = 50;
-	Object3d obj[kObjCount];
-
-	Object3d object;
-
-	XMMATRIX matProjection;
-	XMMATRIX matView;
-	XMFLOAT3 eye(0, 0, 10);	//視点座標
-	XMFLOAT3 target(0, 0, 0);	//注視点座標
-	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
-	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
-	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
-	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
-	XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
-
-	XMFLOAT3 pos{};
-
-
-	//透視東映返還行列の計算
-	//専用の行列を宣言
-	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),					//上下画角45度
-		(float)WindowsAPI::winW / WindowsAPI::winH,	//アスペクト比（画面横幅/画面縦幅）
-		0.1f, 1000.0f								//前橋、奥橋
-	);
-
-		//ビュー変換行列の計算
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-
-	//w.TransferMatrix();
-	//view.UpdateMatrix();
 
 #pragma endregion 描画初期化処理
 	// ゲームループ
@@ -129,26 +101,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		input->Update();
 #pragma endregion 基盤システム初期化
 #pragma region シーン更新処理
-
-		sprite->SetPos({ 100, 100 });
-		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
-		sprite->SetSize({ 64,64 });
-
-		if (input->IsPress(DIK_A)) {
-			objPos.rotation_.y += 0.1f;
-		}
-		else if (input->IsPress(DIK_D)) {
-			objPos.rotation_.y -= 0.1f;
-		}
-		if (input->IsTrigger(DIK_W)) {
-			objPos.translation_.x += 0.1f;
-		}
-		else if (input->IsTrigger(DIK_S)) {
-			objPos.translation_.x -= 0.1f;
-		}
-
-		//view.eye = Vector3(0,0,-100)
-		objPos.TransferMatrix();
+		gameScene->Update();
+	
 
 #pragma endregion シーン更新処理
 
@@ -158,13 +112,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//3Dオブジェクト描画処理
 		Object3d::BeginDraw();
-		//object1.Draw(w,view);
-		obj2.Draw(objPos, view);
+		gameScene->ModelDraw();
 
 		//スプライト描画処理
 		spriteManager->beginDraw();
-		sprite->Draw();
-		//sprite2->Draw();
+		gameScene->FrontSpriteDraw();
 
 #pragma endregion シーン描画処理
 		// ４．描画コマンドここまで

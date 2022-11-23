@@ -16,8 +16,9 @@ GameScene::~GameScene() {
 
 void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi) {
 
-
+	input_ = new Input;
 	input_->Initialize(windowsApi);
+	audio_ = new SoundManager;
 	audio_->Initialize();
 
 
@@ -36,9 +37,9 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	worldTransform.TransferMatrix();
 
 	bossPhase_1 = std::make_unique<BossPhase_1>();
-	bossPhase_1->Initialize();
+	bossPhase_1->Initialize(spriteManager);
 	bossPhase_2 = std::make_unique<BossPhase_2>();
-	bossPhase_2->Initialize();
+	bossPhase_2->Initialize(spriteManager);
 
 
 	player_ = std::make_unique<player>();
@@ -46,7 +47,7 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	sky_ = std::make_unique<sky>();
 
 	sky_->Initialize();
-	player_->Initialize();
+	player_->Initialize(spriteManager);
 	railCamera_->Initialize(Vector3(0, 5, -50), Vector3(0, 0, 0), player_->GetWorldTransform());
 	railCamera_->Update();
 	viewProjection = &titleCamera;
@@ -112,6 +113,8 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 void GameScene::Update() 
 {
 	input_->Update();
+	input_->Updatekeypad(0);
+
 	if (input_->IsTrigger(DIK_0))
 	{
 		viewProjection = &railCamera_->GetViewProjection();
@@ -121,7 +124,7 @@ void GameScene::Update()
 		viewProjection = &titleCamera;
 	}
 
-	input_->Updatekeypad(0);
+	
 
 	switch (gameLoop)
 	{
@@ -268,16 +271,7 @@ void GameScene::Update()
 	//bossPhase_2->Update(player_->GetworldPosition());
 
 	CheckAllCollisions();
-	/*debugText_->SetPos(10, 10);
-	debugText_->Printf("boss1:%d", bossPhase_1->GetHP());
-	debugText_->SetPos(10, 30);
-	debugText_->Printf("boss2:%d", bossPhase_2->GetHP());
-	debugText_->SetPos(10, 50);
-	debugText_->Printf("player:%d", player_->GetHP());
-	debugText_->SetPos(10, 70);
-	debugText_->Printf("%d",A);
-	debugText_->SetPos(10, 90);
-	debugText_->Printf("%d",oldA);*/
+
 }
 
 void GameScene::ModelDraw() {
