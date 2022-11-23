@@ -86,6 +86,8 @@ void BossPhase_2::Initialize(SpriteManager* spriteManager)
 	for (int i = 1; i < 19; i++) {
 		worldTransform_[i].parent_ = &worldTransform_[0];
 	}
+	beamWorldTransform_.parent_= &worldTransform_[0];
+	medamaWT.parent_= &worldTransform_[0];
 
 	//ブーメランの初期化
 	for (int i = 0; i < 5; i++) {
@@ -295,6 +297,8 @@ void BossPhase_2::Rset()
 	worldTransform_[0].translation_ = { 100,20,100 };
 	worldTransform_[0].scale_ = { kyubuScale,kyubuScale,kyubuScale };
 
+	
+
 	// 子の座標設定
 	// 真ん中の段
 	worldTransform_[1].translation_ = { +kyubuLengh, 0,-kyubuLengh };
@@ -325,6 +329,11 @@ void BossPhase_2::Rset()
 	{
 		worldTransform_[i].rotation_ = { 0,0,0 };
 	}
+	for (int i = 1; i < 19; i++) {
+		worldTransform_[i].parent_ = &worldTransform_[0];
+	}
+	beamWorldTransform_.parent_ = &worldTransform_[0];
+	medamaWT.parent_ = &worldTransform_[0];
 
 	angle = 1.57;
 
@@ -382,6 +391,12 @@ void BossPhase_2::beamUpdate(Vector3 playerPos)
 			beamWorldTransform_.scale_.x = 0.5f;
 			beamWorldTransform_.scale_.y = 0.5f;
 			worldTransform_[1].translation_ = { -kyubuLengh, 0, 0 };
+
+			worldTransform_[4].parent_ = &worldTransform_[2];
+			worldTransform_[3].parent_ = &worldTransform_[2];
+			worldTransform_[10].parent_ = &worldTransform_[2];
+			worldTransform_[15].parent_ = &worldTransform_[2];
+
 			worldTransform_[4].translation_ = { -kyubuLengh,0,0 };
 			worldTransform_[3].translation_ = { +kyubuLengh,0,0 };
 			worldTransform_[10].translation_ = { 0,+kyubuLengh,0 };
@@ -466,6 +481,11 @@ void BossPhase_2::beamUpdate(Vector3 playerPos)
 				beamFlag = false;
 				beamOBJSetFlag = false;
 				isAction = Action::AttackInterval;
+				worldTransform_[4].parent_ = &worldTransform_[0];
+				worldTransform_[3].parent_ = &worldTransform_[0];
+				worldTransform_[10].parent_ = &worldTransform_[0];
+				worldTransform_[15].parent_ = &worldTransform_[0];
+
 				worldTransform_[1].translation_ = { +2, 0,-2 };
 				worldTransform_[4].translation_ = { -kyubuLengh, 0, 0 };
 				worldTransform_[3].translation_ = { -2, 0,-2 };
@@ -693,6 +713,7 @@ void BossPhase_2::rushReset()
 void BossPhase_2::DeathblowUp()
 {
 	if (blowUpFlag == true) {
+		
 		if (blowUpSetFlag == false) {
 			for (int i = 0; i < 19; i++) {
 
@@ -703,14 +724,19 @@ void BossPhase_2::DeathblowUp()
 					blowUpVel[i] = { randomAngleX,randomAngleY,randomAngleZ };
 					blowUpVel[i].normalize();
 					blowUpVel[i] *= 0.8f;
+					// 親子関係結びなおし
+					worldTransform_[i].parent_ = &worldTransform_[0];
 				}
 				else {
 					blowUpVel[i] = { 0.0f,90.0f * affine::Deg2Rad,0.0f };
 					blowUpVel[i].normalize();
 					blowUpVel[i] *= 0.6f;
 				}
-
+				
 			}
+			beamWorldTransform_.parent_ = &worldTransform_[0];
+			medamaWT.parent_ = &worldTransform_[0];
+
 			AnnihilationFlag[0] = true;
 			blowUpSetFlag = true;
 		}
@@ -757,11 +783,22 @@ void BossPhase_2::rushUpdate(Vector3 playerPos)
 		// ボスが下がる前のポジを記録
 		if (rushStartSetFlag == false) {
 			// 左側の車輪
+			worldTransform_[13].parent_ = &worldTransform_[4];
+			worldTransform_[5].parent_ = &worldTransform_[4];
+			worldTransform_[3].parent_ = &worldTransform_[4];
+			worldTransform_[18].parent_ = &worldTransform_[4];
+
 			worldTransform_[13].translation_ = { 0,+kyubuLengh,0 };
 			worldTransform_[5].translation_ = { 0,0,+kyubuLengh };
 			worldTransform_[3].translation_ = { 0,0,-kyubuLengh };
 			worldTransform_[18].translation_ = { 0,-kyubuLengh,0 };
 			// 右側の車輪
+			worldTransform_[11].parent_ = &worldTransform_[8];
+			worldTransform_[7].parent_ = &worldTransform_[8];
+			worldTransform_[1].parent_ = &worldTransform_[8];
+			worldTransform_[16].parent_ = &worldTransform_[8];
+
+
 			worldTransform_[11].translation_ = { 0,+kyubuLengh,0 };
 			worldTransform_[7].translation_ = { 0,0,+kyubuLengh };
 			worldTransform_[1].translation_ = { 0,0,-kyubuLengh };
@@ -836,6 +873,15 @@ void BossPhase_2::rushUpdate(Vector3 playerPos)
 			}
 			else if (worldTransform_[0].translation_.y >= originPosY) {
 				worldTransform_[0].translation_.y = originPosY;
+
+				worldTransform_[13].parent_ = &worldTransform_[0];
+				worldTransform_[5].parent_ = &worldTransform_[0];
+				worldTransform_[3].parent_ = &worldTransform_[0];
+				worldTransform_[18].parent_ = &worldTransform_[0];
+				worldTransform_[11].parent_ = &worldTransform_[0];
+				worldTransform_[7].parent_ = &worldTransform_[0];
+				worldTransform_[1].parent_ = &worldTransform_[0];
+				worldTransform_[16].parent_ = &worldTransform_[0];
 
 				worldTransform_[1].translation_ = { +kyubuLengh, 0,-kyubuLengh };
 				worldTransform_[3].translation_ = { -kyubuLengh, 0,-kyubuLengh };
@@ -936,7 +982,7 @@ void BossPhase_2::TransferMat()
 				TurnDeadToPlayer(playerPos_);
 				Kari.rotation_.x = 0.0f;
 				affine::makeAffine(Kari);
-
+				medamaWT.parent_ = &Kari;
 				blowmatSetFlag = true;
 			}
 			affine::makeAffine(medamaWT);
