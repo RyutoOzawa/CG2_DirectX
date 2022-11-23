@@ -16,6 +16,8 @@ GameScene::~GameScene() {
 	delete resultUISprite;
 	delete resultSprite;
 	delete GameOverSprite;
+	delete vignetteEffect;
+	delete blackSprite;
 
 	delete input_;
 	delete audio_;
@@ -37,6 +39,7 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	GameOverSprite = new Sprite;
 	resultSprite = new Sprite;
 	vignetteEffect = new Sprite;
+	blackSprite = new Sprite;
 
 	model_ = new Object3d;
 
@@ -94,6 +97,7 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	int gameOverTexture = Texture::LoadTexture(L"Resources/GameOver.png");
 	int resultTexture = Texture::LoadTexture(L"Resources/GameCLEAR.png");
 	vignetteTexture = Texture::LoadTexture(L"Resources/vignette.png");
+	blackTexture = Texture::LoadTexture(L"Resources/black1x1.png");
 
 	//スプライト生成
 	titleSprite->Initialize(spriteManager, titleTexture);
@@ -128,6 +132,10 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 
 	vignetteEffect->Initialize(spriteManager, vignetteTexture);
 	vignetteEffect->SetSize({ WindowsAPI::winW, WindowsAPI::winH });
+
+	blackSprite->Initialize(spriteManager, blackTexture);
+	blackSprite->SetSize({ WindowsAPI::winW, WindowsAPI::winH });
+	blackSprite->SetColor({ 1,1,1,0 });
 
 	// 音関連の初期化
 	gameBGM.SoundLoadWave("Resources/Sound/Satans Servant.wav");
@@ -311,7 +319,7 @@ void GameScene::Update()
 			titleCamera.eye = cameraPos[Title];
 			titleCamera.target = Vector3(cameraPos[Title].x, cameraPos[Title].y, cameraPos[Title].z + 50);
 			titleCamera.UpdateMatrix();
-
+			isLightUp = false;
 		}
 		break;
 	case GameLoop::Result:
@@ -338,6 +346,7 @@ void GameScene::Update()
 			titleCamera.eye = cameraPos[Title];
 			titleCamera.target = Vector3(cameraPos[Title].x, cameraPos[Title].y, cameraPos[Title].z + 50);
 			titleCamera.UpdateMatrix();
+			isLightUp = false;
 		}
 		break;
 	}
@@ -347,6 +356,25 @@ void GameScene::Update()
 	//bossPhase_2->Update(player_->GetworldPosition());
 
 	CheckAllCollisions();
+
+	//ライトアップフラグがtrueなら黒画像のアルファ値をあげる
+	float alpha = blackSprite->GetColor().w;
+	if (isLightUp) {
+		alpha -= 0.025f;
+		if (alpha <= 0) {
+			alpha = 0;
+		}
+	}else{
+	/*	alpha += 0.025f;
+		if (alpha >= 1) {
+			alpha = 1;
+			isLightUp = true;
+		}*/
+		alpha = 1;
+		isLightUp = true;
+	}
+
+	blackSprite->SetColor({ 1,1,1,alpha });
 
 }
 
@@ -476,8 +504,8 @@ void GameScene::FrontSpriteDraw()
 		break;
 	}
 
-
-
+//暗転用画像
+	blackSprite->Draw();
 
 #pragma endregion
 }
