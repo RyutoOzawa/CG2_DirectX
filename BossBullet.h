@@ -1,15 +1,15 @@
 #pragma once
-#include "Model.h"
+#include "Object3d.h"
 #include "WorldTransform.h"
 #include <cassert>
 #include "affine.h"
-#include "DebugText.h"
+
 
 class BossBullet
 {
 public:
 	// 初期化
-	void Initialize(Model* model, const WorldTransform worldTransform,const Vector3& OyaPos, const Vector3& rotaAngle);
+	void Initialize(Object3d* model, const WorldTransform worldTransform,const Vector3& OyaPos, const Vector3& rotaAngle);
 
 	// 更新処理
 	void Update(const Vector3& playerPos);
@@ -44,7 +44,7 @@ private:
 	WorldTransform worldTransform_;
 
 	//モデル
-	Model* model_ = nullptr;
+	Object3d* model_ = nullptr;
 
 	//速度
 	Vector3 velocity_;
@@ -72,7 +72,6 @@ private:
 	Vector3 oyaPos;
 	Vector3 playerPos;
 
-	DebugText* debugText_ = nullptr;
 
 	// プレイヤーの所に至った時のフラグ
 	bool ToPlayerFlag_ = false;
