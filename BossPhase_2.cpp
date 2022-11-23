@@ -738,7 +738,11 @@ void BossPhase_2::rushReset()
 void BossPhase_2::DeathblowUp()
 {
 	if (blowUpFlag == true) {
-		
+
+		beamSetFlag = false;
+		beamSound.StopWave();
+		upBoomerangSound.StopWave();
+		downBoomerangSound.StopWave();
 		if (blowUpSetFlag == false) {
 			for (int i = 0; i < 19; i++) {
 
