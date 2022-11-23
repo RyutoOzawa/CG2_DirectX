@@ -123,6 +123,7 @@ class GameScene {
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	uint32_t vignetteTexture = 0;
+	uint32_t blackTexture = 0;
 
 	//カメラ座標
 	Vector3 cameraPos[PositionIndexCount];
@@ -142,6 +143,7 @@ class GameScene {
 	Sprite* resultSprite = nullptr;
 	Sprite* GameOverSprite = nullptr;
 	Sprite* vignetteEffect = nullptr;
+	Sprite* blackSprite = nullptr;
 
 	ViewProjection *viewProjection=nullptr;
 
@@ -156,7 +158,7 @@ class GameScene {
 	Sound SelectSe;
 	
 	
-
+	bool isLightUp = true;
 
 	bool titleBgmFlag = false;
 	bool overBgmFlag = false;
