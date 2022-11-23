@@ -359,7 +359,6 @@ void GameScene::ModelDraw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	model_->Draw(worldTransform, *viewProjection);
-	player_->Draw(*viewProjection);
 	switch (gameLoop)
 	{
 	case GameLoop::Title:
@@ -368,6 +367,7 @@ void GameScene::ModelDraw() {
 
 		break;
 	case GameLoop::Game:
+		player_->Draw(*viewProjection);
 		switch (bossTrans)
 		{
 		case BossTrans::TitleToGame:
@@ -410,6 +410,7 @@ void GameScene::ModelDraw() {
 		}
 		break;
 	case GameLoop::Result:
+		player_->Draw(*viewProjection);
 		break;
 	}
 

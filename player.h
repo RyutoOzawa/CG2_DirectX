@@ -10,6 +10,7 @@
 #include<memory>
 #include<list>
 #include<cmath>
+#include"Audio.h"
 class player
 {
 public:
@@ -101,5 +102,10 @@ private:
 	const int attackDelay = 30;
 
 	Sprite* spriteHP[3];
+
+	Sound AttackSound;
+	Sound damageSound;
+	Sound deadSound;
+	Sound janpSound;
 };
 
