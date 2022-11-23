@@ -144,8 +144,21 @@ class GameScene {
 	ViewProjection *viewProjection=nullptr;
 
 	// 音関連
+	// BGM
+	Sound TitleBgm;
 	Sound gameBGM;
-	Sound Mokugyo;
+	Sound ClearBgm;
+	Sound OverBgm;
+
+	// SE
+	Sound SelectSe;
+	
+	
+
+
+	bool titleBgmFlag = false;
+	bool overBgmFlag = false;
+	bool clearBgmFlag = false;
 	bool gameBgmFlag = false;
 
 
