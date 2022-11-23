@@ -12,6 +12,14 @@ GameScene::~GameScene() {
 	delete model_;
 	delete titleSprite;
 	delete titleUISprite;
+	delete playGuideSprite;
+	delete resultUISprite;
+	delete resultSprite;
+	delete GameOverSprite;
+
+	delete input_;
+	delete audio_;
+	delete viewProjection;
 }
 
 void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi) {
@@ -21,6 +29,13 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	audio_ = new SoundManager;
 	audio_->Initialize();
 
+	// スプライトのnew
+	titleSprite = new Sprite;
+	titleUISprite = new Sprite;
+	playGuideSprite = new Sprite;
+	resultUISprite = new Sprite;
+	GameOverSprite = new Sprite;
+	resultSprite = new Sprite;
 
 	model_ = new Object3d;
 
@@ -276,8 +291,7 @@ void GameScene::Update()
 
 void GameScene::ModelDraw() {
 
-	// コマンドリストの取得
-	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	
 
 #pragma region ３Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
@@ -704,6 +718,8 @@ void GameScene::AnimationCameraUpdate()
 	debugText_->SetPos(50, 185);
 	debugText_->Printf("animeTimer:%1.5f", animeTimer);*/
 }
+
+
 
 Vector3 GameScene::Shake(const Vector3& firstPos, int& shakeCount)
 {

@@ -105,7 +105,7 @@ class GameScene {
 	Vector3 Shake(const Vector3& firstPos, int& shakeCount);
 
   private: // メンバ変数
-	ReDirectX* dxCommon_ = nullptr;
+	
 	Input* input_ = nullptr;
 	SoundManager* audio_ = nullptr;
 	
