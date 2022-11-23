@@ -122,6 +122,7 @@ class GameScene {
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+	uint32_t vignetteTexture = 0;
 
 	//カメラ座標
 	Vector3 cameraPos[PositionIndexCount];
@@ -140,6 +141,7 @@ class GameScene {
 	Sprite* resultUISprite = nullptr;
 	Sprite* resultSprite = nullptr;
 	Sprite* GameOverSprite = nullptr;
+	Sprite* vignetteEffect = nullptr;
 
 	ViewProjection *viewProjection=nullptr;
 

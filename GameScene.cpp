@@ -94,6 +94,7 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	int texturerRisultUI = Texture::LoadTexture(L"Resources/PressATitle.png");
 	int gameOverTexture = Texture::LoadTexture(L"Resources/GameOver.png");
 	int resultTexture = Texture::LoadTexture(L"Resources/GameCLEAR.png");
+	vignetteTexture = Texture::LoadTexture(L"Resources/vignette.png");
 
 	//スプライト生成
 	titleSprite->Initialize(spriteManager, titleTexture);
@@ -126,7 +127,8 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	GameOverSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 	resultSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 
-
+	vignetteEffect->Initialize(spriteManager, vignetteTexture);
+	vignetteEffect->SetSize({ WindowsAPI::winW, WindowsAPI::winH });
 }
 
 void GameScene::Update() 
@@ -400,6 +402,7 @@ void GameScene::FrontSpriteDraw()
 			player_->DrawUI();
 			break;
 		case BossTrans::Boss1To2:
+			vignetteEffect->Draw();
 			break;
 		case BossTrans::Boss2:
 			playGuideSprite->Draw();
