@@ -307,7 +307,8 @@ void GameScene::Update()
 			SelectSe.SoundPlayWave();
 			OverBgm.StopWave();
 			overBgmFlag = false;
-
+			railCamera_->Rset();
+			railCamera_->Update();
 			animeTimer = 0;
 			animetionPhase = TitleToGame;
 			player_->Rset();
