@@ -68,6 +68,7 @@ private:
 	WorldTransform worldTransform_;
 	//モデル
 	Object3d* model_ = nullptr;
+	Object3d* bulletModel_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 

@@ -6,14 +6,11 @@
 
 playerBullet::~playerBullet()
 {
-	delete model_;
 }
 
-void playerBullet::Initialize( const Vector3& Position,Vector3 Rot, const Vector3& velocity)
+void playerBullet::Initialize(Object3d* model, const Vector3& Position,Vector3 Rot, const Vector3& velocity)
 {
-	model_ = new Object3d;
-
-	model_->Initialize();
+	model_ = model;
 	//テクスチャ読み込み
 	//textureHandle_ = Texture::Load("uvChecker.png");
 

@@ -3,6 +3,7 @@
 player::~player()
 {
 	delete model_;
+	delete bulletModel_;
 	for (int i = 0; i < maxHP; i++)
 	{
 		delete spriteHP[i];
@@ -13,8 +14,10 @@ void player::Initialize(SpriteManager* spriteManager) {
 	input_ = new Input;
 
 	model_ = new Object3d;
+	bulletModel_ = new Object3d;
 
 	model_->Initialize("player");
+	bulletModel_->Initialize("playerbullet");
 
 	uint32_t texHP = Texture::LoadTexture(L"Resources/heart.png");
 
@@ -138,7 +141,7 @@ void player::Attack() {
 
 		//’e‚Ì¶¬‚µA‰Šú‰»
 		std::unique_ptr<playerBullet> newBullet = std::make_unique<playerBullet>();
-		newBullet->Initialize(worldTransform_.translation_, worldTransform_.rotation_, velocity);
+		newBullet->Initialize(bulletModel_,worldTransform_.translation_, worldTransform_.rotation_, velocity);
 
 		//’e‚Ì“o˜^‚·‚é
 		bullets_.push_back(std::move(newBullet));
