@@ -107,7 +107,7 @@ class GameScene {
   private: // メンバ変数
 	
 	Input* input_ = nullptr;
-	SoundManager* audio_ = nullptr;
+	Sound* audio_ = nullptr;
 	
 
 	std::unique_ptr<player> player_;
@@ -144,8 +144,8 @@ class GameScene {
 	ViewProjection *viewProjection=nullptr;
 
 	// 音関連
-	SoundManager sound_;
-	SoundData gameBGM;
+	Sound gameBGM;
+	Sound Mokugyo;
 	bool gameBgmFlag = false;
 
 

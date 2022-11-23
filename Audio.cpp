@@ -1,21 +1,33 @@
 #include "Audio.h"
 
-SoundManager::~SoundManager()
+Microsoft::WRL::ComPtr<IXAudio2>Sound::xAudio2_;
+IXAudio2MasteringVoice* Sound::masterVoice_;
+
+
+
+Sound::~Sound()
 {
 	// xaudio2の解放
-	xAudio2.Reset();
+	xAudio2_.Reset();
+	//バッファのメモリを解放
+	delete[] soundData_.pBuffer;
 
-
+	soundData_.pBuffer = 0;
+	soundData_.bufferSize = 0;
+	soundData_.wfex = {};
 }
 
-void SoundManager::Initialize()
+void Sound::StaticInitialize()
 {
-	result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	result = xAudio2->CreateMasteringVoice(&masterVoice);
+
+	HRESULT result;
+	result = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	result = xAudio2_->CreateMasteringVoice(&masterVoice_);
+
 }
 
 //音声データの読み込み
-SoundData SoundManager::SoundLoadWave(const char* filename) {
+void Sound::SoundLoadWave(const char* filename) {
 
 	HRESULT result;
 
@@ -112,37 +124,33 @@ SoundData SoundManager::SoundLoadWave(const char* filename) {
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
 	soundData.bufferSize = data.size;
 
-	return soundData;
+	soundData_ = soundData;
 
 }
 
 //-------音声データの解放-------//
-void SoundManager::SoundUnload(SoundData* soundData) {
+void Sound::SoundUnload() {
 	// xaudio2の解放
-	xAudio2.Reset();
+	xAudio2_.Reset();
 
-	//バッファのメモリを解放
-	delete[] soundData->pBuffer;
+	
 
-	soundData->pBuffer = 0;
-	soundData->bufferSize = 0;
-	soundData->wfex = {};
+
 }
 
 //------サウンドの再生-------//
 
 //音声再生
-void SoundManager::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, bool loop, float volume) {
+void Sound::SoundPlayWave(bool loop, float volume) {
+	HRESULT result;
 
 	//波形フォーマットを元にSourceVoiceの生成
-	//IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
+	result = xAudio2_->CreateSourceVoice(&pSourceVoice, &soundData_.wfex);
 	assert(SUCCEEDED(result));
 
 	//再生する波形データの設定
-	//XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundData.pBuffer;
-	buf.AudioBytes = soundData.bufferSize;
+	buf.pAudioData = soundData_.pBuffer;
+	buf.AudioBytes = soundData_.bufferSize;
 
 	pSourceVoice->SetVolume(volume);
 
@@ -160,8 +168,9 @@ void SoundManager::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, 
 }
 
 //----------音声ストップ------------//
-void SoundManager::StopWave(const SoundData& soundData)
+void Sound::StopWave()
 {
+	HRESULT result;
 	if (pSourceVoice != nullptr)
 	{
 		result = pSourceVoice->Stop();

@@ -26,8 +26,8 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 
 	input_ = new Input;
 	input_->Initialize(windowsApi);
-	audio_ = new SoundManager;
-	audio_->Initialize();
+	audio_ = new Sound;
+	audio_->StaticInitialize();
 
 	// スプライトのnew
 	titleSprite = new Sprite;
@@ -125,9 +125,8 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	resultSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 
 	// 音関連の初期化
-	sound_.Initialize();
-	gameBGM = sound_.SoundLoadWave("Resources/Sound/Satans Servant.wav");
-
+	gameBGM.SoundLoadWave("Resources/Sound/Satans Servant.wav");
+	Mokugyo.SoundLoadWave("Resources/mokugyo.wav");
 
 
 }
@@ -161,7 +160,8 @@ void GameScene::Update()
 		break;
 	case GameLoop::Game:
 		if (gameBgmFlag == false) {
-			sound_.SoundPlayWave(sound_.xAudio2.Get(), gameBGM, true, 0.1f);
+			gameBGM.SoundPlayWave(true, 0.1f);
+			Mokugyo.SoundPlayWave(true, 0.5f);
 			gameBgmFlag = true;
 		}
 
@@ -196,7 +196,8 @@ void GameScene::Update()
 			{
 				player_->AllBulletDelete();
 				// ゲームBGMを止める
-				sound_.StopWave(gameBGM);
+				gameBGM.StopWave();
+				Mokugyo.StopWave();
 				gameBgmFlag = false;
 				gameLoop = GameLoop::GameOver;
 			}
@@ -241,7 +242,8 @@ void GameScene::Update()
 			{
 				player_->AllBulletDelete();
 				// ゲームBGMを止める
-				sound_.StopWave(gameBGM);
+				Mokugyo.StopWave();
+				gameBGM.StopWave();
 				gameBgmFlag = false;
 				gameLoop = GameLoop::GameOver;
 			}
@@ -252,7 +254,7 @@ void GameScene::Update()
 			if (bossPhase_2->GetMedamaWTTransformY() <= -10)
 			{
 				// ゲームBGMを止める
-				sound_.StopWave(gameBGM);
+				gameBGM.StopWave();
 				gameBgmFlag = false;
 				gameLoop = GameLoop::Result;
 			}
