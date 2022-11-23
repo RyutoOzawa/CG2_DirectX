@@ -8,6 +8,7 @@
 #include "BossBullet.h"
 #include<sstream>
 #include"Sprite.h"
+#include"Audio.h"
 
 class BossPhase_1
 {
@@ -117,5 +118,7 @@ private:// ƒƒ“ƒo•Ï”
 
 	Sprite* spriteHP;
 	Sprite* spriteHPBar;
+
+	Sound damageSound;
 };
 

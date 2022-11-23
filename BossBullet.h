@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include <cassert>
 #include "affine.h"
+#include"Audio.h"
 
 
 class BossBullet
@@ -77,5 +78,7 @@ private:
 
 	// プレイヤーの所に至った時のフラグ
 	bool ToPlayerFlag_ = false;
+
+	Sound attackSound;
 };
 

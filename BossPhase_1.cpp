@@ -94,6 +94,8 @@ void BossPhase_1::Initialize(SpriteManager* spriteManager)
 	medamaWorldTransform.Initialize();
 	medamaWorldTransform.translation_ = worldTransform_[0].translation_;
 	medamaWorldTransform.TransferMatrix();
+
+	damageSound.SoundLoadWave("Resources/Sound/bosssDamage.wav");
 }
 
 void BossPhase_1::Update(Vector3 playerPos)
@@ -243,6 +245,7 @@ void BossPhase_1::DrawUI()
 void BossPhase_1::OnCollision()
 {
 	HP--;
+	damageSound.SoundPlayWave(false,1.0);
 }
 
 void BossPhase_1::Rset()
@@ -277,9 +280,6 @@ void BossPhase_1::Rset()
 	titleRadian = 0;
 
 	HP = maxHP;
-
-	worldTransform_[randomBlock].scale_ = { 1,1,1 };
-	AnnihilationFlag[randomBlock] = false;
 }
 
 void BossPhase_1::SetRotation(Vector3 rotation)

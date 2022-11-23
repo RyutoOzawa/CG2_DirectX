@@ -32,6 +32,7 @@ void BossBullet::Initialize(Object3d* model, const WorldTransform worldTransform
 
 	flyToPlayerFlag = false;
 	ToPlayerFlag_ = false;
+	attackSound.SoundLoadWave("Resources/Sound/boss1Attack.wav");
 }
 
 void BossBullet::Update(const Vector3& playerPos)
@@ -78,6 +79,7 @@ void BossBullet::FlyBlocks(Vector3 playerPos)
 			FloatXRimitFlag = true;
 			//お試しリスポーン
 			flyToPlayerFlag = true;
+			attackSound.SoundPlayWave(false, 1.0);
 			worldTransform_.translation_.x = oldPos.x + 10.0f;
 
 			// プレイヤーに向かうベクトルの計算
@@ -99,6 +101,7 @@ void BossBullet::FlyBlocks(Vector3 playerPos)
 			FloatXRimitFlag = true;
 			//お試しリスポーン
 			flyToPlayerFlag = true;
+			attackSound.SoundPlayWave(false, 1.0);
 			worldTransform_.translation_.x = oldPos.x - 10.0f;
 
 			// プレイヤーに向かうベクトルの計算
