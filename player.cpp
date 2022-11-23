@@ -111,7 +111,20 @@ void player::Update() {
 	worldTransform_.TransferMatrix();
 
 	//キャラクター攻撃処理
-	Attack();
+	//トリガーならすぐに発射(インターバルを0に)
+	if (input_->TriggerPadKey(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		attackInterval = 0;
+	}//長押しならインターバル減らす
+	if (input_->PadKey(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		attackInterval--;
+	}
+
+	//インターバルが0になったら発射
+	if (attackInterval <= 0) {
+		Attack();
+		attackInterval = attackDelay;
+	}
+
 
 	//弾更新
 	for (std::unique_ptr<playerBullet>& bullet : bullets_) {
@@ -133,7 +146,7 @@ void player::Attack() {
 	{
 		return;
 	}*/
-	if (input_->TriggerPadKey(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+	
 		//弾の速度
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
@@ -153,7 +166,7 @@ void player::Attack() {
 		bullets_.push_back(std::move(newBullet));
 
 		AttackSound.SoundPlayWave(false, 0.1);
-	}
+	
 }
 
 void player::Draw(ViewProjection& viewProjection_) {
