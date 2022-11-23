@@ -143,6 +143,11 @@ class GameScene {
 
 	ViewProjection *viewProjection=nullptr;
 
+	// 音関連
+	SoundManager sound_;
+	SoundData gameBGM;
+	bool gameBgmFlag = false;
+
 
 	GameLoop gameLoop=GameLoop::Title;
 	BossTrans bossTrans = BossTrans::TitleToGame;

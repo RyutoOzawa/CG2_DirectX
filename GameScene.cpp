@@ -23,7 +23,9 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi) {
-
+	// 音関連の初期化
+	sound_.Initialize();
+	gameBGM = sound_.SoundLoadWave("Resources/Satans Servant.wav");
 	input_ = new Input;
 	input_->Initialize(windowsApi);
 	audio_ = new SoundManager;
@@ -123,6 +125,8 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	resultUISprite->SetSize({ 784 * 3 / 10, 288 * 3 / 10 });
 	GameOverSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
 	resultSprite->SetSize({ 688 * 9 / 10, 336 * 9 / 10 });
+
+
 }
 
 void GameScene::Update() 
@@ -153,6 +157,11 @@ void GameScene::Update()
 		}
 		break;
 	case GameLoop::Game:
+		if (gameBgmFlag == false) {
+			sound_.SoundPlayWave(sound_.xAudio2.Get(), gameBGM, true);
+			gameBgmFlag = true;
+		}
+
 		switch (bossTrans)
 		{
 		case BossTrans::TitleToGame:
