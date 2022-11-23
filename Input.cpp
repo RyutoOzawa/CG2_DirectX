@@ -66,12 +66,34 @@ void Input::InitializePad()
 
 DWORD Input::Updatekeypad(DWORD dwUserIndex)
 {
+	XINPUT_STATE A;
 
-	oldGamePad = gamePad;
+	if (XInputGetState(dwUserIndex,&A)== ERROR_SUCCESS)
+	{
+		oldGamePad = gamePad;
 
-	return XInputGetState(
-		dwUserIndex,//•¡”‚Â‚È‚ª‚ê‚Ä‚é‚Æ‚«‚Ì‘I‘ğ
-		&gamePad);//‚±‚Ì•Ï”‚É“ü—Íó‹µ‚ªŠi”[‚³‚ê‚é
+		gamePad = A;
+
+		if (abs(gamePad.Gamepad.sThumbLX)< XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			gamePad.Gamepad.sThumbLX = 0;
+		}
+		if (abs(gamePad.Gamepad.sThumbLY) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			gamePad.Gamepad.sThumbLY = 0;
+		}
+		if (abs(gamePad.Gamepad.sThumbRX) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			gamePad.Gamepad.sThumbRX = 0;
+		}
+		if (abs(gamePad.Gamepad.sThumbRY) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		{
+			gamePad.Gamepad.sThumbRY = 0;
+		}
+
+		return true;
+	}
+	return false;
 }
 
 float Input::PadAnalogStickLX()

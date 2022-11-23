@@ -53,19 +53,23 @@ void player::Update() {
 	//自機のワールド座標から移動ベクトルを計算
 	Vector3 vectorX = { 1.0,0,0 };
 	vectorX = affine::MatVector(worldTransform_.matWorld_, vectorX);
+	vectorX.normalize();
 	Vector3 vectorZ = { 0,0,1.0 };
 	vectorZ = affine::MatVector(worldTransform_.matWorld_, vectorZ);
+	vectorZ.normalize();
 
 	Vector3 move = { 0,0,0 };
 	Vector3 rot = { 0,0,0 };
 	////プレイヤー移動処理
-	input_->Updatekeypad(0);
+	if (input_->Updatekeypad(0))
+	{
 		////プレイヤー移動処理
 		move.x += input_->PadAnalogStickLX() * vectorX.x;
 		move.z += input_->PadAnalogStickLX() * vectorX.z;
 		move.x += input_->PadAnalogStickLY() * vectorZ.x;
 		move.z += input_->PadAnalogStickLY() * vectorZ.z;
-		rot.y =  input_->PadAnalogStickRX();
+		rot.y = input_->PadAnalogStickRX();
+	}
 
 	float AR;
 	float BR;
