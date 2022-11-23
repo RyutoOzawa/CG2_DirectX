@@ -6,6 +6,7 @@
 #include "Input.h"
 #include <cassert>
 #include"Sprite.h"
+#include"Audio.h"
 
 class BossPhase_2
 {
@@ -149,8 +150,14 @@ private:// メンバ変数
 	int Attack=0;
 	int oldAttack=0;
 
+	Sound upBoomerangSound;
+	Sound downBoomerangSound;
+	Sound rushSound;
+	Sound beamSound;
+	Sound damageSound;
+
 	// ビーム用の変数
-	#pragma region ビーム用の変数
+#pragma region ビーム用の変数
 	// ビームのワールドデータ
 	WorldTransform beamWorldTransform_;
 	// ビームのモデル
@@ -181,7 +188,7 @@ private:// メンバ変数
 	Vector3 beamToPlayerVelUp;
 	Vector3 beamLength;
 	float beamSpeed = 1.0f;
-	#pragma endregion
+#pragma endregion
 
 #pragma region 移動用変数
 

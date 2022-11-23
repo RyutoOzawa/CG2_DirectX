@@ -122,6 +122,12 @@ void BossPhase_2::Initialize(SpriteManager* spriteManager)
 
 	medamaWT.scale_ = { 1.2f,1.2f,1.2f };
 	medamaWT.translation_ = { 0.0f,0.0f,-3.2f };
+
+	upBoomerangSound.SoundLoadWave("Resources/Sound/bossUp.wav");
+	downBoomerangSound.SoundLoadWave("Resources/Sound/bossDown.wav");
+	rushSound.SoundLoadWave("Resources/Sound/bossRush.wav");
+	beamSound.SoundLoadWave("Resources/Sound/bossBeam.wav");
+	damageSound.SoundLoadWave("Resources/Sound/bosssDamage.wav");
 }
 
 void BossPhase_2::Update(Vector3 playerPos)
@@ -270,6 +276,7 @@ void BossPhase_2::DrawUI()
 
 void BossPhase_2::OnCollision()
 {
+	damageSound.SoundPlayWave(false, 0.5);
 	HP--;
 }
 
@@ -443,6 +450,8 @@ void BossPhase_2::beamUpdate(Vector3 playerPos)
 				beamToPlayerVel = velocity;
 				beamToPlayerVel *= beamSpeed;
 
+				beamSound.SoundPlayWave(true,0.5);
+
 				beamOBJSetFlag = true;
 			}
 			TurnBeamToPlayer();
@@ -491,6 +500,7 @@ void BossPhase_2::beamUpdate(Vector3 playerPos)
 				worldTransform_[3].translation_ = { -2, 0,-2 };
 				worldTransform_[10].translation_ = { 0,+2,-2 };
 				worldTransform_[15].translation_ = { 0,-2,-2 };
+				beamSound.StopWave();
 			}
 		}
 	}
@@ -516,6 +526,7 @@ void BossPhase_2::boomerangUpdate(Vector3 playerPos)
 			{
 				isUpPreparation = false;
 				isUpAttack = true;
+				upBoomerangSound.SoundPlayWave(true,0.5);
 			}
 		}
 		else if (isUpAttack == true)
@@ -555,6 +566,9 @@ void BossPhase_2::boomerangUpdate(Vector3 playerPos)
 			{
 				isUpActive = false;
 				upBoomerangWorldTransform[0].rotation_.y = 0;
+				
+				upBoomerangSound.StopWave();
+
 				isAction = Action::AttackInterval;
 			}
 		}
@@ -579,6 +593,7 @@ void BossPhase_2::boomerangUpdate(Vector3 playerPos)
 			{
 				isDownPreparation = false;
 				isDownAttack = true;
+				downBoomerangSound.SoundPlayWave(true,0.5);
 			}
 		}
 		else if (isDownAttack == true)
@@ -625,6 +640,8 @@ void BossPhase_2::boomerangUpdate(Vector3 playerPos)
 				isDownActive = false;
 				isAction = Action::AttackInterval;
 				downBoomerangWorldTransform[0].rotation_.y = 0;
+
+				downBoomerangSound.StopWave();
 			}
 		}
 		for (int i = 0; i < 5; i++) {
@@ -842,6 +859,7 @@ void BossPhase_2::rushUpdate(Vector3 playerPos)
 				rushToPlayer.y = 0.0f;
 				rushToPlayer *= 2.5f;
 				RtoPFlag = true;
+				rushSound.SoundPlayWave(false,0.5);
 			}
 			if (rushFinsh == false) {
 				worldTransform_[0].translation_ += rushToPlayer;
