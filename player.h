@@ -10,6 +10,7 @@
 #include<memory>
 #include<list>
 #include<cmath>
+#include"Audio.h"
 class player
 {
 public:
@@ -98,5 +99,10 @@ private:
 	int damageInterval;
 
 	Sprite* spriteHP[3];
+
+	Sound AttackSound;
+	Sound damageSound;
+	Sound deadSound;
+	Sound janpSound;
 };
 

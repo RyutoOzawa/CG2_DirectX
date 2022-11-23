@@ -35,6 +35,11 @@ void player::Initialize(SpriteManager* spriteManager) {
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = Vector3(0.0f, 0.0f, 0.0f);
+
+	AttackSound.SoundLoadWave("Resources/Sound/playerAttack.wav");
+	damageSound.SoundLoadWave("Resources/Sound/playerDamage.wav");
+	deadSound.SoundLoadWave("Resources/Sound/playerDead.wav");
+	janpSound.SoundLoadWave("Resources/Sound/playerJanp.wav");
 }
 
 void player::Update() {
@@ -97,6 +102,7 @@ void player::Update() {
 		if(input_->TriggerPadKey(XINPUT_GAMEPAD_A)&&jumpFlag==false)
 		{
 			jumpFlag = 1;
+			janpSound.SoundPlayWave(false);
 		}
 
 	jump();
@@ -145,6 +151,8 @@ void player::Attack() {
 
 		//’e‚Ì“o˜^‚·‚é
 		bullets_.push_back(std::move(newBullet));
+
+		AttackSound.SoundPlayWave(false,0.1);
 	}
 }
 
@@ -235,6 +243,14 @@ void player::OnCollision()
 		HP--;
 		isDamageInterval = true;
 		damageInterval = 60 * 5;
+		if (HP>0)
+		{
+			damageSound.SoundPlayWave(false);
+		}
+		else
+		{
+			deadSound.SoundPlayWave(false);
+		}
 	}
 }
 void player::jump()
