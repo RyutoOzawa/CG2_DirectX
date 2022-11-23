@@ -17,6 +17,9 @@ public:
 	float dot(const Vector3& v)const;		//内積を求める
 	Vector3 cross(const Vector3& v)const;	//外積を求める
 
+
+	const Vector3 lerp(const Vector3& start, const Vector3& end, const float Timer);
+
 // 単項演算子オーバーロード
 	Vector3 operator+() const;
 	Vector3 operator-() const;

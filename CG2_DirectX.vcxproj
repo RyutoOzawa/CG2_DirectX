@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="affine.cpp" />
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="BossBullet.cpp" />
     <ClCompile Include="BossPhase_1.cpp" />
     <ClCompile Include="BossPhase_2.cpp" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="affine.h" />
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="BossBullet.h" />
     <ClInclude Include="BossPhase_1.h" />
     <ClInclude Include="BossPhase_2.h" />
