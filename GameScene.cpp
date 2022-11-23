@@ -217,6 +217,7 @@ void GameScene::Update()
 				bossTrans = BossTrans::Boss1To2;
 				//ボスの角度をデフォルトに
 				bossPhase_1->SetRotation({ 0,0,0 });
+				bossPhase_1->DeadRset();
 			}
 			if (player_->GetHP() <= 0)
 			{
