@@ -296,8 +296,11 @@ void BossPhase_1::SetRotation(Vector3 rotation)
 
 void BossPhase_1::DeadRset()
 {
-	worldTransform_[randomBlock].scale_ = { 1.0f,1.0f,1.0f };
-	AnnihilationFlag[randomBlock] = false;
+	for (int i = 0; i < 27; i++) {
+		worldTransform_[i].scale_ = { 1.0f,1.0f,1.0f };
+		AnnihilationFlag[i] = false;
+	}
+	TransferMat();
 }
 
 void BossPhase_1::FlyBlocks(Vector3 playerPos)
