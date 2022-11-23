@@ -23,7 +23,7 @@ void player::Initialize(SpriteManager* spriteManager) {
 
 	for (int i = 0; i < maxHP; i++)
 	{
-		spriteHP[i]=new Sprite();
+		spriteHP[i] = new Sprite();
 		spriteHP[i]->Initialize(spriteManager, texHP);
 		spriteHP[i]->SetColor({ 1,1,1,1 });
 		spriteHP[i]->SetAnchorPoint({ 0,0 });
@@ -99,11 +99,11 @@ void player::Update() {
 	//”ÍˆÍ‚ğ’´‚¦‚È‚¢ˆ—
 	worldTransform_.rotation_.x = max(worldTransform_.rotation_.x, -kRotLimit);
 	worldTransform_.rotation_.x = min(worldTransform_.rotation_.x, +kRotLimit);
-		if(input_->TriggerPadKey(XINPUT_GAMEPAD_A)&&jumpFlag==false)
-		{
-			jumpFlag = 1;
-			janpSound.SoundPlayWave(false);
-		}
+	if (input_->TriggerPadKey(XINPUT_GAMEPAD_A) && jumpFlag == false)
+	{
+		jumpFlag = 1;
+		janpSound.SoundPlayWave(false);
+	}
 
 	jump();
 
@@ -147,28 +147,25 @@ void player::Attack() {
 
 		//’e‚Ì¶¬‚µA‰Šú‰»
 		std::unique_ptr<playerBullet> newBullet = std::make_unique<playerBullet>();
-		newBullet->Initialize(bulletModel_,worldTransform_.translation_, worldTransform_.rotation_, velocity);
+		newBullet->Initialize(bulletModel_, worldTransform_.translation_, worldTransform_.rotation_, velocity);
 
 		//’e‚Ì“o˜^‚·‚é
 		bullets_.push_back(std::move(newBullet));
 
-		AttackSound.SoundPlayWave(false,0.1);
+		AttackSound.SoundPlayWave(false, 0.1);
 	}
 }
 
 void player::Draw(ViewProjection& viewProjection_) {
-	if (HP > 0)
+	if (isDamageInterval == false)
 	{
-		if (isDamageInterval == false)
+		model_->Draw(worldTransform_, viewProjection_);
+	}
+	else
+	{
+		if (damageInterval % 3 == 0)
 		{
 			model_->Draw(worldTransform_, viewProjection_);
-		}
-		else
-		{
-			if (damageInterval % 3 == 0)
-			{
-				model_->Draw(worldTransform_, viewProjection_);
-			}
 		}
 	}
 
@@ -243,7 +240,7 @@ void player::OnCollision()
 		HP--;
 		isDamageInterval = true;
 		damageInterval = 60 * 5;
-		if (HP>0)
+		if (HP > 0)
 		{
 			damageSound.SoundPlayWave(false);
 		}
