@@ -26,8 +26,8 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 
 	input_ = new Input;
 	input_->Initialize(windowsApi);
-	audio_ = new SoundManager;
-	audio_->Initialize();
+	audio_ = new Sound;
+	audio_->StaticInitialize();
 
 	// スプライトのnew
 	titleSprite = new Sprite;
@@ -130,9 +130,11 @@ void GameScene::Initialize(SpriteManager* spriteManager, WindowsAPI* windowsApi)
 	vignetteEffect->SetSize({ WindowsAPI::winW, WindowsAPI::winH });
 
 	// 音関連の初期化
-	sound_.Initialize();
-	gameBGM = sound_.SoundLoadWave("Resources/Sound/Satans Servant.wav");
-
+	gameBGM.SoundLoadWave("Resources/Sound/Satans Servant.wav");
+	OverBgm.SoundLoadWave("Resources/Sound/GameOver.wav");
+	ClearBgm.SoundLoadWave("Resources/Sound/GameClear.wav");
+	TitleBgm.SoundLoadWave("Resources/Sound/Title.wav");
+	SelectSe.SoundLoadWave("Resources/Sound/SelectSe.wav");
 
 
 
@@ -157,17 +159,25 @@ void GameScene::Update()
 	switch (gameLoop)
 	{
 	case GameLoop::Title:
+		if (titleBgmFlag == false) {
+			TitleBgm.SoundPlayWave(true, 0.5f);
+			titleBgmFlag = true;
+		}
 		bossPhase_1->TitleUpdate();
 		if (input_->TriggerPadKey(XINPUT_GAMEPAD_A))
 		{
+			SelectSe.SoundPlayWave();
+			TitleBgm.StopWave();
+			titleBgmFlag = false;
 			gameLoop = GameLoop::Game;
 				player_->TransformRset(false);
 				railCamera_->Update();
 		}
 		break;
 	case GameLoop::Game:
+		// ゲームBGM鳴らす
 		if (gameBgmFlag == false) {
-			sound_.SoundPlayWave(sound_.xAudio2.Get(), gameBGM, true, 0.1f);
+			gameBGM.SoundPlayWave(true, 0.4f);
 			gameBgmFlag = true;
 		}
 
@@ -204,7 +214,8 @@ void GameScene::Update()
 			{
 				player_->AllBulletDelete();
 				// ゲームBGMを止める
-				sound_.StopWave(gameBGM);
+				gameBGM.StopWave();
+				
 				gameBgmFlag = false;
 				gameLoop = GameLoop::GameOver;
 			}
@@ -232,6 +243,8 @@ void GameScene::Update()
 			railCamera_->Update();
 			if (bossPhase_2->GetHP() <= 0)
 			{
+			
+
 				player_->TransformRset(false);
 				player_->AllBulletDelete();
 				animeTimer = 0;
@@ -249,7 +262,7 @@ void GameScene::Update()
 			{
 				player_->AllBulletDelete();
 				// ゲームBGMを止める
-				sound_.StopWave(gameBGM);
+				gameBGM.StopWave();
 				gameBgmFlag = false;
 				gameLoop = GameLoop::GameOver;
 			}
@@ -260,7 +273,7 @@ void GameScene::Update()
 			if (bossPhase_2->GetMedamaWTTransformY() <= -10)
 			{
 				// ゲームBGMを止める
-				sound_.StopWave(gameBGM);
+				gameBGM.StopWave();
 				gameBgmFlag = false;
 				gameLoop = GameLoop::Result;
 			}
@@ -268,6 +281,10 @@ void GameScene::Update()
 		}
 		break;
 	case GameLoop::GameOver:
+		if (overBgmFlag == false) {
+			OverBgm.SoundPlayWave(true, 0.5f);
+			overBgmFlag = true;
+		}
 		if (bossTrans == BossTrans::Boss1)
 		{
 			bossPhase_1->Update(player_->GetworldPosition());
@@ -278,6 +295,11 @@ void GameScene::Update()
 		}
 		if (input_->TriggerPadKey(XINPUT_GAMEPAD_A))
 		{
+			// 音を止める
+			SelectSe.SoundPlayWave();
+			OverBgm.StopWave();
+			overBgmFlag = false;
+
 			animeTimer = 0;
 			animetionPhase = TitleToGame;
 			player_->Rset();
@@ -293,8 +315,17 @@ void GameScene::Update()
 		}
 		break;
 	case GameLoop::Result:
+		if (clearBgmFlag == false) {
+			ClearBgm.SoundPlayWave(true, 0.5f);
+			clearBgmFlag = true;
+		}
 		if (input_->TriggerPadKey(XINPUT_GAMEPAD_A))
 		{
+			// 音を止める
+			SelectSe.SoundPlayWave();
+			ClearBgm.StopWave();
+			clearBgmFlag = false;
+
 			animeTimer = 0;
 			animetionPhase = TitleToGame;
 			player_->Rset();
