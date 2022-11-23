@@ -166,7 +166,7 @@ void player::Attack() {
 		bullets_.push_back(std::move(newBullet));
 
 		AttackSound.SoundPlayWave(false, 0.1);
-	}
+	
 }
 
 void player::Draw(ViewProjection& viewProjection_) {
