@@ -76,7 +76,7 @@ void player::Update() {
 		move.z += input_->PadAnalogStickLX() * vectorX.z;
 		move.x += input_->PadAnalogStickLY() * vectorZ.x;
 		move.z += input_->PadAnalogStickLY() * vectorZ.z;
-		rot.y = input_->PadAnalogStickRX();
+		rot.y = input_->PadAnalogStickRX() * 2;
 	}
 
 	float AR;
@@ -165,7 +165,7 @@ void player::Attack() {
 		//’e‚Ì“o˜^‚·‚é
 		bullets_.push_back(std::move(newBullet));
 
-		AttackSound.SoundPlayWave(false, 0.1);
+		AttackSound.SoundPlayWave(false, 0.3f);
 	
 }
 

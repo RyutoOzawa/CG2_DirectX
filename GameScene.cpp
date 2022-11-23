@@ -177,7 +177,7 @@ void GameScene::Update()
 	case GameLoop::Game:
 		// ゲームBGM鳴らす
 		if (gameBgmFlag == false) {
-			gameBGM.SoundPlayWave(true, 0.4f);
+			gameBGM.SoundPlayWave(true, 0.3f);
 			gameBgmFlag = true;
 		}
 

@@ -98,8 +98,9 @@ private:
 
 	int damageInterval;
 
-	int attackInterval = 0;
+	
 	const int attackDelay = 30;
+	int attackInterval = attackDelay;
 
 	Sprite* spriteHP[3];
 
