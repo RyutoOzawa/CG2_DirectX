@@ -12,6 +12,8 @@ BossPhase_1::~BossPhase_1()
 
 void BossPhase_1::Initialize(SpriteManager* spriteManager)
 {
+	
+
 	model_ = new Object3d();
 
 	model_->Initialize("BossCube");
@@ -123,6 +125,7 @@ void BossPhase_1::Update(Vector3 playerPos)
 
 void BossPhase_1::ChangeUpdate(float animationTimer, float animationMax)
 {
+	AnnihilationFlag[randomBlock] = false;
 	//8‚Â‚ÌŒ‡•Ð‚Ì”ò‚ñ‚Å‚¢‚­‘¬“x
 	float breakSpdTemp = 0.25f;
 	Vector3 cornerBreakSpd[8]{
