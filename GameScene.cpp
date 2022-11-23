@@ -675,9 +675,9 @@ void GameScene::AnimationCameraUpdate()
 		if (animeTimer < 425) {
 			animeTimer++;
 			//注視点からカメラの距離
-			float cameraDistance = 40.0f;
+			float cameraDistance = 30.0f;
 			//カメラ回転角
-			float cameraRotation = 30.0f;
+			float cameraRotation = 90.0f;
 			Vector3 eye{}, target;
 			//注視点はボス2に
 			target = bossPhase_2->GetPos().translation_;
