@@ -221,7 +221,7 @@ void BossPhase_2::Update(Vector3 playerPos)
 	DeathblowUp();
 
 	TransferMat();
-	if (maxHP<HP)
+	if (HP<maxHP)
 	{
 		spriteHP->SetSize({ float((630 / maxHP) * HP), 25 });
 	}
