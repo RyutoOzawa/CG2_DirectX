@@ -138,7 +138,7 @@ private:// ƒƒ“ƒo•Ï”
 
 	Vector3 playerPos_;
 
-	const int maxHP = 10;
+	const int maxHP = 25;
 	int HP = maxHP;
 	Sprite* spriteHP;
 	Sprite* spriteHPBar;

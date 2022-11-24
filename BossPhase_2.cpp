@@ -37,7 +37,7 @@ void BossPhase_2::Initialize(SpriteManager* spriteManager)
 
 	spriteHP->SetPos({ 330.0f,610.0f });
 
-	spriteHP->SetSize({ 620,50 });
+	spriteHP->SetSize({ 625,50 });
 
 	spriteHPBar = new Sprite;
 	spriteHPBar->Initialize(spriteManager,texHPBar/*, { 320,600 }, { 1,1,1,1 }, { 0,0 }*/);
@@ -221,8 +221,14 @@ void BossPhase_2::Update(Vector3 playerPos)
 	DeathblowUp();
 
 	TransferMat();
-
-	spriteHP->SetSize({ float((620 / maxHP) * HP), 25 });
+	if (maxHP<HP)
+	{
+		spriteHP->SetSize({ float((630 / maxHP) * HP), 25 });
+	}
+	else
+	{
+		spriteHP->SetSize({620, 25});
+	}
 
 	/*debugText_->SetPos(10, 130);
 	debugText_->Printf("Attack=%d,%d,%d", Attack,oldAttack,randAttack);*/
