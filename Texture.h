@@ -11,7 +11,7 @@ public:
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;			//デスクリプタヒープ
 	static std::array< Microsoft::WRL::ComPtr<ID3D12Resource>, spriteSRVCount >texBuffuers;	//テクスチャバッファ
 	static D3D12_RESOURCE_DESC textureResourceDesc;
-	static Microsoft::WRL::ComPtr<ID3D12Device> dev;
+	static ID3D12Device* dev;
 
 	
 public:
