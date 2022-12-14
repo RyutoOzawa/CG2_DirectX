@@ -392,7 +392,7 @@ void Object3d::Initialize(const std::string& filename)
 		IID_PPV_ARGS(&constBuffB1));
 	assert(SUCCEEDED(result));
 	//定数バッファへデータ転送
-	ConstBufferDatab1* constMapB1 = nullptr;
+	
 	result = constBuffB1->Map(0, nullptr, (void**)&constMapB1);
 	constMapB1->ambient = material.ambient;
 	constMapB1->diffuse = material.diffuse;

@@ -61,12 +61,13 @@ public:
 	std::vector<unsigned short>indices;	//頂点インデックスデータ
 	D3D12_VERTEX_BUFFER_VIEW vbView;	//頂点バッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff; 	//定数バッファマップ（行列用）
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//定数バッファマップ（行列用）
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;	//定数バッファマップ（行列用））
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;	//定数バッファマップ（行列用））
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff; 	//頂点バッファマップ（行列用）
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//インデックスバッファマップ（行列用）
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;	//定数バッファマップ（行列用）
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB1;	//定数バッファマップ（マテリアル用）
 	//ConstBufferDataTransform* constMapTransform = nullptr;	//定数バッファマップ（行列用）
 
+	ConstBufferDatab1* constMapB1 = nullptr;
 	ConstBufferData* constMap = nullptr;
 
 	DirectX::XMFLOAT4 color = { 1,1,1,1 };
