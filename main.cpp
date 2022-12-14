@@ -78,6 +78,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Object3d object1;
 	object1.Initialize("skydome");
+	//object1.scale = XMFLOAT3(0.2f, 0.2f, 0.2f);
+	object1.position = XMFLOAT3(0, 0, 50.0f);
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -98,8 +100,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	XMMATRIX matProjection;
 	XMMATRIX matView;
-	XMFLOAT3 eye(0, 0, 10);	//視点座標
-	XMFLOAT3 target(0, 0, 0);	//注視点座標
+	XMFLOAT3 eye(0, 0, 0);	//視点座標
+	XMFLOAT3 target(0, 0, 10);	//注視点座標
 	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
 	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
 	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
@@ -165,7 +167,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			object1.rotation.y -= 0.1f;
 		}
 
-		object1.scale = { 50,50,50 };
+		//object1.scale = { 50,50,50 };
 
 		object1.Update(matView, matProjection);
 
