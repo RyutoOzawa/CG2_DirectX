@@ -142,7 +142,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\LE2A_06_オザワ_リュウト\LE2A_06_オザワ_リュウト\Matrix4.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Gridline.cpp" />
     <ClCompile Include="DrawInfo.cpp" />
@@ -151,6 +150,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MathInfo.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -164,7 +164,6 @@
     <ClCompile Include="WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Downloads\LE2A_06_オザワ_リュウト\LE2A_06_オザワ_リュウト\Matrix4.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Gridline.h" />
     <ClInclude Include="DrawInfo.h" />
@@ -172,6 +171,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MathInfo.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
