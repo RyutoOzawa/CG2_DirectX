@@ -16,6 +16,7 @@ using namespace DirectX;
 #include"Sprite.h"
 #include"Material.h"
 using namespace Microsoft::WRL;
+#include"Matrix4.h"
 
 
 //パイプラインステートとルートシグネチャのセット
@@ -126,6 +127,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//}
 
 	//object.Initialize(directX->GetDevice());
+
+	Matrix4 mat;
+	mat.Inverse();
+
 
 	//透視東映返還行列の計算
 	//専用の行列を宣言
