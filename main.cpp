@@ -76,8 +76,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sprite2->Initialize(spriteManager,reimuGraph);
 	//sprite2->SetTextureNum(1);
 
+	Model* skyDome;
+	skyDome = Model::CreateModel("skydome");
+
 	Object3d object1;
-	object1.Initialize("skydome");
+	object1.Initialize();
+	object1.SetModel(skyDome);
 	//object1.scale = XMFLOAT3(0.2f, 0.2f, 0.2f);
 	object1.position = XMFLOAT3(0, 0, 50.0f);
 
@@ -201,6 +205,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete input;
 	delete directX;
 	delete spriteManager;
+
+	delete skyDome;
 
 #pragma endregion シーン終了処理
 

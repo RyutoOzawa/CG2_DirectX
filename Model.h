@@ -33,7 +33,7 @@ class Model {
 		Vector3 diffuse;	//ディフューズ影響度
 		Vector3 specular;	//スペキュラー影響度
 		float alpha;		//アルファ
-		std::string textuteFileName;//テクスチャファイル名
+		std::string textureFileName;//テクスチャファイル名
 		//コンストラクタ
 		Material() {
 			ambient = { 0.3f,0.3f,0.3f };
@@ -50,21 +50,28 @@ class Model {
 	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//インデックスバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;	//インデックスバッファ
 
 	uint32_t textureIndex = 0;	//テクスチャ番号
 	Material material;			//マテリアル
 
 public:
+	static ID3D12Device* device;
+
 	//メンバ関数
 	static Model* CreateModel(const std::string& filename = "NULL");
 
+	static void SetDevice(ID3D12Device* dev) { device = dev; }
+
+	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex);
 
 
 	//内部処理用の非公開メンバ関数
 private:
 
 	//モデル生成
-	void Create();
+	void Create(const std::string& modelname);
 	void LoadTexture(const std::string& directoryPath, const std::string& filename);
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
+	void CreateBuffers();
 };
