@@ -128,8 +128,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//object.Initialize(directX->GetDevice());
 
-	Matrix4 mat;
+	
+	Matrix4 mat{
+		1,2,1,3,
+        2,3,1,5,
+        4,7,3,5,
+        1,6,3,7
+	};
+
 	mat.Inverse();
+
+	int i = 20;
+
+	mat.Inverse();
+
 
 
 	//透視東映返還行列の計算

@@ -97,38 +97,38 @@ Vector3 Matrix4::transform(const Vector3& v, const Matrix4& m)
 
 	return result;
 }
-
-Matrix4& operator*=(Matrix4& m1, const  Matrix4& m2)
-{
-	Matrix4 result{ 0 };
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			for (int k = 0; k < 4; k++) {
-				result.m[i][j] += m1.m[i][k] * m2.m[k][j];
-			}
-		}
-	}
-
-	m1 = result;
-	return m1;
-}
+//
+//Matrix4& operator*=(Matrix4& m1, const  Matrix4& m2)
+//{
+//	Matrix4 result{ 0 };
+//
+//	for (int i = 0; i < 4; i++) {
+//		for (int j = 0; j < 4; j++) {
+//			for (int k = 0; k < 4; k++) {
+//				result.m[i][j] += m1.m[i][k] * m2.m[k][j];
+//			}
+//		}
+//	}
+//
+//	m1 = result;
+//	return m1;
+//}
 
 Matrix4 Matrix4::Inverse()
 {
 	Matrix4 mat, result, identity;
 	mat = *this;
 
-	
-	
+
+
 	Matrix4 temp{
-	2.3f,4.7f,8.0f,4.0f,
-	7.3f,8.3f,4.7f,9.0f,
-	4.2f,4.2f,1.0f,4.0f,
-	7.6f,1.1f,4.2f,0.0f
+1,2,1,3,
+2,3,1,5,
+4,7,3,5,
+1,6,3,7
 	};
 
-	mat = temp;
+	//mat = temp;
 
 	identity.identity();
 	float sweep[4][8];
@@ -141,37 +141,98 @@ Matrix4 Matrix4::Inverse()
 		}
 	}
 
-	//行列[0][0]に注目する
-	//mat.m[0][0]が1でないならm[0][0]でm[0]を割る
-	if (sweep[0][0] != 1) {
+	//逆行列計算開始
+	for (int k = 0; k < 4; k++) {
+
+		//ゼロ除算対策
+		double max = fabs(sweep[k][k]);
+		int maxI = k;
+		for (int i = k + 1; i < 4; i++) {
+			if (fabs(sweep[i][k]) > max) {
+				max = fabs(sweep[i][k]);
+				maxI = i;
+			}
+		}
+
+		//絶対値の最大値が0なら逆行列無し。単位行列を返す
+		if (fabs(sweep[maxI][k]) <= 0.000001f) {
+			return identity;
+		}
+
+		//該当行との入れ替え
+		if (k != maxI) {
+			for (int i = 0; i < 8; i++) {
+				float temp = sweep[maxI][i];
+				sweep[maxI][i] = sweep[k][i];
+				sweep[k][i] = temp;
+			}
+		}
+
+
+		//[k][k]に掛けたら1になる値を求め、k行に掛け算
+		float x = 1 / sweep[k][k];
 		for (int i = 0; i < 8; i++) {
-			sweep[0][i] /= sweep[0][0];
+			sweep[k][i] *= x;
+		}
+
+		//この時点でsweep[k][k]は1になっている
+		//次に、[i][k]が0になるようにk行を -i倍
+		for (int i = 0; i < 4; i++) {
+			//i = kなら飛ばす
+			if (i == k) {
+				continue;
+			}
+
+			float num = -sweep[i][k];
+
+			for (int j = 0; j < 8; j++) {
+				sweep[i][j] += sweep[k][j] * num;
+			}
+
 		}
 	}
-	//この時点でmat.m[0][0]は1になっている
-	//次に、mat.m[1][0],mat.m[2][0]が0になるように0行目を-10,-20で掛けて引き算
-	for (int i = 0; i < 3; i++) {
-		if (sweep[i + 1][0] != 0) {
-			for (int j = 0; j < 8; j++) {
-				sweep[i + 1][j] += sweep[0][j] * -sweep[i + 1][j];
+
+	int a = 20;
+
+	//掃き出し終了。sweepの右四列をリザルトに入れる
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			result.m[i][j] = sweep[i][j + 4];
+		}
+	}
+
+	*this = result;
+
+	Matrix4 idenMat;
+	idenMat = result * temp;
+
+	return *this;
+}
+
+Matrix4& Matrix4::operator*=(const Matrix4& mat)
+{
+	Matrix4 result{};
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
+				result.m[i][j] += m[i][k] + mat.m[k][j];
 			}
 		}
 	}
 
-	//行列[1][1]に注目
-	//[1][1]が1になっていなければ同値で行を割る
-	if (sweep[1][1] != 1) {
-		for (int i = 0; i < 8; i++) {
-			sweep[1][i] /= sweep[1][1];
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			m[i][j] = result.m[i][j];
 		}
 	}
-	//この時点で[1][1]は1になっている
 
-	
-	//*this = result;
-
+	*this = result;
 	return *this;
+
 }
+
+
 
 const  Matrix4 operator*(const Matrix4& m1, const Matrix4& m2)
 {

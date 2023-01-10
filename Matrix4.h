@@ -30,8 +30,11 @@ public:
 	//逆行列
 	Matrix4 Inverse();
 
+	//演算子オーバーロード
+	Matrix4& operator*=(const Matrix4& mat);
+
 };
 
-////2項演算子オーバーロード
-//const Matrix4 operator*(const Matrix4& m1, const Matrix4& m2);
-//const Vector3 operator*(const Vector3& v, const Matrix4& m);
+//2項演算子オーバーロード
+const Matrix4 operator*(const Matrix4& m1, const Matrix4& m2);
+const Vector3 operator*(const Vector3& v, const Matrix4& m);
