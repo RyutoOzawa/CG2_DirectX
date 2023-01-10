@@ -119,17 +119,6 @@ Matrix4 Matrix4::Inverse()
 	Matrix4 mat, result, identity;
 	mat = *this;
 
-
-
-	Matrix4 temp{
-1,2,1,3,
-2,3,1,5,
-4,7,3,5,
-1,6,3,7
-	};
-
-	//mat = temp;
-
 	identity.identity();
 	float sweep[4][8];
 
@@ -192,8 +181,6 @@ Matrix4 Matrix4::Inverse()
 		}
 	}
 
-	int a = 20;
-
 	//掃き出し終了。sweepの右四列をリザルトに入れる
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -202,9 +189,6 @@ Matrix4 Matrix4::Inverse()
 	}
 
 	*this = result;
-
-	Matrix4 idenMat;
-	idenMat = result * temp;
 
 	return *this;
 }
