@@ -68,6 +68,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//画像読み込み
 	uint32_t marioGraph = Texture::LoadTexture(L"Resources/mario.jpg");
 	uint32_t reimuGraph = Texture::LoadTexture(L"Resources/reimu.png");
+	uint32_t titleGraph = Texture::LoadTexture(L"Resources/title.png");
+	uint32_t playUIGraph = Texture::LoadTexture(L"Resources/playerUI.png");
+	uint32_t gameoverGraph = Texture::LoadTexture(L"Resources/gameover.png");
+	uint32_t backGroundGraph = Texture::LoadTexture(L"Resources/backGround.png");
+
 
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
@@ -75,6 +80,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Sprite* sprite2 = new Sprite();
 	sprite2->Initialize(spriteManager,reimuGraph);
+
+	Sprite* titleSprite = new Sprite();
+	Sprite* playUISprite = new Sprite();
+	Sprite* gameoverSprite = new Sprite();
+	Sprite* backGroundSprite = new Sprite();
+	titleSprite->Initialize(spriteManager, titleGraph);
+	playUISprite->Initialize(spriteManager, playUIGraph);
+	gameoverSprite->Initialize(spriteManager, gameoverGraph);
+	backGroundSprite->Initialize(spriteManager, backGroundGraph);
+
 	//sprite2->SetTextureNum(1);
 
 	Model* skyDome;
@@ -151,13 +166,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		directX->BeginDraw();
 #pragma region シーン描画処理
 
+		//背景スプライト生成
+		spriteManager->beginDraw();
+		backGroundSprite->Draw();
+
+
 		//3Dオブジェクト描画処理
 		Object3d::BeginDraw();
 		object1.Draw();
 
 		//スプライト描画処理
 		spriteManager->beginDraw();
-		sprite->Draw();
+		
+		playUISprite->Draw();
+
 		//sprite2->Draw();
 
 #pragma endregion シーン描画処理
