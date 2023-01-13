@@ -71,6 +71,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	uint32_t titleGraph = Texture::LoadTexture(L"Resources/title.png");
 	uint32_t playUIGraph = Texture::LoadTexture(L"Resources/playerUI.png");
 	uint32_t gameoverGraph = Texture::LoadTexture(L"Resources/gameover.png");
+	uint32_t gameClearGraph = Texture::LoadTexture(L"Resources/gameClear.png");
 	uint32_t backGroundGraph = Texture::LoadTexture(L"Resources/backGround.png");
 
 
@@ -84,10 +85,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sprite* titleSprite = new Sprite();
 	Sprite* playUISprite = new Sprite();
 	Sprite* gameoverSprite = new Sprite();
+	Sprite* gameClearSprite = new Sprite();
 	Sprite* backGroundSprite = new Sprite();
 	titleSprite->Initialize(spriteManager, titleGraph);
 	playUISprite->Initialize(spriteManager, playUIGraph);
 	gameoverSprite->Initialize(spriteManager, gameoverGraph);
+	gameClearSprite->Initialize(spriteManager, gameClearGraph);
 	backGroundSprite->Initialize(spriteManager, backGroundGraph);
 
 	//sprite2->SetTextureNum(1);
@@ -110,6 +113,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::vector<Object3d> enemys;
 	const int enemySpawnInterval = 10;
 	int spawntimer = 0;
+
+	int scene = 0;
+
+	int clearTimer = 600;
+	int nowTimer = 0;
+
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -144,58 +153,93 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion 基盤システム初期化
 #pragma region シーン更新処理
 
-		sprite->SetPos({ 100, 100 });
-		sprite2->SetPos({ WindowsAPI::winW / 2,WindowsAPI::winH / 2 });
-		sprite->SetSize({ 64,64 });
-
-		float moveSpd = 0.25f;
-
-		float maxMoveX = 20.0f;
-		float maxMoveY = 10.0f;
-
-		//自機操作
-		if (input->IsPress(DIK_A) && player.position.x >= -maxMoveX) {
-			player.position.x -= moveSpd;
+		if (scene == 0) {
+			if(input->IsTrigger(DIK_SPACE)) {
+				scene = 1;
+				//初期化
+				player.position = XMFLOAT3(0,0,30.0f);
+				enemys.clear();
+				spawntimer = enemySpawnInterval;
+				nowTimer = clearTimer;
+			}
 		}
-		else if (input->IsPress(DIK_D) && player.position.x <= maxMoveX) {
-			player.position.x += moveSpd;
+		else if (scene == 1) {
+
+			sprite->SetPos({ 100, 100 });
+			sprite2->SetPos({ WindowsAPI::winW / 2,WindowsAPI::winH / 2 });
+			sprite->SetSize({ 64,64 });
+
+			float moveSpd = 0.25f;
+
+			float maxMoveX = 20.0f;
+			float maxMoveY = 10.0f;
+
+			//自機操作
+			if (input->IsPress(DIK_A) && player.position.x >= -maxMoveX) {
+				player.position.x -= moveSpd;
+			}
+			else if (input->IsPress(DIK_D) && player.position.x <= maxMoveX) {
+				player.position.x += moveSpd;
+			}
+
+			if (input->IsPress(DIK_W) && player.position.y <= maxMoveY) {
+				player.position.y += moveSpd;
+			}
+			else if (input->IsPress(DIK_S) && player.position.y >= -maxMoveY) {
+				player.position.y -= moveSpd;
+			}
+
+			//object1.scale = { 50,50,50 };
+
+			//敵更新
+			for (int i = 0; i < enemys.size(); i++) {
+				enemys[i].position.z -= 0.5f;
+				enemys[i].Update(matView, matProjection);
+			}
+			object1.position.z -= 0.5f;
+
+			object1.Update(matView, matProjection);
+			player.Update(matView, matProjection);
+
+			//敵のスポーン処理
+			if (spawntimer > 0) {
+				spawntimer--;
+			}
+			else if (spawntimer <= 0) {
+				spawntimer = enemySpawnInterval;
+				Object3d newEnemy;
+				newEnemy.Initialize();
+				newEnemy.SetModel(needle);
+				newEnemy.position = XMFLOAT3(Random(-20, 20), Random(-10, 10), 100.0f);
+				enemys.push_back(newEnemy);
+			}
+
+			//当たり判定
+			for (int i = 0; i < enemys.size(); i++) {
+				XMFLOAT3 vecPtoE;
+				vecPtoE.x = player.position.x - enemys[i].position.x;
+				vecPtoE.y = player.position.y - enemys[i].position.y;
+				vecPtoE.z = player.position.z - enemys[i].position.z;
+				float lengthPtoE;
+				XMStoreFloat(&lengthPtoE, XMVector3Length(XMLoadFloat3(&vecPtoE)));
+
+				if (lengthPtoE <= 2.0f) {
+					scene = 2;
+				}
+			}
+
+			if (nowTimer > 0) {
+				nowTimer--;
+			}
+			else if (nowTimer <= 0) {
+				scene = 3;
+			}
+
 		}
-
-		if (input->IsPress(DIK_W) && player.position.y <= maxMoveY) {
-			player.position.y += moveSpd;
-		}
-		else if (input->IsPress(DIK_S) && player.position.y >= -maxMoveY) {
-			player.position.y -= moveSpd;
-		}
-
-		//object1.scale = { 50,50,50 };
-
-		//敵更新
-		for(int i = 0;i<enemys.size();i++){
-			enemys[i].position.z -= 0.5f;
-			enemys[i].Update(matView,matProjection);
-		}
-		object1.position.z -= 0.5f;
-
-		object1.Update(matView, matProjection);
-		player.Update(matView, matProjection);
-
-		//敵のスポーン処理
-		if (spawntimer > 0) {
-			spawntimer--;
-		}
-		else if (spawntimer <= 0) {
-			spawntimer = enemySpawnInterval;
-			Object3d newEnemy;
-			newEnemy.Initialize();
-			newEnemy.SetModel(needle);
-			newEnemy.position = XMFLOAT3(Random(-20, 20), Random(-10, 10), 100.0f);
-			enemys.push_back(newEnemy);
-		}
-
-		//当たり判定
-		for (int i = 0; i < enemys.size(); i++) {
-
+		else {
+			if (input->IsTrigger(DIK_SPACE)) {
+				scene = 0;
+			}
 		}
 
 #pragma endregion シーン更新処理
@@ -206,23 +250,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//背景スプライト生成
 		spriteManager->beginDraw();
-		backGroundSprite->Draw();
 
+		if (scene == 0) {
+			titleSprite->Draw();
+		}
+		else if (scene == 1) {
+			backGroundSprite->Draw();
+		}
+		else if (scene == 2) {
+			gameoverSprite->Draw();
+		}
+		else if (scene == 3) {
+			gameClearSprite->Draw();
+		}
 
 		//3Dオブジェクト描画処理
 		Object3d::BeginDraw();
-		object1.Draw();
-		for (int i = 0; i < enemys.size(); i++) {
-			enemys[i].Draw();
+
+		if (scene == 1) {
+			object1.Draw();
+			for (int i = 0; i < enemys.size(); i++) {
+				enemys[i].Draw();
+			}
+			player.Draw();
 		}
-
-
-		player.Draw();
 
 		//スプライト描画処理
 		spriteManager->beginDraw();
 
-		playUISprite->Draw();
+		if (scene == 1) {
+			playUISprite->Draw();
+		}
 
 		//sprite2->Draw();
 
@@ -235,14 +293,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
 
-	delete sprite;
 
+	//基盤システム開放
 	delete windowsAPI;
 	delete input;
 	delete directX;
 	delete spriteManager;
 
+	//スプライト開放
+	delete sprite;
+	delete sprite2;
+	delete titleSprite;
+	delete gameoverSprite;
+	delete gameClearSprite;
+	delete backGroundSprite;
+
+	//モデル開放
 	delete needle;
+	delete playerModel;
 
 #pragma endregion シーン終了処理
 
