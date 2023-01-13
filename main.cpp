@@ -95,6 +95,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Model* skyDome;
 	skyDome = Model::CreateModel("needleCube");
 
+	Model* playerModel = Model::CreateModel("player");
+
+	Object3d player;
+	player.Initialize();
+	player.SetModel(playerModel);
+	player.position = XMFLOAT3(0, 0, 50.0f);
+	player.rotation.y = 3.14f / 2.0f;
+
 	Object3d object1;
 	object1.Initialize();
 	object1.SetModel(skyDome);
@@ -143,22 +151,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
 		sprite->SetSize({ 64,64 });
 
+		float moveSpd = 0.25f;
+
 		if (input->IsPress(DIK_A)) {
-			object1.rotation.y+= 0.1f;
+			player.position.x-= moveSpd;
 		}
 		else if (input->IsPress(DIK_D)) {
-			object1.rotation.y -= 0.1f;
+			player.position.x += moveSpd;
 		}
 		if (input->IsPress(DIK_W)) {
-			object1.rotation.z += 0.1f;
+			player.position.y += moveSpd;
 		}
 		else if (input->IsPress(DIK_S)) {
-			object1.rotation.z -= 0.1f;
+			player.position.y -= moveSpd;
 		}
 
 		//object1.scale = { 50,50,50 };
 
 		object1.Update(matView, matProjection);
+		player.Update(matView, matProjection);
 
 #pragma endregion シーン更新処理
 
@@ -173,7 +184,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//3Dオブジェクト描画処理
 		Object3d::BeginDraw();
-		object1.Draw();
+		//object1.Draw();
+
+		player.Draw();
 
 		//スプライト描画処理
 		spriteManager->beginDraw();

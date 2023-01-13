@@ -210,7 +210,7 @@ void Object3d::CreatePipeline3D()
 		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		});
 
-	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
+	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout,BLEND_ALPHA);
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
