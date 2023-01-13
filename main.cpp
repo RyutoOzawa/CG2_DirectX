@@ -55,7 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SpriteManager* spriteManager = nullptr;
 	//スプライト共通部の初期化
 	spriteManager = new SpriteManager;
-	spriteManager->Initialize(directX,WindowsAPI::winW,WindowsAPI::winH);
+	spriteManager->Initialize(directX, WindowsAPI::winW, WindowsAPI::winH);
 
 	//3Dオブジェクトの初期化
 	Object3d::StaticInitialize(directX);
@@ -66,7 +66,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region 描画初期化処理
 
 	//画像読み込み
-	uint32_t marioGraph = Texture::LoadTexture(L"Resources/mario.jpg");
+	uint32_t marioGraph = Texture::LoadTexture(L"Resources/orangeBlock.png");
 	uint32_t reimuGraph = Texture::LoadTexture(L"Resources/reimu.png");
 	uint32_t titleGraph = Texture::LoadTexture(L"Resources/title.png");
 	uint32_t playUIGraph = Texture::LoadTexture(L"Resources/playerUI.png");
@@ -76,10 +76,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager,marioGraph);
+	sprite->Initialize(spriteManager, marioGraph);
 
 	Sprite* sprite2 = new Sprite();
-	sprite2->Initialize(spriteManager,reimuGraph);
+	sprite2->Initialize(spriteManager, reimuGraph);
 
 	Sprite* titleSprite = new Sprite();
 	Sprite* playUISprite = new Sprite();
@@ -92,30 +92,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//sprite2->SetTextureNum(1);
 
-	Model* skyDome;
-	skyDome = Model::CreateModel("needleCube");
-
+	Model* needle = Model::CreateModel("needleCube");
 	Model* playerModel = Model::CreateModel("player");
 
 	Object3d player;
 	player.Initialize();
 	player.SetModel(playerModel);
-	player.position = XMFLOAT3(0, 0, 50.0f);
+	player.position = XMFLOAT3(0, 0, 30.0f);
 	player.rotation.y = 3.14f / 2.0f;
 
 	Object3d object1;
 	object1.Initialize();
-	object1.SetModel(skyDome);
+	object1.SetModel(needle);
 	//object1.scale = XMFLOAT3(0.2f, 0.2f, 0.2f);
-	object1.position = XMFLOAT3(0, 0, 50.0f);
+	object1.position = XMFLOAT3(Random(-20,20), Random(-10,10), 100.0f);
+
+	std::vector<Object3d> enemys;
+	const int enemySpawnInterval = 10;
+	int spawntimer = 0;
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
-
-	const size_t kObjCount = 50;
-	Object3d obj[kObjCount];
-
-	Object3d object;
 
 	XMMATRIX matProjection;
 	XMMATRIX matView;
@@ -148,28 +145,58 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region シーン更新処理
 
 		sprite->SetPos({ 100, 100 });
-		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
+		sprite2->SetPos({ WindowsAPI::winW / 2,WindowsAPI::winH / 2 });
 		sprite->SetSize({ 64,64 });
 
 		float moveSpd = 0.25f;
 
-		if (input->IsPress(DIK_A)) {
-			player.position.x-= moveSpd;
+		float maxMoveX = 20.0f;
+		float maxMoveY = 10.0f;
+
+		//自機操作
+		if (input->IsPress(DIK_A) && player.position.x >= -maxMoveX) {
+			player.position.x -= moveSpd;
 		}
-		else if (input->IsPress(DIK_D)) {
+		else if (input->IsPress(DIK_D) && player.position.x <= maxMoveX) {
 			player.position.x += moveSpd;
 		}
-		if (input->IsPress(DIK_W)) {
+
+		if (input->IsPress(DIK_W) && player.position.y <= maxMoveY) {
 			player.position.y += moveSpd;
 		}
-		else if (input->IsPress(DIK_S)) {
+		else if (input->IsPress(DIK_S) && player.position.y >= -maxMoveY) {
 			player.position.y -= moveSpd;
 		}
 
 		//object1.scale = { 50,50,50 };
 
+		//敵更新
+		for(int i = 0;i<enemys.size();i++){
+			enemys[i].position.z -= 0.5f;
+			enemys[i].Update(matView,matProjection);
+		}
+		object1.position.z -= 0.5f;
+
 		object1.Update(matView, matProjection);
 		player.Update(matView, matProjection);
+
+		//敵のスポーン処理
+		if (spawntimer > 0) {
+			spawntimer--;
+		}
+		else if (spawntimer <= 0) {
+			spawntimer = enemySpawnInterval;
+			Object3d newEnemy;
+			newEnemy.Initialize();
+			newEnemy.SetModel(needle);
+			newEnemy.position = XMFLOAT3(Random(-20, 20), Random(-10, 10), 100.0f);
+			enemys.push_back(newEnemy);
+		}
+
+		//当たり判定
+		for (int i = 0; i < enemys.size(); i++) {
+
+		}
 
 #pragma endregion シーン更新処理
 
@@ -184,13 +211,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//3Dオブジェクト描画処理
 		Object3d::BeginDraw();
-		//object1.Draw();
+		object1.Draw();
+		for (int i = 0; i < enemys.size(); i++) {
+			enemys[i].Draw();
+		}
+
 
 		player.Draw();
 
 		//スプライト描画処理
 		spriteManager->beginDraw();
-		
+
 		playUISprite->Draw();
 
 		//sprite2->Draw();
@@ -211,7 +242,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete directX;
 	delete spriteManager;
 
-	delete skyDome;
+	delete needle;
 
 #pragma endregion シーン終了処理
 
