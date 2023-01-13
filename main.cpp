@@ -78,7 +78,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//sprite2->SetTextureNum(1);
 
 	Model* skyDome;
-	skyDome = Model::CreateModel("skydome");
+	skyDome = Model::CreateModel("needleCube");
 
 	Object3d object1;
 	object1.Initialize();
