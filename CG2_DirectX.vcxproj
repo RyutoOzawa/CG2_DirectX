@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Gridline.cpp" />
     <ClCompile Include="DrawInfo.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Gridline.h" />
     <ClInclude Include="DrawInfo.h" />

@@ -17,6 +17,7 @@ using namespace DirectX;
 #include"Material.h"
 using namespace Microsoft::WRL;
 #include"Matrix4.h"
+#include"Camera.h"
 
 
 //パイプラインステートとルートシグネチャのセット
@@ -60,6 +61,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//3Dオブジェクトの初期化
 	Object3d::StaticInitialize(directX);
 
+	//カメラクラス初期化
+	Camera::StaticInitialize(directX->GetDevice());
+	
+	
 
 #pragma endregion 基盤システム初期化
 
@@ -99,6 +104,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	XMFLOAT3 eye(0, 0, 0);	//視点座標
 	XMFLOAT3 target(0, 0, 10);	//注視点座標
 	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
+
+	Camera camera;
+	camera.Initialize(eye, target, up);
 
 	//透視東映返還行列の計算
 	//専用の行列を宣言
@@ -143,7 +151,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//object1.scale = { 50,50,50 };
 
-		object1.Update(matView, matProjection);
+		object1.Update();
 
 #pragma endregion シーン更新処理
 
@@ -152,7 +160,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region シーン描画処理
 
 		//3Dオブジェクト描画処理
-		Object3d::BeginDraw();
+		Object3d::BeginDraw(camera);
 		object1.Draw();
 
 		//スプライト描画処理

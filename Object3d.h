@@ -8,6 +8,7 @@
 #include<vector>
 #include<string>
 #include"Model.h"
+#include"Camera.h"
 
 class Object3d
 {
@@ -51,10 +52,10 @@ public:
 
 	//ê√ìIÉÅÉìÉoä÷êî
 	static void StaticInitialize(ReDirectX* directX_);
-	static void BeginDraw();
+	static void BeginDraw(const Camera& camera);
 
 	void Initialize();
-	void Update(DirectX::XMMATRIX& matView, DirectX::XMMATRIX& matProjection);
+	void Update();
 	void Draw();
 	void SetModel(Model* model_) { model = model_; }
 	

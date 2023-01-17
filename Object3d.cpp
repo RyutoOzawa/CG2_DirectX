@@ -42,7 +42,7 @@ void Object3d::StaticInitialize(ReDirectX* directX_)
 	CreatePipeline3D();
 }
 
-void Object3d::BeginDraw()
+void Object3d::BeginDraw(const Camera& camera)
 {
 	//パイプラインステートの設定
 	directX->GetCommandList()->SetPipelineState(pipelineState.Get());
@@ -51,6 +51,8 @@ void Object3d::BeginDraw()
 	//プリミティブ形状の設定
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
+	//3番定数バッファビューにカメラの定数バッファを設定
+	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.constBuff->GetGPUVirtualAddress());
 }
 
 void Object3d::Initialize()
@@ -90,7 +92,7 @@ void Object3d::Initialize()
 
 }
 
-void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
+void Object3d::Update()
 {
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -114,7 +116,8 @@ void Object3d::Update(XMMATRIX& matView, XMMATRIX& matProjection)
 	}
 
 	//定数バッファに転送
-	constMap->mat = matWorld * matView * matProjection;
+	//constMap->mat = matWorld * matView * matProjection;
+	constMap->mat = matWorld;
 }
 
 void Object3d::Draw()
@@ -220,7 +223,7 @@ void Object3d::CreatePipeline3D()
 	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータの設定
-	D3D12_ROOT_PARAMETER rootParams[3] = {};
+	D3D12_ROOT_PARAMETER rootParams[4] = {};
 	//定数バッファ0番
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
 	rootParams[0].Descriptor.ShaderRegister = 0;					//定数バッファ番号
@@ -235,7 +238,12 @@ void Object3d::CreatePipeline3D()
 	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
 	rootParams[2].Descriptor.ShaderRegister = 1;					//デスクリプタレンジ
 	rootParams[2].Descriptor.RegisterSpace = 0;						//デスクリプタレンジ数
-	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見えるバッファE
+	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見えるバッファ
+	//定数バッファ2番
+	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
+	rootParams[3].Descriptor.ShaderRegister = 2;					//デスクリプタレンジ
+	rootParams[3].Descriptor.RegisterSpace = 0;						//デスクリプタレンジ数
+	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見えるバッファ
 
 	//テクスチャサンプラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
