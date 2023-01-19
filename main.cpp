@@ -18,6 +18,10 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 #include"Matrix4.h"
 #include"Camera.h"
+#include<imgui.h>
+#include<imgui_impl_win32.h>
+#include<imgui_impl_dx12.h>
+#include<dxgi1_4.h>
 
 
 //パイプラインステートとルートシグネチャのセット
@@ -116,6 +120,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//ビュー変換行列の計算
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
+//	ImGui::Text("Hello,world %d", 123);
+	/*if (ImGui::Button("Save")) {
+		M
+	}*/
+
+	//imguiセットアップ
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplWin32_Init(windowsAPI->hwnd);
+	ImGui_ImplDX12_Init(directX->GetDevice(),1,
+		DXGI_FORMAT_R8G8B8A8_UNORM, directX->dsvHeap.Get(),
+		 directX->dsvHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+		 directX->dsvHeap.Get()->GetGPUDescriptorHandleForHeapStart());
+	
+
 #pragma endregion 描画初期化処理
 	// ゲームループ
 	while (true) {
@@ -129,6 +152,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		input->Update();
 #pragma endregion 基盤システム初期化
 #pragma region シーン更新処理
+
+		//imgui開始
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+		//ImGui::ShowDemoWindow();
+
 
 		sprite->SetPos({ 100, 100 });
 		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });

@@ -150,6 +150,7 @@
     <ClCompile Include="Gridline.cpp" />
     <ClCompile Include="DrawInfo.cpp" />
     <ClCompile Include="GpPipeline.cpp" />
+    <ClCompile Include="ImguiManager.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Gridline.h" />
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="GpPipeline.h" />
+    <ClInclude Include="ImguiManager.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MathInfo.h" />
