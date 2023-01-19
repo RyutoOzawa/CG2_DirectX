@@ -63,8 +63,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//カメラクラス初期化
 	Camera::StaticInitialize(directX->GetDevice());
-	
-	
 
 #pragma endregion 基盤システム初期化
 
