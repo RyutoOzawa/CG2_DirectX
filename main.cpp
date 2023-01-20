@@ -94,12 +94,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	object1.position = XMFLOAT3(0, 0, 25.0f);
 
 	//ランダムな数値を取得
-	float randValue = Random(-100, 100);
+	//float randValue = Random(-100, 100);
 
-	const size_t kObjCount = 50;
-	Object3d obj[kObjCount];
+	//const size_t kObjCount = 50;
+	//Object3d obj[kObjCount];
 
-	Object3d object;
+	//Object3d object;
 
 	XMMATRIX matProjection;
 	XMMATRIX matView;
@@ -205,13 +205,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
 
-	delete sprite;
 
 	delete windowsAPI;
 	delete input;
 	delete directX;
 	delete spriteManager;
 
+
+
+	delete sprite;
+	delete sprite2;
 	delete skyDome;
 
 #pragma endregion シーン終了処理
