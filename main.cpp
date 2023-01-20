@@ -91,7 +91,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	object1.Initialize();
 	object1.SetModel(skyDome);
 	//object1.scale = XMFLOAT3(0.2f, 0.2f, 0.2f);
-	object1.position = XMFLOAT3(0, 0, 50.0f);
+	object1.position = XMFLOAT3(0, 0, 25.0f);
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -125,18 +125,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		M
 	}*/
 
-	//imguiセットアップ
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	////imguiセットアップ
+	//IMGUI_CHECKVERSION();
+	//ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsDark();
 
-	ImGui_ImplWin32_Init(windowsAPI->hwnd);
-	ImGui_ImplDX12_Init(directX->GetDevice(),1,
-		DXGI_FORMAT_R8G8B8A8_UNORM, directX->dsvHeap.Get(),
-		 directX->dsvHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
-		 directX->dsvHeap.Get()->GetGPUDescriptorHandleForHeapStart());
+	//ImGui_ImplWin32_Init(windowsAPI->hwnd);
+	//ImGui_ImplDX12_Init(directX->GetDevice(),1,
+	//	DXGI_FORMAT_R8G8B8A8_UNORM, directX->dsvHeap.Get(),
+	//	 directX->dsvHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+	//	 directX->dsvHeap.Get()->GetGPUDescriptorHandleForHeapStart());
 	
 
 #pragma endregion 描画初期化処理
@@ -153,11 +153,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion 基盤システム初期化
 #pragma region シーン更新処理
 
-		//imgui開始
-		ImGui_ImplDX12_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-		//ImGui::ShowDemoWindow();
+		////imgui開始
+		//ImGui_ImplDX12_NewFrame();
+		//ImGui_ImplWin32_NewFrame();
+		//ImGui::NewFrame();
+		////ImGui::ShowDemoWindow();
 
 
 		sprite->SetPos({ 100, 100 });
