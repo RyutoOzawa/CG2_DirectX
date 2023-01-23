@@ -125,6 +125,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		M
 	}*/
 
+
 	//imguiセットアップ
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
