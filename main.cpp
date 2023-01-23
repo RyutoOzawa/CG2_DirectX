@@ -132,12 +132,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	ImGui::StyleColorsDark();
 
-	ImGui_ImplWin32_Init(windowsAPI->hwnd);
-	ImGui_ImplDX12_Init(directX->GetDevice(),1,
-		DXGI_FORMAT_R8G8B8A8_UNORM, directX->dsvHeap.Get(),
-		 directX->dsvHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
-		 directX->dsvHeap.Get()->GetGPUDescriptorHandleForHeapStart());
+	//ImGui用でスクリプタヒープ生成
+	ComPtr<ID3D12DescriptorHeap> descHeap;
+	D3D12_DESCRIPTOR_HEAP_DESC desc{};
+
+	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	desc.NumDescriptors = 1;
+	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	result = directX->GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&descHeap));
+
+	ImGui_ImplWin32_Init(windowsAPI->GetHwnd());
+	ImGui_ImplDX12_Init(directX->GetDevice(), directX->GetBackBufferCount() ,
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, descHeap.Get(),
+		 descHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+		 descHeap.Get()->GetGPUDescriptorHandleForHeapStart());
 	
+	bool show_demo_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 #pragma endregion 描画初期化処理
 	// ゲームループ
@@ -159,6 +171,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::NewFrame();
 		//ImGui::ShowDemoWindow();
 
+
+
+		static float f = 0.0f;
+		static int counter = 0;
+
+		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+		ImGui::Checkbox("Another Window", &show_another_window);
+
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+			counter++;
+		ImGui::SameLine();
+		ImGui::Text("counter = %d", counter);
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+
+		ImGui::Render();
 
 		sprite->SetPos({ 100, 100 });
 		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
@@ -196,12 +231,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		sprite->Draw();
 		//sprite2->Draw();
 
+
+		//ImGui描画処理
+
+		ID3D12GraphicsCommandList* cmdList = directX->GetCommandList();
+		
+		ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
+
+		directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
+
 #pragma endregion シーン描画処理
 		// ４．描画コマンドここまで
 		directX->EndDraw();
 		// DirectX毎フレーム処理 ここまで
 	}
 #pragma region シーン終了処理
+
+	//ImGui終了処理
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
 

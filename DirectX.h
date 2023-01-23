@@ -50,6 +50,8 @@ public:
 	//デバイス取得
 	ID3D12Device* GetDevice() { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
+
+	size_t GetBackBufferCount()const { return backBuffers.size(); }
 private:
 
 	//各種初期化関数
