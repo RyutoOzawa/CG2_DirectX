@@ -18,10 +18,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 #include"Matrix4.h"
 #include"Camera.h"
-#include<imgui.h>
-#include<imgui_impl_win32.h>
-#include<imgui_impl_dx12.h>
-#include<dxgi1_4.h>
+#include"ImguiManager.h"
 
 
 //パイプラインステートとルートシグネチャのセット
@@ -67,6 +64,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//カメラクラス初期化
 	Camera::StaticInitialize(directX->GetDevice());
+
+	ImguiManager* imguiManager = new ImguiManager();
+	imguiManager->Initialize(windowsAPI, directX);
 
 #pragma endregion 基盤システム初期化
 
@@ -125,28 +125,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		M
 	}*/
 
-
-	//imguiセットアップ
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-	ImGui::StyleColorsDark();
-
-	//ImGui用でスクリプタヒープ生成
-	ComPtr<ID3D12DescriptorHeap> descHeap;
-	D3D12_DESCRIPTOR_HEAP_DESC desc{};
-
-	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	desc.NumDescriptors = 1;
-	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	result = directX->GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&descHeap));
-
-	ImGui_ImplWin32_Init(windowsAPI->GetHwnd());
-	ImGui_ImplDX12_Init(directX->GetDevice(), directX->GetBackBufferCount() ,
-		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, descHeap.Get(),
-		 descHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
-		 descHeap.Get()->GetGPUDescriptorHandleForHeapStart());
 	
 	bool show_demo_window = true;
 	bool show_another_window = false;
@@ -166,11 +144,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion 基盤システム初期化
 #pragma region シーン更新処理
 
-		//imgui開始
-		ImGui_ImplDX12_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-		//ImGui::ShowDemoWindow();
+		imguiManager->Begin();
 
 
 
@@ -194,7 +168,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 
-		ImGui::Render();
+		
 
 		sprite->SetPos({ 100, 100 });
 		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
@@ -219,6 +193,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma endregion シーン更新処理
 
+		imguiManager->End();
+
 		//描画前処理
 		directX->BeginDraw();
 #pragma region シーン描画処理
@@ -235,12 +211,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//ImGui描画処理
 
-		ID3D12GraphicsCommandList* cmdList = directX->GetCommandList();
-		
-		ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
-
-		directX->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
+		imguiManager->Draw();
 
 #pragma endregion シーン描画処理
 		// ４．描画コマンドここまで
@@ -250,9 +221,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region シーン終了処理
 
 	//ImGui終了処理
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	imguiManager->Finalize();
+	delete imguiManager;
 
 	//WindowsAPI終了処理
 	windowsAPI->Finalize();
