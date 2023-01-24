@@ -20,6 +20,10 @@ using namespace Microsoft::WRL;
 #include"Camera.h"
 #include"ImguiManager.h"
 
+#include<xaudio2.h>
+#pragma comment(lib,"xaudio2.lib")
+#include<fstream>
+
 
 //パイプラインステートとルートシグネチャのセット
 struct PipelineSet {
@@ -130,6 +134,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	//xaudio2関係
+	ComPtr<IXAudio2> xAudio2;
+	IXAudio2MasteringVoice* mastervoice;
+
+	//xaudio2エンジンのインスタンス生成
+	result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	//マスターボイス(全音源の通り道)生成
+	result = xAudio2->CreateMasteringVoice(&mastervoice);
 
 #pragma endregion 描画初期化処理
 	// ゲームループ
