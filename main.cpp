@@ -57,7 +57,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SpriteManager* spriteManager = nullptr;
 	//スプライト共通部の初期化
 	spriteManager = new SpriteManager;
-	spriteManager->Initialize(directX,WindowsAPI::winW,WindowsAPI::winH);
+	spriteManager->Initialize(directX, WindowsAPI::winW, WindowsAPI::winH);
 
 	//3Dオブジェクトの初期化
 	Object3d::StaticInitialize(directX);
@@ -78,10 +78,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager,marioGraph);
+	sprite->Initialize(spriteManager, marioGraph);
 
 	Sprite* sprite2 = new Sprite();
-	sprite2->Initialize(spriteManager,reimuGraph);
+	sprite2->Initialize(spriteManager, reimuGraph);
 	//sprite2->SetTextureNum(1);
 
 	Model* skyDome;
@@ -120,12 +120,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//ビュー変換行列の計算
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
-//	ImGui::Text("Hello,world %d", 123);
-	/*if (ImGui::Button("Save")) {
-		M
-	}*/
+	//	ImGui::Text("Hello,world %d", 123);
+		/*if (ImGui::Button("Save")) {
+			M
+		}*/
 
-	
+	XMFLOAT2 spritePos(0, 0);
+
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -148,34 +149,46 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-		static float f = 0.0f;
-		static int counter = 0;
+		//ImGuiテストウィンドウ
+		{
+			static float f = 0.0f;
+			static int counter = 0;
 
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &show_another_window);
+			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+			ImGui::Checkbox("Another Window", &show_another_window);
 
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+
+			ImGui::ShowDemoWindow();
+
+		}
+
+		//スプライト座標
+		ImGui::Begin("sprite1");
+		ImGui::SliderFloat("positionX", &spritePos.x, 0.0f, static_cast<float>(WindowsAPI::winW), "%4.1f");
+		ImGui::SliderFloat("positionY", &spritePos.y, 0.0f, static_cast<float>(WindowsAPI::winH), "%4.1f");
 		ImGui::End();
 
-		
 
-		sprite->SetPos({ 100, 100 });
-		sprite2->SetPos({ WindowsAPI::winW/2,WindowsAPI::winH/2 });
+		sprite->SetPos(spritePos);
+		sprite2->SetPos({ WindowsAPI::winW / 2,WindowsAPI::winH / 2 });
 		sprite->SetSize({ 64,64 });
 
 		if (input->IsPress(DIK_A)) {
-			object1.rotation.y+= 0.1f;
+			object1.rotation.y += 0.1f;
 		}
 		else if (input->IsPress(DIK_D)) {
 			object1.rotation.y -= 0.1f;
@@ -210,7 +223,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 		//ImGui描画処理
-
 		imguiManager->Draw();
 
 #pragma endregion シーン描画処理
