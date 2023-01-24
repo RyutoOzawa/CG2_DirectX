@@ -71,5 +71,7 @@ private:
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
 
+	bool isPlay = false;
+
 
 };

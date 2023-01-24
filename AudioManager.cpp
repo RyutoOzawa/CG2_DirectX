@@ -142,6 +142,12 @@ void AudioManager::SoundUnload() {
 void AudioManager::SoundPlayWave(bool loop, float volume) {
 	HRESULT result;
 
+	if (isPlay) {
+		return;
+	}
+
+	isPlay = true;
+
 	//波形フォーマットを元にSourceVoiceの生成
 	result = xAudio2_->CreateSourceVoice(&pSourceVoice, &soundData_.wfex);
 	assert(SUCCEEDED(result));
@@ -174,5 +180,7 @@ void AudioManager::StopWave()
 		result = pSourceVoice->Stop();
 		result = pSourceVoice->FlushSourceBuffers();
 		result = pSourceVoice->SubmitSourceBuffer(&buf);
+
+		isPlay = false;
 	}
 }

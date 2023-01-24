@@ -20,9 +20,7 @@ using namespace Microsoft::WRL;
 #include"Camera.h"
 #include"ImguiManager.h"
 
-#include<xaudio2.h>
-#pragma comment(lib,"xaudio2.lib")
-#include<fstream>
+#include"AudioManager.h"
 
 
 //パイプラインステートとルートシグネチャのセット
@@ -69,9 +67,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//カメラクラス初期化
 	Camera::StaticInitialize(directX->GetDevice());
 
+	//imgui初期化
 	ImguiManager* imguiManager = new ImguiManager();
 	imguiManager->Initialize(windowsAPI, directX);
 
+	//オーディオ初期化
+	AudioManager::StaticInitialize();
 #pragma endregion 基盤システム初期化
 
 #pragma region 描画初期化処理
@@ -96,6 +97,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	object1.SetModel(skyDome);
 	//object1.scale = XMFLOAT3(0.2f, 0.2f, 0.2f);
 	object1.position = XMFLOAT3(0, 0, 50.0f);
+
+	AudioManager newAudio;
+	newAudio.SoundLoadWave("Resources/bgm_title.wav");
+
 
 	//ランダムな数値を取得
 	float randValue = Random(-100, 100);
@@ -135,14 +140,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-	//xaudio2関係
-	ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* mastervoice;
 
-	//xaudio2エンジンのインスタンス生成
-	result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	//マスターボイス(全音源の通り道)生成
-	result = xAudio2->CreateMasteringVoice(&mastervoice);
+	bool isPlayAudio = false;
 
 #pragma endregion 描画初期化処理
 	// ゲームループ
@@ -190,11 +189,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		//スプライト座標
-		ImGui::Begin("sprite1");
+		ImGui::Begin("bebug1");
 		ImGui::SliderFloat("positionX", &spritePos.x, 0.0f, static_cast<float>(WindowsAPI::winW), "%4.1f");
 		ImGui::SliderFloat("positionY", &spritePos.y, 0.0f, static_cast<float>(WindowsAPI::winH), "%4.1f");
+		ImGui::Checkbox("audio", &isPlayAudio);
+		ImGui::Checkbox("audio", &isPlayAudio);
 		ImGui::End();
 
+
+		if (isPlayAudio) {
+			newAudio.SoundPlayWave();
+		}
+		else {
+			newAudio.StopWave();
+		}
 
 		sprite->SetPos(spritePos);
 		sprite2->SetPos({ WindowsAPI::winW / 2,WindowsAPI::winH / 2 });
@@ -214,6 +222,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		//object1.scale = { 50,50,50 };
+
 
 		object1.Update();
 
