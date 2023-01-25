@@ -193,7 +193,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("positionX", &spritePos.x, 0.0f, static_cast<float>(WindowsAPI::winW), "%4.1f");
 		ImGui::SliderFloat("positionY", &spritePos.y, 0.0f, static_cast<float>(WindowsAPI::winH), "%4.1f");
 		ImGui::Checkbox("audio", &isPlayAudio);
-		ImGui::Checkbox("audio", &isPlayAudio);
 		ImGui::End();
 
 
