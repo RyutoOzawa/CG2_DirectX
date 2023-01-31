@@ -1,11 +1,12 @@
 #pragma once
 
-#include"SpriteManager.h"
+
 #include<DirectXMath.h>
 #include"Material.h"
 #include"Texture.h"
 #include<string>
 #include"Vector3.h"
+#include"SpriteManager.h"
 
 enum VertexNumber {
 	LB,	//左下
@@ -16,10 +17,14 @@ enum VertexNumber {
 
 class Sprite
 {
-	//マネージャクラスのポインタ
-	SpriteManager* spriteManager = nullptr;
+
+private:
+
 
 public:	//メンバ変数
+
+	//マネージャクラスのポインタ
+	SpriteManager* spriteManager = nullptr;
 
 	VertexPosUv vertices[4] = {};		//頂点座標データ
 	D3D12_VERTEX_BUFFER_VIEW vbView{};	//頂点バッファビュー
@@ -28,8 +33,8 @@ public:	//メンバ変数
 	uint32_t textureIndex = 0;	//テクスチャに割り当てられている番号
 	ConstBufferData* constMap = nullptr;//定数バッファ構造体
 
-	DirectX::XMMATRIX matWorld;	//ワールド変換行列
-	float rotation;	//回転角
+	DirectX::XMMATRIX matWorld{};	//ワールド変換行列
+	float rotation = 0.0f;	//回転角
 	DirectX::XMFLOAT2 position = { 0.0f,0.0f };	//座標
 	DirectX::XMFLOAT4 color = { 1,1,1,1 };	//座標
 	DirectX::XMFLOAT2 size = { 100.0f,100.0f };//スプライトサイズ
@@ -43,7 +48,7 @@ public:	//メンバ変数
 
 
 public: //メンバ関数
-	void Initialize(SpriteManager* spriteManager,uint32_t textureNum = UINT32_MAX);
+	void Initialize(uint32_t textureNum = UINT32_MAX);
 
 	void Draw();
 	void SetColor(const DirectX::XMFLOAT4& color_) { color = color_; }
@@ -55,8 +60,8 @@ public: //メンバ関数
 	void SetFlipY(bool flipY) { isFlipY = flipY; }
 	void SetInvisible(bool flag) { isInvisible = flag; }
 	void SetTextureNum(uint32_t index) { textureIndex = index; }
-	void SetTextureLeftTop(const DirectX::XMFLOAT2& leftTop) { textureLeftTop = leftTop;}
-	void SetTextureSize(const DirectX::XMFLOAT2& size) { textureSize = size;}
+	void SetTextureLeftTop(const DirectX::XMFLOAT2& leftTop) { textureLeftTop = leftTop; }
+	void SetTextureSize(const DirectX::XMFLOAT2& size) { textureSize = size; }
 
 	const DirectX::XMFLOAT2& GetPosition()const { return position; }
 	float GetRotation()const { return rotation; }

@@ -5,11 +5,11 @@ using namespace Microsoft::WRL;
 using namespace std;
 #include"WindowsAPI.h"
 
-void Sprite::Initialize(SpriteManager* spriteManager,uint32_t textureNum)
+void Sprite::Initialize(uint32_t textureNum)
 {
-	HRESULT result;
+	HRESULT result{  };
 
-	this->spriteManager = spriteManager;
+	spriteManager = SpriteManager::GetInstance();
 	ComPtr<ID3D12Device> dev = spriteManager->directX->GetDevice();
 
 	if (textureNum != UINT32_MAX) {

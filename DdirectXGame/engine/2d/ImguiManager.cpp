@@ -1,12 +1,32 @@
 #include "ImguiManager.h"
+#include"WindowsAPI.h"
+#include"DirectX.h"
 
-void ImguiManager::Initialize(WindowsAPI* winApp, ReDirectX* directX_)
+ImguiManager::ImguiManager()
 {
+}
+
+ImguiManager::~ImguiManager()
+{
+}
+
+ImguiManager* ImguiManager::GetInstance()
+{
+	static ImguiManager instance;
+	return &instance;
+}
+
+void ImguiManager::Initialize(WindowsAPI* winApp_, ReDirectX* directX_)
+{
+	//winAppとDirectXのインスタンス取得
+	WindowsAPI* winApp = nullptr;
+
 	HRESULT result;
 
 	assert(directX_);
+	assert(winApp_);
 	directX = directX_;
-
+	winApp = winApp_;
 	//imguiセットアップ
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();

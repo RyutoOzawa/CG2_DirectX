@@ -9,12 +9,13 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 #include"Texture.h"
 
+
 ID3D12Device* Model::device = nullptr;
 
-Model * Model::CreateModel(const std::string & filename)
+std::unique_ptr<Model> Model::CreateModel(const std::string & filename)
 {
 	//新しいインスタンスをnewする
-	Model* newModel = new Model();
+	std::unique_ptr<Model> newModel =std::make_unique< Model>();
 	//objファイルからデータを読み込む
 	newModel->Create(filename);
 	//バッファ生成

@@ -9,6 +9,20 @@ using namespace Microsoft::WRL;
 
 std::string SpriteManager::defaultTextureDirectoryPath = "Resources/";
 
+SpriteManager::SpriteManager()
+{
+}
+
+SpriteManager::~SpriteManager()
+{
+}
+
+SpriteManager* SpriteManager::GetInstance()
+{
+	static SpriteManager instance;
+	return &instance;
+}
+
 void SpriteManager::Initialize(ReDirectX* directX, int windowWidth, int windowHeight)
 {
 	//nullチェック

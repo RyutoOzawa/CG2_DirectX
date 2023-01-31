@@ -5,6 +5,7 @@
 #include<vector>
 #include<d3d12.h>
 #include<wrl.h>
+#include<memory>
 
 class Model {
 
@@ -59,7 +60,7 @@ public:
 	static ID3D12Device* device;
 
 	//ƒƒ“ƒoŠÖ”
-	static Model* CreateModel(const std::string& filename = "NULL");
+	static std::unique_ptr< Model> CreateModel(const std::string& filename = "NULL");
 
 	static void SetDevice(ID3D12Device* dev) { device = dev; }
 

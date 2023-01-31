@@ -18,21 +18,30 @@ struct ConstBufferData {
 
 class SpriteManager
 {
+private:
+	SpriteManager();
+	~SpriteManager();
 
-	
 public:
-	
+	//コピーコンストラクタ無効
+	SpriteManager(const SpriteManager& obj) = delete;
+	//代入演算子を無効
+	SpriteManager& operator=(const SpriteManager& obj) = delete;
+
+	//インスタンスアクセス専用関数
+	static SpriteManager* GetInstance();
+
 	static std::string defaultTextureDirectoryPath;
 	ReDirectX* directX = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;		//パイプラインステート
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
 
-	DirectX::XMMATRIX matProjection;//射影行列
+	DirectX::XMMATRIX matProjection{};//射影行列
 
-	
+
 public:
 	//初期化
-	void Initialize(ReDirectX* directX,int windowWidth,int windowHeight);
+	void Initialize(ReDirectX* directX, int windowWidth, int windowHeight);
 
 	//描画前処理
 	void beginDraw();

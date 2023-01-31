@@ -16,144 +16,237 @@
     <Filter Include="シェーダーファイル">
       <UniqueIdentifier>{4a6f0499-feeb-4a22-9168-a6c1a7a41583}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\engine">
+      <UniqueIdentifier>{ed1d3c9e-69e5-4a54-886d-a4db20c9cbac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engine\3d">
+      <UniqueIdentifier>{cc92ddb4-a195-4817-934b-710fb5add8cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engine\2d">
+      <UniqueIdentifier>{6ae6d1b6-115e-4d1d-b5d5-c9827e7fd242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engine\scene">
+      <UniqueIdentifier>{37cfb744-d01d-43f6-bf24-78f7ea5e16c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engine\math">
+      <UniqueIdentifier>{9ccf243d-235a-49e7-a6f2-a81504829f15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engine\base">
+      <UniqueIdentifier>{fde95b00-3f95-4f5e-b9c1-6b0563d074bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\application">
+      <UniqueIdentifier>{6fc9c507-1264-4933-a920-3e01ccd8211b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enigne">
+      <UniqueIdentifier>{17a009f2-c41b-4601-9041-97bdf6679e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\application">
+      <UniqueIdentifier>{4c9c4665-9da3-4b56-b392-3ae5c86625dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enigne\2d">
+      <UniqueIdentifier>{a3c378aa-992e-4a1a-af1c-d2c4c9e73b23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enigne\3d">
+      <UniqueIdentifier>{753508f1-0e57-4437-860b-123ef19ef2f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enigne\math">
+      <UniqueIdentifier>{fdd8eec8-05d0-4108-85a4-e80f57a2645a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enigne\base">
+      <UniqueIdentifier>{648f98e4-5089-4ac6-9627-4f87c59f9da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enigne\scene">
+      <UniqueIdentifier>{e76b3288-1908-440f-a7d6-8564df014ca6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="DdirectXGame\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\Input.cpp">
+      <Filter>ソース ファイル\engine</Filter>
     </ClCompile>
-    <ClCompile Include="WindowsAPI.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\2d\ImguiManager.cpp">
+      <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\2d\Sprite.cpp">
+      <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Object3d.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\2d\SpriteManager.cpp">
+      <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="MathInfo.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\3d\Object3d.cpp">
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\3d\Gridline.cpp">
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\3d\Camera.cpp">
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Vertex.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\2d\DrawInfo.cpp">
+      <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\3d\Material.cpp">
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="GpPipeline.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\3d\Model.cpp">
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="DrawInfo.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\3d\Sphere.cpp">
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\math\Util.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Gridline.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\math\MathInfo.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\math\Vector2.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Util.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\math\Vector3.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\math\Vertex.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\math\Matrix4.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\scene\GameBaseScene.cpp">
+      <Filter>ソース ファイル\engine\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix4.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\scene\GameSceneManager.cpp">
+      <Filter>ソース ファイル\engine\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\scene\SceneFactory.cpp">
+      <Filter>ソース ファイル\engine\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\3d\GpPipeline.cpp">
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="ImguiManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="DdirectXGame\engine\base\DirectX.cpp">
+      <Filter>ソース ファイル\engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\base\WindowsAPI.cpp">
+      <Filter>ソース ファイル\engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\base\KEngineFramework.cpp">
+      <Filter>ソース ファイル\engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\2d\Texture.cpp">
+      <Filter>ソース ファイル\engine\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\application\MyGame.cpp">
+      <Filter>ソース ファイル\application</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\application\GamePlayScene.cpp">
+      <Filter>ソース ファイル\application</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\application\GameTitleScene.cpp">
+      <Filter>ソース ファイル\application</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\math\Transform.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\AudioManager.cpp">
+      <Filter>ソース ファイル\engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Input.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\application\GamePlayScene.h">
+      <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="WindowsAPI.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\application\GameTitleScene.h">
+      <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\application\MyGame.h">
+      <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="Object3d.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\Input.h">
+      <Filter>ヘッダー ファイル\enigne</Filter>
     </ClInclude>
-    <ClInclude Include="MathInfo.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\2d\DrawInfo.h">
+      <Filter>ヘッダー ファイル\enigne\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\2d\ImguiManager.h">
+      <Filter>ヘッダー ファイル\enigne\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\2d\Sprite.h">
+      <Filter>ヘッダー ファイル\enigne\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\2d\SpriteManager.h">
+      <Filter>ヘッダー ファイル\enigne\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\2d\Texture.h">
+      <Filter>ヘッダー ファイル\enigne\2d</Filter>
     </ClInclude>
-    <ClInclude Include="GpPipeline.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\3d\Camera.h">
+      <Filter>ヘッダー ファイル\enigne\3d</Filter>
     </ClInclude>
-    <ClInclude Include="DrawInfo.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\3d\Gridline.h">
+      <Filter>ヘッダー ファイル\enigne\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\3d\GpPipeline.h">
+      <Filter>ヘッダー ファイル\enigne\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Gridline.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\3d\Material.h">
+      <Filter>ヘッダー ファイル\enigne\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\3d\Model.h">
+      <Filter>ヘッダー ファイル\enigne\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Util.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\3d\Object3d.h">
+      <Filter>ヘッダー ファイル\enigne\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\3d\Sphere.h">
+      <Filter>ヘッダー ファイル\enigne\3d</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\math\Transform.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\base\KEngineFramework.h">
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix4.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\math\MathInfo.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\math\Matrix4.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\math\Util.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
-    <ClInclude Include="ImguiManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="DdirectXGame\engine\math\Vector2.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\Vector3.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\Vertex.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\base\DirectX.h">
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\base\WindowsAPI.h">
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\scene\GameBaseScene.h">
+      <Filter>ヘッダー ファイル\enigne\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\scene\GameSceneManager.h">
+      <Filter>ヘッダー ファイル\enigne\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\scene\SceneFactory.h">
+      <Filter>ヘッダー ファイル\enigne\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\base\AbstractSceneFactory.h">
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\AudioManager.h">
+      <Filter>ヘッダー ファイル\enigne</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
