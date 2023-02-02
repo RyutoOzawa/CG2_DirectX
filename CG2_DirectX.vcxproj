@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -78,11 +78,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(solutionDir)DirectXTex;$(IncludePath)</IncludePath>
+    <IncludePath>$(solutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\GE3_Generated\Output\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\GE3_Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(solutionDir)DirectXTex;$(IncludePath)</IncludePath>
+    <IncludePath>$(solutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\GE3_Generated\Output\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\GE3_Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,6 +122,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame;$(ProjectDir)DdirectXGame\engine\2d;$(ProjectDir)DdirectXGame\engine\3d;$(ProjectDir)DdirectXGame\engine\base;$(ProjectDir)DdirectXGame\engine\math;$(ProjectDir)DdirectXGame\engine\scene;$(ProjectDir)DdirectXGame;$(ProjectDir)DdirectXGame\application;$(ProjectDir)DdirectXGame\engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,6 +139,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame;$(ProjectDir)DdirectXGame\engine\2d;$(ProjectDir)DdirectXGame\engine\3d;$(ProjectDir)DdirectXGame\engine\base;$(ProjectDir)DdirectXGame\engine\math;$(ProjectDir)DdirectXGame\engine\scene;$(ProjectDir)DdirectXGame;$(ProjectDir)DdirectXGame\application;$(ProjectDir)DdirectXGame\engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,48 +151,120 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="math.cpp" />
-    <ClCompile Include="Object3d.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Vector2.cpp" />
-    <ClCompile Include="Vector3.cpp" />
-    <ClCompile Include="Vertex.cpp" />
-    <ClCompile Include="WindowsAPI.cpp" />
+    <ClCompile Include="DdirectXGame\engine\AudioManager.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\Camera.cpp" />
+    <ClCompile Include="DdirectXGame\engine\base\DirectX.cpp" />
+    <ClCompile Include="DdirectXGame\engine\scene\GameBaseScene.cpp" />
+    <ClCompile Include="DdirectXGame\application\GamePlayScene.cpp" />
+    <ClCompile Include="DdirectXGame\engine\scene\GameSceneManager.cpp" />
+    <ClCompile Include="DdirectXGame\application\GameTitleScene.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\Gridline.cpp" />
+    <ClCompile Include="DdirectXGame\engine\2d\DrawInfo.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\GpPipeline.cpp" />
+    <ClCompile Include="DdirectXGame\engine\2d\ImguiManager.cpp" />
+    <ClCompile Include="DdirectXGame\engine\Input.cpp" />
+    <ClCompile Include="DdirectXGame\engine\base\KEngineFramework.cpp" />
+    <ClCompile Include="DdirectXGame\main.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\Material.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\MathInfo.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Matrix4.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\Model.cpp" />
+    <ClCompile Include="DdirectXGame\application\MyGame.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\Object3d.cpp" />
+    <ClCompile Include="DdirectXGame\engine\scene\SceneFactory.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\Sphere.cpp" />
+    <ClCompile Include="DdirectXGame\engine\2d\Sprite.cpp" />
+    <ClCompile Include="DdirectXGame\engine\2d\SpriteManager.cpp" />
+    <ClCompile Include="DdirectXGame\engine\2d\Texture.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Transform.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Util.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Vector2.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Vector3.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Vertex.cpp" />
+    <ClCompile Include="DdirectXGame\engine\base\WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicPS.hlsl">
+    <ClInclude Include="DdirectXGame\engine\base\AbstractSceneFactory.h" />
+    <ClInclude Include="DdirectXGame\engine\AudioManager.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\Camera.h" />
+    <ClInclude Include="DdirectXGame\engine\base\DirectX.h" />
+    <ClInclude Include="DdirectXGame\engine\scene\GameBaseScene.h" />
+    <ClInclude Include="DdirectXGame\application\GamePlayScene.h" />
+    <ClInclude Include="DdirectXGame\engine\scene\GameSceneManager.h" />
+    <ClInclude Include="DdirectXGame\application\GameTitleScene.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\Gridline.h" />
+    <ClInclude Include="DdirectXGame\engine\2d\DrawInfo.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\GpPipeline.h" />
+    <ClInclude Include="DdirectXGame\engine\2d\ImguiManager.h" />
+    <ClInclude Include="DdirectXGame\engine\Input.h" />
+    <ClInclude Include="DdirectXGame\engine\base\KEngineFramework.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\Material.h" />
+    <ClInclude Include="DdirectXGame\engine\math\MathInfo.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Matrix4.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\Model.h" />
+    <ClInclude Include="DdirectXGame\application\MyGame.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\Object3d.h" />
+    <ClInclude Include="DdirectXGame\engine\scene\SceneFactory.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\Sphere.h" />
+    <ClInclude Include="DdirectXGame\engine\2d\Sprite.h" />
+    <ClInclude Include="DdirectXGame\engine\2d\SpriteManager.h" />
+    <ClInclude Include="DdirectXGame\engine\2d\Texture.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Transform.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Util.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Vector2.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Vector3.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Vertex.h" />
+    <ClInclude Include="DdirectXGame\engine\base\WindowsAPI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\shaders\BasicPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="BasicVS.hlsl">
+    <FxCompile Include="Resources\shaders\BasicVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ObjPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ObjVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpritePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpriteVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Basic.hlsli" />
+    <None Include="Resources\shaders\Basic.hlsli" />
+    <None Include="Resources\shaders\Obj.hlsli" />
+    <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectX.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="math.h" />
-    <ClInclude Include="Object3d.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Vector3.h" />
-    <ClInclude Include="Vertex.h" />
-    <ClInclude Include="WindowsAPI.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+    <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="External\imgui\imgui.vcxproj">
+      <Project>{caee5cc3-ae3d-4a70-8e07-19858b96a921}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
