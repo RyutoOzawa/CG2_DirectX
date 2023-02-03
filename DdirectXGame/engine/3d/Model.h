@@ -53,12 +53,12 @@ class Model {
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//インデックスバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;	//インデックスバッファ
 
-	uint32_t textureIndex = 0;	//テクスチャ番号
+
 	Material material;			//マテリアル
 
 public:
 	static ID3D12Device* device;
-
+	uint32_t textureIndex = 0;	//テクスチャ番号
 	//メンバ関数
 	static std::unique_ptr< Model> CreateModel(const std::string& filename = "NULL");
 

@@ -151,7 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CollisionPrimitive.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Collision.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\CollisionPrimitive.cpp" />
     <ClCompile Include="DdirectXGame\engine\AudioManager.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\Camera.cpp" />
     <ClCompile Include="DdirectXGame\engine\base\DirectX.cpp" />
@@ -185,7 +186,8 @@
     <ClCompile Include="DdirectXGame\engine\base\WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CollisionPrimitive.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Collision.h" />
+    <ClInclude Include="DdirectXGame\engine\math\CollisionPrimitive.h" />
     <ClInclude Include="DdirectXGame\engine\base\AbstractSceneFactory.h" />
     <ClInclude Include="DdirectXGame\engine\AudioManager.h" />
     <ClInclude Include="DdirectXGame\engine\3d\Camera.h" />

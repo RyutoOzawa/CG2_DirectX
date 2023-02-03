@@ -1,14 +1,13 @@
 #pragma once
 #include"GameBaseScene.h"
-
 #include"ImguiManager.h"
 #include"Input.h"
 #include"Sprite.h"
 #include"Camera.h"
 #include"Object3d.h"
 #include"AudioManager.h"
-
 #include<memory>
+#include"CollisionPrimitive.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -38,9 +37,15 @@ public://メンバ変数
 	std::unique_ptr<Sprite> sprite = nullptr;
 	std::unique_ptr<Sprite> sprite2 = nullptr;
 	std::unique_ptr<Model> skydome = nullptr;
+	std::unique_ptr<Model> defaultModel = nullptr;
 	std::unique_ptr<Object3d> skydomeObj = nullptr;
+	std::unique_ptr<Object3d> planeObj = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
+
+	//当たり判定テスト用
+	Sphere sphere;
+	Plane plane;
 
 	Camera camera;
 

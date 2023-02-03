@@ -3,6 +3,7 @@
 #include"DirectX.h"
 #include"SpriteManager.h"
 #include"GameSceneManager.h"
+#include"Collision.h"
 
 using namespace DirectX;
 
@@ -28,12 +29,14 @@ void GamePlayScene::Initialize()
 	sprite2->Initialize(reimuGraph);
 
 	skydome = std::make_unique<Model>();
-
-
 	skydome = Model::CreateModel("skydome");
 
+	defaultModel = std::make_unique<Model>();
+	defaultModel = Model::CreateModel();
+	defaultModel->textureIndex = reimuGraph;
+
 	//カメラ初期化
-	Vector3 eye(0, 0, -20);	//視点座標
+	Vector3 eye(0, 20, -20);	//視点座標
 	Vector3 target(0, 0, 6);	//注視点座標
 	Vector3 up(0, 1, 0);		//上方向ベクトル
 
@@ -43,8 +46,20 @@ void GamePlayScene::Initialize()
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
 
+	planeObj = std::make_unique<Object3d>();
+	planeObj->Initialize();
+	planeObj->SetModel(defaultModel.get());
+	planeObj->scale = { 10.0f,0.01f,10.0f };
+
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
+
+	//球の初期値を設定
+	sphere.pos = { 0,2,0 };
+	sphere.radius = 1.0f;
+	//平面の初期値を設定
+	plane.normal = { 0,1,0 };
+	plane.distance = 0.0f;
 
 }
 
@@ -69,27 +84,36 @@ void GamePlayScene::Update()
 
 
 
-	
+
 
 	camera.UpdateMatrix();
 
 	//ADで天球の回転
-	ImGui::Begin("debug");
+	ImGui::Begin("skydome");
 
-	ImGui::SliderFloat("Skydome:rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("Skydome:posX", &skydomeObj->position.x, 0.0f, 5.0f);
-	ImGui::SliderFloat("Skydome:posY", &skydomeObj->position.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("Skydome:scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
-	ImGui::SliderFloat("Skydome:scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("Skydome:scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
+	ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
+	ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
+	ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
 
-	if (ImGui::Button("music")) {
+	/*if (ImGui::Button("music")) {
 		newAudio->SoundPlayWave();
+	}*/
+	ImGui::End();
+
+	ImGui::Begin("collision");
+
+	if (Collision::ColSphereToPlane(sphere, plane)) {
+		ImGui::Text("hit!");
 	}
 
 	ImGui::End();
 
+	skydomeObj->position = sphere.pos;
 	skydomeObj->Update();
+	planeObj->Update();
 
 	//----------------------ゲーム内ループはここまで---------------------//
 
@@ -101,16 +125,17 @@ void GamePlayScene::Draw()
 	//-------背景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
-	backGroundSprite->Draw();
+	//backGroundSprite->Draw();
 
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
 	skydomeObj->Draw();
+	planeObj->Draw();
 
 	//-------前景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
-	sprite->Draw();
-	sprite2->Draw();
+	//sprite->Draw();
+	//sprite2->Draw();
 }

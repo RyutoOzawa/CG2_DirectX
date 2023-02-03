@@ -153,7 +153,10 @@
     <ClCompile Include="DdirectXGame\engine\AudioManager.cpp">
       <Filter>ソース ファイル\engine</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionPrimitive.cpp">
+    <ClCompile Include="DdirectXGame\engine\math\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\math\Collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -251,8 +254,11 @@
     <ClInclude Include="DdirectXGame\engine\AudioManager.h">
       <Filter>ヘッダー ファイル\enigne</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionPrimitive.h">
+    <ClInclude Include="DdirectXGame\engine\math\Collision.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\CollisionPrimitive.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
