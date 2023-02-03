@@ -1,6 +1,8 @@
 #include "Camera.h"
 #include"WindowsAPI.h"
 using namespace DirectX;
+#include"Matrix4.h"
+#include"Util.h"
 
 ID3D12Device* Camera::device = nullptr;
 
@@ -58,8 +60,16 @@ void Camera::UpdateMatrix()
 		0.1f, 1000.0f								//前橋、奥橋
 	);
 
+	Matrix4 matPro;
+	matPro = matPro.CreateProjectionMat(45.0 * PI/ 180, (float)WindowsAPI::winW / WindowsAPI::winH, 0.1f, 1000.0f);
+
+
 	//ビュー変換行列の計算
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+
+
+
+	int s = 0;
 
 	constMap->view = matView;
 	constMap->projection = matProjection;

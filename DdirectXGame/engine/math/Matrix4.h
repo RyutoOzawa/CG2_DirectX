@@ -25,10 +25,12 @@ public:
 	//座標変換（ベクトルと行列の掛け算）
 	Vector3 transform(const Vector3& v, const Matrix4& m);
 
-
-
 	//逆行列
 	Matrix4 Inverse();
+
+	Matrix4 CreateViewMat(const Vector3& eye, const Vector3& target, const Vector3& up );
+
+	Matrix4 CreateProjectionMat(float fovY,float aspectRatio,float nearZ,float farZ);
 
 	//演算子オーバーロード
 	Matrix4& operator*=(const Matrix4& mat);

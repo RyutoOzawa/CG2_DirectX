@@ -33,7 +33,7 @@ void GamePlayScene::Initialize()
 	skydome = Model::CreateModel("skydome");
 
 	//カメラ初期化
-	XMFLOAT3 eye(0, 0, -20);	//視点座標
+	XMFLOAT3 eye(100, 20, -20);	//視点座標
 	XMFLOAT3 target(0, 0, 6);	//注視点座標
 	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
 
