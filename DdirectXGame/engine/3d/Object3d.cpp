@@ -86,7 +86,7 @@ void Object3d::Initialize()
 	assert(SUCCEEDED(result));
 
 
-	XMMATRIX matrix = XMMatrixIdentity();
+	Matrix4 matrix = matrix.identity();
 	constMap->mat = matrix;
 
 
@@ -94,22 +94,23 @@ void Object3d::Initialize()
 
 void Object3d::Update()
 {
-	XMMATRIX matScale, matRot, matTrans;
+	
+	//s—ñŒvŽZ
+	Matrix4 matScale, matRot, matTrans;
 
-	//Šes—ñŒvŽZ
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotation.z);	//ZŽ²Žü‚è‚É‰ñ“]
-	matRot *= XMMatrixRotationX(rotation.x);	//XŽ²Žü‚è‚É‰ñ“]
-	matRot *= XMMatrixRotationY(rotation.y);	//YŽ²Žü‚è‚É‰ñ“]
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+	matScale = matScale.scale(scale);
 
-	matWorld = XMMatrixIdentity();
-	matWorld = XMMatrixIdentity();
+	matRot = matRot.identity();
+	matRot *= matRot.rotateZ(rotation.z);
+	matRot *= matRot.rotateX(rotation.x);
+	matRot *= matRot.rotateY(rotation.y);
 
-	matWorld *= matScale;	//ƒXƒP[ƒŠƒ“ƒO‚ð”½‰f
-	matWorld *= matRot;	//‰ñ“]‚ð”½‰f
-	matWorld *= matTrans;	//•½sˆÚ“®‚ð”½‰f
+	matTrans = matTrans.translate(position);
+
+	matWorld.identity();
+	matWorld *= matScale;
+	matWorld *= matRot;
+	matWorld *= matTrans;
 
 	if (parent != nullptr) {
 		matWorld *= parent->matWorld;

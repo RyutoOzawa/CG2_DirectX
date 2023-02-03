@@ -33,9 +33,9 @@ void GamePlayScene::Initialize()
 	skydome = Model::CreateModel("skydome");
 
 	//カメラ初期化
-	XMFLOAT3 eye(100, 20, -20);	//視点座標
-	XMFLOAT3 target(0, 0, 6);	//注視点座標
-	XMFLOAT3 up(0, 1, 0);		//上方向ベクトル
+	Vector3 eye(0, 0, -20);	//視点座標
+	Vector3 target(0, 0, 6);	//注視点座標
+	Vector3 up(0, 1, 0);		//上方向ベクトル
 
 	camera.Initialize(eye, target, up);
 
@@ -77,6 +77,11 @@ void GamePlayScene::Update()
 	ImGui::Begin("debug");
 
 	ImGui::SliderFloat("Skydome:rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("Skydome:posX", &skydomeObj->position.x, 0.0f, 5.0f);
+	ImGui::SliderFloat("Skydome:posY", &skydomeObj->position.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("Skydome:scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
+	ImGui::SliderFloat("Skydome:scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("Skydome:scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
 
 	if (ImGui::Button("music")) {
 		newAudio->SoundPlayWave();

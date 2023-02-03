@@ -3,6 +3,7 @@
 #include<DirectXMath.h>
 #include<d3d12.h>
 #include<wrl.h>
+#include"Matrix4.h"
 
 class Camera
 {
@@ -12,26 +13,26 @@ public:
 	static void StaticInitialize(ID3D12Device* dev);
 
 	struct ConstBufferCamera {
-		DirectX::XMMATRIX view;
-		DirectX::XMMATRIX projection;
+		Matrix4 view;
+		Matrix4 projection;
 	};
 
 	ConstBufferCamera* constMap = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
 
-	DirectX::XMMATRIX matView;
-	DirectX::XMMATRIX matProjection;
-	DirectX::XMFLOAT3 eye;
-	DirectX::XMFLOAT3 target;
-	DirectX::XMFLOAT3 up;
+	Matrix4 matView;
+	Matrix4 matProjection;
+	Vector3 eye;
+	Vector3 target;
+	Vector3 up;
 
 public:
 
 
-	void Initialize(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& up);
+	void Initialize(const Vector3& eye, const Vector3& target, const Vector3& up);
 
 	void UpdateMatrix();
 
-	DirectX::XMMATRIX GetViewProjection()const { return matView * matProjection; }
+	Matrix4 GetViewProjection()const { return matView * matProjection; }
 };
 

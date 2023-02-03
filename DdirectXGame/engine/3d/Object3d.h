@@ -9,6 +9,7 @@
 #include<string>
 #include"Model.h"
 #include"Camera.h"
+#include"Matrix4.h"
 
 class Object3d
 {
@@ -24,7 +25,7 @@ public:
 
 	struct ConstBufferData {
 		//DirectX::XMFLOAT4 color;
-		DirectX::XMMATRIX mat;
+		Matrix4 mat;
 	};
 
 
@@ -38,10 +39,10 @@ public:
 	ConstBufferData* constMap = nullptr;
 
 	DirectX::XMFLOAT4 color = { 1,1,1,1 };
-	DirectX::XMFLOAT3 scale = { 1,1,1 };	//アフィン変換情報
-	DirectX::XMFLOAT3 rotation = { 0,0,0 };	//アフィン変換情報
-	DirectX::XMFLOAT3 position = { 0,0,0 };	//アフィン変換情報
-	DirectX::XMMATRIX matWorld;	//ワールド変換行列
+	Vector3 scale = { 1,1,1 };	//アフィン変換情報
+	Vector3 rotation = { 0,0,0 };	//アフィン変換情報
+	Vector3 position = { 0,0,0 };	//アフィン変換情報
+	Matrix4 matWorld;	//ワールド変換行列
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ
 
 	Model* model = nullptr;	//モデルデータ

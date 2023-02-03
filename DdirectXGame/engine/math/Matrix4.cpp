@@ -243,7 +243,7 @@ Matrix4& Matrix4::operator*=(const Matrix4& mat)
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			for (int k = 0; k < 4; k++) {
-				result.m[i][j] += m[i][k] + mat.m[k][j];
+				result.m[i][j] += m[i][k] * mat.m[k][j];
 			}
 		}
 	}

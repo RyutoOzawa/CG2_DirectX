@@ -13,7 +13,7 @@ void Camera::StaticInitialize(ID3D12Device* dev)
 	device = dev;
 }
 
-void Camera::Initialize(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& up)
+void Camera::Initialize(const Vector3& eye, const Vector3& target, const Vector3& up)
 {
 	//引数をメンバに移して行列更新
 	this->eye = eye;
@@ -54,22 +54,13 @@ void Camera::Initialize(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& t
 void Camera::UpdateMatrix()
 {
 	//専用の行列を宣言
-	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),					//上下画角45度
-		(float)WindowsAPI::winW / WindowsAPI::winH,	//アスペクト比（画面横幅/画面縦幅）
-		0.1f, 1000.0f								//前橋、奥橋
-	);
-
-	Matrix4 matPro;
-	matPro = matPro.CreateProjectionMat(45.0 * PI/ 180, (float)WindowsAPI::winW / WindowsAPI::winH, 0.1f, 1000.0f);
 
 
+	
+	matProjection = matProjection.CreateProjectionMat(45.0 * PI/ 180, (float)WindowsAPI::winW / WindowsAPI::winH, 0.1f, 1000.0f);
+
+	matView = matView.CreateViewMat(eye, target, up);
 	//ビュー変換行列の計算
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-
-
-
-	int s = 0;
 
 	constMap->view = matView;
 	constMap->projection = matProjection;
