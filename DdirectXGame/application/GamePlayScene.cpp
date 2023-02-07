@@ -32,8 +32,8 @@ void GamePlayScene::Initialize()
 	skydome = Model::CreateModel("skydome");
 
 	defaultModel = std::make_unique<Model>();
-	defaultModel = Model::CreateModel();
-	defaultModel->textureIndex = reimuGraph;
+	defaultModel = Model::CreateModel("triangle_mat");
+//	defaultModel->textureIndex = reimuGraph;
 
 	//カメラ初期化
 	Vector3 eye(0, 20, -20);	//視点座標
@@ -49,7 +49,7 @@ void GamePlayScene::Initialize()
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
 	planeObj->SetModel(defaultModel.get());
-	planeObj->scale = { 10.0f,0.01f,10.0f };
+	//planeObj->scale = { 10.0f,0.01f,10.0f };
 
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
@@ -60,6 +60,11 @@ void GamePlayScene::Initialize()
 	//平面の初期値を設定
 	plane.normal = { 0,1,0 };
 	plane.distance = 0.0f;
+	//三角形の初期値を設定
+	triangle.p0 = { -1.0f,0,-1.0f };
+	triangle.p1 = { -1.0f,0,+1.0f };
+	triangle.p2 = { +1.0f,0,-1.0f };
+	triangle.normal = { 0.0f,1.0f,0.0f };
 
 }
 
@@ -105,7 +110,7 @@ void GamePlayScene::Update()
 
 	ImGui::Begin("collision");
 
-	if (Collision::ColSphereToPlane(sphere, plane)) {
+	if (Collision::ColSphereToTriangle(sphere,triangle)) {
 		ImGui::Text("hit!");
 	}
 

@@ -46,6 +46,7 @@ public://メンバ変数
 	//当たり判定テスト用
 	Sphere sphere;
 	Plane plane;
+	Triangle triangle;
 
 	Camera camera;
 

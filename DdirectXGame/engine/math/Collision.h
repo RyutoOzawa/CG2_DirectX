@@ -19,5 +19,22 @@ public:
 	static bool ColSphereToPlane(const Sphere& sphere, const Plane& plane,
 		Vector3* inter = nullptr);
 
+	/// <summary>
+	/// 点と三角形の最近接点を求める
+	/// </summary>
+	/// <param name="point">点</param>
+	/// <param name="triangle">三角形</param>
+	/// <param name="closest">最近接点(出力用)</param>
+	static void ClosestPtPointToTriangle(const Vector3& point, const Triangle& triangle, Vector3* closest);
+
+	/// <summary>
+	/// 球と法線付き三角形の当たり判定
+	/// </summary>
+	/// <param name="sphere">球</param>
+	/// <param name="triangle">三角形</param>
+	/// <param name="inter">交点(三角形上の最近接点)</param>
+	/// <returns>交差しているかどうか</returns>
+	static bool ColSphereToTriangle(const Sphere& sphere, const Triangle& triangle, Vector3* inter = nullptr);
+
 };
 

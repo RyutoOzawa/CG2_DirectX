@@ -25,5 +25,15 @@ struct Plane {
 	float distance = 0.0f;
 };
 
-
+/// <summary>
+/// 法線付き三角形データ(時計回りが表面)
+/// </summary>
+class Triangle {
+public:
+	Vector3 p0;
+	Vector3 p1;
+	Vector3 p2;
+	//法線
+	Vector3 normal;
+};
 
