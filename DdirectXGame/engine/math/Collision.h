@@ -36,5 +36,15 @@ public:
 	/// <returns>交差しているかどうか</returns>
 	static bool ColSphereToTriangle(const Sphere& sphere, const Triangle& triangle, Vector3* inter = nullptr);
 
+	/// <summary>
+	/// レイと平面の当たり判定
+	/// </summary>
+	/// <param name="ray">レイ</param>
+	/// <param name="plane">平面</param>
+	/// <param name="distance">距離(出力用)</param>
+	/// <param name="inter">交点(出力用)</param>
+	/// <returns>交差しているか</returns>
+	static bool ColRayToPlane(const Ray& ray, const Plane& plane, float* distance = nullptr, Vector3* inter = nullptr);
+
 };
 

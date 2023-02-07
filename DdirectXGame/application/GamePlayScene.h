@@ -38,15 +38,20 @@ public://メンバ変数
 	std::unique_ptr<Sprite> sprite2 = nullptr;
 	std::unique_ptr<Model> skydome = nullptr;
 	std::unique_ptr<Model> defaultModel = nullptr;
+	std::unique_ptr<Model> triangleModel = nullptr;
 	std::unique_ptr<Object3d> skydomeObj = nullptr;
 	std::unique_ptr<Object3d> planeObj = nullptr;
+	std::unique_ptr<Object3d> triangleObj = nullptr;
+	std::unique_ptr<Object3d> rayObj = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
 
 	//当たり判定テスト用
+	Vector3 colHitPos;
 	Sphere sphere;
 	Plane plane;
 	Triangle triangle;
+	Ray ray;
 
 	Camera camera;
 

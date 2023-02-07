@@ -32,8 +32,11 @@ void GamePlayScene::Initialize()
 	skydome = Model::CreateModel("skydome");
 
 	defaultModel = std::make_unique<Model>();
-	defaultModel = Model::CreateModel("triangle_mat");
-//	defaultModel->textureIndex = reimuGraph;
+	defaultModel = Model::CreateModel();
+	defaultModel->textureIndex = reimuGraph;
+
+	triangleModel = std::make_unique<Model>();
+	triangleModel = Model::CreateModel("triangle_mat");
 
 	//カメラ初期化
 	Vector3 eye(0, 20, -20);	//視点座標
@@ -49,7 +52,16 @@ void GamePlayScene::Initialize()
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
 	planeObj->SetModel(defaultModel.get());
-	//planeObj->scale = { 10.0f,0.01f,10.0f };
+	planeObj->scale = { 10.0f,0.01f,10.0f };
+
+	triangleObj = std::make_unique<Object3d>();
+	triangleObj->Initialize();
+	triangleObj->SetModel(triangleModel.get());
+
+	rayObj = std::make_unique<Object3d>();
+	rayObj->Initialize();
+	rayObj->SetModel(defaultModel.get());
+	rayObj->scale = { 0.01f,10.0f,0.01f };
 
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
@@ -65,6 +77,9 @@ void GamePlayScene::Initialize()
 	triangle.p1 = { -1.0f,0,+1.0f };
 	triangle.p2 = { +1.0f,0,-1.0f };
 	triangle.normal = { 0.0f,1.0f,0.0f };
+	//レイの初期値を設定
+	ray.start = { 0,1,0 };
+	ray.dir = { 0,-1,0 };
 
 }
 
@@ -93,25 +108,30 @@ void GamePlayScene::Update()
 
 	camera.UpdateMatrix();
 
-	//ADで天球の回転
+	//天球の操作
 	ImGui::Begin("skydome");
-
 	ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
 	ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
 	ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
+	ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
 	ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
 	ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
 	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
-
-	/*if (ImGui::Button("music")) {
-		newAudio->SoundPlayWave();
-	}*/
 	ImGui::End();
 
+	//レイの操作
+	ImGui::Begin("Ray");
+	ImGui::Text("cube wo scale de ookiku siteiru tame usiro ha hanntei arimasen");
+	ImGui::SliderFloat("posX", &ray.start.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
+	ImGui::End();
+
+	//当たり判定確認
 	ImGui::Begin("collision");
 
-	if (Collision::ColSphereToTriangle(sphere,triangle)) {
+	if (Collision::ColRayToPlane(ray,plane,nullptr,&colHitPos)) {
 		ImGui::Text("hit!");
+		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
 	}
 
 	ImGui::End();
@@ -119,6 +139,8 @@ void GamePlayScene::Update()
 	skydomeObj->position = sphere.pos;
 	skydomeObj->Update();
 	planeObj->Update();
+	rayObj->position = ray.start;
+	rayObj->Update();
 
 	//----------------------ゲーム内ループはここまで---------------------//
 
@@ -137,6 +159,8 @@ void GamePlayScene::Draw()
 
 	skydomeObj->Draw();
 	planeObj->Draw();
+	rayObj->Draw();
+
 
 	//-------前景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
