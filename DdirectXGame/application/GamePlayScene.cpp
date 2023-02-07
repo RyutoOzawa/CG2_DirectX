@@ -129,7 +129,7 @@ void GamePlayScene::Update()
 	//当たり判定確認
 	ImGui::Begin("collision");
 
-	if (Collision::ColRayToTriangle(ray,triangle,nullptr,&colHitPos)) {
+	if (Collision::ColRayToSphere(ray,sphere,nullptr,&colHitPos)) {
 		ImGui::Text("hit!");
 		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
 	}
@@ -158,9 +158,9 @@ void GamePlayScene::Draw()
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-	//skydomeObj->Draw();
+	skydomeObj->Draw();
 	//planeObj->Draw();
-	triangleObj->Draw();
+	//triangleObj->Draw();
 	rayObj->Draw();
 
 
