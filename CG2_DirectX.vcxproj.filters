@@ -49,14 +49,14 @@
     <Filter Include="ヘッダー ファイル\enigne\3d">
       <UniqueIdentifier>{753508f1-0e57-4437-860b-123ef19ef2f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\enigne\math">
-      <UniqueIdentifier>{fdd8eec8-05d0-4108-85a4-e80f57a2645a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\enigne\scene">
       <UniqueIdentifier>{e76b3288-1908-440f-a7d6-8564df014ca6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\enigne\math\base">
+    <Filter Include="ヘッダー ファイル\enigne\base">
       <UniqueIdentifier>{648f98e4-5089-4ac6-9627-4f87c59f9da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enigne\math">
+      <UniqueIdentifier>{fdd8eec8-05d0-4108-85a4-e80f57a2645a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +157,18 @@
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
     <ClCompile Include="DdirectXGame\engine\math\Collision.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\math\BaseCollider.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\math\CollisionInfo.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\math\CollisionTypes.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -213,7 +225,7 @@
       <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\base\KEngineFramework.h">
-      <Filter>ヘッダー ファイル\enigne\math\base</Filter>
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\math\MathInfo.h">
       <Filter>ヘッダー ファイル\enigne\math</Filter>
@@ -234,10 +246,10 @@
       <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\base\DirectX.h">
-      <Filter>ヘッダー ファイル\enigne\math\base</Filter>
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\base\WindowsAPI.h">
-      <Filter>ヘッダー ファイル\enigne\math\base</Filter>
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\scene\GameBaseScene.h">
       <Filter>ヘッダー ファイル\enigne\scene</Filter>
@@ -249,16 +261,28 @@
       <Filter>ヘッダー ファイル\enigne\scene</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\base\AbstractSceneFactory.h">
-      <Filter>ヘッダー ファイル\enigne\math\base</Filter>
+      <Filter>ヘッダー ファイル\enigne\base</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\AudioManager.h">
       <Filter>ヘッダー ファイル\enigne</Filter>
     </ClInclude>
-    <ClInclude Include="DdirectXGame\engine\math\Collision.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="DdirectXGame\engine\math\CollisionPrimitive.h">
       <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\Collision.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\BaseCollider.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\CollisionInfo.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\CollisionTypes.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

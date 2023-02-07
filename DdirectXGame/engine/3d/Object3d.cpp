@@ -13,6 +13,7 @@ using namespace Microsoft::WRL;
 #include<sstream>
 #include"Model.h"
 #include<vector>
+#include"BaseCollider.h"
 using namespace std;
 
 //静的メンバ変数
@@ -21,12 +22,13 @@ ComPtr<ID3D12RootSignature> Object3d::rootSignature;
 ReDirectX* Object3d::directX = nullptr;
 
 
-Object3d::Object3d()
-{
-}
+
 
 Object3d::~Object3d()
 {
+	if (collider) {
+		delete collider;
+	}
 }
 
 void Object3d::StaticInitialize(ReDirectX* directX_)
@@ -57,6 +59,7 @@ void Object3d::BeginDraw(const Camera& camera)
 
 void Object3d::Initialize()
 {
+
 	ID3D12Device* device = directX->GetDevice();
 
 	HRESULT result;
@@ -85,10 +88,11 @@ void Object3d::Initialize()
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);//マッピング
 	assert(SUCCEEDED(result));
 
-
 	Matrix4 matrix = matrix.identity();
 	constMap->mat = matrix;
 
+	//クラス名の文字列を取得
+	name = typeid(*this).name();
 
 }
 
@@ -119,6 +123,11 @@ void Object3d::Update()
 	//定数バッファに転送
 	//constMap->mat = matWorld * matView * matProjection;
 	constMap->mat = matWorld;
+
+	//当たり判定更新
+	if (collider) {
+		collider->Update();
+	}
 }
 
 void Object3d::Draw()
@@ -129,6 +138,12 @@ void Object3d::Draw()
 	
 	//モデルデータの描画用コマンドのまとまり
 	model->Draw(commandList, 2);
+}
+
+void Object3d::SetCollider(BaseCollider* collider)
+{
+	collider->SetObject(this);
+	this->collider = collider;
 }
 
 void Object3d::CreatePipeline3D()

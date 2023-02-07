@@ -10,6 +10,9 @@
 #include"Model.h"
 #include"Camera.h"
 #include"Matrix4.h"
+#include"CollisionInfo.h"
+
+class BaseCollider;
 
 class Object3d
 {
@@ -48,19 +51,54 @@ public:
 	Model* model = nullptr;	//モデルデータ
 	
 public:
-	Object3d();
-	~Object3d();
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Object3d() = default;
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	virtual ~Object3d();
 
 	//静的メンバ関数
 	static void StaticInitialize(ReDirectX* directX_);
 	static void BeginDraw(const Camera& camera);
 
-	void Initialize();
-	void Update();
-	void Draw();
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	virtual void Initialize();
+
+	virtual void Update();
+
+	virtual void Draw();
+
 	void SetModel(Model* model_) { model = model_; }
 	
+	/// <summary>
+	/// ワールド行列の取得
+	/// </summary>
+	/// <returns>ワールド行列</returns>
+	const Matrix4& GetMatWorld() { return matWorld; }
+
+	/// <summary>
+	/// コライダーのセット
+	/// </summary>
+	/// <param name="collider">コライダー</param>
+	void SetCollider(BaseCollider* collider);
+
+	virtual void OnCollision(const CollisionInfo& info) {}
+
+protected:
+	//クラス名
+	const char* name = nullptr;
+	//コライダー
+	BaseCollider* collider = nullptr;
+
 private:
 	static void CreatePipeline3D();
+
+
 };
 

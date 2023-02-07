@@ -151,6 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DdirectXGame\engine\math\BaseCollider.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\CollisionInfo.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\CollisionTypes.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\Collision.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\CollisionPrimitive.cpp" />
     <ClCompile Include="DdirectXGame\engine\AudioManager.cpp" />
@@ -184,8 +187,12 @@
     <ClCompile Include="DdirectXGame\engine\math\Vector3.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\Vertex.cpp" />
     <ClCompile Include="DdirectXGame\engine\base\WindowsAPI.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DdirectXGame\engine\math\BaseCollider.h" />
+    <ClInclude Include="DdirectXGame\engine\math\CollisionInfo.h" />
+    <ClInclude Include="DdirectXGame\engine\math\CollisionTypes.h" />
     <ClInclude Include="DdirectXGame\engine\math\Collision.h" />
     <ClInclude Include="DdirectXGame\engine\math\CollisionPrimitive.h" />
     <ClInclude Include="DdirectXGame\engine\base\AbstractSceneFactory.h" />
@@ -219,6 +226,7 @@
     <ClInclude Include="DdirectXGame\engine\math\Vector3.h" />
     <ClInclude Include="DdirectXGame\engine\math\Vertex.h" />
     <ClInclude Include="DdirectXGame\engine\base\WindowsAPI.h" />
+    <ClInclude Include="SphereCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
