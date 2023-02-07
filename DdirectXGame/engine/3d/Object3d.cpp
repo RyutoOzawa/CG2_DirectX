@@ -153,6 +153,7 @@ void Object3d::CreatePipeline3D()
 	ID3D12Device* dev = directX->GetDevice();
 
 	ComPtr<ID3DBlob> vsBlob;		// 頂点シェーダオブジェクト
+	ComPtr<ID3DBlob> gsBlob;		// ジオメトリシェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;		// ピクセルシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob;	// エラーオブジェクト
 
@@ -179,6 +180,28 @@ void Object3d::CreatePipeline3D()
 		assert(0);
 	}
 
+	// ジオメトリシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/BasicGeometryShader.hlsl", // シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "gs_5_0", // エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&gsBlob, &errorBlob);
+	// エラーなら
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string error;
+		error.resize(errorBlob->GetBufferSize());
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(error.c_str());
+		assert(0);
+	}
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -230,6 +253,9 @@ void Object3d::CreatePipeline3D()
 		});
 
 	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
+	//ジオメトリシェーダーの設定を追加
+	pipeline3D.desc.GS.BytecodeLength = gsBlob->GetBufferSize();
+	pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
