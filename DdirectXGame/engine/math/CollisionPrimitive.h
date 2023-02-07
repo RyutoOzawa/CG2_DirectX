@@ -35,6 +35,11 @@ public:
 	Vector3 p2;
 	//–@ü
 	Vector3 normal;
+
+	/// <summary>
+	/// –@ü‚ÌŒvZ
+	/// </summary>
+	void ComputeNormal();
 };
 
 /// <summary>
