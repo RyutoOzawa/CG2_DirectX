@@ -72,7 +72,7 @@ void GamePlayScene::Initialize()
 	sphere.radius = 1.0f;
 	//平面の初期値を設定
 	plane.normal = { 0,1,0 };
-	plane.distance = 0.0f;
+	plane.distance = -2.0f;
 	//三角形の初期値を設定
 	triangle.p0 = { -1.0f,0,-1.0f };
 	triangle.p1 = { -1.0f,0,+1.0f };
