@@ -53,6 +53,7 @@ void GamePlayScene::Initialize()
 	planeObj->Initialize();
 	planeObj->SetModel(defaultModel.get());
 	planeObj->scale = { 10.0f,0.01f,10.0f };
+	planeObj->position.y = -2.0f;
 
 	triangleObj = std::make_unique<Object3d>();
 	triangleObj->Initialize();
@@ -67,11 +68,11 @@ void GamePlayScene::Initialize()
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
 
 	//球の初期値を設定
-	sphere.pos = { 0,2,0 };
+	sphere.pos = { -5,2,-0 };
 	sphere.radius = 1.0f;
 	//平面の初期値を設定
 	plane.normal = { 0,1,0 };
-	plane.distance = 0.0f;
+	plane.distance = -2.0f;
 	//三角形の初期値を設定
 	triangle.p0 = { -1.0f,0,-1.0f };
 	triangle.p1 = { -1.0f,0,+1.0f };
@@ -130,7 +131,27 @@ void GamePlayScene::Update()
 	ImGui::Begin("collision");
 
 	if (Collision::ColRayToSphere(ray,sphere,nullptr,&colHitPos)) {
-		ImGui::Text("hit!");
+		ImGui::Text("hit Ray to Sphere!");
+		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
+	}
+
+	if (Collision::ColRayToTriangle(ray,triangle, nullptr, &colHitPos)) {
+		ImGui::Text("hit Ray to triangle!");
+		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
+	}
+
+	if (Collision::ColRayToPlane(ray, plane, nullptr, &colHitPos)) {
+		ImGui::Text("hit Ray to Plane!");
+		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
+	}
+
+	if (Collision::ColSphereToPlane(sphere,plane, &colHitPos)) {
+		ImGui::Text("hit Plane to Sphere!");
+		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
+	}
+
+	if (Collision::ColSphereToTriangle(sphere, triangle, &colHitPos)) {
+		ImGui::Text("hit triangle to Sphere!");
 		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
 	}
 
@@ -159,8 +180,8 @@ void GamePlayScene::Draw()
 	Object3d::BeginDraw(camera);
 
 	skydomeObj->Draw();
-	//planeObj->Draw();
-	//triangleObj->Draw();
+	planeObj->Draw();
+	triangleObj->Draw();
 	rayObj->Draw();
 
 
