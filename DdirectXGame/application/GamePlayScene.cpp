@@ -28,6 +28,7 @@ void GamePlayScene::Initialize()
 	sprite->Initialize(marioGraph);
 	sprite2->Initialize(reimuGraph);
 
+
 	skydome = std::make_unique<Model>();
 	skydome = Model::CreateModel("skydome");
 
@@ -42,6 +43,8 @@ void GamePlayScene::Initialize()
 	Vector3 eye(0, 20, -20);	//視点座標
 	Vector3 target(0, 0, 6);	//注視点座標
 	Vector3 up(0, 1, 0);		//上方向ベクトル
+
+	sprite2->SetPos({240, 240});
 
 	camera.Initialize(eye, target, up);
 
@@ -127,35 +130,21 @@ void GamePlayScene::Update()
 	ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
 	ImGui::End();
 
-	//当たり判定確認
-	ImGui::Begin("collision");
+	Vector2 sprite1Pos = { sprite->GetPosition().x,sprite->GetPosition().y };
+	Vector2 sprite2Pos = { sprite2->GetPosition().x,sprite2->GetPosition().y };
+	float pos[2] = { sprite1Pos.x,sprite1Pos.y };
+	ImGui::Begin("Sprite");
 
-	if (Collision::ColRayToSphere(ray,sphere,nullptr,&colHitPos)) {
-		ImGui::Text("hit Ray to Sphere!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
+	ImGui::SliderFloat2("sprite1", pos, 0.0f, WindowsAPI::winW);
+	sprite->SetPos({ pos[0],pos[1] });
 
-	if (Collision::ColRayToTriangle(ray,triangle, nullptr, &colHitPos)) {
-		ImGui::Text("hit Ray to triangle!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
 
-	if (Collision::ColRayToPlane(ray, plane, nullptr, &colHitPos)) {
-		ImGui::Text("hit Ray to Plane!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
-
-	if (Collision::ColSphereToPlane(sphere,plane, &colHitPos)) {
-		ImGui::Text("hit Plane to Sphere!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
-
-	if (Collision::ColSphereToTriangle(sphere, triangle, &colHitPos)) {
-		ImGui::Text("hit triangle to Sphere!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
+	sprite->Update();
+	sprite2->Update();
 
 	ImGui::End();
+
+	//ata
 
 	skydomeObj->position = sphere.pos;
 	skydomeObj->Update();
@@ -188,6 +177,6 @@ void GamePlayScene::Draw()
 	//-------前景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
-	//sprite->Draw();
-	//sprite2->Draw();
+	sprite->Draw();
+	sprite2->Draw();
 }
