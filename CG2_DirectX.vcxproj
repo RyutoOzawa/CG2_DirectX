@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DdirectXGame\engine\2d\ParticleManager.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\BaseCollider.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\CollisionInfo.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\CollisionTypes.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="DdirectXGame\engine\AudioManager.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\Camera.cpp" />
     <ClCompile Include="DdirectXGame\engine\base\DirectX.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Vector4.cpp" />
     <ClCompile Include="DdirectXGame\engine\scene\GameBaseScene.cpp" />
     <ClCompile Include="DdirectXGame\application\GamePlayScene.cpp" />
     <ClCompile Include="DdirectXGame\engine\scene\GameSceneManager.cpp" />
@@ -190,6 +192,7 @@
     <ClCompile Include="SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DdirectXGame\engine\2d\ParticleManager.h" />
     <ClInclude Include="DdirectXGame\engine\math\BaseCollider.h" />
     <ClInclude Include="DdirectXGame\engine\math\CollisionInfo.h" />
     <ClInclude Include="DdirectXGame\engine\math\CollisionTypes.h" />
@@ -199,6 +202,7 @@
     <ClInclude Include="DdirectXGame\engine\AudioManager.h" />
     <ClInclude Include="DdirectXGame\engine\3d\Camera.h" />
     <ClInclude Include="DdirectXGame\engine\base\DirectX.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Vector4.h" />
     <ClInclude Include="DdirectXGame\engine\scene\GameBaseScene.h" />
     <ClInclude Include="DdirectXGame\application\GamePlayScene.h" />
     <ClInclude Include="DdirectXGame\engine\scene\GameSceneManager.h" />
@@ -263,6 +267,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleGS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticlePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\shaders\SpritePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -279,6 +295,7 @@
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />
     <None Include="Resources\shaders\Obj.hlsli" />
+    <None Include="Resources\shaders\Particle.hlsli" />
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>

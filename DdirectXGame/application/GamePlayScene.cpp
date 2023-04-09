@@ -4,6 +4,8 @@
 #include"SpriteManager.h"
 #include"GameSceneManager.h"
 #include"Collision.h"
+#include"Util.h"
+
 
 using namespace DirectX;
 
@@ -82,6 +84,18 @@ void GamePlayScene::Initialize()
 	ray.start = { 0,1,0 };
 	ray.dir = { 0,-1,0 };
 
+	//パーティクル初期化
+	particle1 = std::make_unique<ParticleManager>();
+	particle1->Initialize();
+	particle1->SetTextureHandle(reimuGraph);
+
+	particle2 = std::make_unique<ParticleManager>();
+	particle2->Initialize();
+	particle2->SetTextureHandle(marioGraph);
+
+	particleStart1 = { -10,0,0 };
+	particleStart2 = { 10,0,0 };
+
 }
 
 void GamePlayScene::Finalize()
@@ -110,21 +124,21 @@ void GamePlayScene::Update()
 	camera.UpdateMatrix();
 
 	//天球の操作
-	ImGui::Begin("skydome");
-	ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
-	ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
-	ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
-	ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
-	ImGui::End();
+	//ImGui::Begin("skydome");
+	//ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
+	//ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
+	//ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
+	//ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
+	//ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
+	//ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
+	//ImGui::End();
 
-	//レイの操作
-	ImGui::Begin("Ray");
-	ImGui::Text("cube wo scale de ookiku siteiru tame usiro ha hanntei arimasen");
-	ImGui::SliderFloat("posX", &ray.start.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
+	//カメラ操作デバッグテキスト
+	ImGui::Begin("camera");
+	ImGui::SliderFloat("eyeX", &camera.eye.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("eyeY", &camera.eye.y, -10.0f, 10.0f);
+	ImGui::SliderFloat("eyeZ", &camera.eye.z, -10.0f, 10.0f);
 	ImGui::End();
 
 	//当たり判定確認
@@ -164,6 +178,30 @@ void GamePlayScene::Update()
 	rayObj->position = ray.start;
 	rayObj->Update();
 
+	//パーティクルを生成し続ける
+	Vector3 particleEndPos1;
+	Vector3 particleEndPos2;
+
+	//パーティクル終点は始点からランダムに増減
+	particleEndPos1 = particleStart1 + Vector3(Random(-10,10), Random(-10, 10), Random(-10, 10));
+	particleEndPos2 = particleStart2 + Vector3(Random(-10,10), Random(-10, 10), Random(-10, 10));
+
+	particle1->Add(ParticleManager::Type::Normal, 30, false, particleStart1, Vector3{ 0,0,0 }, particleEndPos1, 0.1f, 2,
+		Vector4{ 1,1,1,1 }, Vector4{ 0,0,0,1 });
+
+	particle2->Add(ParticleManager::Type::Normal, 30, false, particleStart2, Vector3{ 0,0,0 }, particleEndPos2,0.1f, 2,
+		Vector4{ 0,0,0,1 }, Vector4{ 1,1,1,1 });
+
+	particle1->Update();
+	particle2->Update();
+
+	sprite->SetSize(XMFLOAT2{ 64, 64 });
+	sprite->SetPos(XMFLOAT2{ 700,0 });
+	sprite->Update();
+
+	sprite2->SetSize(XMFLOAT2{ 64, 64 });
+	sprite2->Update();
+
 	//----------------------ゲーム内ループはここまで---------------------//
 
 
@@ -171,16 +209,29 @@ void GamePlayScene::Update()
 
 void GamePlayScene::Draw()
 {
+
+
+
 	//-------背景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
 	//backGroundSprite->Draw();
+	// 
+
+		//パーティクル描画処理
+	ParticleManager::BeginDraw();
+
+	particle1->Draw(camera);
+	particle2->Draw(camera);
+
+	ParticleManager::EndDraw();
+
 
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
 	skydomeObj->Draw();
-	planeObj->Draw();
+	//planeObj->Draw();
 	triangleObj->Draw();
 	rayObj->Draw();
 
@@ -188,6 +239,6 @@ void GamePlayScene::Draw()
 	//-------前景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
-	//sprite->Draw();
-	//sprite2->Draw();
+	sprite->Draw();
+	sprite2->Draw();
 }

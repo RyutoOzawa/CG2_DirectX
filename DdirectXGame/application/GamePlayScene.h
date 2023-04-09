@@ -8,6 +8,7 @@
 #include"AudioManager.h"
 #include<memory>
 #include"CollisionPrimitive.h"
+#include"ParticleManager.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -55,5 +56,12 @@ public://メンバ変数
 
 	Camera camera;
 
+
+	//パーティクル
+	std::unique_ptr<ParticleManager> particle1;
+	std::unique_ptr<ParticleManager> particle2;
+
+	Vector3 particleStart1;
+	Vector3 particleStart2;
 };
 

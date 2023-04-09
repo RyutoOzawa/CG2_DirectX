@@ -1,4 +1,5 @@
 #include "KEngineFramework.h"
+#include"ParticleManager.h"
 
 //KEngineFramework::KEngineFramework()
 //{
@@ -37,6 +38,9 @@ void KEngineFramework::Initialize()
 	//デバッグテキスト(imgui初期化)
 	imguiManager = ImguiManager::GetInstance();
 	imguiManager->Initialize(windowsAPI,directX);
+
+	//パーティクルマネージャ初期化
+	ParticleManager::StaticInitialize(directX);
 
 	//シーンマネージャの生成
 	sceneManager = GameSceneManager::GetInstance();
