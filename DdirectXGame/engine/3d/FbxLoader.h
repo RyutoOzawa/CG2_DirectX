@@ -46,7 +46,7 @@ public:
 	/// </summary>
 	/// <param name="fbxModel"></param>
 	/// <param name="fbxNode"></param>
-	void ParseNodeRecursive(FbxModel* fbxModel, FbxNode* fbxNode);
+	void ParseNodeRecursive(FbxModel* fbxModel, FbxNode* fbxNode,Node* parent = nullptr);
 
 /// <summary>
 /// メンバ変数
