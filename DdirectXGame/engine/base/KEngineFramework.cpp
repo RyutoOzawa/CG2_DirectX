@@ -1,4 +1,5 @@
 #include "KEngineFramework.h"
+#include"FbxLoader.h"
 
 //KEngineFramework::KEngineFramework()
 //{
@@ -40,11 +41,16 @@ void KEngineFramework::Initialize()
 
 	//シーンマネージャの生成
 	sceneManager = GameSceneManager::GetInstance();
+
+	//FBX初期化
+	FbxLoader::GetInstance()->Initialize(directX->GetDevice());
 }
 
 void KEngineFramework::Finalize()
 {
 	imguiManager->Finalize();
+
+	FbxLoader::GetInstance()->Finalize();
 
 	windowsAPI->Finalize();
 

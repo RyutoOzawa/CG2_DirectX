@@ -4,6 +4,7 @@
 #include"SpriteManager.h"
 #include"GameSceneManager.h"
 #include"Collision.h"
+#include"FbxLoader.h"
 
 using namespace DirectX;
 
@@ -85,6 +86,9 @@ void GamePlayScene::Initialize()
 	ray.start = { 0,1,0 };
 	ray.dir = { 0,-1,0 };
 
+
+	//モデル名を指定してファイル読み込み
+	FbxLoader::GetInstance()->LoadModelFromFile("cube");
 }
 
 void GamePlayScene::Finalize()
