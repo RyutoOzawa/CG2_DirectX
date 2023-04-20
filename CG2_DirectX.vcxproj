@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DdirectXGame\engine\3d\FbxLoader.cpp" />
+    <ClCompile Include="DdirectXGame\engine\3d\FbxModel.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\BaseCollider.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\CollisionInfo.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\CollisionTypes.cpp" />
@@ -135,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DdirectXGame\engine\3d\FbxLoader.h" />
+    <ClInclude Include="DdirectXGame\engine\3d\FbxModel.h" />
     <ClInclude Include="DdirectXGame\engine\math\BaseCollider.h" />
     <ClInclude Include="DdirectXGame\engine\math\CollisionInfo.h" />
     <ClInclude Include="DdirectXGame\engine\math\CollisionTypes.h" />

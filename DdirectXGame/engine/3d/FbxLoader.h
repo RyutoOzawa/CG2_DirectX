@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include<string>
+#include"FbxModel.h"
 
 class FbxLoader
 {
@@ -40,6 +41,13 @@ public:
 	/// <param name="modelName">モデルのファイル名</param>
 	void LoadModelFromFile(const string& modelName);
 
+	/// <summary>
+	/// 再帰的にノード構成を解析
+	/// </summary>
+	/// <param name="fbxModel"></param>
+	/// <param name="fbxNode"></param>
+	void ParseNodeRecursive(FbxModel* fbxModel, FbxNode* fbxNode);
+
 /// <summary>
 /// メンバ変数
 /// </summary>
@@ -64,7 +72,6 @@ private:
 	FbxManager* fbxManager = nullptr;
 	//FBXインポータ
 	FbxImporter* fbxImporter = nullptr;
-
 
 
 

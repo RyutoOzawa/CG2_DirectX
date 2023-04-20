@@ -26,6 +26,8 @@ void FbxLoader::Initialize(ID3D12Device* device)
 	fbxManager->SetIOSettings(ios);
 	//FBXインポータの生成
 	fbxImporter = FbxImporter::Create(fbxManager, "");
+
+
 }
 
 void FbxLoader::Finalize()
@@ -54,4 +56,24 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 
 	//ファイルからロードしたFBXの情報をシーンにインポート
 	fbxImporter->Import(fbxScene);
+
+	//モデル生成
+	FbxModel* fbxModel = new FbxModel();
+	fbxModel->name = modelName;
+}
+
+void FbxLoader::ParseNodeRecursive(FbxModel* fbxModel, FbxNode* fbxNode)
+{
+	//ノード名を取得
+	string name = fbxNode->GetName();
+	//モデルにノードを追加
+
+	//FBXノードの情報を更新してノードに記録
+
+	//FBXノードのメッシュ情報を
+
+	//子ノードに対して再帰呼び出し
+	for (int i = 0; i < fbxNode->GetChildCount(); i++) {
+		ParseNodeRecursive(fbxModel, fbxNode->GetChild(i));
+	}
 }
