@@ -7,6 +7,7 @@ using namespace DirectX;
 /// 静的メンバの実態
 /// </summary>
 const string FbxLoader::baseDirectory = "Resources/";
+const string FbxLoader::defaultTextureFileName = "white1x1.png";
 
 FbxLoader* FbxLoader::GetInstance()
 {
@@ -69,6 +70,9 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 	ParseNodeRecursive(fbxModel, fbxScene->GetRootNode());
 	//FBXシーン開放
 	fbxScene->Destroy();
+
+	//バッファ生成
+	fbxModel->CreateBuffers(device);
 
 }
 
@@ -205,7 +209,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* fbxModel, FbxMesh* fbxMesh)
 
 	//面ごとの情報読み取り
 	for (int i = 0; i < polygonCount; i++) {
-	//面を構成する頂点の数を取得(3なら三角形ポリゴン)
+		//面を構成する頂点の数を取得(3なら三角形ポリゴン)
 		const int polygonSize = fbxMesh->GetPolygonSize(i);
 		assert(polygonSize <= 4);
 
@@ -257,9 +261,67 @@ void FbxLoader::ParseMeshFaces(FbxModel* fbxModel, FbxMesh* fbxMesh)
 
 void FbxLoader::ParseMaterial(FbxModel* fbxModel, FbxNode* fbxNode)
 {
+	const int materialCount = fbxNode->GetMaterialCount();
+	if (materialCount > 0) {
+		//先頭のマテリアルを取得
+		FbxSurfaceMaterial* material = fbxNode->GetMaterial(0);
+		//テクスチャを読み込んだかどうかを表すフラグ
+		bool textureLoaded = false;
+
+		if (material) {
+			//FbxSurfaceLambertクラスかどうかを調べる
+			if (material->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
+				FbxSurfaceLambert* lambert = static_cast<FbxSurfaceLambert*>(material);
+
+				//環境光係数
+				FbxPropertyT<FbxDouble3> ambient = lambert->Ambient;
+				fbxModel->ambient.x = (float)ambient.Get()[0];
+				fbxModel->ambient.y = (float)ambient.Get()[1];
+				fbxModel->ambient.z = (float)ambient.Get()[2];
+
+				//拡散反射光係数
+				FbxPropertyT<FbxDouble3> diffuse = lambert->Diffuse;
+				fbxModel->diffuse.x = (float)diffuse.Get()[0];
+				fbxModel->diffuse.y = (float)diffuse.Get()[1];
+				fbxModel->diffuse.z = (float)diffuse.Get()[2];
+			}
+
+			//ディフューズテクスチャを取り出す
+			const FbxProperty diffuseProperty = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+			if (diffuseProperty.IsValid()) {
+				const FbxFileTexture* texture = diffuseProperty.GetSrcObject<FbxFileTexture>();
+				if (texture) {
+					const char* filePath = texture->GetFileName();
+					//ファイルパスからファイル名抽出
+					string path_str(filePath);
+					string name = ExtractFileName(path_str);
+					//テクスチャ読み込み
+					LoadTexture(fbxModel, baseDirectory + fbxModel->name + "/" + name);
+					textureLoaded = true;
+				}
+			}
+		}
+		//テクスチャがない場合は白テクスチャを貼る
+		if (!textureLoaded) {
+			LoadTexture(fbxModel, baseDirectory + defaultTextureFileName);
+		}
+	}
 }
 
 void FbxLoader::LoadTexture(FbxModel* fbxModel, const std::string& fullPath)
 {
+	HRESULT result;
+	//WICテクスチャのロード
+	TexMetadata& metadata = fbxModel->metadata;
+	ScratchImage& scratchImg = fbxModel->scratchImg;
+	//ユニコード文字列に変換
+	wchar_t wfilePath[128];
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath, _countof(wfilePath));
+	result = LoadFromWICFile(
+		wfilePath, WIC_FLAGS_NONE,
+		&metadata, scratchImg);
+	if (FAILED(result)) {
+		assert(0);
+	}
 }
 

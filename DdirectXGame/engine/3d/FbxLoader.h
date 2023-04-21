@@ -83,6 +83,9 @@ private:
 	//FBXインポータ
 	FbxImporter* fbxImporter = nullptr;
 
+	//テクスチャがない場合の標準テクスチャファイル名
+	static const string defaultTextureFileName;
+
 	//頂点座標読み取り
 	void ParseMeshVertices(FbxModel* fbxModel, FbxMesh* fbxMesh);
 	//面情報読み取り

@@ -175,7 +175,7 @@
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="DdirectXGame\engine\3d\FbxModel.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
