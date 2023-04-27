@@ -1,5 +1,6 @@
 #include "KEngineFramework.h"
 #include"FbxLoader.h"
+#include"FbxObject3d.h"
 
 //KEngineFramework::KEngineFramework()
 //{
@@ -44,6 +45,9 @@ void KEngineFramework::Initialize()
 
 	//FBX初期化
 	FbxLoader::GetInstance()->Initialize(directX->GetDevice());
+
+	//FbxObjectのデバイスセット
+	FbxObject3d::SetDevice(directX->GetDevice());
 }
 
 void KEngineFramework::Finalize()

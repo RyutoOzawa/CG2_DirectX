@@ -63,7 +63,7 @@ public:
 
 	//Ã“Iƒƒ“ƒoŠÖ”
 	static void StaticInitialize(ReDirectX* directX_);
-	static void BeginDraw(const Camera& camera);
+	static void BeginDraw(Camera* camera);
 
 	/// <summary>
 	/// ‰Šú‰»

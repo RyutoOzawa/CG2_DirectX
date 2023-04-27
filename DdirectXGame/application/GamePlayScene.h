@@ -53,7 +53,7 @@ public://ƒƒ“ƒo•Ï”
 	Triangle triangle;
 	Ray ray;
 
-	Camera camera;
+	Camera* camera = nullptr;
 
 };
 

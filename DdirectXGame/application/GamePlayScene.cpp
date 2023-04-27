@@ -5,6 +5,7 @@
 #include"GameSceneManager.h"
 #include"Collision.h"
 #include"FbxLoader.h"
+#include"FbxObject3d.h"
 
 using namespace DirectX;
 
@@ -47,7 +48,7 @@ void GamePlayScene::Initialize()
 
 	sprite2->SetPos({240, 240});
 
-	camera.Initialize(eye, target, up);
+	camera->Initialize(eye, target, up);
 
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
@@ -89,6 +90,9 @@ void GamePlayScene::Initialize()
 
 	//モデル名を指定してファイル読み込み
 	FbxLoader::GetInstance()->LoadModelFromFile("cube");
+
+	//デバイスセット
+	FbxObject3d::SetCamera(camera);
 }
 
 void GamePlayScene::Finalize()
@@ -97,6 +101,8 @@ void GamePlayScene::Finalize()
 
 	//delete sprite;
 	//delete skyDome;
+
+	delete camera;
 
 	//-------------ここまでにループ内で使用したものの後処理------------//
 
@@ -114,7 +120,7 @@ void GamePlayScene::Update()
 
 
 
-	camera.UpdateMatrix();
+	camera->UpdateMatrix();
 
 	//天球の操作
 	ImGui::Begin("skydome");
