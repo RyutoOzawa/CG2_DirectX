@@ -104,6 +104,7 @@
     <ClCompile Include="DdirectXGame\engine\AudioManager.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\Camera.cpp" />
     <ClCompile Include="DdirectXGame\engine\base\DirectX.cpp" />
+    <ClCompile Include="DdirectXGame\engine\math\Vector4.cpp" />
     <ClCompile Include="DdirectXGame\engine\scene\GameBaseScene.cpp" />
     <ClCompile Include="DdirectXGame\application\GamePlayScene.cpp" />
     <ClCompile Include="DdirectXGame\engine\scene\GameSceneManager.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="DdirectXGame\engine\AudioManager.h" />
     <ClInclude Include="DdirectXGame\engine\3d\Camera.h" />
     <ClInclude Include="DdirectXGame\engine\base\DirectX.h" />
+    <ClInclude Include="DdirectXGame\engine\math\Vector4.h" />
     <ClInclude Include="DdirectXGame\engine\scene\GameBaseScene.h" />
     <ClInclude Include="DdirectXGame\application\GamePlayScene.h" />
     <ClInclude Include="DdirectXGame\engine\scene\GameSceneManager.h" />

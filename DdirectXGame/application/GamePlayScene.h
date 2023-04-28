@@ -8,6 +8,7 @@
 #include"AudioManager.h"
 #include<memory>
 #include"CollisionPrimitive.h"
+#include"FbxModel.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -43,6 +44,8 @@ public://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Object3d> planeObj = nullptr;
 	std::unique_ptr<Object3d> triangleObj = nullptr;
 	std::unique_ptr<Object3d> rayObj = nullptr;
+	std::unique_ptr<FbxModel> model1 = nullptr;
+	std::unique_ptr<FbxObject3d> object1 = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
 

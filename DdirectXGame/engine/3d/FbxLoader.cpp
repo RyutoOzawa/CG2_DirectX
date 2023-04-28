@@ -39,8 +39,10 @@ void FbxLoader::Finalize()
 	fbxManager->Destroy();
 }
 
-void FbxLoader::LoadModelFromFile(const string& modelName)
+std::unique_ptr< FbxModel> FbxLoader::LoadModelFromFile(const string& modelName)
 {
+
+
 	//モデルと同じ名前のフォルダから読み込む
 	const string directoryPath = baseDirectory + modelName + "/";
 	//拡張子.fbxを追加
@@ -60,20 +62,21 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 	fbxImporter->Import(fbxScene);
 
 	//モデル生成
-	FbxModel* fbxModel = new FbxModel();
+	std::unique_ptr<FbxModel> fbxModel = std::make_unique< FbxModel>();
 	fbxModel->name = modelName;
 	//FBXノードの数を取得
 	int nodeCount = fbxScene->GetNodeCount();
 	//あらかじめ必要数分のメモリを確保することで、アドレスがずれるのを予防する
 	fbxModel->nodes.reserve(nodeCount);
 	//ルートノードから順に解析してモデルに流し込む
-	ParseNodeRecursive(fbxModel, fbxScene->GetRootNode());
+	ParseNodeRecursive(fbxModel.get(), fbxScene->GetRootNode());
 	//FBXシーン開放
 	fbxScene->Destroy();
 
 	//バッファ生成
 	fbxModel->CreateBuffers(device);
 
+	return fbxModel;
 }
 
 void FbxLoader::ParseNodeRecursive(FbxModel* fbxModel, FbxNode* fbxNode, Node* parent)
@@ -97,18 +100,25 @@ void FbxLoader::ParseNodeRecursive(FbxModel* fbxModel, FbxNode* fbxNode, Node* p
 	node.translation = { (float)translation[0],(float)translation[1],(float)translation[2],0.0f };
 
 	//回転角をDegree(度)からラジアンに変換
-	node.rotation.m128_f32[0] = XMConvertToRadians(node.rotation.m128_f32[0]);
-	node.rotation.m128_f32[1] = XMConvertToRadians(node.rotation.m128_f32[1]);
-	node.rotation.m128_f32[2] = XMConvertToRadians(node.rotation.m128_f32[2]);
+	node.rotation.x = XMConvertToRadians(node.rotation.x);
+	node.rotation.y = XMConvertToRadians(node.rotation.y);
+	node.rotation.z = XMConvertToRadians(node.rotation.z);
 
 	//スケール、回転、平行移動行列の計算
-	XMMATRIX matScaling, matRotation, matTranslation;
-	matScaling = XMMatrixScalingFromVector(node.scaling);
-	matRotation = XMMatrixRotationRollPitchYawFromVector(node.rotation);
-	matTranslation = XMMatrixTranslationFromVector(node.translation);
+	Matrix4 matScaling, matRotation, matTranslation;
+	matScaling.scale({node.scaling.x, node.scaling.y, node.scaling.z});
+	Matrix4 rotX, rotY, rotZ;
+	rotX.rotateX(node.rotation.x);
+	rotY.rotateY(node.rotation.y);
+	rotZ.rotateZ(node.rotation.z);
+	matRotation.identity();
+	matRotation *= rotZ;
+	matRotation *= rotX;
+	matRotation *= rotY;
+	matTranslation.translate({ node.translation.x, node.translation.y, node.translation.z });
 
 	//ローカル変形行列の計算
-	node.transform = XMMatrixIdentity();
+	node.transform.identity();
 	node.transform *= matScaling;
 	node.transform *= matRotation;
 	node.transform *= matTranslation;

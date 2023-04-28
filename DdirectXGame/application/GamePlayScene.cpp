@@ -89,10 +89,19 @@ void GamePlayScene::Initialize()
 
 
 	//モデル名を指定してファイル読み込み
-	FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	model1 = std::make_unique<FbxModel>();
+	model1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+
+	object1 = std::make_unique<FbxObject3d>();
+	object1->Initialize();
+	object1->SetModel(model1.get());
 
 	//デバイスセット
 	FbxObject3d::SetCamera(camera);
+
+	camera->target = { 0,20,0 };
+	camera->eye = { 0,0,-200 };
+
 }
 
 void GamePlayScene::Finalize()
@@ -163,6 +172,8 @@ void GamePlayScene::Update()
 	rayObj->position = ray.start;
 	rayObj->Update();
 
+	object1->Update();
+
 	//----------------------ゲーム内ループはここまで---------------------//
 
 
@@ -183,6 +194,7 @@ void GamePlayScene::Draw()
 	triangleObj->Draw();
 	rayObj->Draw();
 
+	object1->Draw();
 
 	//-------前景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();

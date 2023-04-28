@@ -10,7 +10,7 @@ struct VSInput
 {
 	float4 pos : POSITION;//位置
 	float3 normal : NORMAL;//頂点法線
-	flaot2 uv : TEXCOORD;//テクスチャ法線
+	float2 uv : TEXCOORD;//テクスチャ法線
 };
 
 //頂点シェーダからピクセルシェーダへのやり取りに使用する構造体

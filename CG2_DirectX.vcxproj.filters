@@ -180,6 +180,9 @@
     <ClCompile Include="DdirectXGame\engine\3d\FbxObject3d.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
+    <ClCompile Include="DdirectXGame\engine\math\Vector4.cpp">
+      <Filter>ソース ファイル\engine\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DdirectXGame\application\GamePlayScene.h">
@@ -301,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\3d\FbxObject3d.h">
       <Filter>ヘッダー ファイル\enigne\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\math\Vector4.h">
+      <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,5 +34,8 @@ public:
 	void UpdateMatrix();
 
 	Matrix4 GetViewProjection()const { return matView * matProjection; }
+
+	Vector3 GetEye()const { return eye; }
+		 
 };
 

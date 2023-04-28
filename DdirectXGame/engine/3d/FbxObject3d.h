@@ -1,6 +1,6 @@
 #pragma once
 
-#include"Model.h"
+#include"FbxModel.h"
 #include"Camera.h"
 
 #include<Windows.h>
@@ -21,6 +21,7 @@ protected:
 public://静的メンバ関数
 	//setter
 	static void SetDevice(ID3D12Device* device) { FbxObject3d::device = device; }
+	static void SetCmdList(ID3D12GraphicsCommandList* cmdList) { FbxObject3d::cmdList = cmdList; }
 	static void SetCamera(Camera* camera) { FbxObject3d::camera = camera; }
 
 	/// <summary>
@@ -31,6 +32,8 @@ public://静的メンバ関数
 private://静的メンバ変数
 	//デバイス
 	static ID3D12Device* device;
+	//コマンドリスト
+	static ID3D12GraphicsCommandList* cmdList;
 	//カメラ
 	static Camera* camera;
 	//ルートシグネチャ
@@ -53,10 +56,36 @@ public://メンバ関数
 	/// </summary>
 	void Initialize();
 
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// モデルのセット
+	/// </summary>
+	/// <param name="fbxModel">fbxモデルデータ</param>
+	void SetModel(FbxModel* fbxModel) { this->fbxModel = fbxModel; }
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
 
 protected://メンバ変数
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffTransform;
+
+	//ローカルスケール
+	Vector3 scale = { 1,1,1 };
+	//X,Y,Z軸周りのローカル回転角
+	Vector3 rotation = { 0,0,0 };
+	//ローカル座標
+	Vector3 position = { 0,0,0 };
+	//ローカルワールド変換行列
+	Matrix4 matWorld;
+	//モデル
+	FbxModel* fbxModel = nullptr;
 
 };
 

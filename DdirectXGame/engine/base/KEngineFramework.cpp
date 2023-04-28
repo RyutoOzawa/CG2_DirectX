@@ -46,8 +46,11 @@ void KEngineFramework::Initialize()
 	//FBX初期化
 	FbxLoader::GetInstance()->Initialize(directX->GetDevice());
 
-	//FbxObjectのデバイスセット
+	//FbxObjectのデバイスとパイプライン生成
 	FbxObject3d::SetDevice(directX->GetDevice());
+	FbxObject3d::SetCmdList(directX->GetCommandList());
+	FbxObject3d::CreateGraphicsPipeline();
+
 }
 
 void KEngineFramework::Finalize()

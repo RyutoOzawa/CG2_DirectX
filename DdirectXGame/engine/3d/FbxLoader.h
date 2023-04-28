@@ -6,6 +6,7 @@
 #include <d3dx12.h>
 #include<string>
 #include"FbxModel.h"
+#include<memory>
 
 class FbxLoader
 {
@@ -39,7 +40,7 @@ public:
 	/// ファイルからFBXモデル読み込み
 	/// </summary>
 	/// <param name="modelName">モデルのファイル名</param>
-	void LoadModelFromFile(const string& modelName);
+	std::unique_ptr< FbxModel> LoadModelFromFile(const string& modelName);
 
 	/// <summary>
 	/// 再帰的にノード構成を解析
