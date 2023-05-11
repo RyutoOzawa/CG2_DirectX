@@ -11,6 +11,7 @@
 #include"Vector3.h"
 #include"Vector4.h"
 #include"Matrix4.h"
+#include<fbxsdk.h>
 
 struct Node {
 	//名前
@@ -27,6 +28,19 @@ struct Node {
 	Matrix4 grobalTransform;
 	//親ノード
 	Node* parent = nullptr;
+};
+
+struct Bone {
+	//名前
+	std::string name;
+	//初期姿勢の逆行列
+	Matrix4 invInitialPose;
+	//クラスター(FBXガワのボーン情報)
+	FbxCluster* fbxCluster;
+	//コンストラクタ
+	Bone(const std::string& name) {
+		this->name = name;
+	}
 };
 
 class FbxModel
@@ -46,14 +60,19 @@ private:
 	template<class T> using vector = std::vector<T>;
 
 public:
+	//ボーンインデックスの最大数
+	static const int MAX_BONE_INDICES = 4;
+
 	//フレンドクラス
 	friend class FbxLoader;
 
 	//サブクラス
-	struct VertexPosNormalUv {
+	struct VertexPosNormalUvSkin {
 		Vector3 pos;//XYZ座標
 		Vector3 normal;//法線ベクトル
 		Vector2 uv;//uv座標
+		UINT boneIndex[MAX_BONE_INDICES];//ボーン番号
+		float boneWeight[MAX_BONE_INDICES];//ボーンの重み
 	};
 private:
 	//モデル名
@@ -63,7 +82,7 @@ private:
 	//メッシュを持つノード
 	Node* meshNode = nullptr;
 	//頂点データ配列
-	vector < VertexPosNormalUv> vertices;
+	vector < VertexPosNormalUvSkin> vertices;
 	//頂点インデックス配列
 	vector<unsigned short> indices;
 	//アンビエント係数
@@ -86,9 +105,14 @@ private:
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
 	//SRV用でスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+	//ボーン配列
+	vector<Bone> bones;
 
 
 public:
+
+
+
 	//バッファ生成
 	void CreateBuffers(ID3D12Device* device);
 
@@ -97,5 +121,8 @@ public:
 
 	//モデルの変形行列取得
 	const Matrix4& GetModelTransform() { return meshNode->grobalTransform; }
+
+	//ボーンのゲッター
+	vector<Bone>& GetBones() { return bones; }
 };
 

@@ -59,6 +59,13 @@ public:
 	//ディレクトリを含んだファイルパスからファイル名を抽出する
 	std::string ExtractFileName(const std::string& path);
 
+	/// <summary>
+/// FBXの行列をmatrix4に変換
+/// </summary>
+/// <param name="">書き込み先</param>
+/// <param name="">元となるFBX行列</param>
+	static void ConvertMatrixFromFbx(Matrix4* dst, const FbxAMatrix*& src);
+
 /// <summary>
 /// メンバ変数
 /// </summary>
@@ -95,4 +102,6 @@ private:
 	void ParseMaterial(FbxModel* fbxModel, FbxNode* fbxNode);
 	//テクスチャ読み込み
 	void LoadTexture(FbxModel* fbxModel, const std::string& fullPath);
+	//スキニング情報の読み取り
+	void ParseSkin(FbxModel* fbxModel,FbxMesh* fbxMesh);
 };
