@@ -8,6 +8,7 @@ using namespace Microsoft::WRL;
 ///静的メンバ変数の実態
 /// </summary>
 ID3D12Device* FbxObject3d::device = nullptr;
+ID3D12GraphicsCommandList* FbxObject3d::cmdList = nullptr;
 Camera* FbxObject3d::camera = nullptr;
 ComPtr<ID3D12RootSignature> FbxObject3d::rootsignature;
 ComPtr<ID3D12PipelineState> FbxObject3d::pipelinestate;
@@ -126,7 +127,7 @@ void FbxObject3d::CreateGraphicsPipeline()
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	gpipeline.NumRenderTargets = 1;    // 描画対象は1つ
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // 0～255指定のRGBA
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
@@ -164,11 +165,23 @@ void FbxObject3d::CreateGraphicsPipeline()
 void FbxObject3d::Initialize()
 {
 	HRESULT result;
+	//ヒープ設定とリソース設定
+	D3D12_HEAP_PROPERTIES heapProp{};
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;	//256バイトアラインメント
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
 	//定数バッファの生成
 	result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff),
+		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffTransform));
@@ -188,8 +201,8 @@ void FbxObject3d::Update()
 	rotY.identity();
 	rotZ.identity();
 	rotZ.rotateZ(rotation.z);
-	rotX.rotateZ(rotation.x);
-	rotY.rotateZ(rotation.y);
+	rotX.rotateX(rotation.x);
+	rotY.rotateY(rotation.y);
 	matRot *= rotZ;
 	matRot *= rotX;
 	matRot *= rotY;
@@ -206,7 +219,7 @@ void FbxObject3d::Update()
 	//ビュープロジェクション行列
 	const Matrix4& matViewProjection = camera->GetViewProjection();
 	//モデルのメッシュトランスフォーム
-	const Matrix4 modelTransform = fbxModel->GetModelTransform();
+	const Matrix4& modelTransform = fbxModel->GetModelTransform();
 	//カメラ座標
 	const Vector3& cameraPos = camera->GetEye();
 

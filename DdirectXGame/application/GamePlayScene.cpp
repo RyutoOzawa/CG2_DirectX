@@ -48,6 +48,7 @@ void GamePlayScene::Initialize()
 
 	sprite2->SetPos({240, 240});
 
+	camera = new Camera();
 	camera->Initialize(eye, target, up);
 
 	skydomeObj = std::make_unique<Object3d>();
@@ -127,7 +128,14 @@ void GamePlayScene::Update()
 
 
 
+	camera->target = { 0,20,0 };
+	//camera->eye = { 0,0,-100 };
+	ImGui::SliderFloat("cameraX", &camera->eye.x, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraY", &camera->eye.y, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraZ", &camera->eye.z, -100.0f, 100.0f);
 
+	camera->target = camera->eye;
+	camera->target.z += 1.0f;
 
 	camera->UpdateMatrix();
 
@@ -190,15 +198,15 @@ void GamePlayScene::Draw()
 	Object3d::BeginDraw(camera);
 
 	skydomeObj->Draw();
-	planeObj->Draw();
-	triangleObj->Draw();
-	rayObj->Draw();
+	//planeObj->Draw();
+	//triangleObj->Draw();
+	//rayObj->Draw();
 
 	object1->Draw();
 
 	//-------前景スプライト描画処理-------//
 	SpriteManager::GetInstance()->beginDraw();
 
-	sprite->Draw();
-	sprite2->Draw();
+	//sprite->Draw();
+	//sprite2->Draw();
 }

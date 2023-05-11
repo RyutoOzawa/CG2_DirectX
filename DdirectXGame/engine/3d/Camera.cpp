@@ -54,9 +54,6 @@ void Camera::Initialize(const Vector3& eye, const Vector3& target, const Vector3
 void Camera::UpdateMatrix()
 {
 	//ê—p‚Ìs—ñ‚ğéŒ¾
-
-
-	
 	matProjection = matProjection.CreateProjectionMat(45.0 * PI/ 180, (float)WindowsAPI::winW / WindowsAPI::winH, 0.1f, 1000.0f);
 
 	matView = matView.CreateViewMat(eye, target, up);

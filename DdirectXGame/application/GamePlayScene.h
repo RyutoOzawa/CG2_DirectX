@@ -9,6 +9,7 @@
 #include<memory>
 #include"CollisionPrimitive.h"
 #include"FbxModel.h"
+#include"FbxObject3d.h"
 
 class GamePlayScene :public GameBaseScene
 {

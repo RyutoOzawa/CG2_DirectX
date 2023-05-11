@@ -106,16 +106,16 @@ void FbxLoader::ParseNodeRecursive(FbxModel* fbxModel, FbxNode* fbxNode, Node* p
 
 	//スケール、回転、平行移動行列の計算
 	Matrix4 matScaling, matRotation, matTranslation;
-	matScaling.scale({node.scaling.x, node.scaling.y, node.scaling.z});
+	matScaling = matScaling.scale({ node.scaling.x, node.scaling.y, node.scaling.z });
 	Matrix4 rotX, rotY, rotZ;
-	rotX.rotateX(node.rotation.x);
-	rotY.rotateY(node.rotation.y);
-	rotZ.rotateZ(node.rotation.z);
+	rotX = rotX.rotateX(node.rotation.x);
+	rotY = rotY.rotateY(node.rotation.y);
+	rotZ = rotZ.rotateZ(node.rotation.z);
 	matRotation.identity();
 	matRotation *= rotZ;
 	matRotation *= rotX;
 	matRotation *= rotY;
-	matTranslation.translate({ node.translation.x, node.translation.y, node.translation.z });
+	matTranslation = matTranslation.translate({ node.translation.x, node.translation.y, node.translation.z });
 
 	//ローカル変形行列の計算
 	node.transform.identity();
@@ -251,7 +251,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* fbxModel, FbxMesh* fbxMesh)
 
 			//インデックス配列に頂点インデックス追加
 			//3頂点目までなら
-			if (j > 3) {
+			if (j < 3) {
 				//1点追加し、他の2点と三角形を構築する
 				indices.push_back(index);
 			}
