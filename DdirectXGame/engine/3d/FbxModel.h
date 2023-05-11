@@ -30,18 +30,7 @@ struct Node {
 	Node* parent = nullptr;
 };
 
-struct Bone {
-	//名前
-	std::string name;
-	//初期姿勢の逆行列
-	Matrix4 invInitialPose;
-	//クラスター(FBXガワのボーン情報)
-	FbxCluster* fbxCluster;
-	//コンストラクタ
-	Bone(const std::string& name) {
-		this->name = name;
-	}
-};
+
 
 class FbxModel
 {
@@ -73,6 +62,19 @@ public:
 		Vector2 uv;//uv座標
 		UINT boneIndex[MAX_BONE_INDICES];//ボーン番号
 		float boneWeight[MAX_BONE_INDICES];//ボーンの重み
+	};
+
+	struct Bone {
+		//名前
+		std::string name;
+		//初期姿勢の逆行列
+		Matrix4 invInitialPose;
+		//クラスター(FBXガワのボーン情報)
+		FbxCluster* fbxCluster;
+		//コンストラクタ
+		Bone(const std::string& name) {
+			this->name = name;
+		}
 	};
 private:
 	//モデル名
@@ -107,11 +109,13 @@ private:
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 	//ボーン配列
 	vector<Bone> bones;
-
+	//FBXシーン
+	FbxScene* fbxScene = nullptr;
 
 public:
 
-
+	//デストラクタ
+	~FbxModel();
 
 	//バッファ生成
 	void CreateBuffers(ID3D12Device* device);
@@ -124,5 +128,8 @@ public:
 
 	//ボーンのゲッター
 	vector<Bone>& GetBones() { return bones; }
+
+	//FBXシーンのゲッター
+	FbxScene* GetFbxScene() { return fbxScene; }
 };
 

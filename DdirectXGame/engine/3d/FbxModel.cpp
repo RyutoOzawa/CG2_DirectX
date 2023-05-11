@@ -1,5 +1,11 @@
 #include "FbxModel.h"
 
+FbxModel::~FbxModel()
+{
+	//FBXƒV[ƒ“‚Ì‰ð•ú
+	fbxScene->Destroy();
+}
+
 void FbxModel::CreateBuffers(ID3D12Device* device)
 {
 	HRESULT result;

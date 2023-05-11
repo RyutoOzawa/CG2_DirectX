@@ -64,7 +64,7 @@ public:
 /// </summary>
 /// <param name="">書き込み先</param>
 /// <param name="">元となるFBX行列</param>
-	static void ConvertMatrixFromFbx(Matrix4* dst, const FbxAMatrix*& src);
+	static void ConvertMatrixFromFbx(Matrix4* dst, const FbxAMatrix& src);
 
 /// <summary>
 /// メンバ変数
