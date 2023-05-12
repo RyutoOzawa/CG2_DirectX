@@ -67,14 +67,14 @@ void GamePlayScene::Initialize()
 
 	rayObj = std::make_unique<Object3d>();
 	rayObj->Initialize();
-	rayObj->SetModel(defaultModel.get());
-	rayObj->scale = { 0.01f,10.0f,0.01f };
+	rayObj->SetModel(skydome.get());
+//	rayObj->scale = { 0.01f,10.0f,0.01f };
 
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
 
 	//球の初期値を設定
-	sphere.pos = { -5,2,-0 };
+	sphere.pos = { -1,1,-0 };
 	sphere.radius = 1.0f;
 	//平面の初期値を設定
 	plane.normal = { 0,1,0 };
@@ -171,14 +171,26 @@ void GamePlayScene::Update()
 
 	ImGui::End();
 
-	//ata
+
 
 	skydomeObj->position = sphere.pos;
 	skydomeObj->Update();
 	planeObj->Update();
 
-	rayObj->position = ray.start;
+	rayObj->position = { 1,1,0 };
 	rayObj->Update();
+
+
+	//アニメーション開始ボタン
+	if (ImGui::Button("animation start")) {
+		object1->PlayAnitimation();
+	}
+
+	if (input->IsKeyTrigger(DIK_A)) {
+		object1->PlayAnitimation();
+	}
+
+	ImGui::Text("current:%d", object1->BaGetCurrentTime());
 
 	object1->Update();
 
@@ -204,10 +216,11 @@ void GamePlayScene::Draw()
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-	skydomeObj->Draw();
+	//skydomeObj->Draw();
+	//rayObj->Draw();
 	//planeObj->Draw();
 	//triangleObj->Draw();
-	//rayObj->Draw();
+
 
 	object1->Draw();
 
