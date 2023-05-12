@@ -55,6 +55,8 @@ void KEngineFramework::Initialize()
 
 void KEngineFramework::Finalize()
 {
+
+
 	imguiManager->Finalize();
 
 	FbxLoader::GetInstance()->Finalize();

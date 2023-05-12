@@ -90,8 +90,8 @@ void GamePlayScene::Initialize()
 
 
 	//モデル名を指定してファイル読み込み
-	model1 = std::make_unique<FbxModel>();
-	model1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	//model1 = std::make_unique<FbxModel>();
+	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
 	object1 = std::make_unique<FbxObject3d>();
 	object1->Initialize();
@@ -101,7 +101,7 @@ void GamePlayScene::Initialize()
 	FbxObject3d::SetCamera(camera);
 
 	camera->target = { 0,20,0 };
-	camera->eye = { 0,0,-200 };
+	camera->eye = { 0,0,-20 };
 
 }
 
@@ -181,6 +181,13 @@ void GamePlayScene::Update()
 	rayObj->Update();
 
 	object1->Update();
+
+	//スペースキーでメインゲームへ
+	if (input->IsKeyTrigger(DIK_SPACE))
+	{
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("TITLE");
+	}
 
 	//----------------------ゲーム内ループはここまで---------------------//
 
