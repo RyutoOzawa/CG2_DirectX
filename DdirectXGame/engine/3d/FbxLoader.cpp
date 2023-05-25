@@ -197,7 +197,7 @@ void FbxLoader::ParseMeshVertices(FbxModel* fbxModel, FbxMesh* fbxMesh)
 	//頂点座標データの数
 	const int controlPointCount = fbxMesh->GetControlPointsCount();
 	//必要数だけ頂点データ配列を確保
-	FbxModel::VertexPosNormalUvSkin vert;
+	FbxModel::VertexPosNormalUvSkin vert{};
 	fbxModel->vertices.resize(controlPointCount, vert);
 
 	//FBXメッシュの頂点座標配列を取得
@@ -378,7 +378,7 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
 
 		//FBXから初期姿勢行列を取得する
 		FbxAMatrix fbxMat;
-		fbxCluster->GetTransformMatrix(fbxMat);
+		fbxCluster->GetTransformLinkMatrix(fbxMat);
 
 		//Matrix4型に変換する
 		Matrix4 initialPose;
@@ -397,7 +397,7 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
 	//二次元配列(ジャグ配列)
 	//list:頂点が影響を受けるボーンの全リスト
 	//vector:それを前頂点分
-	vector<list<WeightSet>> weightLists(fbxModel->vertices.size());
+	std::vector<std::list<WeightSet>> weightLists(fbxModel->vertices.size());
 
 	//すべてのボーンについて
 	for (int i = 0; i < clusterCount; i++) {
@@ -412,9 +412,9 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
 		//影響を受ける全頂点について
 		for (int j = 0; j < controlPointIndicesCount; j++) {
 			//頂点番号
-			int vertIndex = controlPointIndices[i];
+			int vertIndex = controlPointIndices[j];
 			//スキンウェイト
-			float weight = (float)controlPointWeights[i];
+			float weight = (float)controlPointWeights[j];
 			//その頂点を影響を受けるボーンリストに、ボーンとウェイとのペアを追加
 			weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i,weight });
 		}
@@ -427,7 +427,8 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
 		//頂点のウェイトから最も大きい4つを選択
 		auto& weightList = weightLists[i];
 		//大小比較用のラムダ式を指定して降順にソート
-		weightList.sort([](auto const& lhs, auto const& rhs) {
+		weightList.sort(
+			[](auto const& lhs, auto const& rhs) {
 			//左の要素の方がおおきければtrue,そうでなければfalseを返す
 			return lhs.weight > rhs.weight;
 			});

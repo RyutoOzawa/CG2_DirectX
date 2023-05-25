@@ -92,7 +92,7 @@ void FbxObject3d::CreateGraphicsPipeline()
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		},
 		{//ボーンのスキンウェイト(4つ)
-			"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_UINT,0,
+			"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		},
@@ -231,23 +231,14 @@ void FbxObject3d::Update()
 	Matrix4 matScale, matRot, matTrans;
 
 	//スケール、回転、平行移動行列の計算
-	matScale.identity();
-	matScale.scale(scale);
+	matScale = matScale.scale(scale);
 
-	Matrix4 rotX, rotY, rotZ;
 	matRot.identity();
-	rotX.identity();
-	rotY.identity();
-	rotZ.identity();
-	rotZ.rotateZ(rotation.z);
-	rotX.rotateX(rotation.x);
-	rotY.rotateY(rotation.y);
-	matRot *= rotZ;
-	matRot *= rotX;
-	matRot *= rotY;
+	matRot *= matRot.rotateZ(rotation.z);
+	matRot *= matRot.rotateX(rotation.x);
+	matRot *= matRot.rotateY(rotation.y);
 
-	matTrans.identity();
-	matTrans.translate(position);
+	matTrans = matTrans.translate(position);
 
 	//ワールド行列合成
 	matWorld.identity();

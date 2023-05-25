@@ -89,6 +89,8 @@ public://ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void PlayAnitimation();
 
+	void SetRot(const Vector3& rotation) { this->rotation = rotation; }
+
 	FbxTime BaGetCurrentTime() { return currentTime; }
 
 protected://ƒƒ“ƒo•Ï”

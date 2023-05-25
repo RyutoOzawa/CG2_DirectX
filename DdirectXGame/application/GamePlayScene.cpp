@@ -171,8 +171,6 @@ void GamePlayScene::Update()
 
 	ImGui::End();
 
-
-
 	skydomeObj->position = sphere.pos;
 	skydomeObj->Update();
 	planeObj->Update();
@@ -192,6 +190,7 @@ void GamePlayScene::Update()
 
 	ImGui::Text("current:%d", object1->BaGetCurrentTime());
 
+	//object1->SetRot({ 0,3.14f / 2,0 });
 	object1->Update();
 
 	//スペースキーでメインゲームへ
