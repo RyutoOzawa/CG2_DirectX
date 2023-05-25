@@ -1,7 +1,6 @@
 #include "GamePlayScene.h"
 #include"Texture.h"
 #include"DirectX.h"
-#include"SpriteManager.h"
 #include"GameSceneManager.h"
 #include"Collision.h"
 #include"FbxLoader.h"
@@ -46,7 +45,7 @@ void GamePlayScene::Initialize()
 	Vector3 target(0, 0, 6);	//注視点座標
 	Vector3 up(0, 1, 0);		//上方向ベクトル
 
-	sprite2->SetPos({240, 240});
+	sprite2->SetPos({ 240, 240 });
 
 	camera = new Camera();
 	camera->Initialize(eye, target, up);
@@ -54,6 +53,7 @@ void GamePlayScene::Initialize()
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
+	skydomeObj->scale = { 100,100,100 };
 
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
@@ -68,7 +68,7 @@ void GamePlayScene::Initialize()
 	rayObj = std::make_unique<Object3d>();
 	rayObj->Initialize();
 	rayObj->SetModel(skydome.get());
-//	rayObj->scale = { 0.01f,10.0f,0.01f };
+	//	rayObj->scale = { 0.01f,10.0f,0.01f };
 
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
@@ -101,7 +101,8 @@ void GamePlayScene::Initialize()
 	FbxObject3d::SetCamera(camera);
 
 	camera->target = { 0,20,0 };
-	camera->eye = { 0,0,-20 };
+	//	camera->eye = { 0,0,-20 };
+	camera->eye = { 100,0,0 };
 
 }
 
@@ -127,15 +128,17 @@ void GamePlayScene::Update()
 	//----------------------ゲーム内ループはここから---------------------//
 
 
+	Matrix4 mat = mat.CreateParallelProjection(1280.0f, 720.0f);
+	XMMATRIX dxmat = XMMatrixOrthographicOffCenterLH(0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1.0f);
 
-	camera->target = { 0,20,0 };
-	//camera->eye = { 0,0,-100 };
+	camera->target = { 0,0,0 };
+
 	ImGui::SliderFloat("cameraX", &camera->eye.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("cameraY", &camera->eye.y, -100.0f, 100.0f);
 	ImGui::SliderFloat("cameraZ", &camera->eye.z, -100.0f, 100.0f);
 
-	camera->target = camera->eye;
-	camera->target.z += 1.0f;
+	//camera->target = camera->eye;
+	//camera->target.z += 1.0f;
 
 	camera->UpdateMatrix();
 
@@ -208,14 +211,14 @@ void GamePlayScene::Update()
 void GamePlayScene::Draw()
 {
 	//-------背景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
+	Sprite::BeginDraw();
 
 	//backGroundSprite->Draw();
 
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-	//skydomeObj->Draw();
+	skydomeObj->Draw();
 	//rayObj->Draw();
 	//planeObj->Draw();
 	//triangleObj->Draw();
@@ -224,7 +227,7 @@ void GamePlayScene::Draw()
 	object1->Draw();
 
 	//-------前景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
+	Sprite::BeginDraw();
 
 	//sprite->Draw();
 	//sprite2->Draw();

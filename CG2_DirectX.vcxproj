@@ -125,7 +125,6 @@
     <ClCompile Include="DdirectXGame\engine\scene\SceneFactory.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\Sphere.cpp" />
     <ClCompile Include="DdirectXGame\engine\2d\Sprite.cpp" />
-    <ClCompile Include="DdirectXGame\engine\2d\SpriteManager.cpp" />
     <ClCompile Include="DdirectXGame\engine\2d\Texture.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\Transform.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\Util.cpp" />
@@ -134,9 +133,11 @@
     <ClCompile Include="DdirectXGame\engine\math\Vertex.cpp" />
     <ClCompile Include="DdirectXGame\engine\base\WindowsAPI.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\FbxObject3d.cpp" />
+    <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DdirectXGame\engine\2d\PostEffect.h" />
     <ClInclude Include="DdirectXGame\engine\3d\FbxLoader.h" />
     <ClInclude Include="DdirectXGame\engine\3d\FbxModel.h" />
     <ClInclude Include="DdirectXGame\engine\math\BaseCollider.h" />
@@ -168,7 +169,6 @@
     <ClInclude Include="DdirectXGame\engine\scene\SceneFactory.h" />
     <ClInclude Include="DdirectXGame\engine\3d\Sphere.h" />
     <ClInclude Include="DdirectXGame\engine\2d\Sprite.h" />
-    <ClInclude Include="DdirectXGame\engine\2d\SpriteManager.h" />
     <ClInclude Include="DdirectXGame\engine\2d\Texture.h" />
     <ClInclude Include="DdirectXGame\engine\math\Transform.h" />
     <ClInclude Include="DdirectXGame\engine\math\Util.h" />

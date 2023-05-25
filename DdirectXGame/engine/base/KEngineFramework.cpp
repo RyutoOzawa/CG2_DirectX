@@ -23,9 +23,8 @@ void KEngineFramework::Initialize()
 	//テクスチャマネージャーの初期化
 	Texture::Initialize(directX->GetDevice());
 
-	//スプライト共通部の初期化
-	spriteManager = SpriteManager::GetInstance();
-	spriteManager->Initialize(directX, WindowsAPI::winW, WindowsAPI::winH);
+	//スプライトの初期化
+	Sprite::StaticInitialize(directX->GetDevice(), directX->GetCommandList(), WindowsAPI::winW, WindowsAPI::winH);
 
 	//3Dオブジェクトの初期化
 	Object3d::StaticInitialize(directX);

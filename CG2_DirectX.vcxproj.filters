@@ -72,9 +72,6 @@
     <ClCompile Include="DdirectXGame\engine\2d\Sprite.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="DdirectXGame\engine\2d\SpriteManager.cpp">
-      <Filter>ソース ファイル\engine\2d</Filter>
-    </ClCompile>
     <ClCompile Include="DdirectXGame\engine\3d\Object3d.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
     <ClCompile Include="DdirectXGame\engine\math\Vector4.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
+    <ClCompile Include="PostEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DdirectXGame\application\GamePlayScene.h">
@@ -204,9 +204,6 @@
       <Filter>ヘッダー ファイル\enigne\2d</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\2d\Sprite.h">
-      <Filter>ヘッダー ファイル\enigne\2d</Filter>
-    </ClInclude>
-    <ClInclude Include="DdirectXGame\engine\2d\SpriteManager.h">
       <Filter>ヘッダー ファイル\enigne\2d</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\2d\Texture.h">
@@ -307,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\math\Vector4.h">
       <Filter>ヘッダー ファイル\enigne\math</Filter>
+    </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\2d\PostEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

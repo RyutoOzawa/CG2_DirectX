@@ -3,7 +3,6 @@
 #include"DirectX.h"
 #include"Input.h"
 #include"Texture.h"
-#include"SpriteManager.h"
 #include"Sprite.h"
 #include"Object3d.h"
 #include"Camera.h"
@@ -41,7 +40,6 @@ public:
 	WindowsAPI* windowsAPI = nullptr;
 	ReDirectX* directX = nullptr;
 	Input* input = nullptr;
-	SpriteManager* spriteManager = nullptr;
 	ImguiManager* imguiManager = nullptr;
 
 protected:
