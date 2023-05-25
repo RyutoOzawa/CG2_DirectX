@@ -43,13 +43,16 @@ void Sprite::BeginDraw()
 	cmdList->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
 }
 
 void Sprite::SetTextureCommand(uint32_t index)
-{	//SRVヒープの先頭ハンドル取得
+{
+	//デスクリプタヒープの配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	//SRVヒープの先頭ハンドル取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
 	UINT incrementSize =device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	srvGpuHandle.ptr += incrementSize * index;
@@ -200,6 +203,16 @@ void Sprite::CreatePipeline2D()
 
 	//パイプラインステートの生成
 	pipeline.SetPipelineState(device, pipelineState);
+}
+
+Sprite::Sprite()
+{
+}
+
+Sprite::Sprite(uint32_t texIdnex, Vector2 pos, Vector2 size_, Vector4 color_, Vector2 anchorP, bool isFlipX_, bool isFlipY_):
+textureIndex(texIdnex),position(pos),color(color_),anchorPoint(anchorP),size(size_),isFlipX(isFlipX_),isFlipY(isFlipY_)
+
+{
 }
 
 void Sprite::Initialize(uint32_t textureNum)

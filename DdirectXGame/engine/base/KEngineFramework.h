@@ -10,7 +10,7 @@
 #include"AudioManager.h"
 #include"GameSceneManager.h"
 #include"SceneFactory.h"
-
+#include"PostEffect.h"
 #include<memory>
 
 class KEngineFramework
@@ -41,6 +41,8 @@ public:
 	ReDirectX* directX = nullptr;
 	Input* input = nullptr;
 	ImguiManager* imguiManager = nullptr;
+	PostEffect* postEffect = nullptr;
+
 
 protected:
 	GameSceneManager* sceneManager = nullptr;

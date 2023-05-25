@@ -74,6 +74,10 @@ protected:	//メンバ変数
 	Vector2 textureSize = { 100.0f,100.0f };	//テクスチャ切り出しサイズ
 
 public: //メンバ関数
+
+	Sprite();
+	Sprite(uint32_t texIdnex,Vector2 pos,Vector2 size_,Vector4 color_,Vector2 anchorP,bool isFlipX_,bool isFlipY_);
+
 	void Initialize(uint32_t textureNum = UINT32_MAX);
 
 	void Draw();

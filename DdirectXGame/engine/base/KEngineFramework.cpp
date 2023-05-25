@@ -50,6 +50,12 @@ void KEngineFramework::Initialize()
 	FbxObject3d::SetCmdList(directX->GetCommandList());
 	FbxObject3d::CreateGraphicsPipeline();
 
+	//ポストエフェクト用テクスチャの読み込み
+	uint32_t postEffectTexture = Texture::LoadTexture(L"Resources/white1x1.png");
+	//ポストエフェクトの初期化
+	postEffect = new PostEffect();
+	postEffect->Initialize(postEffectTexture);
+
 }
 
 void KEngineFramework::Finalize()
