@@ -211,6 +211,14 @@ void FbxObject3d::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuffSkin));
 
+	//定数バッファへデータ転送
+	ConstBufferDataSkin* constMapSkin = nullptr;
+	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
+	for (int i = 0; i < MAX_BONES; i++) {
+		constMapSkin->bones[i].identity();
+	}
+	constBuffSkin->Unmap(0, nullptr);
+
 	//1フレーム間の時間を60fpsで固定
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 }
