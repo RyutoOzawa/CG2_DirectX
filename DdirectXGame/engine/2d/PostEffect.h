@@ -14,5 +14,14 @@ public:
     /// </summary>
     /// <param name="cmdList"></param>
     void Draw(ID3D12GraphicsCommandList* cmdList);
+
+    /// <summary>
+    /// ‰Šú‰»
+    /// </summary>
+    void Initialize(uint32_t textureHandle);
+
+private://ƒƒ“ƒo•Ï”
+    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 };
 
