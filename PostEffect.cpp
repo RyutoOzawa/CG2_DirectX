@@ -283,3 +283,8 @@ void PostEffect::InitCreateDSV()
 		&dsvDesc,
 		descHeapDSV->GetCPUDescriptorHandleForHeapStart());
 }
+
+void PostEffect::InitVertbuff()
+{
+	//頂点バッファ生成
+}

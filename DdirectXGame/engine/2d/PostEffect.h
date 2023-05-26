@@ -49,6 +49,8 @@ private:
     void InitCreateRTV();
     void InitCreateDepthBuff();
     void InitCreateDSV();
+    void InitVertbuff();
+    
 
 };
 
