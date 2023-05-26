@@ -53,7 +53,7 @@ void ReDirectX::BeginDraw()
 
 	// ４．描画コマンドここから
 #pragma region グラフィックスコマンド
-// ビューポート設定コマンド
+	// ビューポート設定コマンド
 	D3D12_VIEWPORT viewport{};
 	viewport.Width = WindowsAPI::winW;
 	viewport.Height = WindowsAPI::winH;

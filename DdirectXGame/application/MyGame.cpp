@@ -44,7 +44,15 @@ void MyGame::Update()
 
 void MyGame::Draw()
 {
+
+	//レンダーテクスチャへの描画
+	postEffect->BeginDrawScene(directX->GetCommandList());
+	sceneManager->Draw();
+	postEffect->EndDrawScene(directX->GetCommandList());
+
+
 	directX->BeginDraw();
+
 
 	//ポストエフェクトの描画
 	postEffect->Draw(directX->GetCommandList());
