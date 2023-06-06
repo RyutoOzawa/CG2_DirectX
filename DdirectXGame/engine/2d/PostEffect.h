@@ -53,7 +53,7 @@ public://ƒƒ“ƒoŠÖ”
 private://ƒƒ“ƒo•Ï”
     ID3D12Device* device = nullptr;
 
-    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
+    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff[2];
     Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff;
     Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;
     Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
