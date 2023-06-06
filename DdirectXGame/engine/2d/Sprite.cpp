@@ -419,9 +419,5 @@ void Sprite::AdjustTextureSize() {
 	textureSize.y = static_cast<float>(resDesc.Height);
 }
 
-void Sprite::CreatePipeline2D(ID3D12Device* dev)
-{
-
-}
 
 

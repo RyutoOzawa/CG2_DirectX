@@ -218,7 +218,7 @@ void GamePlayScene::Draw()
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-	skydomeObj->Draw();
+//	skydomeObj->Draw();
 	//rayObj->Draw();
 	//planeObj->Draw();
 	//triangleObj->Draw();

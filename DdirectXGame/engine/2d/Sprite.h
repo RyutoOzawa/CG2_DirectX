@@ -111,7 +111,6 @@ private:
 	//テクスチャサイズをイメージサイズに合わせる
 	void AdjustTextureSize();
 
-	//スプライト用パイプラインステートとルートシグネチャの生成
-	void CreatePipeline2D(ID3D12Device* dev);
+
 };
 
