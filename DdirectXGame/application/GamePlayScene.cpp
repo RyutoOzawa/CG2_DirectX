@@ -102,7 +102,7 @@ void GamePlayScene::Initialize()
 
 	camera->target = { 0,20,0 };
 	//	camera->eye = { 0,0,-20 };
-	camera->eye = { 100,0,0 };
+	camera->eye = { 40,0,0 };
 
 }
 
