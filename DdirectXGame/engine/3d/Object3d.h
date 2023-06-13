@@ -46,6 +46,10 @@ public:
 	Vector3 rotation = { 0,0,0 };	//アフィン変換情報
 	Vector3 position = { 0,0,0 };	//アフィン変換情報
 	Matrix4 matWorld;	//ワールド変換行列
+
+	Matrix4 matBillboard = matBillboard.identity();	//ビルボード行列
+	Matrix4 matBillboardY = matBillboardY.identity();	//Y軸周りビルボード行列
+
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ
 
 	Model* model = nullptr;	//モデルデータ
