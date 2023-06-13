@@ -100,9 +100,9 @@ void GamePlayScene::Initialize()
 	//デバイスセット
 	FbxObject3d::SetCamera(camera);
 
-	camera->target = { 0,20,0 };
+	camera->target = { 0,0,0 };
 	//	camera->eye = { 0,0,-20 };
-	camera->eye = { 100,0,0 };
+	camera->eye = { 0,0,-50 };
 
 }
 
@@ -182,6 +182,9 @@ void GamePlayScene::Update()
 	rayObj->Update();
 
 
+	triangleObj->position = { 0,0,0 };
+	triangleObj->Update();
+
 	//アニメーション開始ボタン
 	if (ImGui::Button("animation start")) {
 		object1->PlayAnitimation();
@@ -221,10 +224,10 @@ void GamePlayScene::Draw()
 //	skydomeObj->Draw();
 	//rayObj->Draw();
 	//planeObj->Draw();
-	//triangleObj->Draw();
+	triangleObj->Draw();
 
 
-	object1->Draw();
+	//object1->Draw();
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();
