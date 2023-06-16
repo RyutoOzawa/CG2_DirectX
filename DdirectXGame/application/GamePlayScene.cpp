@@ -128,8 +128,6 @@ void GamePlayScene::Update()
 	//----------------------ゲーム内ループはここから---------------------//
 
 
-	Matrix4 mat = mat.CreateParallelProjection(1280.0f, 720.0f);
-	XMMATRIX dxmat = XMMatrixOrthographicOffCenterLH(0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1.0f);
 
 	camera->target = { 0,0,0 };
 
@@ -183,6 +181,12 @@ void GamePlayScene::Update()
 
 
 	triangleObj->position = { 0,0,0 };
+
+	triangleObj->camera = camera;
+
+	ImGui::Checkbox("is billboard", &triangleObj->isBillboard);
+
+
 	triangleObj->Update();
 
 	//アニメーション開始ボタン

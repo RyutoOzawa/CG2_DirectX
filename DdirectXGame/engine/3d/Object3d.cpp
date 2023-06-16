@@ -112,6 +112,13 @@ void Object3d::Update()
 	matTrans = matTrans.translate(position);
 
 	matWorld.identity();
+
+	//ビルボードフラグがtrueならビルボード行列更新と掛け算を行う
+	if (isBillboard) {
+		UpdateBillBoard();
+		matWorld *= matBillboard;
+	}
+
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
@@ -144,6 +151,34 @@ void Object3d::SetCollider(BaseCollider* collider)
 {
 	collider->SetObject(this);
 	this->collider = collider;
+}
+
+void Object3d::UpdateBillBoard()
+{
+	matBillboard.identity();
+
+	//カメラの各ベクトルを設定
+	Vector3 eye, target, up;
+	eye = camera->eye;
+	target = camera->target;
+	up = camera->up;
+	Vector3 cameraAxisZ, cameraAxisX, cameraAxisY;
+	cameraAxisZ = target - eye;
+	cameraAxisZ.normalize();
+	cameraAxisX = up.cross(cameraAxisZ);
+	cameraAxisX.normalize();
+	cameraAxisY = cameraAxisZ.cross(cameraAxisX);
+	cameraAxisY.normalize();
+
+	Matrix4 matCameraRot = {
+		cameraAxisX.x,cameraAxisX.y,cameraAxisX.z,0,
+		cameraAxisY.x,cameraAxisY.y,cameraAxisY.z,0,
+		cameraAxisZ.x,cameraAxisZ.y,cameraAxisZ.z,0,
+					0,            0,            0,1,
+	};
+
+	//カメラの行列をビルボード行列に
+	matBillboard = matCameraRot;
 }
 
 void Object3d::CreatePipeline3D()

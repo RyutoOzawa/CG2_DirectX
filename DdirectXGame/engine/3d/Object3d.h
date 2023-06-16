@@ -49,10 +49,13 @@ public:
 
 	Matrix4 matBillboard = matBillboard.identity();	//ビルボード行列
 	Matrix4 matBillboardY = matBillboardY.identity();	//Y軸周りビルボード行列
+	bool isBillboard = false;
 
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ
 
 	Model* model = nullptr;	//モデルデータ
+
+	Camera* camera = nullptr;//ビルボード用のカメラ
 	
 public:
 	/// <summary>
@@ -93,6 +96,9 @@ public:
 	void SetCollider(BaseCollider* collider);
 
 	virtual void OnCollision(const CollisionInfo& info) {}
+
+	//ビルボード行列の更新
+	void UpdateBillBoard();
 
 protected:
 	//クラス名
