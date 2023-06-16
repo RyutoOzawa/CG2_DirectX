@@ -8,15 +8,16 @@ GameSceneManager::GameSceneManager()
 
 GameSceneManager::~GameSceneManager()
 {
-	//現在のシーンの終了と開放
-	activeScene->Finalize();
-	delete activeScene;
+	
 }
 
 GameSceneManager* GameSceneManager::GetInstance()
 {
-	static GameSceneManager instance;
-	return &instance;
+	static GameSceneManager* instance = nullptr;
+	if (instance == nullptr) {
+		instance = new GameSceneManager;
+	}
+	return instance;
 }
 
 void GameSceneManager::Update()
@@ -48,6 +49,13 @@ void GameSceneManager::Update()
 void GameSceneManager::Draw()
 {
 	activeScene->Draw();
+}
+
+void GameSceneManager::Finalize()
+{
+	//現在のシーンの終了と開放
+	activeScene->Finalize();
+	delete activeScene;
 }
 
 void GameSceneManager::ChangeScene(const std::string& sceneName)

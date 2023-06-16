@@ -63,6 +63,8 @@ void KEngineFramework::Finalize()
 
 	imguiManager->Finalize();
 
+	sceneManager->Finalize();
+
 	FbxLoader::GetInstance()->Finalize();
 
 	windowsAPI->Finalize();
