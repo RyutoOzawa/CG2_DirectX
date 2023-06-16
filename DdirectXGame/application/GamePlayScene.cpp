@@ -185,6 +185,7 @@ void GamePlayScene::Update()
 	triangleObj->camera = camera;
 
 	ImGui::Checkbox("is billboard", &triangleObj->isBillboard);
+	ImGui::Checkbox("is billboardY", &triangleObj->isBillboardY);
 
 
 	triangleObj->Update();

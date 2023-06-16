@@ -50,6 +50,7 @@ public:
 	Matrix4 matBillboard = matBillboard.identity();	//ビルボード行列
 	Matrix4 matBillboardY = matBillboardY.identity();	//Y軸周りビルボード行列
 	bool isBillboard = false;
+	bool isBillboardY = false;
 
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ
 
@@ -99,6 +100,9 @@ public:
 
 	//ビルボード行列の更新
 	void UpdateBillBoard();
+
+	//Y軸ビルボード行列の更新
+	void UpdatebillboardY();
 
 protected:
 	//クラス名
