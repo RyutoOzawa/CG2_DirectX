@@ -22,9 +22,9 @@ public:
 
 	Matrix4 matView;
 	Matrix4 matProjection;
-	Vector3 eye;
-	Vector3 target;
-	Vector3 up;
+	Vector3 eye = {0,0,0};
+	Vector3 target = { 0,0,10 };
+	Vector3 up = { 0,1,0 };
 
 public:
 
@@ -34,5 +34,8 @@ public:
 	void UpdateMatrix();
 
 	Matrix4 GetViewProjection()const { return matView * matProjection; }
+
+	Vector3 GetEye()const { return eye; }
+		 
 };
 

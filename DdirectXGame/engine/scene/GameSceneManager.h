@@ -24,6 +24,9 @@ public:
 	//描画
 	void Draw();
 
+	//終了処理
+	void Finalize();
+
 	void ChangeScene(const std::string& sceneName);
 
 	//シーンファクトリーのセッター

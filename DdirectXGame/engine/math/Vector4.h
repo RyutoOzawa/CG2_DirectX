@@ -1,31 +1,20 @@
 #pragma once
-
 class Vector4
 {
 public:
-	float x;
-	float y;
-	float z;
-	float w;
+	float x;	//x成分
+	float y;	//y成分
+	float z;	//z成分
+	float w;	//w成分
+
 public:
 	//コンストラクタ
-	Vector4();								//零ベクトルとする
-	Vector4(float x, float y, float z, float w);		//x成分,y成分,z成分 を指定して生成
+	Vector4();										//零ベクトルとする
+	Vector4(float x, float y, float z, float w);	//各成分を指定して生成
 
-	//メンバ関数
-	float length() const;					//ノルム(長さ)を求める
-	Vector4& normalize();					//正規化する
-	float dot(const Vector4& v) const;		//内積を求める
-	Vector4 cross(const Vector4& v) const;	//外積を求める
-
-
-	float Vector3Length()const;//ノルムを求める
-	float Vector3LengthSquared()const;
-	Vector4 Vector3Normalization()const;//正規化する
-	Vector4& Vector3Normal();//正規化する
-	float Vector3Dot(const Vector4& v)const;//内積を求める
-	Vector4 Vector3Cross(const Vector4& v)const;//外積を求める
-
+	float length()const;
+	Vector4& normalize();
+	float dot(const Vector4& v);
 
 	//単項演算子オーバーロード
 	Vector4 operator+() const;
@@ -39,15 +28,10 @@ public:
 
 };
 
-
-//　2項演算子オーバーロード
-//　いろいろな引数のパターンに対応(引数の序列)するため、以下のように準備している
+// 2項演算子オーバーロード
+// ※いろんな引数のパターンに対応するため、以下のように準備している
 const Vector4 operator+(const Vector4& v1, const Vector4& v2);
 const Vector4 operator-(const Vector4& v1, const Vector4& v2);
 const Vector4 operator*(const Vector4& v, float s);
 const Vector4 operator*(float s, const Vector4& v);
 const Vector4 operator/(const Vector4& v, float s);
-
-void Vector4Lerp(const Vector4& src1, const Vector4& src2, float t, Vector4& dest);
-
-Vector4 Vector4Lerp(const Vector4& src1, const Vector4& src2, float t);

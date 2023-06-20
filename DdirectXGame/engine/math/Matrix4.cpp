@@ -208,16 +208,29 @@ Matrix4 Matrix4::CreateViewMat(const Vector3& eye, const Vector3& target, const 
 		cameraVecX.x,cameraVecX.y,cameraVecX.z,0,
 		cameraVecY.x,cameraVecY.y,cameraVecY.z,0,
 		cameraVecZ.x,cameraVecZ.y,cameraVecZ.z,0,
-		eye.x,eye.y,eye.z,1
+				   0,           0,           0,1
 	};
 
-	//作ったワールド行列を逆行列に
+
+	//作った行列を逆行列に
 	result.Inverse();
+
+	//カメラの平行移動を計算
+	Vector3 translation, eyeNegate = eye * -1;
+	translation.x = cameraVecX.dot(eyeNegate);
+	translation.y = cameraVecY.dot(eyeNegate);
+	translation.z = cameraVecZ.dot(eyeNegate);
+
+	result.m[3][0] = translation.x;
+	result.m[3][1] = translation.y;
+	result.m[3][2] = translation.z;
+	result.m[3][3] = 1.0f;
+
 
 	return result;
 }
 
-Matrix4 Matrix4::CreateProjectionMat(float fovY, float aspectRatio, float nearZ, float farZ)
+Matrix4 Matrix4::CreatePerspectiveProjection(float fovY, float aspectRatio, float nearZ, float farZ)
 {
 	Matrix4 result;
 
@@ -231,6 +244,27 @@ Matrix4 Matrix4::CreateProjectionMat(float fovY, float aspectRatio, float nearZ,
 		0,h,0,0,
 		0,0,z,1,
 		0,0,cameraZ,0
+	};
+
+	return result;
+}
+
+Matrix4 Matrix4::CreateParallelProjection(float windowW, float windowH)
+{
+	Matrix4 result;
+
+
+	float m00, m11;
+	m00 = 2 / windowW;
+	m11 = -2 / windowH;
+
+
+	result =
+	{
+		 m00,0.0f,0.0f,0.0f,
+		0.0f, m11,0.0f,0.0f,
+		0.0f,0.0f,1.0f,0.0f,
+	   -1.0f,1.0f,0.0f,1.0f,
 	};
 
 	return result;

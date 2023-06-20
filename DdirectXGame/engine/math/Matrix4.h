@@ -30,7 +30,9 @@ public:
 
 	Matrix4 CreateViewMat(const Vector3& eye, const Vector3& target, const Vector3& up );
 
-	Matrix4 CreateProjectionMat(float fovY,float aspectRatio,float nearZ,float farZ);
+	Matrix4 CreatePerspectiveProjection(float fovY,float aspectRatio,float nearZ,float farZ);
+
+	Matrix4 CreateParallelProjection(float windowW,float windowH);
 
 	//演算子オーバーロード
 	Matrix4& operator*=(const Matrix4& mat);

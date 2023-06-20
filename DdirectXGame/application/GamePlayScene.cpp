@@ -1,11 +1,10 @@
 #include "GamePlayScene.h"
 #include"Texture.h"
 #include"DirectX.h"
-#include"SpriteManager.h"
 #include"GameSceneManager.h"
 #include"Collision.h"
-#include"Util.h"
-
+#include"FbxLoader.h"
+#include"FbxObject3d.h"
 
 using namespace DirectX;
 
@@ -30,6 +29,7 @@ void GamePlayScene::Initialize()
 	sprite->Initialize(marioGraph);
 	sprite2->Initialize(reimuGraph);
 
+
 	skydome = std::make_unique<Model>();
 	skydome = Model::CreateModel("skydome");
 
@@ -45,11 +45,15 @@ void GamePlayScene::Initialize()
 	Vector3 target(0, 0, 6);	//注視点座標
 	Vector3 up(0, 1, 0);		//上方向ベクトル
 
-	camera.Initialize(eye, target, up);
+	sprite2->SetPos({ 240, 240 });
+
+	camera = new Camera();
+	camera->Initialize(eye, target, up);
 
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
+	skydomeObj->scale = { 100,100,100 };
 
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
@@ -63,14 +67,14 @@ void GamePlayScene::Initialize()
 
 	rayObj = std::make_unique<Object3d>();
 	rayObj->Initialize();
-	rayObj->SetModel(defaultModel.get());
-	rayObj->scale = { 0.01f,10.0f,0.01f };
+	rayObj->SetModel(skydome.get());
+	//	rayObj->scale = { 0.01f,10.0f,0.01f };
 
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
 
 	//球の初期値を設定
-	sphere.pos = { -5,2,-0 };
+	sphere.pos = { -1,1,-0 };
 	sphere.radius = 1.0f;
 	//平面の初期値を設定
 	plane.normal = { 0,1,0 };
@@ -84,17 +88,21 @@ void GamePlayScene::Initialize()
 	ray.start = { 0,1,0 };
 	ray.dir = { 0,-1,0 };
 
-	//パーティクル初期化
-	particle1 = std::make_unique<ParticleManager>();
-	particle1->Initialize();
-	particle1->SetTextureHandle(reimuGraph);
 
-	particle2 = std::make_unique<ParticleManager>();
-	particle2->Initialize();
-	particle2->SetTextureHandle(marioGraph);
+	//モデル名を指定してファイル読み込み
+	//model1 = std::make_unique<FbxModel>();
+	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
-	particleStart1 = { -10,0,0 };
-	particleStart2 = { 10,0,0 };
+	object1 = std::make_unique<FbxObject3d>();
+	object1->Initialize();
+	object1->SetModel(model1.get());
+
+	//デバイスセット
+	FbxObject3d::SetCamera(camera);
+
+	camera->target = { 0,0,0 };
+	//	camera->eye = { 0,0,-20 };
+	camera->eye = { 0,0,-50 };
 
 }
 
@@ -104,6 +112,8 @@ void GamePlayScene::Finalize()
 
 	//delete sprite;
 	//delete skyDome;
+
+	delete camera;
 
 	//-------------ここまでにループ内で使用したものの後処理------------//
 
@@ -119,55 +129,46 @@ void GamePlayScene::Update()
 
 
 
+	camera->target = { 0,0,0 };
 
+	ImGui::SliderFloat("cameraX", &camera->eye.x, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraY", &camera->eye.y, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraZ", &camera->eye.z, -100.0f, 100.0f);
 
-	camera.UpdateMatrix();
+	//camera->target = camera->eye;
+	//camera->target.z += 1.0f;
+
+	camera->UpdateMatrix();
 
 	//天球の操作
-	//ImGui::Begin("skydome");
-	//ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
-	//ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
-	//ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
-	//ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
-	//ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
-	//ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
-	//ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
-	//ImGui::End();
-
-	//カメラ操作デバッグテキスト
-	ImGui::Begin("camera");
-	ImGui::SliderFloat("eyeX", &camera.eye.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("eyeY", &camera.eye.y, -10.0f, 10.0f);
-	ImGui::SliderFloat("eyeZ", &camera.eye.z, -10.0f, 10.0f);
+	ImGui::Begin("skydome");
+	ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
+	ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
+	ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
+	ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
 	ImGui::End();
 
-	//当たり判定確認
-	ImGui::Begin("collision");
+	//レイの操作
+	ImGui::Begin("Ray");
+	ImGui::Text("cube wo scale de ookiku siteiru tame usiro ha hanntei arimasen");
+	ImGui::SliderFloat("posX", &ray.start.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
+	ImGui::End();
 
-	if (Collision::ColRayToSphere(ray,sphere,nullptr,&colHitPos)) {
-		ImGui::Text("hit Ray to Sphere!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
+	Vector2 sprite1Pos = { sprite->GetPosition().x,sprite->GetPosition().y };
+	Vector2 sprite2Pos = { sprite2->GetPosition().x,sprite2->GetPosition().y };
+	float pos[2] = { sprite1Pos.x,sprite1Pos.y };
+	ImGui::Begin("Sprite");
 
-	if (Collision::ColRayToTriangle(ray,triangle, nullptr, &colHitPos)) {
-		ImGui::Text("hit Ray to triangle!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
+	ImGui::SliderFloat2("sprite1", pos, 0.0f, WindowsAPI::winW);
+	sprite->SetPos({ pos[0],pos[1] });
 
-	if (Collision::ColRayToPlane(ray, plane, nullptr, &colHitPos)) {
-		ImGui::Text("hit Ray to Plane!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
 
-	if (Collision::ColSphereToPlane(sphere,plane, &colHitPos)) {
-		ImGui::Text("hit Plane to Sphere!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
-
-	if (Collision::ColSphereToTriangle(sphere, triangle, &colHitPos)) {
-		ImGui::Text("hit triangle to Sphere!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
+	sprite->Update();
+	sprite2->Update();
 
 	ImGui::End();
 
@@ -175,32 +176,40 @@ void GamePlayScene::Update()
 	skydomeObj->Update();
 	planeObj->Update();
 
-	rayObj->position = ray.start;
+	rayObj->position = { 1,1,0 };
 	rayObj->Update();
 
-	//パーティクルを生成し続ける
-	Vector3 particleEndPos1;
-	Vector3 particleEndPos2;
 
-	//パーティクル終点は始点からランダムに増減
-	particleEndPos1 = particleStart1 + Vector3(Random(-10,10), Random(-10, 10), Random(-10, 10));
-	particleEndPos2 = particleStart2 + Vector3(Random(-10,10), Random(-10, 10), Random(-10, 10));
+	triangleObj->position = { 0,0,0 };
 
-	particle1->Add(ParticleManager::Type::Normal, 30, false, particleStart1, Vector3{ 0,0,0 }, particleEndPos1, 0.1f, 2,
-		Vector4{ 1,1,1,1 }, Vector4{ 0,0,0,1 });
+	triangleObj->camera = camera;
 
-	particle2->Add(ParticleManager::Type::Normal, 30, false, particleStart2, Vector3{ 0,0,0 }, particleEndPos2,0.1f, 2,
-		Vector4{ 0,0,0,1 }, Vector4{ 1,1,1,1 });
+	ImGui::Checkbox("is billboard", &triangleObj->isBillboard);
+	ImGui::Checkbox("is billboardY", &triangleObj->isBillboardY);
 
-	particle1->Update();
-	particle2->Update();
 
-	sprite->SetSize(XMFLOAT2{ 64, 64 });
-	sprite->SetPos(XMFLOAT2{ 700,0 });
-	sprite->Update();
+	triangleObj->Update();
 
-	sprite2->SetSize(XMFLOAT2{ 64, 64 });
-	sprite2->Update();
+	//アニメーション開始ボタン
+	if (ImGui::Button("animation start")) {
+		object1->PlayAnitimation();
+	}
+
+	if (input->IsKeyTrigger(DIK_A)) {
+		object1->PlayAnitimation();
+	}
+
+	ImGui::Text("current:%d", object1->BaGetCurrentTime());
+
+	//object1->SetRot({ 0,3.14f / 2,0 });
+	object1->Update();
+
+	//スペースキーでメインゲームへ
+	if (input->IsKeyTrigger(DIK_SPACE))
+	{
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("TITLE");
+	}
 
 	//----------------------ゲーム内ループはここまで---------------------//
 
@@ -209,36 +218,25 @@ void GamePlayScene::Update()
 
 void GamePlayScene::Draw()
 {
-
-
-
 	//-------背景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
+	Sprite::BeginDraw();
 
 	//backGroundSprite->Draw();
-	// 
-
-		//パーティクル描画処理
-	ParticleManager::BeginDraw();
-
-	particle1->Draw(camera);
-	particle2->Draw(camera);
-
-	ParticleManager::EndDraw();
-
 
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-	skydomeObj->Draw();
+//	skydomeObj->Draw();
+	//rayObj->Draw();
 	//planeObj->Draw();
 	triangleObj->Draw();
-	rayObj->Draw();
 
+
+	//object1->Draw();
 
 	//-------前景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
+	Sprite::BeginDraw();
 
-	sprite->Draw();
-	sprite2->Draw();
+	//sprite->Draw();
+	//sprite2->Draw();
 }

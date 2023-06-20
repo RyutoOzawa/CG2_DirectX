@@ -46,9 +46,17 @@ public:
 	Vector3 rotation = { 0,0,0 };	//アフィン変換情報
 	Vector3 position = { 0,0,0 };	//アフィン変換情報
 	Matrix4 matWorld;	//ワールド変換行列
+
+	Matrix4 matBillboard = matBillboard.identity();	//ビルボード行列
+	Matrix4 matBillboardY = matBillboardY.identity();	//Y軸周りビルボード行列
+	bool isBillboard = false;
+	bool isBillboardY = false;
+
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ
 
 	Model* model = nullptr;	//モデルデータ
+
+	Camera* camera = nullptr;//ビルボード用のカメラ
 	
 public:
 	/// <summary>
@@ -63,7 +71,7 @@ public:
 
 	//静的メンバ関数
 	static void StaticInitialize(ReDirectX* directX_);
-	static void BeginDraw(const Camera& camera);
+	static void BeginDraw(Camera* camera);
 
 	/// <summary>
 	/// 初期化
@@ -89,6 +97,12 @@ public:
 	void SetCollider(BaseCollider* collider);
 
 	virtual void OnCollision(const CollisionInfo& info) {}
+
+	//ビルボード行列の更新
+	void UpdateBillBoard();
+
+	//Y軸ビルボード行列の更新
+	void UpdatebillboardY();
 
 protected:
 	//クラス名

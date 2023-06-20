@@ -8,7 +8,8 @@
 #include"AudioManager.h"
 #include<memory>
 #include"CollisionPrimitive.h"
-#include"ParticleManager.h"
+#include"FbxModel.h"
+#include"FbxObject3d.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -44,6 +45,8 @@ public://メンバ変数
 	std::unique_ptr<Object3d> planeObj = nullptr;
 	std::unique_ptr<Object3d> triangleObj = nullptr;
 	std::unique_ptr<Object3d> rayObj = nullptr;
+	std::unique_ptr<FbxModel> model1 = nullptr;
+	std::unique_ptr<FbxObject3d> object1 = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
 
@@ -54,14 +57,7 @@ public://メンバ変数
 	Triangle triangle;
 	Ray ray;
 
-	Camera camera;
+	Camera* camera = nullptr;
 
-
-	//パーティクル
-	std::unique_ptr<ParticleManager> particle1;
-	std::unique_ptr<ParticleManager> particle2;
-
-	Vector3 particleStart1;
-	Vector3 particleStart2;
 };
 

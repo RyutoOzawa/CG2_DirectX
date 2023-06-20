@@ -53,7 +53,7 @@ void ReDirectX::BeginDraw()
 
 	// ４．描画コマンドここから
 #pragma region グラフィックスコマンド
-// ビューポート設定コマンド
+	// ビューポート設定コマンド
 	D3D12_VIEWPORT viewport{};
 	viewport.Width = WindowsAPI::winW;
 	viewport.Height = WindowsAPI::winH;
@@ -140,18 +140,19 @@ void ReDirectX::InitializeDevice() {
 		i++) {
 		// 動的配列に追加する
 		adapters.push_back(tmpAdapter);
-		// 妥当なアダプタを選別する
-		for (size_t i = 0; i < adapters.size(); i++) {
-			DXGI_ADAPTER_DESC1 adapterDesc;
-			// アダプターの情報を取得する
-			//adapters[i]->GetDesc3(&adapterDesc);
-			adapters[i]->GetDesc1(&adapterDesc);
-			// ソフトウェアデバイスを回避
-			if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-				// デバイスを採用してループを抜ける
-				tmpAdapter = adapters[i];
-				break;
-			}
+	}
+
+	// 妥当なアダプタを選別する
+	for (size_t i = 0; i < adapters.size(); i++) {
+		DXGI_ADAPTER_DESC1 adapterDesc;
+		// アダプターの情報を取得する
+		//adapters[i]->GetDesc3(&adapterDesc);
+		adapters[i]->GetDesc1(&adapterDesc);
+		// ソフトウェアデバイスを回避
+		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
+			// デバイスを採用してループを抜ける
+			tmpAdapter = adapters[i];
+			break;
 		}
 	}
 
@@ -180,6 +181,7 @@ void ReDirectX::InitializeDevice() {
 	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 	}
 #endif
 }

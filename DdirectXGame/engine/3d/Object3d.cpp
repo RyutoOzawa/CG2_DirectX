@@ -44,17 +44,17 @@ void Object3d::StaticInitialize(ReDirectX* directX_)
 	CreatePipeline3D();
 }
 
-void Object3d::BeginDraw(const Camera& camera)
+void Object3d::BeginDraw(Camera* camera)
 {
 	//パイプラインステートの設定
 	directX->GetCommandList()->SetPipelineState(pipelineState.Get());
 	//ルートシグネチャの設定
 	directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定
-	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	
+	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+
 	//3番定数バッファビューにカメラの定数バッファを設定
-	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.constBuff->GetGPUVirtualAddress());
+	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera->constBuff->GetGPUVirtualAddress());
 }
 
 void Object3d::Initialize()
@@ -98,7 +98,7 @@ void Object3d::Initialize()
 
 void Object3d::Update()
 {
-	
+
 	//行列計算
 	Matrix4 matScale, matRot, matTrans;
 
@@ -112,6 +112,20 @@ void Object3d::Update()
 	matTrans = matTrans.translate(position);
 
 	matWorld.identity();
+
+	//ビルボードフラグがtrueならビルボード行列更新と掛け算を行う
+	if (isBillboard) {
+		matWorld.identity();
+		UpdateBillBoard();
+		matWorld *= matBillboard;
+	}
+
+	if (isBillboardY) {
+		matWorld.identity();
+		UpdatebillboardY();
+		matWorld *= matBillboardY;
+	}
+
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
@@ -135,7 +149,7 @@ void Object3d::Draw()
 	ID3D12GraphicsCommandList* commandList = directX->GetCommandList();
 	//h定数バッファビュー(CBV)の設定コマンド
 	commandList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	
+
 	//モデルデータの描画用コマンドのまとまり
 	model->Draw(commandList, 2);
 }
@@ -144,6 +158,67 @@ void Object3d::SetCollider(BaseCollider* collider)
 {
 	collider->SetObject(this);
 	this->collider = collider;
+}
+
+void Object3d::UpdateBillBoard()
+{
+	matBillboard.identity();
+
+	//カメラの各ベクトルを設定
+	Vector3 eye, target, up;
+	eye = camera->eye;
+	target = camera->target;
+	up = camera->up;
+	Vector3 cameraAxisZ, cameraAxisX, cameraAxisY;
+	cameraAxisZ = target - eye;
+	cameraAxisZ.normalize();
+	cameraAxisX = up.cross(cameraAxisZ);
+	cameraAxisX.normalize();
+	cameraAxisY = cameraAxisZ.cross(cameraAxisX);
+	cameraAxisY.normalize();
+
+	Matrix4 matCameraRot = {
+		cameraAxisX.x,cameraAxisX.y,cameraAxisX.z,0,
+		cameraAxisY.x,cameraAxisY.y,cameraAxisY.z,0,
+		cameraAxisZ.x,cameraAxisZ.y,cameraAxisZ.z,0,
+					0,            0,            0,1,
+	};
+
+	//カメラの行列をビルボード行列に
+	matBillboard = matCameraRot;
+}
+
+void Object3d::UpdatebillboardY()
+{
+	matBillboardY.identity();
+
+	//カメラの各ベクトルを設定
+	Vector3 eye, target, up;
+	eye = camera->eye;
+	target = camera->target;
+	up = camera->up;
+	Vector3 cameraAxisZ, cameraAxisX, cameraAxisY;
+	cameraAxisZ = target - eye;
+	cameraAxisZ.normalize();
+	cameraAxisX = up.cross(cameraAxisZ);
+	cameraAxisX.normalize();
+	cameraAxisY = cameraAxisZ.cross(cameraAxisX);
+	cameraAxisY.normalize();
+
+
+	Vector3 axisX, axisY, axisZ;
+	axisX = cameraAxisX;
+	axisY = up;
+	axisY.normalize();
+	axisZ = axisX.cross(axisY);
+	axisZ.normalize();
+	matBillboardY = {
+		axisX.x,axisX.y,axisX.z,0,
+		axisY.x,axisY.y,axisY.z,0,
+		axisZ.x,axisZ.y,axisZ.z,0,
+		0,0,0,1
+	};
+
 }
 
 void Object3d::CreatePipeline3D()
@@ -256,6 +331,8 @@ void Object3d::CreatePipeline3D()
 	//ジオメトリシェーダーの設定を追加
 	pipeline3D.desc.GS.BytecodeLength = gsBlob->GetBufferSize();
 	pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
+
+	pipeline3D.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
