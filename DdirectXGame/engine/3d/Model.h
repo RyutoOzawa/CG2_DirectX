@@ -44,16 +44,16 @@ class Model {
 		}
 	};
 
+	static const int vertexCount = 1;	//頂点数
+
 	//メンバ変数
 	std::vector<Vertex> vertices;		//頂点データ配列
 	D3D12_VERTEX_BUFFER_VIEW vbView;	//頂点バッファビュー
-	std::vector<unsigned short> indices;//インデックスデータ配列
-	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//インデックスバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;	//インデックスバッファ
-
-
+	std::vector<unsigned short> indices;//インデックスデータ配列
+	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;	//定数バッファ
 	Material material;			//マテリアル
 
 public:

@@ -3,7 +3,6 @@
 #include"DirectX.h"
 #include"Input.h"
 #include"Texture.h"
-#include"SpriteManager.h"
 #include"Sprite.h"
 #include"Object3d.h"
 #include"Camera.h"
@@ -11,7 +10,7 @@
 #include"AudioManager.h"
 #include"GameSceneManager.h"
 #include"SceneFactory.h"
-
+#include"PostEffect.h"
 #include<memory>
 
 class KEngineFramework
@@ -41,8 +40,9 @@ public:
 	WindowsAPI* windowsAPI = nullptr;
 	ReDirectX* directX = nullptr;
 	Input* input = nullptr;
-	SpriteManager* spriteManager = nullptr;
 	ImguiManager* imguiManager = nullptr;
+	PostEffect* postEffect = nullptr;
+
 
 protected:
 	GameSceneManager* sceneManager = nullptr;

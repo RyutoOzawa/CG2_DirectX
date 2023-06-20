@@ -20,6 +20,9 @@ void MyGame::Initialize()
 
 void MyGame::Finalize()
 {
+	delete postEffect;
+
+
 	// 基底クラスの終了処理
 	KEngineFramework::Finalize();
 }
@@ -35,16 +38,28 @@ void MyGame::Update()
 	//imgui終了
 	imguiManager->End();
 
+	
 
 }
 
 void MyGame::Draw()
 {
+
+	//レンダーテクスチャへの描画
+	postEffect->BeginDrawScene(directX->GetCommandList());
+	sceneManager->Draw();
+	postEffect->EndDrawScene(directX->GetCommandList());
+
+
 	directX->BeginDraw();
 
-	//シーン描画処理
-	sceneManager->Draw();
 
+	//ポストエフェクトの描画
+	postEffect->Draw(directX->GetCommandList());
+
+	//シーン描画処理
+	//sceneManager->Draw();
 	imguiManager->Draw();
+
 	directX->EndDraw();
 }

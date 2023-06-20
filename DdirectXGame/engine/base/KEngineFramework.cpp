@@ -1,4 +1,6 @@
 #include "KEngineFramework.h"
+#include"FbxLoader.h"
+#include"FbxObject3d.h"
 
 //KEngineFramework::KEngineFramework()
 //{
@@ -21,9 +23,8 @@ void KEngineFramework::Initialize()
 	//テクスチャマネージャーの初期化
 	Texture::Initialize(directX->GetDevice());
 
-	//スプライト共通部の初期化
-	spriteManager = SpriteManager::GetInstance();
-	spriteManager->Initialize(directX, WindowsAPI::winW, WindowsAPI::winH);
+	//スプライトの初期化
+	Sprite::StaticInitialize(directX->GetDevice(), directX->GetCommandList(), WindowsAPI::winW, WindowsAPI::winH);
 
 	//3Dオブジェクトの初期化
 	Object3d::StaticInitialize(directX);
@@ -40,11 +41,29 @@ void KEngineFramework::Initialize()
 
 	//シーンマネージャの生成
 	sceneManager = GameSceneManager::GetInstance();
+
+	//FBX初期化
+	FbxLoader::GetInstance()->Initialize(directX->GetDevice());
+
+	//FbxObjectのデバイスとパイプライン生成
+	FbxObject3d::SetDevice(directX->GetDevice());
+	FbxObject3d::SetCmdList(directX->GetCommandList());
+	FbxObject3d::CreateGraphicsPipeline();
+
+
+	//ポストエフェクトの初期化
+	postEffect = new PostEffect();
+	postEffect->Initialize(directX->GetDevice());
+
 }
 
 void KEngineFramework::Finalize()
 {
+
+
 	imguiManager->Finalize();
+
+	FbxLoader::GetInstance()->Finalize();
 
 	windowsAPI->Finalize();
 

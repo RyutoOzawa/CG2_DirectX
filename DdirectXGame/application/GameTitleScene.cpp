@@ -1,7 +1,6 @@
 #include "GameTitleScene.h"
 #include"Texture.h"
 #include"DirectX.h"
-#include"SpriteManager.h"
 using namespace DirectX;
 #include"GameSceneManager.h"
 
@@ -57,7 +56,7 @@ void GameTitleScene::Update()
 void GameTitleScene::Draw()
 {
 	//-------スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
+	Sprite::BeginDraw();
 
 	titleSprite->Draw();
 

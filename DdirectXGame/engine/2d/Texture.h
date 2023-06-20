@@ -13,10 +13,15 @@ public:
 	static D3D12_RESOURCE_DESC textureResourceDesc;
 	static ID3D12Device* dev;
 
+
 	
 public:
 	static uint32_t LoadTexture(const wchar_t*fileName = L"NULL");
 	static void Initialize(ID3D12Device* device);
 	static void CreateSRV(ID3D12Resource* texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
+
+	//指定番号のテクスチャバッファを取得
+	static ID3D12Resource* GetTextureBuffer(uint32_t index) { return texBuffuers[index].Get(); }
+
 };
 

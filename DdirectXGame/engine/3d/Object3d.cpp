@@ -44,7 +44,7 @@ void Object3d::StaticInitialize(ReDirectX* directX_)
 	CreatePipeline3D();
 }
 
-void Object3d::BeginDraw(const Camera& camera)
+void Object3d::BeginDraw(Camera* camera)
 {
 	//パイプラインステートの設定
 	directX->GetCommandList()->SetPipelineState(pipelineState.Get());
@@ -54,7 +54,7 @@ void Object3d::BeginDraw(const Camera& camera)
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	//3番定数バッファビューにカメラの定数バッファを設定
-	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.constBuff->GetGPUVirtualAddress());
+	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera->constBuff->GetGPUVirtualAddress());
 }
 
 void Object3d::Initialize()

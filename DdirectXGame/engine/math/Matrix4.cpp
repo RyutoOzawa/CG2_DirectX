@@ -217,7 +217,7 @@ Matrix4 Matrix4::CreateViewMat(const Vector3& eye, const Vector3& target, const 
 	return result;
 }
 
-Matrix4 Matrix4::CreateProjectionMat(float fovY, float aspectRatio, float nearZ, float farZ)
+Matrix4 Matrix4::CreatePerspectiveProjection(float fovY, float aspectRatio, float nearZ, float farZ)
 {
 	Matrix4 result;
 
@@ -231,6 +231,27 @@ Matrix4 Matrix4::CreateProjectionMat(float fovY, float aspectRatio, float nearZ,
 		0,h,0,0,
 		0,0,z,1,
 		0,0,cameraZ,0
+	};
+
+	return result;
+}
+
+Matrix4 Matrix4::CreateParallelProjection(float windowW, float windowH)
+{
+	Matrix4 result;
+
+
+	float m00, m11;
+	m00 = 2 / windowW;
+	m11 = -2 /windowH;
+
+
+	result =
+	{
+		 m00,0.0f,0.0f,0.0f,
+		0.0f, m11,0.0f,0.0f,
+		0.0f,0.0f,1.0f,0.0f,
+	   -1.0f,1.0f,0.0f,1.0f,
 	};
 
 	return result;

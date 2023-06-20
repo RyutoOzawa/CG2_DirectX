@@ -9,6 +9,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//フレームワークを基底クラスとしたゲームクラスを生成
 	std::unique_ptr<KEngineFramework> game = std::make_unique< MyGame>();
 
+
 	//ゲームクラスの処理実行
 	game->Run();
 

@@ -1,9 +1,10 @@
 #include "GamePlayScene.h"
 #include"Texture.h"
 #include"DirectX.h"
-#include"SpriteManager.h"
 #include"GameSceneManager.h"
 #include"Collision.h"
+#include"FbxLoader.h"
+#include"FbxObject3d.h"
 
 using namespace DirectX;
 
@@ -28,6 +29,7 @@ void GamePlayScene::Initialize()
 	sprite->Initialize(marioGraph);
 	sprite2->Initialize(reimuGraph);
 
+
 	skydome = std::make_unique<Model>();
 	skydome = Model::CreateModel("skydome");
 
@@ -43,16 +45,21 @@ void GamePlayScene::Initialize()
 	Vector3 target(0, 0, 6);	//注視点座標
 	Vector3 up(0, 1, 0);		//上方向ベクトル
 
-	camera.Initialize(eye, target, up);
+	sprite2->SetPos({ 240, 240 });
+
+	camera = new Camera();
+	camera->Initialize(eye, target, up);
 
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
+	skydomeObj->scale = { 100,100,100 };
 
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
 	planeObj->SetModel(defaultModel.get());
 	planeObj->scale = { 10.0f,0.01f,10.0f };
+	planeObj->position.y = -2.0f;
 
 	triangleObj = std::make_unique<Object3d>();
 	triangleObj->Initialize();
@@ -60,18 +67,18 @@ void GamePlayScene::Initialize()
 
 	rayObj = std::make_unique<Object3d>();
 	rayObj->Initialize();
-	rayObj->SetModel(defaultModel.get());
-	rayObj->scale = { 0.01f,10.0f,0.01f };
+	rayObj->SetModel(skydome.get());
+	//	rayObj->scale = { 0.01f,10.0f,0.01f };
 
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
 
 	//球の初期値を設定
-	sphere.pos = { 0,2,0 };
+	sphere.pos = { -1,1,-0 };
 	sphere.radius = 1.0f;
 	//平面の初期値を設定
 	plane.normal = { 0,1,0 };
-	plane.distance = 0.0f;
+	plane.distance = -2.0f;
 	//三角形の初期値を設定
 	triangle.p0 = { -1.0f,0,-1.0f };
 	triangle.p1 = { -1.0f,0,+1.0f };
@@ -81,6 +88,22 @@ void GamePlayScene::Initialize()
 	ray.start = { 0,1,0 };
 	ray.dir = { 0,-1,0 };
 
+
+	//モデル名を指定してファイル読み込み
+	//model1 = std::make_unique<FbxModel>();
+	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+
+	object1 = std::make_unique<FbxObject3d>();
+	object1->Initialize();
+	object1->SetModel(model1.get());
+
+	//デバイスセット
+	FbxObject3d::SetCamera(camera);
+
+	camera->target = { 0,20,0 };
+	//	camera->eye = { 0,0,-20 };
+	camera->eye = { 100,0,0 };
+
 }
 
 void GamePlayScene::Finalize()
@@ -89,6 +112,8 @@ void GamePlayScene::Finalize()
 
 	//delete sprite;
 	//delete skyDome;
+
+	delete camera;
 
 	//-------------ここまでにループ内で使用したものの後処理------------//
 
@@ -103,10 +128,19 @@ void GamePlayScene::Update()
 	//----------------------ゲーム内ループはここから---------------------//
 
 
+	Matrix4 mat = mat.CreateParallelProjection(1280.0f, 720.0f);
+	XMMATRIX dxmat = XMMatrixOrthographicOffCenterLH(0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1.0f);
 
+	camera->target = { 0,0,0 };
 
+	ImGui::SliderFloat("cameraX", &camera->eye.x, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraY", &camera->eye.y, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraZ", &camera->eye.z, -100.0f, 100.0f);
 
-	camera.UpdateMatrix();
+	//camera->target = camera->eye;
+	//camera->target.z += 1.0f;
+
+	camera->UpdateMatrix();
 
 	//天球の操作
 	ImGui::Begin("skydome");
@@ -126,13 +160,17 @@ void GamePlayScene::Update()
 	ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
 	ImGui::End();
 
-	//当たり判定確認
-	ImGui::Begin("collision");
+	Vector2 sprite1Pos = { sprite->GetPosition().x,sprite->GetPosition().y };
+	Vector2 sprite2Pos = { sprite2->GetPosition().x,sprite2->GetPosition().y };
+	float pos[2] = { sprite1Pos.x,sprite1Pos.y };
+	ImGui::Begin("Sprite");
 
-	if (Collision::ColRayToSphere(ray,sphere,nullptr,&colHitPos)) {
-		ImGui::Text("hit!");
-		ImGui::Text("hitPos:(%2.2f,%2.2f,%2.2f)", colHitPos.x, colHitPos.y, colHitPos.z);
-	}
+	ImGui::SliderFloat2("sprite1", pos, 0.0f, WindowsAPI::winW);
+	sprite->SetPos({ pos[0],pos[1] });
+
+
+	sprite->Update();
+	sprite2->Update();
 
 	ImGui::End();
 
@@ -140,8 +178,30 @@ void GamePlayScene::Update()
 	skydomeObj->Update();
 	planeObj->Update();
 
-	rayObj->position = ray.start;
+	rayObj->position = { 1,1,0 };
 	rayObj->Update();
+
+
+	//アニメーション開始ボタン
+	if (ImGui::Button("animation start")) {
+		object1->PlayAnitimation();
+	}
+
+	if (input->IsKeyTrigger(DIK_A)) {
+		object1->PlayAnitimation();
+	}
+
+	ImGui::Text("current:%d", object1->BaGetCurrentTime());
+
+	//object1->SetRot({ 0,3.14f / 2,0 });
+	object1->Update();
+
+	//スペースキーでメインゲームへ
+	if (input->IsKeyTrigger(DIK_SPACE))
+	{
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("TITLE");
+	}
 
 	//----------------------ゲーム内ループはここまで---------------------//
 
@@ -151,21 +211,23 @@ void GamePlayScene::Update()
 void GamePlayScene::Draw()
 {
 	//-------背景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
+	Sprite::BeginDraw();
 
 	//backGroundSprite->Draw();
 
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-	skydomeObj->Draw();
+//	skydomeObj->Draw();
+	//rayObj->Draw();
 	//planeObj->Draw();
 	//triangleObj->Draw();
-	rayObj->Draw();
 
+
+	object1->Draw();
 
 	//-------前景スプライト描画処理-------//
-	SpriteManager::GetInstance()->beginDraw();
+	Sprite::BeginDraw();
 
 	//sprite->Draw();
 	//sprite2->Draw();
