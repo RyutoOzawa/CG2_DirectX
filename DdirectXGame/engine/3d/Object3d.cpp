@@ -51,7 +51,7 @@ void Object3d::BeginDraw(Camera* camera)
 	//ルートシグネチャの設定
 	directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定
-	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	//3番定数バッファビューにカメラの定数バッファを設定
 	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera->constBuff->GetGPUVirtualAddress());
@@ -331,6 +331,8 @@ void Object3d::CreatePipeline3D()
 	//ジオメトリシェーダーの設定を追加
 	pipeline3D.desc.GS.BytecodeLength = gsBlob->GetBufferSize();
 	pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
+
+	pipeline3D.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
