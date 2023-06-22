@@ -9,14 +9,15 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 #include"Texture.h"
 #include<algorithm>
+#include"Util.h"
 
 
 ID3D12Device* Model::device = nullptr;
 
-std::unique_ptr<Model> Model::CreateModel(const std::string & filename)
+std::unique_ptr<Model> Model::CreateModel(const std::string& filename)
 {
 	//新しいインスタンスをnewする
-	std::unique_ptr<Model> newModel =std::make_unique< Model>();
+	std::unique_ptr<Model> newModel = std::make_unique< Model>();
 	//objファイルからデータを読み込む
 	newModel->Create(filename);
 	//バッファ生成
@@ -41,107 +42,107 @@ void Model::Create(const std::string& modelname)
 	HRESULT result;
 
 	if (modelname != "NULL") {
-	//	HRESULT result = S_FALSE;
+		//	HRESULT result = S_FALSE;
 
-	//	//ファイルストリーム
-	//	ifstream file;
-	//	//.objファイルを開く
-	//	//file.open("Resources/triangle/triangle.obj");
-	////	const string modelname = "triangle_mat";
-	//	const string filename = modelname + ".obj";
-	//	const string directoryPath = "Resources/" + modelname + "/";
-	//	file.open(directoryPath + filename);
+		//	//ファイルストリーム
+		//	ifstream file;
+		//	//.objファイルを開く
+		//	//file.open("Resources/triangle/triangle.obj");
+		////	const string modelname = "triangle_mat";
+		//	const string filename = modelname + ".obj";
+		//	const string directoryPath = "Resources/" + modelname + "/";
+		//	file.open(directoryPath + filename);
 
-	//	//ファイルオープン失敗をチェック
-	//	if (file.fail()) {
-	//		assert(0);
-	//	}
+		//	//ファイルオープン失敗をチェック
+		//	if (file.fail()) {
+		//		assert(0);
+		//	}
 
-	//	vector<Vector3> positions;	//頂点座標
-	//	vector<Vector3> normals;	//法線ベクトル
-	//	vector<Vector2> texcords;	//テクスチャUV
-	//	//1行ずつ読み込む
-	//	string line;
-	//	while (getline(file, line)) {
+		//	vector<Vector3> positions;	//頂点座標
+		//	vector<Vector3> normals;	//法線ベクトル
+		//	vector<Vector2> texcords;	//テクスチャUV
+		//	//1行ずつ読み込む
+		//	string line;
+		//	while (getline(file, line)) {
 
-	//		//1行分の文字列をストリームに変換して解析しやすくする
-	//		istringstream line_stream(line);
+		//		//1行分の文字列をストリームに変換して解析しやすくする
+		//		istringstream line_stream(line);
 
-	//		//半角スペース区切りで行の先頭文字列を取得
-	//		string key;
-	//		getline(line_stream, key, ' ');
+		//		//半角スペース区切りで行の先頭文字列を取得
+		//		string key;
+		//		getline(line_stream, key, ' ');
 
-	//		//先頭文字列がmtllibならマテリアル
-	//		if (key == "mtllib") {
-	//			//マテリアルのファイル名読み込み
-	//			string filename;
-	//			line_stream >> filename;
-	//			//マテリアル読み込み
-	//			LoadMaterial(directoryPath, filename);
-	//		}
-	//		//先頭文字列がvなら頂点座標
-	//		if (key == "v") {
-	//			//X,Y,Z座標読み込み
-	//			Vector3 position{};
-	//			line_stream >> position.x;
-	//			line_stream >> position.y;
-	//			line_stream >> position.z;
-	//			//座標データに追加
-	//			positions.emplace_back(position);
-	//			//頂点データに追加
-	//		/*	Vertex vertex{};
-	//			vertex.pos = position;
-	//			vertices.emplace_back(vertex);*/
-	//		}
-	//		//先頭文字列がvtならテクスチャ
-	//		if (key == "vt") {
-	//			//U,V成分読み込み
-	//			Vector2 texcoord{};
-	//			line_stream >> texcoord.x;
-	//			line_stream >> texcoord.y;
-	//			//V方向反転
-	//			texcoord.y = 1.0f - texcoord.y;
-	//			//テクスチャ座標データに追加
-	//			texcords.emplace_back(texcoord);
-	//		}
-	//		//先頭文字列がvnなら法線ベクトル
-	//		if (key == "vn") {
-	//			//X,Y,Z成分読み込み
-	//			Vector3 normal{};
-	//			line_stream >> normal.x;
-	//			line_stream >> normal.y;
-	//			line_stream >> normal.z;
-	//			//法線ベクトルデータに追加
-	//			normals.emplace_back(normal);
-	//		}
-	//		//先頭文字列がfならポリゴン(三角形)
-	//		if (key == "f") {
-	//			//半角スペース区切りで行の続きを読み込む
-	//			string index_string;
-	//			while (getline(line_stream, index_string, ' ')) {
-	//				//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
-	//				istringstream index_stream(index_string);
-	//				unsigned short indexPosition, indexNormal, indexTexcoord;
-	//				index_stream >> indexPosition;
-	//				index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
-	//				index_stream >> indexTexcoord;
-	//				index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
-	//				index_stream >> indexNormal;
-	//				//頂点データの追加
-	//				Vertex vertex{};
-	//				vertex.pos = positions[indexPosition - 1];
-	//				vertex.normal = normals[indexNormal - 1];
-	//				vertex.uv = texcords[indexTexcoord - 1];
-	//				vertices.emplace_back(vertex);
-	//				//頂点インデックスに追加
-	//			//	indices.emplace_back((unsigned short)indices.size());
-	//			}
+		//		//先頭文字列がmtllibならマテリアル
+		//		if (key == "mtllib") {
+		//			//マテリアルのファイル名読み込み
+		//			string filename;
+		//			line_stream >> filename;
+		//			//マテリアル読み込み
+		//			LoadMaterial(directoryPath, filename);
+		//		}
+		//		//先頭文字列がvなら頂点座標
+		//		if (key == "v") {
+		//			//X,Y,Z座標読み込み
+		//			Vector3 position{};
+		//			line_stream >> position.x;
+		//			line_stream >> position.y;
+		//			line_stream >> position.z;
+		//			//座標データに追加
+		//			positions.emplace_back(position);
+		//			//頂点データに追加
+		//		/*	Vertex vertex{};
+		//			vertex.pos = position;
+		//			vertices.emplace_back(vertex);*/
+		//		}
+		//		//先頭文字列がvtならテクスチャ
+		//		if (key == "vt") {
+		//			//U,V成分読み込み
+		//			Vector2 texcoord{};
+		//			line_stream >> texcoord.x;
+		//			line_stream >> texcoord.y;
+		//			//V方向反転
+		//			texcoord.y = 1.0f - texcoord.y;
+		//			//テクスチャ座標データに追加
+		//			texcords.emplace_back(texcoord);
+		//		}
+		//		//先頭文字列がvnなら法線ベクトル
+		//		if (key == "vn") {
+		//			//X,Y,Z成分読み込み
+		//			Vector3 normal{};
+		//			line_stream >> normal.x;
+		//			line_stream >> normal.y;
+		//			line_stream >> normal.z;
+		//			//法線ベクトルデータに追加
+		//			normals.emplace_back(normal);
+		//		}
+		//		//先頭文字列がfならポリゴン(三角形)
+		//		if (key == "f") {
+		//			//半角スペース区切りで行の続きを読み込む
+		//			string index_string;
+		//			while (getline(line_stream, index_string, ' ')) {
+		//				//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
+		//				istringstream index_stream(index_string);
+		//				unsigned short indexPosition, indexNormal, indexTexcoord;
+		//				index_stream >> indexPosition;
+		//				index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+		//				index_stream >> indexTexcoord;
+		//				index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+		//				index_stream >> indexNormal;
+		//				//頂点データの追加
+		//				Vertex vertex{};
+		//				vertex.pos = positions[indexPosition - 1];
+		//				vertex.normal = normals[indexNormal - 1];
+		//				vertex.uv = texcords[indexTexcoord - 1];
+		//				vertices.emplace_back(vertex);
+		//				//頂点インデックスに追加
+		//			//	indices.emplace_back((unsigned short)indices.size());
+		//			}
 
-	//		}
+		//		}
 
-	//	}
-	//	//ファイルを閉じる
-	//	file.close();
+		//	}
+		//	//ファイルを閉じる
+		//	file.close();
 
 
 
@@ -193,7 +194,7 @@ void Model::Create(const std::string& modelname)
 		//	vertices.push_back(vertices_[i]);
 		//}
 
-	
+
 
 		////インデックスデータ
 		//unsigned short indices_[] = {
@@ -249,15 +250,22 @@ void Model::Create(const std::string& modelname)
 
 	}
 
-	VertexPos vertex[] = {
-		{{0.0f,0.0f,0.0f }}
+	VertexPos vertex = {
+		{0.0f,0.0f,0.0f }
 	};
 
 	//ジオメトリシェーダの確認用にもらった頂点配列をクリア
 	vertices.clear();
 
 	//頂点データコピー
-	vertices.push_back(vertex[0]);
+
+	for (int i = 0; i < vertexCount; i++) {
+		vertex.pos.x = Random(-10.0f, 10.0f);
+		vertex.pos.y = Random(-10.0f, 10.0f);
+		vertex.pos.z = Random(-10.0f, 10.0f);
+
+		vertices.push_back(vertex);
+	}
 
 	//頂点データ全体のサイズ
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
@@ -439,29 +447,26 @@ void Model::CreateBuffers()
 		&cbResourceDesc,//リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuffMaterial));
 	assert(SUCCEEDED(result));
 
 	ConstBufferDataMaterial* constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuffMaterial->Map(0, nullptr, (void**)&constMap);
 	constMap->ambient = material.ambient;
 	constMap->diffuse = material.diffuse;
 	constMap->specular = material.specular;
 	constMap->alpha = material.alpha;
-	constBuff->Unmap(0, nullptr);
+	constBuffMaterial->Unmap(0, nullptr);
 
 }
 
-void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex)
+void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	//頂点バッファビュー、インデックスバッファビューの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
-//	cmdList->IASetIndexBuffer(&ibView);
+	//	cmdList->IASetIndexBuffer(&ibView);
 
-	//定数バッファビュー設定
-	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff->GetGPUVirtualAddress());
-
-	//デスクリプタヒープの配列をセットするコマンド
+		//デスクリプタヒープの配列をセットするコマンド
 	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 

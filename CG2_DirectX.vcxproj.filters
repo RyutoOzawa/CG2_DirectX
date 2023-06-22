@@ -183,6 +183,9 @@
     <ClCompile Include="PostEffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DdirectXGame\application\GamePlayScene.h">
@@ -308,6 +311,9 @@
     <ClInclude Include="DdirectXGame\engine\2d\PostEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DdirectXGame\engine\ParticleManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -343,6 +349,15 @@
     <FxCompile Include="Resources\shaders\PostEffectTestVS.hlsl">
       <Filter>シェーダーファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleGS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticlePS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -358,6 +373,9 @@
       <Filter>シェーダーファイル</Filter>
     </None>
     <None Include="Resources\shaders\PostEffectTest.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\Particle.hlsli">
       <Filter>シェーダーファイル</Filter>
     </None>
   </ItemGroup>

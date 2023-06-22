@@ -66,6 +66,10 @@ void GamePlayScene::Initialize()
 	triangleObj->Initialize();
 	triangleObj->SetModel(triangleModel.get());
 
+	particleMan = std::make_unique<ParticleManager>();
+	particleMan->Initialize();
+	particleMan->SetModel(triangleModel.get());
+
 	rayObj = std::make_unique<Object3d>();
 	rayObj->Initialize();
 	rayObj->SetModel(skydome.get());
@@ -130,7 +134,7 @@ void GamePlayScene::Update()
 
 
 
-	camera->target = { 0,0,0 };
+	camera->target = { 0,5,0 };
 
 	ImGui::SliderFloat("cameraX", &camera->eye.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("cameraY", &camera->eye.y, -100.0f, 100.0f);
@@ -190,6 +194,7 @@ void GamePlayScene::Update()
 
 
 	triangleObj->Update();
+	particleMan->Update();
 
 	//アニメーション開始ボタン
 	if (ImGui::Button("animation start")) {
@@ -230,10 +235,14 @@ void GamePlayScene::Draw()
 //	skydomeObj->Draw();
 	//rayObj->Draw();
 	//planeObj->Draw();
-	triangleObj->Draw();
+	//triangleObj->Draw();
 
 
 	//object1->Draw();
+
+	//パーティクル描画
+	ParticleManager::BeginDraw(camera);
+	particleMan->Draw();
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();
