@@ -136,6 +136,10 @@ void Object3d::Update()
 
 	//定数バッファに転送
 	//constMap->mat = matWorld * matView * matProjection;
+	
+	//パーティクル用に行列初期化
+	matWorld.identity();
+
 	constMap->mat = matWorld;
 
 	//当たり判定更新
@@ -315,17 +319,17 @@ void Object3d::CreatePipeline3D()
 		0												//一度に描画するインスタンス数(0でよい)
 		});
 
-	inputLayout.push_back(
-		{//法線ベクトル
-		"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
-		D3D12_APPEND_ALIGNED_ELEMENT,
-		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		});
-	inputLayout.push_back({//uv座標
-		"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
-		D3D12_APPEND_ALIGNED_ELEMENT,
-		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		});
+	//inputLayout.push_back(
+	//	{//法線ベクトル
+	//	"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+	//	D3D12_APPEND_ALIGNED_ELEMENT,
+	//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+	//	});
+	//inputLayout.push_back({//uv座標
+	//	"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+	//	D3D12_APPEND_ALIGNED_ELEMENT,
+	//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+	//	});
 
 	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
 	//ジオメトリシェーダーの設定を追加

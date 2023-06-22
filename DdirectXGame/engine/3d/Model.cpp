@@ -134,7 +134,7 @@ void Model::Create(const std::string& modelname)
 	//				vertex.uv = texcords[indexTexcoord - 1];
 	//				vertices.emplace_back(vertex);
 	//				//頂点インデックスに追加
-	//				indices.emplace_back((unsigned short)indices.size());
+	//			//	indices.emplace_back((unsigned short)indices.size());
 	//			}
 
 	//		}
@@ -249,9 +249,12 @@ void Model::Create(const std::string& modelname)
 
 	}
 
-	Vertex vertex[] = {
-		{{0.0f,0.0f,0.0f},{0,0,1},{0,1}}
+	VertexPos vertex[] = {
+		{{0.0f,0.0f,0.0f }}
 	};
+
+	//ジオメトリシェーダの確認用にもらった頂点配列をクリア
+	vertices.clear();
 
 	//頂点データコピー
 	vertices.push_back(vertex[0]);
@@ -284,7 +287,7 @@ void Model::Create(const std::string& modelname)
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
-	Vertex* vertMap = nullptr;
+	VertexPos* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して

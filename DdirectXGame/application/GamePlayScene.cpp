@@ -39,6 +39,7 @@ void GamePlayScene::Initialize()
 
 	triangleModel = std::make_unique<Model>();
 	triangleModel = Model::CreateModel("triangle_mat");
+	triangleModel->textureIndex = marioGraph;
 
 	//ƒJƒƒ‰‰Šú‰»
 	Vector3 eye(0, 20, -20);	//‹“_À•W

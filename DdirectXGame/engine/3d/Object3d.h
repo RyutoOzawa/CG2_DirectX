@@ -18,13 +18,7 @@ class Object3d
 {
 public:
 
-	//サブクラス
-		//頂点データ構造体
-	struct Vertex {
-		DirectX::XMFLOAT3 pos;//xyz座標
-		DirectX::XMFLOAT3 normal;//法線ベクトル
-		DirectX::XMFLOAT2 uv;//uv座標
-	};
+
 
 	struct ConstBufferData {
 		//DirectX::XMFLOAT4 color;
