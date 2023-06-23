@@ -17,11 +17,6 @@ class Model {
 		Vector2 uv;		//uv座標
 	};
 
-	//パーティクル用の頂点データ構造体
-	struct VertexPos {
-		Vector3 pos;
-	};
-
 	//定数バッファ用構造体
 	struct ConstBufferDataMaterial {
 		Vector3 ambient;//アンビエント係数
@@ -52,13 +47,12 @@ class Model {
 	static const int vertexCount = 30;	//頂点数
 
 	//メンバ変数
-	//std::vector<Vertex> vertices;		//頂点データ配列
-	std::vector<VertexPos> vertices;//パーティクル用頂点データ構造体
+	std::vector<Vertex> vertices;		//頂点データ配列
 	D3D12_VERTEX_BUFFER_VIEW vbView;	//頂点バッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;	//頂点バッファ
-	//Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//インデックスバッファ
-	//std::vector<unsigned short> indices;//インデックスデータ配列
-	//D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//インデックスバッファ
+	std::vector<unsigned short> indices;//インデックスデータ配列
+	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial;	//定数バッファ
 	Material material;			//マテリアル
 
@@ -67,8 +61,6 @@ public:
 	uint32_t textureIndex = 0;	//テクスチャ番号
 	//メンバ関数
 	static std::unique_ptr< Model> CreateModel(const std::string& filename = "NULL");
-
-	static std::unique_ptr<Model> CreateModelSquare();
 
 	static void SetDevice(ID3D12Device* dev) { device = dev; }
 
