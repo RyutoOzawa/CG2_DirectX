@@ -42,7 +42,6 @@ private:
 
 	static const int vertexCount = 1024;
 
-	std::vector<VertexPos> vertices;//パーティクル用頂点データ構造体
 	D3D12_VERTEX_BUFFER_VIEW vbView;	//頂点バッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;	//定数バッファマップ（行列用）
@@ -69,8 +68,14 @@ public:
 
 	void SetTexture(uint32_t texIndex) { textureIndex = texIndex; }
 
-
-
+	/// <summary>
+	/// パーティクルの追加
+	/// </summary>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">初期座標</param>
+	/// <param name="velocity">速度</param>
+	/// <param name="accel">加速度</param>
+	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel);
 private:
 	static void CreatePipeline3D();
 

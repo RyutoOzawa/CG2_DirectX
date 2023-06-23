@@ -5,6 +5,7 @@
 #include"Collision.h"
 #include"FbxLoader.h"
 #include"FbxObject3d.h"
+#include"Util.h"
 
 using namespace DirectX;
 
@@ -70,6 +71,27 @@ void GamePlayScene::Initialize()
 	particleMan = std::make_unique<ParticleManager>();
 	particleMan->Initialize(particleGraph);
 	
+	for (int i = 0; i < 100; i++) {
+		//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
+		const float randPos = 5.0f;
+		Vector3 pos{};
+		pos.x = Random(-randPos, randPos);
+		pos.y = Random(-randPos, randPos);
+		pos.z = Random(-randPos, randPos);
+		//x,y,zすべて±0.05で分布
+		const float randVel = 0.05f;
+		Vector3 vel{};
+		vel.x = Random(-randVel, randVel);
+		vel.y = Random(-randVel, randVel);
+		vel.z = Random(-randVel, randVel);
+		//重力に見立ててYのみ-0.001f~0でランダムに分布
+		Vector3 acc{};
+		const float randAcc = 0.001f;
+		acc.y = Random(-randAcc, 0.0f);
+
+		//追加
+		particleMan->Add(60, pos, vel, acc);
+	}
 
 	rayObj = std::make_unique<Object3d>();
 	rayObj->Initialize();

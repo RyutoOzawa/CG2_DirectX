@@ -72,21 +72,10 @@ void ParticleManager::Initialize(uint32_t texIndex)
 	Matrix4 matrix = matrix.identity();
 	constMap->matBillboard = matrix;
 
-	VertexPos vertex = {
-		{0.0f,0.0f,0.0f}
-	};
-
-	//頂点データコピー
-	for (int i = 0; i < vertexCount; i++) {
-		vertex.pos.x = Random(-10.0f, 10.0f);
-		vertex.pos.y = Random(-10.0f, 10.0f);
-		vertex.pos.z = Random(-10.0f, 10.0f);
-
-		vertices.push_back(vertex);
-	}
+	
 
 	//頂点データ全体のサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPos) * vertexCount);
 
 	// リソース設定
 	D3D12_RESOURCE_DESC resDesc{};
@@ -117,9 +106,9 @@ void ParticleManager::Initialize(uint32_t texIndex)
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
-	for (int i = 0; i < vertices.size(); i++) {
-		vertMap[i] = vertices[i]; // 座標をコピー
-	}
+	//for (int i = 0; i < vertices.size(); i++) {
+	//	vertMap[i] = vertices[i]; // 座標をコピー
+	//}
 	// 繋がりを解除
 	vertBuff->Unmap(0, nullptr);
 
@@ -129,12 +118,36 @@ void ParticleManager::Initialize(uint32_t texIndex)
 	// 頂点バッファのサイズ
 	vbView.SizeInBytes = sizeVB;
 	// 頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertices[0]);
+	vbView.StrideInBytes = sizeof(VertexPos);
 }
 
 void ParticleManager::Update()
 {
+	//寿命がつきたパーティクルを全削除
+	particles.remove_if([](Particle& x) {return x.frame > x.num_frame; });
 
+	//全パーティクル更新
+	for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		//経過フレーム数をカウント
+		it->frame++;
+		//速度に加速度を加算
+		it->velocity += it->accel;
+		//速度による移動
+		it->position += it->velocity;
+	}
+	//頂点バッファへデータ転送
+	VertexPos* vertMap = nullptr;
+	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	if (SUCCEEDED(result)) {
+		//パーティクルの情報を1つずつ反映
+		for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+			//座標
+			vertMap->pos = it->position;
+			//次の順番へ
+			vertMap++;
+		}
+		vertBuff->Unmap(0, nullptr);
+	}
 }
 
 void ParticleManager::Draw()
@@ -187,7 +200,19 @@ void ParticleManager::Draw()
 	srvGpuHandle.ptr += incrementSize * textureIndex;
 	commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	//描画コマンド
-	commandList->DrawInstanced(vertices.size(), 1, 0, 0);
+	commandList->DrawInstanced((UINT)std::distance(particles.begin(),particles.end()), 1, 0, 0);
+}
+
+void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel) {
+	//リストに要素を追加
+	particles.emplace_front();
+	//追加した要素の参照
+	Particle& p = particles.front();
+	//値のセット
+	p.position = position;
+	p.velocity = velocity;
+	p.accel = accel;
+	p.num_frame = life;
 }
 
 void ParticleManager::CreatePipeline3D()
