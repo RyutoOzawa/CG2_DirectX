@@ -22,6 +22,7 @@ void GamePlayScene::Initialize()
 	backGroundTexture = Texture::LoadTexture(L"Resources/dummyPlayGame.png");
 	marioGraph = Texture::LoadTexture(L"Resources/mario.jpg");
 	reimuGraph = Texture::LoadTexture(L"Resources/reimu.png");
+	particleGraph = Texture::LoadTexture(L"Resources/particle.png");
 	backGroundSprite = std::make_unique<Sprite>();
 	sprite = std::make_unique<Sprite>();
 	sprite2 = std::make_unique<Sprite>();
@@ -39,7 +40,7 @@ void GamePlayScene::Initialize()
 
 	triangleModel = std::make_unique<Model>();
 	triangleModel = Model::CreateModel("triangle_mat");
-	triangleModel->textureIndex = marioGraph;
+	triangleModel->textureIndex = particleGraph;
 
 	//ƒJƒƒ‰‰Šú‰»
 	Vector3 eye(0, 20, -20);	//Ž‹“_À•W
@@ -67,8 +68,8 @@ void GamePlayScene::Initialize()
 	triangleObj->SetModel(triangleModel.get());
 
 	particleMan = std::make_unique<ParticleManager>();
-	particleMan->Initialize();
-	particleMan->SetModel(triangleModel.get());
+	particleMan->Initialize(particleGraph);
+	
 
 	rayObj = std::make_unique<Object3d>();
 	rayObj->Initialize();

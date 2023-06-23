@@ -3,6 +3,8 @@ using namespace Microsoft::WRL;
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 #include"GpPipeline.h"
+#include"Util.h"
+#include"Texture.h"
 
 ComPtr<ID3D12PipelineState> ParticleManager::pipelineState;
 ComPtr<ID3D12RootSignature> ParticleManager::rootSignature;
@@ -34,8 +36,11 @@ void ParticleManager::BeginDraw(Camera* camera_)
 
 }
 
-void ParticleManager::Initialize()
+void ParticleManager::Initialize(uint32_t texIndex)
 {
+	//テクスチャセット
+	SetTexture(texIndex);
+
 	ID3D12Device* device = directX->GetDevice();
 
 	HRESULT result;
@@ -66,11 +71,70 @@ void ParticleManager::Initialize()
 
 	Matrix4 matrix = matrix.identity();
 	constMap->matBillboard = matrix;
+
+	VertexPos vertex = {
+		{0.0f,0.0f,0.0f}
+	};
+
+	//頂点データコピー
+	for (int i = 0; i < vertexCount; i++) {
+		vertex.pos.x = Random(-10.0f, 10.0f);
+		vertex.pos.y = Random(-10.0f, 10.0f);
+		vertex.pos.z = Random(-10.0f, 10.0f);
+
+		vertices.push_back(vertex);
+	}
+
+	//頂点データ全体のサイズ
+	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
+
+	// リソース設定
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = sizeVB; // 頂点データ全体のサイズ
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// 頂点バッファの設定
+	D3D12_HEAP_PROPERTIES heapProp{}; // ヒープ設定
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
+
+	// 頂点バッファの生成
+	result = device->CreateCommittedResource(
+		&heapProp, // ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc, // リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertBuff));
+	assert(SUCCEEDED(result));
+
+	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
+	VertexPos* vertMap = nullptr;
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	assert(SUCCEEDED(result));
+	// 全頂点に対して
+	for (int i = 0; i < vertices.size(); i++) {
+		vertMap[i] = vertices[i]; // 座標をコピー
+	}
+	// 繋がりを解除
+	vertBuff->Unmap(0, nullptr);
+
+	// 頂点バッファビューの作成
+	// GPU仮想アドレス
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	// 頂点バッファのサイズ
+	vbView.SizeInBytes = sizeVB;
+	// 頂点1つ分のデータサイズ
+	vbView.StrideInBytes = sizeof(vertices[0]);
 }
 
 void ParticleManager::Update()
 {
-	
+
 }
 
 void ParticleManager::Draw()
@@ -108,7 +172,22 @@ void ParticleManager::Draw()
 	commandList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 
 	//モデルデータの描画用コマンドのまとまり
-	model->Draw(commandList);
+	//model->Draw(commandList);
+
+	//頂点バッファビューの設定
+	commandList->IASetVertexBuffers(0, 1, &vbView);
+
+	//デスクリプタヒープの配列セット
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	//ハンドルをテクスチャ番号分進める
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
+	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	srvGpuHandle.ptr += incrementSize * textureIndex;
+	commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	//描画コマンド
+	commandList->DrawInstanced(vertices.size(), 1, 0, 0);
 }
 
 void ParticleManager::CreatePipeline3D()
@@ -211,6 +290,12 @@ void ParticleManager::CreatePipeline3D()
 	pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
 
 	pipeline3D.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+
+	//デプスの書き込み禁止
+	pipeline3D.desc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	pipeline3D.SetBlendAdd();
+	pipeline3D.SetBlendSub();
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};

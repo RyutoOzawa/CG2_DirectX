@@ -258,7 +258,6 @@ void Model::Create(const std::string& modelname)
 	vertices.clear();
 
 	//頂点データコピー
-
 	for (int i = 0; i < vertexCount; i++) {
 		vertex.pos.x = Random(-10.0f, 10.0f);
 		vertex.pos.y = Random(-10.0f, 10.0f);
