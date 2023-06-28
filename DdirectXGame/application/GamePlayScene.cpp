@@ -143,22 +143,22 @@ void GamePlayScene::Update()
 	camera->UpdateMatrix();
 
 	//“V‹…‚Ì‘€ì
-	ImGui::Begin("skydome");
-	ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
-	ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
-	ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
-	ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
-	ImGui::End();
+	//ImGui::Begin("skydome");
+	//ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
+	//ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
+	//ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
+	//ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
+	//ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
+	//ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
+	//ImGui::End();
 
-	//ƒŒƒC‚Ì‘€ì
-	ImGui::Begin("Ray");
-	ImGui::Text("cube wo scale de ookiku siteiru tame usiro ha hanntei arimasen");
-	ImGui::SliderFloat("posX", &ray.start.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
-	ImGui::End();
+	////ƒŒƒC‚Ì‘€ì
+	//ImGui::Begin("Ray");
+	//ImGui::Text("cube wo scale de ookiku siteiru tame usiro ha hanntei arimasen");
+	//ImGui::SliderFloat("posX", &ray.start.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
+	//ImGui::End();
 
 	Vector2 sprite1Pos = { sprite->GetPosition().x,sprite->GetPosition().y };
 	Vector2 sprite2Pos = { sprite2->GetPosition().x,sprite2->GetPosition().y };
@@ -220,8 +220,8 @@ void GamePlayScene::Draw()
 
 //	skydomeObj->Draw();
 	//rayObj->Draw();
-	//planeObj->Draw();
-	//triangleObj->Draw();
+	planeObj->Draw();
+	triangleObj->Draw();
 
 
 	object1->Draw();
