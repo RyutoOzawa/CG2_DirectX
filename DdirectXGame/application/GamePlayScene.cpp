@@ -90,7 +90,7 @@ void GamePlayScene::Initialize()
 		acc.y = Random(-randAcc, 0.0f);
 
 		//’Ç‰Á
-		particleMan->Add(60, pos, vel, acc);
+		particleMan->Add(60, pos, vel, acc,1.0f,0.0f);
 	}
 
 	rayObj = std::make_unique<Object3d>();

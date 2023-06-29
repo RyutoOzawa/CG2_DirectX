@@ -75,7 +75,7 @@ void ParticleManager::Initialize(uint32_t texIndex)
 	
 
 	//頂点データ全体のサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPos) * vertexCount);
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosScale) * vertexCount);
 
 	// リソース設定
 	D3D12_RESOURCE_DESC resDesc{};
@@ -102,7 +102,7 @@ void ParticleManager::Initialize(uint32_t texIndex)
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
-	VertexPos* vertMap = nullptr;
+	VertexPosScale* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
@@ -118,7 +118,7 @@ void ParticleManager::Initialize(uint32_t texIndex)
 	// 頂点バッファのサイズ
 	vbView.SizeInBytes = sizeVB;
 	// 頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(VertexPos);
+	vbView.StrideInBytes = sizeof(VertexPosScale);
 }
 
 void ParticleManager::Update()
@@ -134,15 +134,23 @@ void ParticleManager::Update()
 		it->velocity += it->accel;
 		//速度による移動
 		it->position += it->velocity;
+		//パーティクルの現在時間を計算
+		float f = (float)it->frame / it->num_frame;
+		//スケールの線形補間
+		it->scale = (it->scaleEnd - it->scaleStart) * f;
+		it->scale += it->scaleStart;
+
 	}
 	//頂点バッファへデータ転送
-	VertexPos* vertMap = nullptr;
+	VertexPosScale* vertMap = nullptr;
 	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		//パーティクルの情報を1つずつ反映
 		for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 			//座標
 			vertMap->pos = it->position;
+			//スケール
+			vertMap->scale = it->scale;
 			//次の順番へ
 			vertMap++;
 		}
@@ -203,7 +211,7 @@ void ParticleManager::Draw()
 	commandList->DrawInstanced((UINT)std::distance(particles.begin(),particles.end()), 1, 0, 0);
 }
 
-void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 accel) {
+void ParticleManager::Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd) {
 	//リストに要素を追加
 	particles.emplace_front();
 	//追加した要素の参照
@@ -213,6 +221,9 @@ void ParticleManager::Add(int life, Vector3 position, Vector3 velocity, Vector3 
 	p.velocity = velocity;
 	p.accel = accel;
 	p.num_frame = life;
+	p.scale = scaleStart;
+	p.scaleStart = scaleStart;
+	p.scaleEnd = scaleEnd;
 }
 
 void ParticleManager::CreatePipeline3D()
@@ -307,6 +318,13 @@ void ParticleManager::CreatePipeline3D()
 		D3D12_APPEND_ALIGNED_ELEMENT,					//データのオフセット値(D3D12_APPEND_ALIGNED_ELEMENTだと自動設定)
 		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,		//入力データ種別(標準はD3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA)
 		0												//一度に描画するインスタンス数(0でよい)
+		});
+
+	inputLayout.push_back(
+		{
+			"TEXCOORD",0,DXGI_FORMAT_R32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		});
 
 	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);

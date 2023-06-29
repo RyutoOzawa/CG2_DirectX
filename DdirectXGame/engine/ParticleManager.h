@@ -16,8 +16,9 @@ public:
 	};
 
 	//頂点データ構造体
-	struct VertexPos {
-		Vector3 pos;
+	struct VertexPosScale {
+		Vector3 pos;//xyz座標
+		float scale;//スケール
 	};
 
 	struct Particle {
@@ -31,6 +32,12 @@ public:
 		int frame = 0;
 		//終了フレーム
 		int num_frame = 0;
+		//スケール現在値
+		float scale = 1.0f;
+		//スケール開始値
+		float scaleStart = 1.0f;
+		//スケール終了値
+		float scaleEnd = 0.0f;
 	};
 
 private:
@@ -75,7 +82,9 @@ public:
 	/// <param name="position">初期座標</param>
 	/// <param name="velocity">速度</param>
 	/// <param name="accel">加速度</param>
-	void Add(int life, Vector3 position, Vector3 velocity, Vector3 accel);
+	/// <param name="scaleStart">開始時スケール</param>
+	/// <param name="scaleEnd">終了時スケール</param>
+	void Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel,float scaleStart,float scaleEnd);
 private:
 	static void CreatePipeline3D();
 

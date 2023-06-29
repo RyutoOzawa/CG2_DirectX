@@ -13,6 +13,7 @@ cbuffer cbuff1 : register(b1)
 struct VSOutput
 {
 	float4 pos : SV_POSITION; // 頂点座標
+	float scale : TEXCOORD;//スケール
 };
 
 //ジオメトリシェーダーからピクセルシェーダへの出力
