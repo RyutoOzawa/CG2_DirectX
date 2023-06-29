@@ -18,13 +18,7 @@ class Object3d
 {
 public:
 
-	//サブクラス
-		//頂点データ構造体
-	struct Vertex {
-		DirectX::XMFLOAT3 pos;//xyz座標
-		DirectX::XMFLOAT3 normal;//法線ベクトル
-		DirectX::XMFLOAT2 uv;//uv座標
-	};
+
 
 	struct ConstBufferData {
 		//DirectX::XMFLOAT4 color;
@@ -49,10 +43,14 @@ public:
 
 	Matrix4 matBillboard = matBillboard.identity();	//ビルボード行列
 	Matrix4 matBillboardY = matBillboardY.identity();	//Y軸周りビルボード行列
+	bool isBillboard = false;
+	bool isBillboardY = false;
 
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ
 
 	Model* model = nullptr;	//モデルデータ
+
+	Camera* camera = nullptr;//ビルボード用のカメラ
 	
 public:
 	/// <summary>
@@ -93,6 +91,12 @@ public:
 	void SetCollider(BaseCollider* collider);
 
 	virtual void OnCollision(const CollisionInfo& info) {}
+
+	//ビルボード行列の更新
+	void UpdateBillBoard();
+
+	//Y軸ビルボード行列の更新
+	void UpdatebillboardY();
 
 protected:
 	//クラス名

@@ -44,7 +44,7 @@ class Model {
 		}
 	};
 
-	static const int vertexCount = 1;	//頂点数
+	static const int vertexCount = 30;	//頂点数
 
 	//メンバ変数
 	std::vector<Vertex> vertices;		//頂点データ配列
@@ -53,7 +53,7 @@ class Model {
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuff;	//インデックスバッファ
 	std::vector<unsigned short> indices;//インデックスデータ配列
 	D3D12_INDEX_BUFFER_VIEW ibView;		//インデックスバッファビュー
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;	//定数バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial;	//定数バッファ
 	Material material;			//マテリアル
 
 public:
@@ -64,8 +64,9 @@ public:
 
 	static void SetDevice(ID3D12Device* dev) { device = dev; }
 
-	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	ID3D12Resource* GetCBMaterial()const { return constBuffMaterial.Get(); }
 
 	//内部処理用の非公開メンバ関数
 private:

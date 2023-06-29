@@ -1,51 +1,29 @@
-#include "Object3d.h"
-
-#include"WindowsAPI.h"
-#include<cassert>
-using namespace DirectX;
+#include "ParticleManager.h"
 using namespace Microsoft::WRL;
-#include<d3dx12.h>
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 #include"GpPipeline.h"
+#include"Util.h"
 #include"Texture.h"
-#include<fstream>
-#include<sstream>
-#include"Model.h"
-#include<vector>
-#include"BaseCollider.h"
-using namespace std;
 
-//静的メンバ変数
-ComPtr<ID3D12PipelineState> Object3d::pipelineState;
-ComPtr<ID3D12RootSignature> Object3d::rootSignature;
-ReDirectX* Object3d::directX = nullptr;
+ComPtr<ID3D12PipelineState> ParticleManager::pipelineState;
+ComPtr<ID3D12RootSignature> ParticleManager::rootSignature;
+ReDirectX* ParticleManager::directX = nullptr;
+Camera* ParticleManager::camera = nullptr;
 
-
-
-
-Object3d::~Object3d()
+void ParticleManager::StaticInitialize(ReDirectX* directX_)
 {
-	if (collider) {
-		delete collider;
-	}
-}
-
-void Object3d::StaticInitialize(ReDirectX* directX_)
-{
-	//nullチェック
 	assert(directX_);
-	//メンバに渡す
 	directX = directX_;
 
-	//モデルクラスにデバイスのインスタンスを渡す
-	Model::SetDevice(directX->GetDevice());
-	//3D用パイプラインステート生成
+	//パイプライン設定
 	CreatePipeline3D();
 }
 
-void Object3d::BeginDraw(Camera* camera)
+void ParticleManager::BeginDraw(Camera* camera_)
 {
+	camera = camera_;
+
 	//パイプラインステートの設定
 	directX->GetCommandList()->SetPipelineState(pipelineState.Get());
 	//ルートシグネチャの設定
@@ -53,12 +31,15 @@ void Object3d::BeginDraw(Camera* camera)
 	//プリミティブ形状の設定
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-	//3番定数バッファビューにカメラの定数バッファを設定
-	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera->constBuff->GetGPUVirtualAddress());
+	//2番定数バッファビューにカメラの定数バッファを設定
+	directX->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera->constBuff->GetGPUVirtualAddress());
+
 }
 
-void Object3d::Initialize()
+void ParticleManager::Initialize(uint32_t texIndex)
 {
+	//テクスチャセット
+	SetTexture(texIndex);
 
 	ID3D12Device* device = directX->GetDevice();
 
@@ -89,83 +70,95 @@ void Object3d::Initialize()
 	assert(SUCCEEDED(result));
 
 	Matrix4 matrix = matrix.identity();
-	constMap->mat = matrix;
+	constMap->matBillboard = matrix;
 
-	//クラス名の文字列を取得
-	name = typeid(*this).name();
+	
 
+	//頂点データ全体のサイズ
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosScale) * vertexCount);
+
+	// リソース設定
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = sizeVB; // 頂点データ全体のサイズ
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// 頂点バッファの設定
+	D3D12_HEAP_PROPERTIES heapProp{}; // ヒープ設定
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
+
+	// 頂点バッファの生成
+	result = device->CreateCommittedResource(
+		&heapProp, // ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc, // リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertBuff));
+	assert(SUCCEEDED(result));
+
+	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
+	VertexPosScale* vertMap = nullptr;
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	assert(SUCCEEDED(result));
+	// 全頂点に対して
+	//for (int i = 0; i < vertices.size(); i++) {
+	//	vertMap[i] = vertices[i]; // 座標をコピー
+	//}
+	// 繋がりを解除
+	vertBuff->Unmap(0, nullptr);
+
+	// 頂点バッファビューの作成
+	// GPU仮想アドレス
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	// 頂点バッファのサイズ
+	vbView.SizeInBytes = sizeVB;
+	// 頂点1つ分のデータサイズ
+	vbView.StrideInBytes = sizeof(VertexPosScale);
 }
 
-void Object3d::Update()
+void ParticleManager::Update()
 {
+	//寿命がつきたパーティクルを全削除
+	particles.remove_if([](Particle& x) {return x.frame > x.num_frame; });
 
-	//行列計算
-	Matrix4 matScale, matRot, matTrans;
+	//全パーティクル更新
+	for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		//経過フレーム数をカウント
+		it->frame++;
+		//速度に加速度を加算
+		it->velocity += it->accel;
+		//速度による移動
+		it->position += it->velocity;
+		//パーティクルの現在時間を計算
+		float f = (float)it->frame / it->num_frame;
+		//スケールの線形補間
+		it->scale = (it->scaleEnd - it->scaleStart) * f;
+		it->scale += it->scaleStart;
 
-	matScale = matScale.scale(scale);
-
-	matRot = matRot.identity();
-	matRot *= matRot.rotateZ(rotation.z);
-	matRot *= matRot.rotateX(rotation.x);
-	matRot *= matRot.rotateY(rotation.y);
-
-	matTrans = matTrans.translate(position);
-
-	matWorld.identity();
-
-	//ビルボードフラグがtrueならビルボード行列更新と掛け算を行う
-	if (isBillboard) {
-		matWorld.identity();
-		UpdateBillBoard();
-		matWorld *= matBillboard;
 	}
-
-	if (isBillboardY) {
-		matWorld.identity();
-		UpdatebillboardY();
-		matWorld *= matBillboardY;
-	}
-
-	matWorld *= matScale;
-	matWorld *= matRot;
-	matWorld *= matTrans;
-
-	if (parent != nullptr) {
-		matWorld *= parent->matWorld;
-	}
-
-	//定数バッファに転送
-	//constMap->mat = matWorld * matView * matProjection;
-
-	constMap->mat = matWorld;
-
-	//当たり判定更新
-	if (collider) {
-		collider->Update();
+	//頂点バッファへデータ転送
+	VertexPosScale* vertMap = nullptr;
+	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	if (SUCCEEDED(result)) {
+		//パーティクルの情報を1つずつ反映
+		for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+			//座標
+			vertMap->pos = it->position;
+			//スケール
+			vertMap->scale = it->scale;
+			//次の順番へ
+			vertMap++;
+		}
+		vertBuff->Unmap(0, nullptr);
 	}
 }
 
-void Object3d::Draw()
-{
-	ID3D12GraphicsCommandList* commandList = directX->GetCommandList();
-	//h定数バッファビュー(CBV)の設定コマンド
-	commandList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-
-	//モデルのマテリアル定数バッファ設定
-	commandList->SetGraphicsRootConstantBufferView(2, model->GetCBMaterial()->GetGPUVirtualAddress());
-
-
-	//モデルデータの描画用コマンドのまとまり
-	model->Draw(commandList);
-}
-
-void Object3d::SetCollider(BaseCollider* collider)
-{
-	collider->SetObject(this);
-	this->collider = collider;
-}
-
-void Object3d::UpdateBillBoard()
+void ParticleManager::Draw()
 {
 	matBillboard.identity();
 
@@ -191,42 +184,49 @@ void Object3d::UpdateBillBoard()
 
 	//カメラの行列をビルボード行列に
 	matBillboard = matCameraRot;
+
+	constMap->matBillboard = matBillboard;
+
+
+	ID3D12GraphicsCommandList* commandList = directX->GetCommandList();
+	//h定数バッファビュー(CBV)の設定コマンド
+	commandList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+
+	//モデルデータの描画用コマンドのまとまり
+	//model->Draw(commandList);
+
+	//頂点バッファビューの設定
+	commandList->IASetVertexBuffers(0, 1, &vbView);
+
+	//デスクリプタヒープの配列セット
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	//ハンドルをテクスチャ番号分進める
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
+	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	srvGpuHandle.ptr += incrementSize * textureIndex;
+	commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	//描画コマンド
+	commandList->DrawInstanced((UINT)std::distance(particles.begin(),particles.end()), 1, 0, 0);
 }
 
-void Object3d::UpdatebillboardY()
-{
-	matBillboardY.identity();
-
-	//カメラの各ベクトルを設定
-	Vector3 eye, target, up;
-	eye = camera->eye;
-	target = camera->target;
-	up = camera->up;
-	Vector3 cameraAxisZ, cameraAxisX, cameraAxisY;
-	cameraAxisZ = target - eye;
-	cameraAxisZ.normalize();
-	cameraAxisX = up.cross(cameraAxisZ);
-	cameraAxisX.normalize();
-	cameraAxisY = cameraAxisZ.cross(cameraAxisX);
-	cameraAxisY.normalize();
-
-
-	Vector3 axisX, axisY, axisZ;
-	axisX = cameraAxisX;
-	axisY = up;
-	axisY.normalize();
-	axisZ = axisX.cross(axisY);
-	axisZ.normalize();
-	matBillboardY = {
-		axisX.x,axisX.y,axisX.z,0,
-		axisY.x,axisY.y,axisY.z,0,
-		axisZ.x,axisZ.y,axisZ.z,0,
-		0,0,0,1
-	};
-
+void ParticleManager::Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd) {
+	//リストに要素を追加
+	particles.emplace_front();
+	//追加した要素の参照
+	Particle& p = particles.front();
+	//値のセット
+	p.position = position;
+	p.velocity = velocity;
+	p.accel = accel;
+	p.num_frame = life;
+	p.scale = scaleStart;
+	p.scaleStart = scaleStart;
+	p.scaleEnd = scaleEnd;
 }
 
-void Object3d::CreatePipeline3D()
+void ParticleManager::CreatePipeline3D()
 {
 	HRESULT result;
 
@@ -239,7 +239,7 @@ void Object3d::CreatePipeline3D()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/ObjVertexShader.hlsl", // シェーダファイル名
+		L"Resources/shaders/ParticleVS.hlsl", // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -262,7 +262,7 @@ void Object3d::CreatePipeline3D()
 
 	// ジオメトリシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicGeometryShader.hlsl", // シェーダファイル名
+		L"Resources/shaders/ParticleGS.hlsl", // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "gs_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -285,7 +285,7 @@ void Object3d::CreatePipeline3D()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/ObjPixelShader.hlsl", // シェーダファイル名
+		L"Resources/shaders/ParticlePS.hlsl", // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -320,17 +320,12 @@ void Object3d::CreatePipeline3D()
 		0												//一度に描画するインスタンス数(0でよい)
 		});
 
-	//inputLayout.push_back(
-	//	{//法線ベクトル
-	//	"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
-	//	D3D12_APPEND_ALIGNED_ELEMENT,
-	//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-	//	});
-	//inputLayout.push_back({//uv座標
-	//	"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
-	//	D3D12_APPEND_ALIGNED_ELEMENT,
-	//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-	//	});
+	inputLayout.push_back(
+		{
+			"TEXCOORD",0,DXGI_FORMAT_R32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		});
 
 	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
 	//ジオメトリシェーダーの設定を追加
@@ -338,6 +333,12 @@ void Object3d::CreatePipeline3D()
 	pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
 
 	pipeline3D.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+
+	//デプスの書き込み禁止
+	pipeline3D.desc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	pipeline3D.SetBlendAdd();
+	pipeline3D.SetBlendSub();
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
@@ -347,8 +348,8 @@ void Object3d::CreatePipeline3D()
 	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//ルートパラメータの設定
-	D3D12_ROOT_PARAMETER rootParams[4] = {};
-	//定数バッファ0番(ワールド座標)
+	D3D12_ROOT_PARAMETER rootParams[3] = {};
+	//定数バッファ0番(ビルボード行列の定数)
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
 	rootParams[0].Descriptor.ShaderRegister = 0;					//定数バッファ番号
 	rootParams[0].Descriptor.RegisterSpace = 0;						//デフォルト値
@@ -358,16 +359,11 @@ void Object3d::CreatePipeline3D()
 	rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange;			//デスクリプタレンジ
 	rootParams[1].DescriptorTable.NumDescriptorRanges = 1;						//デスクリプタレンジ数
 	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//すべてのシェーダから見える
-	//定数バッファ1番(マテリアル)
+	//定数バッファ1番(カメラ行列)
 	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
 	rootParams[2].Descriptor.ShaderRegister = 1;					//デスクリプタレンジ
 	rootParams[2].Descriptor.RegisterSpace = 0;						//デスクリプタレンジ数
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見えるバッファ
-	//定数バッファ2番(カメラ)
-	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[3].Descriptor.ShaderRegister = 2;					//デスクリプタレンジ
-	rootParams[3].Descriptor.RegisterSpace = 0;						//デスクリプタレンジ数
-	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見えるバッファ
 
 	//テクスチャサンプラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
@@ -403,6 +399,4 @@ void Object3d::CreatePipeline3D()
 	//パイプラインステートの生成
 	pipeline3D.SetPipelineState(dev, pipelineState);
 }
-
-
 

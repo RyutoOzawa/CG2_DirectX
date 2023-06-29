@@ -1,6 +1,7 @@
 #include "KEngineFramework.h"
 #include"FbxLoader.h"
 #include"FbxObject3d.h"
+#include"ParticleManager.h"
 
 //KEngineFramework::KEngineFramework()
 //{
@@ -55,6 +56,9 @@ void KEngineFramework::Initialize()
 	postEffect = new PostEffect();
 	postEffect->Initialize(directX->GetDevice());
 
+	//パーティクルマネージャ初期化
+	ParticleManager::StaticInitialize(directX);
+
 }
 
 void KEngineFramework::Finalize()
@@ -62,6 +66,8 @@ void KEngineFramework::Finalize()
 
 
 	imguiManager->Finalize();
+
+	sceneManager->Finalize();
 
 	FbxLoader::GetInstance()->Finalize();
 
