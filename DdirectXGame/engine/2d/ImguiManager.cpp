@@ -43,7 +43,7 @@ void ImguiManager::Initialize(WindowsAPI* winApp_, ReDirectX* directX_)
 	result = directX->GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&descHeap));
 
 	ImGui_ImplWin32_Init(winApp->GetHwnd());
-	ImGui_ImplDX12_Init(directX->GetDevice(), directX->GetBackBufferCount(),
+	ImGui_ImplDX12_Init(directX->GetDevice(), (int)directX->GetBackBufferCount(),
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, descHeap.Get(),
 		descHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
 		descHeap.Get()->GetGPUDescriptorHandleForHeapStart());

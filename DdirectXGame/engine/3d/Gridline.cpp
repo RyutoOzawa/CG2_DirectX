@@ -105,7 +105,7 @@ void Gridline::Draw(ID3D12GraphicsCommandList* commandList, ID3D12DescriptorHeap
 	commandList->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
 
 	//•`‰æƒRƒ}ƒ“ƒh
-	commandList->DrawInstanced(vertices.size(), 1, 0, 0);
+	commandList->DrawInstanced((UINT)vertices.size(), 1, 0, 0);
 
 }
 

@@ -139,7 +139,9 @@ uint32_t Texture::LoadTexture(const wchar_t* fileName)
 			//i‚ð–ß‚è’l‚Æ‚µ‚Ä•Ô‚·
 			return i;
 		}
+
 	}
+	return spriteSRVCount-1;
 }
 
 void Texture::Initialize(ID3D12Device* device)

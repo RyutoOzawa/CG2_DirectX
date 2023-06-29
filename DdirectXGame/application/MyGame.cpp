@@ -1,4 +1,4 @@
-#include "MyGame.h"
+﻿#include "MyGame.h"
 using namespace DirectX;
 #include"SceneFactory.h"
 

@@ -27,8 +27,6 @@ void AudioManager::StaticInitialize()
 //音声データの読み込み
 void AudioManager::SoundLoadWave(const char* filename) {
 
-	HRESULT result;
-
 	//-------①ファイルオープン-------//
 
 	//ファイル入力ストリームのインスタンス
