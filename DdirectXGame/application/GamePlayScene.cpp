@@ -41,7 +41,7 @@ void GamePlayScene::Initialize()
 
 	triangleModel = std::make_unique<Model>();
 	triangleModel = Model::CreateModel("triangle_mat");
-	triangleModel->textureIndex = particleGraph;
+	//triangleModel->textureIndex = particleGraph;
 
 	//カメラ初期化
 	Vector3 eye(0, 20, -20);	//視点座標
@@ -56,7 +56,7 @@ void GamePlayScene::Initialize()
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
-	skydomeObj->scale = { 100,100,100 };
+	//skydomeObj->scale = { 100,100,100 };
 
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
@@ -169,15 +169,15 @@ void GamePlayScene::Update()
 	camera->UpdateMatrix();
 
 	//天球の操作
-	//ImGui::Begin("skydome");
-	//ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
-	//ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
-	//ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
-	//ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
-	//ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
-	//ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
-	//ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
-	//ImGui::End();
+	ImGui::Begin("skydome");
+	ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
+	ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
+	ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
+	ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
+	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
+	ImGui::End();
 
 	////レイの操作
 	//ImGui::Begin("Ray");
@@ -217,6 +217,30 @@ void GamePlayScene::Update()
 
 
 	triangleObj->Update();
+
+	//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
+	{
+		const float randPos = 5.0f;
+		Vector3 pos{};
+		pos.x = Random(-randPos, randPos);
+		pos.y = Random(-randPos, randPos);
+		pos.z = Random(-randPos, randPos);
+		//x,y,zすべて±0.05で分布
+		const float randVel = 0.05f;
+		Vector3 vel{};
+		vel.x = Random(-randVel, randVel);
+		vel.y = Random(-randVel, randVel);
+		vel.z = Random(-randVel, randVel);
+		//重力に見立ててYのみ-0.001f~0でランダムに分布
+		Vector3 acc{};
+		const float randAcc = 0.001f;
+		acc.y = Random(-randAcc, 0.0f);
+
+		//追加
+		particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
+
+
+	}
 	particleMan->Update();
 
 	//アニメーション開始ボタン
@@ -255,13 +279,13 @@ void GamePlayScene::Draw()
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-//	skydomeObj->Draw();
+	skydomeObj->Draw();
 	//rayObj->Draw();
 	planeObj->Draw();
-	triangleObj->Draw();
+	//triangleObj->Draw();
 
 
-	//object1->Draw();
+	object1->Draw();
 
 	//パーティクル描画
 	ParticleManager::BeginDraw(camera);

@@ -44,8 +44,6 @@ class Model {
 		}
 	};
 
-	static const int vertexCount = 30;	//頂点数
-
 	//メンバ変数
 	std::vector<Vertex> vertices;		//頂点データ配列
 	D3D12_VERTEX_BUFFER_VIEW vbView;	//頂点バッファビュー

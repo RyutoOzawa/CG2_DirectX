@@ -55,10 +55,10 @@ void MyGame::Draw()
 
 
 	//ポストエフェクトの描画
-	//postEffect->Draw(directX->GetCommandList());
+	postEffect->Draw(directX->GetCommandList());
 
 	//シーン描画処理
-	sceneManager->Draw();
+//	sceneManager->Draw();
 	imguiManager->Draw();
 
 	directX->EndDraw();

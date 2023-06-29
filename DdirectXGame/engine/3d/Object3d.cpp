@@ -51,7 +51,7 @@ void Object3d::BeginDraw(Camera* camera)
 	//ルートシグネチャの設定
 	directX->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定
-	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//3番定数バッファビューにカメラの定数バッファを設定
 	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera->constBuff->GetGPUVirtualAddress());
@@ -114,17 +114,17 @@ void Object3d::Update()
 	matWorld.identity();
 
 	//ビルボードフラグがtrueならビルボード行列更新と掛け算を行う
-	if (isBillboard) {
-		matWorld.identity();
-		UpdateBillBoard();
-		matWorld *= matBillboard;
-	}
+	//if (isBillboard) {
+	//	matWorld.identity();
+	//	UpdateBillBoard();
+	//	matWorld *= matBillboard;
+	//}
 
-	if (isBillboardY) {
-		matWorld.identity();
-		UpdatebillboardY();
-		matWorld *= matBillboardY;
-	}
+	//if (isBillboardY) {
+	//	matWorld.identity();
+	//	UpdatebillboardY();
+	//	matWorld *= matBillboardY;
+	//}
 
 	matWorld *= matScale;
 	matWorld *= matRot;
@@ -320,24 +320,24 @@ void Object3d::CreatePipeline3D()
 		0												//一度に描画するインスタンス数(0でよい)
 		});
 
-	//inputLayout.push_back(
-	//	{//法線ベクトル
-	//	"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
-	//	D3D12_APPEND_ALIGNED_ELEMENT,
-	//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-	//	});
-	//inputLayout.push_back({//uv座標
-	//	"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
-	//	D3D12_APPEND_ALIGNED_ELEMENT,
-	//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-	//	});
+	inputLayout.push_back(
+		{//法線ベクトル
+		"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+		D3D12_APPEND_ALIGNED_ELEMENT,
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		});
+	inputLayout.push_back({//uv座標
+		"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+		D3D12_APPEND_ALIGNED_ELEMENT,
+		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		});
 
 	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
 	//ジオメトリシェーダーの設定を追加
-	pipeline3D.desc.GS.BytecodeLength = gsBlob->GetBufferSize();
-	pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
+	//pipeline3D.desc.GS.BytecodeLength = gsBlob->GetBufferSize();
+	//pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
 
-	pipeline3D.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+	//pipeline3D.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
