@@ -6,6 +6,7 @@
 #include"FbxLoader.h"
 #include"FbxObject3d.h"
 #include"Util.h"
+#include"JsonLoader.h"
 
 using namespace DirectX;
 
@@ -131,6 +132,10 @@ void GamePlayScene::Initialize()
 	camera->target = { 0,0,0 };
 	//	camera->eye = { 0,0,-20 };
 	camera->eye = { 0,0,-50 };
+
+	LevelData* data = nullptr;
+
+	data = JsonLoader::LoadJsonFile("untitled");
 
 }
 

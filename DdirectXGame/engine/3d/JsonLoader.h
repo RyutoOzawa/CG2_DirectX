@@ -41,7 +41,7 @@ public://静的メンバ変数
 
 private:
 	//オブジェクト走査用再帰関数
-	void ScanObjects();
+	static void ScanObjects(const std::string& dataName,LevelData* levelData,const nlohmann::json& daserialized);
 
 };
 
