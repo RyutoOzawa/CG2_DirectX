@@ -137,6 +137,7 @@
     <ClCompile Include="DdirectXGame\engine\3d\FbxObject3d.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="PostEffect.cpp" />
+    <ClCompile Include="DdirectXGame\application\RailCamera.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +183,7 @@
     <ClInclude Include="DdirectXGame\engine\math\Vertex.h" />
     <ClInclude Include="DdirectXGame\engine\base\WindowsAPI.h" />
     <ClInclude Include="DdirectXGame\engine\3d\FbxObject3d.h" />
+    <ClInclude Include="DdirectXGame\application\RailCamera.h" />
     <ClInclude Include="SphereCollider.h" />
   </ItemGroup>
   <ItemGroup>

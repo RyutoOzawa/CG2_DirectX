@@ -50,13 +50,13 @@ void GamePlayScene::Initialize()
 
 	sprite2->SetPos({ 240, 240 });
 
-	camera = new Camera();
-	camera->Initialize(eye, target, up);
+	currentCamera = new Camera();
+	currentCamera->Initialize(eye, target, up);
 
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
-	skydomeObj->scale = { 100,100,100 };
+	skydomeObj->scale = { 1000,1000,1000 };
 
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
@@ -131,11 +131,16 @@ void GamePlayScene::Initialize()
 	object1->SetModel(model1.get());
 
 	//デバイスセット
-	FbxObject3d::SetCamera(camera);
+	FbxObject3d::SetCamera(currentCamera);
 
-	camera->target = { 0,0,0 };
+
+	currentCamera->target = { 0,0,0 };
 	//	camera->eye = { 0,0,-20 };
-	camera->eye = { 0,0,-50 };
+	currentCamera->eye = { 0,0,-50 };
+
+
+	railCamera = new RailCamera();
+	railCamera->Initialize({0,0,0}, {0,0,0});
 
 }
 
@@ -145,8 +150,9 @@ void GamePlayScene::Finalize()
 
 	//delete sprite;
 	//delete skyDome;
+	delete currentCamera;
 
-	delete camera;
+	//delete railCamera;
 
 	//-------------ここまでにループ内で使用したものの後処理------------//
 
@@ -160,18 +166,26 @@ void GamePlayScene::Update()
 
 	//----------------------ゲーム内ループはここから---------------------//
 
+
+	//レールカメラの更新
+	railCamera->Update();
+
+	//レールカメラを親にする
+	player->parent = railCamera->GetObject3d();
 	player->Update();
 
-	camera->target = { 0,5,0 };
 
-	ImGui::SliderFloat("cameraX", &camera->eye.x, -100.0f, 100.0f);
-	ImGui::SliderFloat("cameraY", &camera->eye.y, -100.0f, 100.0f);
-	ImGui::SliderFloat("cameraZ", &camera->eye.z, -100.0f, 100.0f);
+
+	ImGui::SliderFloat("cameraX", &currentCamera->eye.x, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraY", &currentCamera->eye.y, -100.0f, 100.0f);
+	ImGui::SliderFloat("cameraZ", &currentCamera->eye.z, -100.0f, 100.0f);
 
 	//camera->target = camera->eye;
 	//camera->target.z += 1.0f;
 
-	camera->UpdateMatrix();
+	//現在のカメラ情報をレールカメラのものに
+	currentCamera = railCamera->GetCamera();
+	currentCamera->UpdateMatrix();
 
 	//天球の操作
 	ImGui::Begin("skydome");
@@ -215,7 +229,7 @@ void GamePlayScene::Update()
 
 	triangleObj->position = { 0,0,0 };
 
-	triangleObj->camera = camera;
+	triangleObj->camera = currentCamera;
 
 	ImGui::Checkbox("is billboard", &triangleObj->isBillboard);
 	ImGui::Checkbox("is billboardY", &triangleObj->isBillboardY);
@@ -282,7 +296,7 @@ void GamePlayScene::Draw()
 	//backGroundSprite->Draw();
 
 	//-------3Dオブジェクト描画処理-------//
-	Object3d::BeginDraw(camera);
+	Object3d::BeginDraw(currentCamera);
 
 
 	//天球
@@ -299,7 +313,7 @@ void GamePlayScene::Draw()
 	//object1->Draw();
 
 	//パーティクル描画
-	ParticleManager::BeginDraw(camera);
+	ParticleManager::BeginDraw(currentCamera);
 	//パーティクルテスト
 	//particleMan->Draw();
 

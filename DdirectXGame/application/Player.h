@@ -8,7 +8,8 @@ class Player :public Object3d
 {
 public:	//ƒƒ“ƒoŠÖ”
 
-//	void Initialize();
+	//‰Šú‰»
+	void Initialize();
 
 	//XV
 	void Update();

@@ -1,6 +1,14 @@
 #include "Player.h"
 #include"Input.h"
 
+void Player::Initialize()
+{
+	Object3d::Initialize();
+
+	position = { 0,0,100 };
+
+}
+
 void Player::Update()
 {
 

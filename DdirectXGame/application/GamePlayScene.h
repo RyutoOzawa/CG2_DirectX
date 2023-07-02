@@ -12,6 +12,7 @@
 #include"FbxObject3d.h"
 #include"ParticleManager.h"
 #include"Player.h"
+#include"RailCamera.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -64,7 +65,8 @@ public://ƒƒ“ƒo•Ï”
 	Triangle triangle;
 	Ray ray;
 
-	Camera* camera = nullptr;
+	Camera* currentCamera = nullptr;
+	RailCamera* railCamera = nullptr;
 
 };
 
