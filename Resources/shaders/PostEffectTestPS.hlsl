@@ -24,8 +24,10 @@ float4 main(VSOutput input) : SV_TARGET
 	}
 
 	result.rgb = result.rgb / totalWeight;
-	//result= tex.Sample(smp, input.uv);
+	result= tex.Sample(smp, input.uv);
 	return float4(result.rgb,1);
+
+
 }
 
 

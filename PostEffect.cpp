@@ -10,7 +10,8 @@ using namespace Microsoft::WRL;
 
 //静的メンバ変数の実態
 //										   Red Green Blue Alpha  
-const float PostEffect::clearColor[4] = { 0.25f,0.5f,0.1f,0.0f };//緑っぽい色
+//const float PostEffect::clearColor[4] = { 0.25f,0.5f,0.1f,0.0f };//緑っぽい色
+const float PostEffect::clearColor[4] = { 0.1f,0.25f, 0.5f,0.0f };//青っぽい色
 
 PostEffect::PostEffect()
 {

@@ -11,6 +11,7 @@
 #include"FbxModel.h"
 #include"FbxObject3d.h"
 #include"ParticleManager.h"
+#include"Player.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -51,8 +52,10 @@ public://メンバ変数
 	std::unique_ptr<FbxModel> model1 = nullptr;
 	std::unique_ptr<FbxObject3d> object1 = nullptr;
 	std::unique_ptr<ParticleManager> particleMan = nullptr;
+	std::unique_ptr<Player> player = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
+
 
 	//当たり判定テスト用
 	Vector3 colHitPos;

@@ -56,7 +56,7 @@ void GamePlayScene::Initialize()
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
-	//skydomeObj->scale = { 100,100,100 };
+	skydomeObj->scale = { 100,100,100 };
 
 	planeObj = std::make_unique<Object3d>();
 	planeObj->Initialize();
@@ -70,6 +70,11 @@ void GamePlayScene::Initialize()
 
 	particleMan = std::make_unique<ParticleManager>();
 	particleMan->Initialize(particleGraph);
+
+	player = std::make_unique<Player>();
+	player->Initialize();
+	player->SetModel(defaultModel.get());
+
 	
 	for (int i = 0; i < 100; i++) {
 		//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
@@ -155,7 +160,7 @@ void GamePlayScene::Update()
 
 	//----------------------ゲーム内ループはここから---------------------//
 
-
+	player->Update();
 
 	camera->target = { 0,5,0 };
 
@@ -258,7 +263,7 @@ void GamePlayScene::Update()
 	object1->Update();
 
 	//スペースキーでメインゲームへ
-	if (input->IsKeyTrigger(DIK_SPACE))
+	if (input->IsKeyTrigger(DIK_F1))
 	{
 		//シーンの切り替えを依頼
 		sceneManager->ChangeScene("TITLE");
@@ -279,17 +284,24 @@ void GamePlayScene::Draw()
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
+
+	//天球
 	skydomeObj->Draw();
+	
+	//プレイヤー
+	player->Draw();
+
 	//rayObj->Draw();
-	planeObj->Draw();
+	//planeObj->Draw();
 	//triangleObj->Draw();
 
-
-	object1->Draw();
+	//FBX
+	//object1->Draw();
 
 	//パーティクル描画
 	ParticleManager::BeginDraw(camera);
-	particleMan->Draw();
+	//パーティクルテスト
+	//particleMan->Draw();
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();

@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DdirectXGame\application\Player.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\FbxLoader.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\FbxModel.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\BaseCollider.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DdirectXGame\application\Player.h" />
     <ClInclude Include="DdirectXGame\engine\2d\PostEffect.h" />
     <ClInclude Include="DdirectXGame\engine\3d\FbxLoader.h" />
     <ClInclude Include="DdirectXGame\engine\3d\FbxModel.h" />
