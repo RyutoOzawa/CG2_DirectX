@@ -1,4 +1,4 @@
-#include "RailCamera.h"
+ï»¿#include "RailCamera.h"
 #include"ImguiManager.h"
 #include"Util.h"
 
@@ -14,7 +14,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	world = new Object3d();
 	camera = new Camera();
 
-	//ƒ[ƒ‹ƒhÀ•W‰ŠúÝ’è
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™åˆæœŸè¨­å®š
 	world->Initialize();
 	world->position = position;
 	world->rotation = rotation;
@@ -32,11 +32,11 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 
 void RailCamera::Update()
 {
-	//ƒŒ[ƒ‹ƒJƒƒ‰—pƒfƒoƒbƒOƒeƒLƒXƒg
+	//ãƒ¬ãƒ¼ãƒ«ã‚«ãƒ¡ãƒ©ç”¨ãƒ‡ãƒãƒƒã‚°ãƒ†ã‚­ã‚¹ãƒˆ
 	ImGui::Begin("railCamera");
 
 
-	//ƒ[ƒ‹ƒhÀ•W‚ÌXV
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã®æ›´æ–°
 	ImGui::SliderFloat("posX", &world->position.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("posY", &world->position.y, -100.0f, 100.0f);
 	ImGui::SliderFloat("posZ", &world->position.z, -100.0f, 100.0f);
@@ -50,18 +50,18 @@ void RailCamera::Update()
 	world->Update();
 
 	camera->eye = world->position;
-	//ƒ[ƒ‹ƒh‘O•ûƒxƒNƒgƒ‹
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å‰æ–¹ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 forward(0, 0, 1);
-	//ƒŒ[ƒ‹ƒJƒƒ‰‚Ì‰ñ“]‚ð”½‰f
+	//ãƒ¬ãƒ¼ãƒ«ã‚«ãƒ¡ãƒ©ã®å›žè»¢ã‚’åæ˜ 
 	forward = Matrix4::transform(forward, world->matWorld);
-	//Ž‹“_+‘O•ûƒxƒNƒgƒ‹‚Å’Ž‹“_
+	//è¦–ç‚¹+å‰æ–¹ãƒ™ã‚¯ãƒˆãƒ«ã§æ³¨è¦–ç‚¹
 	camera->target = camera->eye + forward;
 	camera->target = forward;
-	//ã•ûŒüƒxƒNƒgƒ‹
+	//ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 up(0, 1, 0);
-	//ƒJƒƒ‰‚Ìã•ûŒü‚ðforward‚Æ“¯—l‚É•ÏŠ·
+	//ã‚«ãƒ¡ãƒ©ã®ä¸Šæ–¹å‘ã‚’forwardã¨åŒæ§˜ã«å¤‰æ›
 	//camera->up = Matrix4::transform(up, world->matWorld);
-	//ƒJƒƒ‰XV
+	//ã‚«ãƒ¡ãƒ©æ›´æ–°
 	camera->UpdateMatrix();
 
 
