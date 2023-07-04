@@ -11,6 +11,7 @@
 #include"FbxModel.h"
 #include"FbxObject3d.h"
 #include"ParticleManager.h"
+#include"JsonLoader.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -53,6 +54,12 @@ public://メンバ変数
 	std::unique_ptr<ParticleManager> particleMan = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
+
+	std::vector<std::unique_ptr<Object3d>> stageObjects;
+	std::vector<std::unique_ptr<Model>> stageModels;
+	LevelData levelData;
+
+
 
 	//当たり判定テスト用
 	Vector3 colHitPos;

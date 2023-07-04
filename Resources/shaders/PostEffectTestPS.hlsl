@@ -11,7 +11,7 @@ float Gaussian(float2 drawUV, float2 pickUV, float sigma) {
 
 float4 main(VSOutput input) : SV_TARGET
 {
-	float totalWeight = 0,sigma = 0.008,stepWidth = 0.001;
+	float totalWeight = 0,sigma = 0.004,stepWidth = 0.001;
 	float4 result = float4(0, 0, 0, 0);
 	
 	for (float y = -sigma * 2; y < sigma * 2; y += stepWidth) {
@@ -24,7 +24,7 @@ float4 main(VSOutput input) : SV_TARGET
 	}
 
 	result.rgb = result.rgb / totalWeight;
-	//result= tex.Sample(smp, input.uv);
+	result= tex.Sample(smp, input.uv);
 	return float4(result.rgb,1);
 }
 

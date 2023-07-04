@@ -6,7 +6,6 @@
 #include"FbxLoader.h"
 #include"FbxObject3d.h"
 #include"Util.h"
-#include"JsonLoader.h"
 
 using namespace DirectX;
 
@@ -133,9 +132,12 @@ void GamePlayScene::Initialize()
 	//	camera->eye = { 0,0,-20 };
 	camera->eye = { 0,0,-50 };
 
-	LevelData* data = nullptr;
+	levelData = JsonLoader::LoadJsonFile("levelDataTest");
 
-	data = JsonLoader::LoadJsonFile("untitled");
+	static int a = 0;
+	a++;
+
+	JsonLoader::CreateObjectFromLevelData(levelData, stageObjects,stageModels);
 
 }
 
@@ -289,8 +291,13 @@ void GamePlayScene::Draw()
 	planeObj->Draw();
 	//triangleObj->Draw();
 
+	for (int i = 0; i < stageObjects.size(); i++) {
+		stageObjects[i]->Draw();
+	}
 
 	object1->Draw();
+
+	
 
 	//パーティクル描画
 	ParticleManager::BeginDraw(camera);
