@@ -33,7 +33,7 @@ void GamePlayScene::Initialize()
 
 
 	skydome = std::make_unique<Model>();
-	skydome = Model::CreateModel("skydome");
+	skydome = Model::CreateModel("blockman");
 
 	defaultModel = std::make_unique<Model>();
 	defaultModel = Model::CreateModel();
@@ -286,22 +286,22 @@ void GamePlayScene::Draw()
 	//-------3Dオブジェクト描画処理-------//
 	Object3d::BeginDraw(camera);
 
-	skydomeObj->Draw();
+	//skydomeObj->Draw();
 	//rayObj->Draw();
-	planeObj->Draw();
+	//planeObj->Draw();
 	//triangleObj->Draw();
 
 	for (int i = 0; i < stageObjects.size(); i++) {
 		stageObjects[i]->Draw();
 	}
 
-	object1->Draw();
+//	object1->Draw();
 
 	
 
 	//パーティクル描画
 	ParticleManager::BeginDraw(camera);
-	particleMan->Draw();
+	//particleMan->Draw();
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();

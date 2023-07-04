@@ -2,6 +2,7 @@
 #include<iostream>
 #include<fstream>
 #include<cassert>
+#include"Util.h"
 
 const std::string JsonLoader::defaultBaseDirectory = "Resources/Json/";
 
@@ -166,13 +167,18 @@ void JsonLoader::ScanObjects(const std::string& dataName, LevelData& leveldata, 
 			//トランスフォームのパラメータ読み込み
 			nlohmann::json transform = object["transform"];
 			//平行移動
-			objectData.translation.x = (float)transform["translation"][1];
+			objectData.translation.x = (float)transform["translation"][0];
 			objectData.translation.y = (float)transform["translation"][2];
-			objectData.translation.z = -(float)transform["translation"][0];
+			objectData.translation.z = -(float)transform["translation"][1];
 			//回転角
-			objectData.rotation.x = -(float)transform["rotation"][1];
+			objectData.rotation.x = -(float)transform["rotation"][0];
 			objectData.rotation.y = -(float)transform["rotation"][2];
-			objectData.rotation.z = (float)transform["rotation"][0];
+			objectData.rotation.z = -(float)transform["rotation"][1];
+
+			objectData.rotation.x=objectData.rotation.x * (float)PI / 180.0f;
+			objectData.rotation.y=objectData.rotation.y * (float)PI / 180.0f;
+			objectData.rotation.z=objectData.rotation.z * (float)PI / 180.0f;
+
 			//スケーリング
 			objectData.scaling.x = (float)transform["scaling"][1];
 			objectData.scaling.y = (float)transform["scaling"][2];
