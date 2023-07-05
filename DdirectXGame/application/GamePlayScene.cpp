@@ -134,10 +134,12 @@ void GamePlayScene::Initialize()
 
 	levelData = JsonLoader::LoadJsonFile("levelDataTest");
 
-	static int a = 0;
-	a++;
+
 
 	JsonLoader::CreateObjectFromLevelData(levelData, stageObjects,stageModels);
+
+	static int a = 0;
+	a++;
 
 }
 

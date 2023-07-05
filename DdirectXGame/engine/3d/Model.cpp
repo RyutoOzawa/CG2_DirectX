@@ -75,6 +75,7 @@ void Model::Create(const std::string& modelname)
 				line_stream >> position.x;
 				line_stream >> position.y;
 				line_stream >> position.z;
+				position.z *= -1.0f;
 				//座標データに追加
 				positions.emplace_back(position);
 				//頂点データに追加
@@ -100,6 +101,7 @@ void Model::Create(const std::string& modelname)
 				line_stream >> normal.x;
 				line_stream >> normal.y;
 				line_stream >> normal.z;
+				normal.z *= -1.0f;
 				//法線ベクトルデータに追加
 				normals.emplace_back(normal);
 			}
@@ -107,24 +109,54 @@ void Model::Create(const std::string& modelname)
 			if (key == "f") {
 				//半角スペース区切りで行の続きを読み込む
 				string index_string;
+				int32_t triangleCount = 0;
+				Vertex triangle[3];
 				while (getline(line_stream, index_string, ' ')) {
-					//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
-					istringstream index_stream(index_string);
-					unsigned short indexPosition, indexNormal, indexTexcoord;
-					index_stream >> indexPosition;
-					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
-					index_stream >> indexTexcoord;
-					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
-					index_stream >> indexNormal;
-					//頂点データの追加
-					Vertex vertex{};
-					vertex.pos = positions[indexPosition - 1];
-					vertex.normal = normals[indexNormal - 1];
-					vertex.uv = texcords[indexTexcoord - 1];
-					vertices.emplace_back(vertex);
+					
+				//	for (int32_t faceIndex = 0; faceIndex < 3; ++faceIndex) {
+
+						//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
+						istringstream index_stream(index_string);
+						unsigned short indexPosition, indexNormal, indexTexcoord;
+						index_stream >> indexPosition;
+						index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+						index_stream >> indexTexcoord;
+						index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+						index_stream >> indexNormal;
+						//頂点データの追加
+						Vertex vertex{};
+						vertex.pos = positions[indexPosition - 1];
+						vertex.normal = normals[indexNormal - 1];
+						vertex.uv = texcords[indexTexcoord - 1];
+
+						triangle[triangleCount] = vertex;
+						triangleCount++;
+						if (triangleCount == 3) {
+							triangleCount = 0;
+							vertices.push_back(triangle[2]);
+							vertices.push_back(triangle[1]);
+							vertices.push_back(triangle[0]);
+						}
+
+					//	triangle[faceIndex] = vertex;
+						//vertices.emplace_back(vertex);
+						indices.emplace_back((unsigned short)indices.size());
+						
+				//	}
+
+					//頂点を逆順で登録して周り順を逆にする
+				/*	vertices.push_back(triangle[2]);
+					vertices.push_back(triangle[1]);
+					vertices.push_back(triangle[0]);*/
 					//頂点インデックスに追加
-					indices.emplace_back((unsigned short)indices.size());
+				/*	unsigned short indexSize = (unsigned short)indices.size();
+					indices.emplace_back(indexSize+2);
+					indices.emplace_back(indexSize+1);
+					indices.emplace_back(indexSize);*/
+
 				}
+
+			
 
 			}
 
