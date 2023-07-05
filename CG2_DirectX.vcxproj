@@ -135,10 +135,12 @@
     <ClCompile Include="DdirectXGame\engine\math\Vertex.cpp" />
     <ClCompile Include="DdirectXGame\engine\base\WindowsAPI.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\FbxObject3d.cpp" />
+    <ClCompile Include="EasingData.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="DdirectXGame\application\RailCamera.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="SplineCurve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DdirectXGame\application\Player.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="DdirectXGame\engine\AudioManager.h" />
     <ClInclude Include="DdirectXGame\engine\3d\Camera.h" />
     <ClInclude Include="DdirectXGame\engine\base\DirectX.h" />
+    <ClInclude Include="DdirectXGame\engine\math\SplineCurve.h" />
     <ClInclude Include="DdirectXGame\engine\math\Vector4.h" />
     <ClInclude Include="DdirectXGame\engine\ParticleManager.h" />
     <ClInclude Include="DdirectXGame\engine\scene\GameBaseScene.h" />
@@ -184,6 +187,7 @@
     <ClInclude Include="DdirectXGame\engine\base\WindowsAPI.h" />
     <ClInclude Include="DdirectXGame\engine\3d\FbxObject3d.h" />
     <ClInclude Include="DdirectXGame\application\RailCamera.h" />
+    <ClInclude Include="EasingData.h" />
     <ClInclude Include="SphereCollider.h" />
   </ItemGroup>
   <ItemGroup>
