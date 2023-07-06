@@ -39,6 +39,9 @@ void GamePlayScene::Initialize()
 	defaultModel = Model::CreateModel();
 	defaultModel->textureIndex = reimuGraph;
 
+	playerBulletModel = std::make_unique<Model>();
+	playerBulletModel = Model::CreateModel("PlayerBullet");
+
 	triangleModel = std::make_unique<Model>();
 	triangleModel = Model::CreateModel("triangle_mat");
 	//triangleModel->textureIndex = particleGraph;
@@ -74,6 +77,7 @@ void GamePlayScene::Initialize()
 	player = std::make_unique<Player>();
 	player->Initialize();
 	player->SetModel(defaultModel.get());
+	player->SetBulletModel(playerBulletModel.get());
 
 	
 	for (int i = 0; i < 100; i++) {

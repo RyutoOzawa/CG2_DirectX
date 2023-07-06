@@ -46,6 +46,7 @@ public://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Model> skydome = nullptr;
 	std::unique_ptr<Model> defaultModel = nullptr;
 	std::unique_ptr<Model> triangleModel = nullptr;
+	std::unique_ptr<Model> playerBulletModel = nullptr;
 	std::unique_ptr<Object3d> skydomeObj = nullptr;
 	std::unique_ptr<Object3d> planeObj = nullptr;
 	std::unique_ptr<Object3d> triangleObj = nullptr;

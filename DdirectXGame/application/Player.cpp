@@ -15,12 +15,30 @@ void Player::Initialize()
 
 void Player::Update()
 {
-
+	//ˆÚ“®
 	Move();
 
+	//UŒ‚
+	Attack();
 
-	//obj3d‚ÌXV
-	Object3d::Update();
+
+
+	//’e‚ÌXV
+	if (bullet) {
+		bullet->Update();
+	}
+
+}
+
+void Player::Draw()
+{
+	//Ž©•ª‚Ì•`‰æ
+	Object3d::Draw();
+
+	//’e‚Ì•`‰æ
+	if (bullet) {
+		bullet->Draw();
+	}
 }
 
 void Player::Move()
@@ -52,5 +70,23 @@ void Player::Move()
 	//‰ÁŽZ‚µ‚Ä‘ã“ü
 	pos += spd;
 	position = pos;
+
+	//obj3d‚ÌXV
+	Object3d::Update();
+
+}
+
+void Player::Attack()
+{
+	//ƒXƒy[ƒXƒL[‚Å’e”­ŽË
+	if (Input::GetInstance()->IsKeyTrigger(DIK_SPACE)) {
+		//’e‚Ì¶¬‚Æ‰Šú‰»
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(bulletModel, GetPosition());
+
+		//’e‚Ì“o˜^
+		bullet = newBullet;
+	}
+
 
 }

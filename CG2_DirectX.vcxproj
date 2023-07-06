@@ -137,6 +137,7 @@
     <ClCompile Include="DdirectXGame\engine\3d\FbxObject3d.cpp" />
     <ClCompile Include="DdirectXGame\engine\math\EasingData.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="DdirectXGame\application\PlayerBullet.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="DdirectXGame\application\RailCamera.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="DdirectXGame\engine\3d\FbxObject3d.h" />
     <ClInclude Include="DdirectXGame\application\RailCamera.h" />
     <ClInclude Include="DdirectXGame\engine\math\EasingData.h" />
+    <ClInclude Include="DdirectXGame\application\PlayerBullet.h" />
     <ClInclude Include="SphereCollider.h" />
   </ItemGroup>
   <ItemGroup>
