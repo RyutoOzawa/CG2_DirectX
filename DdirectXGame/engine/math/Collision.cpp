@@ -162,7 +162,7 @@ bool Collision::ColRayToTriangle(const Ray& ray, const Triangle& triangle, float
 
 	//•Óp2_p0‚É‚Â‚¢‚Ä
 	Vector3 pt_p2 = triangle.p2 - interPlane;
-	Vector3 p2_p0= triangle.p0 - triangle.p2;
+	Vector3 p2_p0 = triangle.p0 - triangle.p2;
 	m = pt_p2.cross(p2_p0);
 	//•Ó‚ÌŠO‘¤‚Å‚ ‚ê‚Î“–‚½‚Á‚Ä‚¢‚È‚¢‚Ì‚Å”»’è‚ğ‘Å‚¿Ø‚é
 	if (m.dot(triangle.normal) < -epsilon) { return false; }
@@ -195,6 +195,34 @@ bool Collision::ColRayToSphere(const Ray& ray, const Sphere& sphere, float* dist
 	if (distance) { *distance = t; }
 
 	if (inter) { *inter = ray.start + t * ray.dir; }
+
+	return true;
+}
+
+bool Collision::ColSphereToSphere(const Sphere& s1, const Sphere& s2, float* distance, Vector3* inter)
+{
+	Vector3 p1, p2;
+	float r1, r2;
+	p1 = s1.pos;
+	p2 = s2.pos;
+	r1 = s1.radius;
+	r2 = s2.radius;
+
+	float dis = (p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y) + (p2.z - p1.z) * (p2.z - p1.z);
+	float rr = (r1 + r2) * (r1 + r2);
+
+	if (distance) {
+		*distance = dis;
+	}
+
+	//‹——£‚Ì•û‚ª‰“‚¯‚ê‚Î“–‚½‚ç‚È‚¢
+	if (dis > rr) {
+		return false;
+	}
+
+	if (inter) {
+		*inter = (p1 + p2) / 2.0f;
+	}
 
 	return true;
 }

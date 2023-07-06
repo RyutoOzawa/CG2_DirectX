@@ -1,5 +1,6 @@
 #include "Player.h"
 #include"Input.h"
+#include"SphereCollider.h"
 
 void Player::Initialize()
 {
@@ -7,7 +8,10 @@ void Player::Initialize()
 
 	position = { 0,0,50 };
 
-
+	//コライダーの追加
+	float radius = 0.6f;
+	//半径分だけ浮いた座標を球の中心にする
+	SetCollider(new SphereCollider(Vector3(0, radius, 0)));
 
 
 
@@ -49,6 +53,15 @@ void Player::Draw()
 		bullet->Draw();
 	}
 }
+
+void Player::OnCollision(const CollisionInfo& info)
+{
+
+	static int a = 0;
+	a++;
+
+}
+
 
 void Player::Move()
 {

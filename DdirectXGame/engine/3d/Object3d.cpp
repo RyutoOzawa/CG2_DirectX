@@ -14,6 +14,7 @@ using namespace Microsoft::WRL;
 #include"Model.h"
 #include<vector>
 #include"BaseCollider.h"
+
 using namespace std;
 
 //静的メンバ変数
@@ -27,6 +28,8 @@ ReDirectX* Object3d::directX = nullptr;
 Object3d::~Object3d()
 {
 	if (collider) {
+		//コリジョンマネージャから登録を解除する
+		CollisionManager::GetInstance()->RemoveCollider(collider);
 		delete collider;
 	}
 }
@@ -163,6 +166,10 @@ void Object3d::SetCollider(BaseCollider* collider)
 {
 	collider->SetObject(this);
 	this->collider = collider;
+	//コリジョンマネージャに登録
+	CollisionManager::GetInstance()->AddCollider(collider);
+	//コライダーを更新しておく
+	collider->Update();
 }
 
 void Object3d::UpdateBillBoard()

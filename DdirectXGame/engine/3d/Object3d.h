@@ -11,6 +11,7 @@
 #include"Camera.h"
 #include"Matrix4.h"
 #include"CollisionInfo.h"
+#include"CollisionManager.h"
 
 class BaseCollider;
 

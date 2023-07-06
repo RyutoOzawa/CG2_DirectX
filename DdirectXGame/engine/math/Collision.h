@@ -65,5 +65,15 @@ public:
 	/// <param name="inter">交点(出力用)</param>
 	/// <returns>交差しているかどうか</returns>
 	static bool ColRayToSphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, Vector3* inter = nullptr);
+
+	/// <summary>
+	/// 球同士の当たり判定
+	/// </summary>
+	/// <param name="s1">球1</param>
+	/// <param name="s2">球2</param>
+	/// <param name="distance">距離(出力用)</param>
+	/// <param name="inter">交点(出力用)</param>
+	/// <returns>衝突しているか</returns>
+	static bool ColSphereToSphere(const Sphere& s1, const Sphere& s2, float* distance = nullptr, Vector3* inter = nullptr);
 };
 

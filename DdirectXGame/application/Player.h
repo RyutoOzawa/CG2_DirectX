@@ -22,6 +22,8 @@ public:	//ƒƒ“ƒoŠÖ”
 
 	Vector3 GetPosition()const { return { matWorld.m[3][0],matWorld.m[3][1] ,matWorld.m[3][2] }; }
 
+	void OnCollision(const CollisionInfo& info) override;
+
 private://ƒƒ“ƒo•Ï”
 
 	Vector3 pos;

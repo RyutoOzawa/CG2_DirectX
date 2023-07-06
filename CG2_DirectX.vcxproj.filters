@@ -165,7 +165,7 @@
     <ClCompile Include="DdirectXGame\engine\math\CollisionTypes.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="SphereCollider.cpp">
+    <ClCompile Include="DdirectXGame\engine\SphereCollider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DdirectXGame\engine\3d\FbxLoader.cpp">
@@ -204,7 +204,7 @@
     <ClCompile Include="DdirectXGame\application\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionManager.cpp">
+    <ClCompile Include="DdirectXGame\engine\CollisionManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -314,7 +314,7 @@
     <ClInclude Include="DdirectXGame\engine\math\CollisionTypes.h">
       <Filter>ヘッダー ファイル\enigne\math</Filter>
     </ClInclude>
-    <ClInclude Include="SphereCollider.h">
+    <ClInclude Include="DdirectXGame\engine\SphereCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DdirectXGame\engine\3d\FbxLoader.h">
@@ -353,7 +353,7 @@
     <ClInclude Include="DdirectXGame\application\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionManager.h">
+    <ClInclude Include="DdirectXGame\engine\CollisionManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
