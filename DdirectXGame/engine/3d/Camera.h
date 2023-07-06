@@ -25,6 +25,8 @@ public:
 	Vector3 eye = {0,0,0};
 	Vector3 target = { 0,0,10 };
 	Vector3 up = { 0,1,0 };
+	float nearZ = 0.1f;
+	float farZ = 1000.0f;
 
 public:
 

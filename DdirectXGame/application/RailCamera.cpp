@@ -78,6 +78,8 @@ void RailCamera::Update()
 	Vector3 up(0, 1, 0);
 	//カメラの上方向をforwardと同様に変換
 	//camera->up = Matrix4::transform(up, world->matWorld);
+	//クリップ距離を変更 
+	camera->farZ = 2000.0f;
 	//カメラ更新
 	camera->UpdateMatrix();
 

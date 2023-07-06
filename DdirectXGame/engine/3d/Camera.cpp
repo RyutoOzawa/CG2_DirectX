@@ -54,7 +54,7 @@ void Camera::Initialize(const Vector3& eye, const Vector3& target, const Vector3
 void Camera::UpdateMatrix()
 {
 	//専用の行列を宣言
-	matProjection = matProjection.CreatePerspectiveProjection(45.0f * (float)PI/ 180.0f, (float)WindowsAPI::winW / WindowsAPI::winH, 0.1f, 1000.0f);
+	matProjection = matProjection.CreatePerspectiveProjection(45.0f * (float)PI/ 180.0f, (float)WindowsAPI::winW / WindowsAPI::winH, nearZ, farZ);
 
 	matView = matView.CreateViewMat(eye, target, up);
 	//ビュー変換行列の計算
