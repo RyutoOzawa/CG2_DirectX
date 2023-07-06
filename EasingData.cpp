@@ -1,25 +1,23 @@
 #include "EasingData.h"
 #include<cmath>
 
-float EasingData::Update()
+void EasingData::Update()
 {
-	//現在時刻を取得
-	nowCount = clock();
-	//start()で取得した開始時間との差分
-	endCount = nowCount - startCount;
-	//進行度をfloatに変換
-	endTime = (float)endCount / 1'000.0f;
+	//現在時間を加算
+	nowTime += 1.0f;
+
 	//進行度÷最大時間で進み具合を計算
-	timeRate = endTime / maxTime;
+	timeRate = nowTime / maxTime;
 	if (timeRate > 1.0f) {
 		timeRate = 1.0f;
 	}
 
-	return timeRate;
 }
 
-void EasingData::Start(float time)
+void EasingData::Start(float allFrame)
 {
-	startCount = clock();
-	maxTime = time;
+	//現在時間を初期化
+	nowTime = 0.0f;
+	//最大フレームのセット
+	maxTime = allFrame;
 }
