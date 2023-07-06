@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="DdirectXGame\application\Enemy.cpp" />
     <ClCompile Include="DdirectXGame\application\Player.cpp" />
     <ClCompile Include="DdirectXGame\engine\3d\FbxLoader.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="SplineCurve.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="DdirectXGame\application\Enemy.h" />
     <ClInclude Include="DdirectXGame\application\Player.h" />
     <ClInclude Include="DdirectXGame\engine\2d\PostEffect.h" />
