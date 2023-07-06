@@ -17,9 +17,13 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 
 void PlayerBullet::Update()
 {
+	//ŽžŠÔŒo‰ß‚ÅŽ€–S
+	if (--deathTimer <= 0) {
+		isAlive = false;
+	}
+
 	//ˆÚ“®
 	position += velocity;
-
 
 	//object3d‚ÌXV
 	Object3d::Update();

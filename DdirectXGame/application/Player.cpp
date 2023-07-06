@@ -15,6 +15,15 @@ void Player::Initialize()
 
 void Player::Update()
 {
+	//€‚ñ‚Å‚é’e‚ğÁ‚·
+	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
+		if (!bullet->IsAlive()) {
+			return true;
+		}
+		return false;
+		});
+
+
 	//ˆÚ“®
 	Move();
 
@@ -24,7 +33,7 @@ void Player::Update()
 
 
 	//’e‚ÌXV
-	for(std::unique_ptr<PlayerBullet>& bullet:bullets){
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets) {
 		bullet->Update();
 	}
 
@@ -86,8 +95,8 @@ void Player::Attack()
 		Vector3 velocity(0, 0, bulletSpdBase);
 
 		//’e‚Ì¶¬‚Æ‰Šú‰»
-		std::unique_ptr< PlayerBullet> newBullet =  std::make_unique<PlayerBullet>();
-		newBullet->Initialize(bulletModel, GetPosition(),velocity);
+		std::unique_ptr< PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+		newBullet->Initialize(bulletModel, GetPosition(), velocity);
 
 		//’e‚Ì“o˜^
 		bullets.push_back(std::move(newBullet));

@@ -12,10 +12,20 @@ public:
 
 	void Update();
 
+	bool IsAlive()const { return isAlive; }
+
 private:
+
+	static const int32_t lifeTime = 60 * 5;
 
 	//速度
 	Vector3 velocity;
+	//デスタイマー
+	int32_t deathTimer = lifeTime;
+	//生存フラグ
+	bool isAlive = true;
+
+
 
 };
 
