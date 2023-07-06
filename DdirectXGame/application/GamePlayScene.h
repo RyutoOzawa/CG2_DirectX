@@ -13,6 +13,7 @@
 #include"ParticleManager.h"
 #include"Player.h"
 #include"RailCamera.h"
+#include"Enemy.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -28,6 +29,8 @@ public:
 
 	//•`‰æ
 	void Draw()override;
+
+	void EnemySpawn();
 
 
 public://ƒƒ“ƒo•Ï”
@@ -55,6 +58,8 @@ public://ƒƒ“ƒo•Ï”
 	std::unique_ptr<FbxObject3d> object1 = nullptr;
 	std::unique_ptr<ParticleManager> particleMan = nullptr;
 	std::unique_ptr<Player> player = nullptr;
+	std::list< std::unique_ptr<Enemy>> enemys;
+
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
 

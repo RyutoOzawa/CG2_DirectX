@@ -5,7 +5,7 @@ void Player::Initialize()
 {
 	Object3d::Initialize();
 
-	position = { 0,0,100 };
+	position = { 0,0,50 };
 
 
 

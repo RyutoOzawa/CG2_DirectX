@@ -27,7 +27,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	camera->Initialize(eye, target, up);
 
 
-	Vector3 start{ -100,0,0 };
+	Vector3 start{ 0,0,0 };
 	Vector3 p1{ -30,50,-50 };
 	Vector3 p2{ 30,-50,50 };
 	Vector3 end{ 100,0,-100 };

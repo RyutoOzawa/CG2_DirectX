@@ -78,6 +78,9 @@ void GamePlayScene::Initialize()
 	player->Initialize();
 	player->SetModel(defaultModel.get());
 	player->SetBulletModel(playerBulletModel.get());
+	
+
+
 
 	
 	for (int i = 0; i < 100; i++) {
@@ -178,7 +181,14 @@ void GamePlayScene::Update()
 	player->parent = railCamera->GetObject3d();
 	player->Update();
 
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
 
+		enemy->Update();
+	}
+
+	if (ImGui::Button("Enemy spwan")) {
+		EnemySpawn();
+	}
 
 	ImGui::SliderFloat("cameraX", &currentCamera->eye.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("cameraY", &currentCamera->eye.y, -100.0f, 100.0f);
@@ -309,6 +319,13 @@ void GamePlayScene::Draw()
 	//ƒvƒŒƒCƒ„[
 	player->Draw();
 
+	//“G
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+
+		enemy->Draw();
+	}
+
+
 	//rayObj->Draw();
 	//planeObj->Draw();
 	//triangleObj->Draw();
@@ -326,4 +343,27 @@ void GamePlayScene::Draw()
 
 	//sprite->Draw();
 	//sprite2->Draw();
+}
+
+void GamePlayScene::EnemySpawn()
+{
+	Vector3 start{ -100,0,100 };
+	Vector3 p1 = { 0,30,100 };
+	Vector3 p2 = { -30,0,100 };
+	Vector3 p3 = { 0,-30,100 };
+	Vector3 p4 = { 30,0,100 };
+	Vector3 end = { 100,0,100 };
+
+	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
+
+	//“G‚Ì¶¬‚Æ‰Šú‰»
+	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+	newEnemy->Initialize(enemyMovePoints);
+	newEnemy->SetModel(defaultModel.get());
+	newEnemy->Spawn();
+	
+	//ƒŠƒXƒg‚É“o˜^
+	enemys.push_back(std::move(newEnemy));
+
+
 }

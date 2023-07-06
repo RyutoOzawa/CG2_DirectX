@@ -1,5 +1,6 @@
 #include "PlayerBullet.h"
 #include<cassert>
+#include"Util.h"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
 {
@@ -24,6 +25,9 @@ void PlayerBullet::Update()
 
 	//ˆÚ“®
 	position += velocity;
+
+	//Z²‰ñ“]
+	rotation.z += (float)PI / 180.0f * 36;
 
 	//object3d‚ÌXV
 	Object3d::Update();
