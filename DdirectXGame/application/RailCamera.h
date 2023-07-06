@@ -1,6 +1,8 @@
 #pragma once
 #include"Camera.h"
 #include"Object3d.h"
+#include"SplineCurve.h"
+
 
 class RailCamera
 {
@@ -30,6 +32,9 @@ private://メンバ変数
 
 	//カメラ
 	Camera* camera = nullptr;
+
+	//カメラ挙動用スプライン曲線
+	SplineCurve spline;
 
 };
 

@@ -45,17 +45,6 @@ void SplineCurve::Update()
 	size_t lerpMax = controllPoints.size() - 2;
 
 	//最初の補間、最後の補間ではそれぞれp0,p3にダミーを使う
-	if (startIndex == 0) {
-		//n = 0はp0(ダミー) p0 p1 p2
-		p0 = dummyPoints[0];
-	}
-	else if (startIndex  < 0) {
-		currentPos = dummyPoints[0];
-		return;
-	}
-	else {
-		p0 = controllPoints[startIndex - 1];
-	}
 
 	if (startIndex == lerpMax) {
 		p3 = dummyPoints[1];
@@ -68,6 +57,20 @@ void SplineCurve::Update()
 
 		p3 = controllPoints[startIndex + 2];
 	}
+
+	if (startIndex == 0) {
+		//n = 0はp0(ダミー) p0 p1 p2
+		p0 = dummyPoints[0];
+	}
+	else if (startIndex  < 0) {
+		currentPos = dummyPoints[0];
+		return;
+	}
+	else {
+		p0 = controllPoints[startIndex - 1];
+	}
+
+
 
 	p1 = controllPoints[startIndex];
 	p2 = controllPoints[startIndex+1];
