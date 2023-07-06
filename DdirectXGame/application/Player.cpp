@@ -80,9 +80,14 @@ void Player::Attack()
 {
 	//スペースキーで弾発射
 	if (Input::GetInstance()->IsKeyTrigger(DIK_SPACE)) {
+
+		//弾の速度
+		const float bulletSpdBase = 1.0f;
+		Vector3 velocity(0, 0, bulletSpdBase);
+
 		//弾の生成と初期化
 		std::unique_ptr< PlayerBullet> newBullet =  std::make_unique<PlayerBullet>();
-		newBullet->Initialize(bulletModel, GetPosition());
+		newBullet->Initialize(bulletModel, GetPosition(),velocity);
 
 		//弾の登録
 		bullets.push_back(std::move(newBullet));

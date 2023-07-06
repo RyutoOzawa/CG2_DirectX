@@ -8,10 +8,14 @@ class PlayerBullet : public Object3d
 public:
 
 	//èâä˙âª
-	void Initialize(Model* model,const Vector3& position);
+	void Initialize(Model* model,const Vector3& position,const Vector3& velocity);
 
 	void Update();
 
 private:
+
+	//ë¨ìx
+	Vector3 velocity;
+
 };
 
