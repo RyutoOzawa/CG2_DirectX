@@ -195,7 +195,7 @@
     <ClCompile Include="SplineCurve.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EasingData.cpp">
+    <ClCompile Include="DdirectXGame\engine\math\EasingData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -335,7 +335,7 @@
     <ClInclude Include="DdirectXGame\engine\math\SplineCurve.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EasingData.h">
+    <ClInclude Include="DdirectXGame\engine\math\EasingData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

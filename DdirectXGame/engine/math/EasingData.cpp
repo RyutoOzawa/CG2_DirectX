@@ -3,6 +3,10 @@
 
 void EasingData::Update()
 {
+	if (!isActive) {
+		return;
+}
+
 	//現在時間を加算
 	nowTime += 1.0f;
 
@@ -10,12 +14,15 @@ void EasingData::Update()
 	timeRate = nowTime / maxTime;
 	if (timeRate > 1.0f) {
 		timeRate = 1.0f;
+		isActive = false;
 	}
 
 }
 
 void EasingData::Start(float allFrame)
 {
+	isActive = true;
+
 	//現在時間を初期化
 	nowTime = 0.0f;
 	//最大フレームのセット

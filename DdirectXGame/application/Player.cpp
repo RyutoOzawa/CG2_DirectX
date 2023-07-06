@@ -7,6 +7,17 @@ void Player::Initialize()
 
 	position = { 0,0,100 };
 
+	Vector3 start{ -10,0,0 };
+	Vector3 p1{ -3,5,-5 };
+	Vector3 p2{ 3,-5,5 };
+	Vector3 end{ 110,0,-10 };
+
+	std::vector<Vector3> c{start,p1,p2,end};
+
+	splineTest.SetPositions(c);
+
+
+
 }
 
 void Player::Update()
@@ -25,6 +36,7 @@ void Player::Move()
 	Vector3 spd{};
 	float baseSpd = 0.5f;
 
+	splineTest.Update();
 
 	//WASDˆÚ“®
 	if (Input::GetInstance()->IsKeyPress(DIK_A)) {
@@ -41,10 +53,16 @@ void Player::Move()
 		spd.y += baseSpd;
 	}
 
+	if (Input::GetInstance()->IsKeyTrigger(DIK_SPACE)) {
+		splineTest.Start(240.0f);
+	}
+
 	//Œ»İÀ•W‚ğæ“¾
 	pos = position;
-	
 	//‰ÁZ‚µ‚Ä‘ã“ü
 	pos += spd;
 	position = pos;
+
+	position = splineTest.GetPosition();
+	position.z += 100.0f;
 }

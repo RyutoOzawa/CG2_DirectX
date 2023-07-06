@@ -1,5 +1,4 @@
 #pragma once
-#include<time.h>
 
 class EasingData
 {
@@ -8,6 +7,7 @@ private:
 	float maxTime = 0;
 	float nowTime = 0;
 	float timeRate = 0;
+	bool isActive = false;
 
 public:
 
