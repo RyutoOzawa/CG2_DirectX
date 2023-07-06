@@ -24,7 +24,7 @@ void Player::Update()
 
 
 	//’e‚ÌXV
-	if (bullet) {
+	for(std::unique_ptr<PlayerBullet>& bullet:bullets){
 		bullet->Update();
 	}
 
@@ -36,7 +36,7 @@ void Player::Draw()
 	Object3d::Draw();
 
 	//’e‚Ì•`‰æ
-	if (bullet) {
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets) {
 		bullet->Draw();
 	}
 }
@@ -81,11 +81,11 @@ void Player::Attack()
 	//ƒXƒy[ƒXƒL[‚Å’e”­Ë
 	if (Input::GetInstance()->IsKeyTrigger(DIK_SPACE)) {
 		//’e‚Ì¶¬‚Æ‰Šú‰»
-		PlayerBullet* newBullet = new PlayerBullet();
+		std::unique_ptr< PlayerBullet> newBullet =  std::make_unique<PlayerBullet>();
 		newBullet->Initialize(bulletModel, GetPosition());
 
 		//’e‚Ì“o˜^
-		bullet = newBullet;
+		bullets.push_back(std::move(newBullet));
 	}
 
 

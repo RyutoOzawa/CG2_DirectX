@@ -3,6 +3,7 @@
 #include"Model.h"
 #include"Vector3.h"
 #include"PlayerBullet.h"
+#include<list>
 
 //3Dオブジェクトなのでobj3dクラスを継承
 class Player :public Object3d
@@ -26,10 +27,10 @@ private://メンバ変数
 	Vector3 pos;
 
 	//弾
-	PlayerBullet* bullet = nullptr;
+	std::list<std::unique_ptr<PlayerBullet>> bullets;
 	//弾のモデルデータ
 	Model* bulletModel = nullptr;
-	
+
 
 private://内部処理用メンバ関数
 
