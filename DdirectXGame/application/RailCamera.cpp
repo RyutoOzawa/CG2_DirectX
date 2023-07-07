@@ -45,7 +45,7 @@ void RailCamera::Update()
 	ImGui::Begin("railCamera");
 
 	if (ImGui::Button("start spline")) {
-		spline.Start(240.0f);
+		spline.Start(240.0f,true);
 	}
 
 	spline.Update();
@@ -66,18 +66,18 @@ void RailCamera::Update()
 
 	world->Update();
 
-	camera->eye = world->position;
+	camera->eye = { world->matWorld.m[3][0],world->matWorld.m[3][1],world->matWorld.m[3][2]};
 	//ワールド前方ベクトル
 	Vector3 forward(0, 0, 1);
 	//レールカメラの回転を反映
 	forward = Matrix4::transform(forward, world->matWorld);
 	//視点+前方ベクトルで注視点
 	camera->target = camera->eye + forward;
-	camera->target = forward;
+	//camera->target = forward;
 	//上方向ベクトル
 	Vector3 up(0, 1, 0);
 	//カメラの上方向をforwardと同様に変換
-	//camera->up = Matrix4::transform(up, world->matWorld);
+	camera->up = Matrix4::transform(up, world->matWorld);
 	//クリップ距離を変更 
 	camera->farZ = 2000.0f;
 	//カメラ更新

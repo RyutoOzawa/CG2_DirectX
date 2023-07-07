@@ -35,7 +35,7 @@ void Enemy::Draw()
 
 void Enemy::Spawn()
 {
-	moveLine.Start(600);
+	moveLine.Start(600,true);
 
 	isAlive = true;
 }

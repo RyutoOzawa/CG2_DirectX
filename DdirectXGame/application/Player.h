@@ -39,6 +39,8 @@ private://メンバ変数
 	//ヒットパーティクル
 	ParticleManager hitParticle;
 
+	Object3d reticleObj;
+
 
 private://内部処理用メンバ関数
 

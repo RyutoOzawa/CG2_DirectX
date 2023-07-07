@@ -16,6 +16,8 @@ void Player::Initialize()
 
 	hitParticle.Initialize(0);
 
+	reticleObj.Initialize();
+
 }
 
 void Player::Update()

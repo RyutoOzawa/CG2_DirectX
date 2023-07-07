@@ -19,6 +19,9 @@ private:
 	//一区間当たりの補間時間
 	float allTimeOnce;
 
+	//始点と終点をつないでループするかどうか
+	bool isLoop = false;
+
 	
 
 
@@ -30,7 +33,7 @@ public:
 	/// 補間の開始
 	/// </summary>
 	/// <param name="allTime">補間にかかる時間</param>
-	void Start(float allTime);
+	void Start(float allTime,bool isLoop = false);
 
 	//更新
 	void Update();
