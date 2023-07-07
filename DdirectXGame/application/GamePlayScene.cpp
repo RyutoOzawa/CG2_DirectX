@@ -6,6 +6,7 @@
 #include"FbxLoader.h"
 #include"FbxObject3d.h"
 #include"Util.h"
+#include"SphereCollider.h"
 
 using namespace DirectX;
 
@@ -17,6 +18,9 @@ void GamePlayScene::Initialize()
 
 	//inputのインスタンス取得
 	input = Input::GetInstance();
+
+	//衝突マネージャにインスタンス取得
+	collisionManager = CollisionManager::GetInstance();
 
 	//テクスチャデータ初期化
 
@@ -79,7 +83,11 @@ void GamePlayScene::Initialize()
 	player->SetModel(defaultModel.get());
 	player->SetBulletModel(playerBulletModel.get());
 	
-
+	//当たり判定テスト用オブジェクト
+	colTestObj = std::make_unique<Object3d>();
+	colTestObj->Initialize();
+	colTestObj->SetModel(defaultModel.get());
+	colTestObj->SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
 
 
 	
@@ -148,6 +156,8 @@ void GamePlayScene::Initialize()
 
 	railCamera = new RailCamera();
 	railCamera->Initialize({0,0,0}, {0,0,0});
+
+
 
 }
 
@@ -276,6 +286,8 @@ void GamePlayScene::Update()
 	}
 	particleMan->Update();
 
+	colTestObj->Update();
+
 	//アニメーション開始ボタン
 	if (ImGui::Button("animation start")) {
 		object1->PlayAnitimation();
@@ -290,12 +302,17 @@ void GamePlayScene::Update()
 	//object1->SetRot({ 0,3.14f / 2,0 });
 	object1->Update();
 
+	//当たり判定チェック
+	collisionManager->CheckAllCollisions();
+
 	//スペースキーでメインゲームへ
 	if (input->IsKeyTrigger(DIK_F1))
 	{
 		//シーンの切り替えを依頼
 		sceneManager->ChangeScene("TITLE");
 	}
+
+
 
 	//----------------------ゲーム内ループはここまで---------------------//
 
@@ -319,6 +336,8 @@ void GamePlayScene::Draw()
 	//プレイヤー
 	player->Draw();
 
+	colTestObj->Draw();
+
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 
@@ -337,6 +356,8 @@ void GamePlayScene::Draw()
 	ParticleManager::BeginDraw(currentCamera);
 	//パーティクルテスト
 	//particleMan->Draw();
+
+	player->DrawParticle();
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();

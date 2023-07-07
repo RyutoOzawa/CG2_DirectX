@@ -14,6 +14,7 @@
 #include"Player.h"
 #include"RailCamera.h"
 #include"Enemy.h"
+#include"CollisionManager.h"
 
 class GamePlayScene :public GameBaseScene
 {
@@ -36,6 +37,7 @@ public:
 public://メンバ変数
 
 	Input* input = nullptr;
+	CollisionManager* collisionManager = nullptr;
 
 	uint32_t backGroundTexture = 0;
 	uint32_t marioGraph = 0;
@@ -59,9 +61,11 @@ public://メンバ変数
 	std::unique_ptr<ParticleManager> particleMan = nullptr;
 	std::unique_ptr<Player> player = nullptr;
 	std::list< std::unique_ptr<Enemy>> enemys;
+	std::unique_ptr<Object3d> colTestObj = nullptr;
 
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
+	
 
 
 	//当たり判定テスト用

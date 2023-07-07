@@ -1,6 +1,7 @@
 #include "Player.h"
 #include"Input.h"
 #include"SphereCollider.h"
+#include"Util.h"
 
 void Player::Initialize()
 {
@@ -9,11 +10,11 @@ void Player::Initialize()
 	position = { 0,0,50 };
 
 	//コライダーの追加
-	float radius = 0.6f;
+	float radius = 1.0f;
 	//半径分だけ浮いた座標を球の中心にする
-	SetCollider(new SphereCollider(Vector3(0, radius, 0)));
+	SetCollider(new SphereCollider(Vector3(0, 0, 0),radius));
 
-
+	hitParticle.Initialize(0);
 
 }
 
@@ -41,6 +42,8 @@ void Player::Update()
 		bullet->Update();
 	}
 
+	hitParticle.Update();
+
 }
 
 void Player::Draw()
@@ -52,6 +55,13 @@ void Player::Draw()
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets) {
 		bullet->Draw();
 	}
+
+
+}
+
+void Player::DrawParticle()
+{
+	hitParticle.Draw();
 }
 
 void Player::OnCollision(const CollisionInfo& info)
@@ -59,6 +69,14 @@ void Player::OnCollision(const CollisionInfo& info)
 
 	static int a = 0;
 	a++;
+
+	//パーティクルの速度
+	Vector3 vel = { 0,0,0 };
+	Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+
+	
+	//パーティクル追加
+	hitParticle.Add(15, info.inter, vel, acc, 3.0f, 0.0f);
 
 }
 

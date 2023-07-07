@@ -4,6 +4,7 @@
 #include"Vector3.h"
 #include"PlayerBullet.h"
 #include<list>
+#include"ParticleManager.h"
 
 //3Dオブジェクトなのでobj3dクラスを継承
 class Player :public Object3d
@@ -17,6 +18,8 @@ public:	//メンバ関数
 	void Update();
 
 	void Draw();
+
+	void DrawParticle();
 
 	void SetBulletModel(Model* model) { bulletModel = model; }
 
@@ -32,6 +35,9 @@ private://メンバ変数
 	std::list<std::unique_ptr<PlayerBullet>> bullets;
 	//弾のモデルデータ
 	Model* bulletModel = nullptr;
+
+	//ヒットパーティクル
+	ParticleManager hitParticle;
 
 
 private://内部処理用メンバ関数
