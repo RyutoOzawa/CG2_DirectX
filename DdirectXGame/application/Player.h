@@ -13,7 +13,7 @@ class Player :public Object3d
 public:	//メンバ関数
 
 	//初期化
-	void Initialize(Model* model);
+	void Initialize(Model* model,uint32_t reticleTexture);
 
 	//更新
 	void Update();
@@ -21,6 +21,8 @@ public:	//メンバ関数
 	void Draw();
 
 	void DrawParticle();
+
+	void DrawUI();
 
 	void SetBulletModel(Model* model) { bulletModel = model; }
 

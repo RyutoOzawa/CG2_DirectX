@@ -136,6 +136,8 @@ void Sprite::CreatePipeline2D()
 
 	pipeline.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
 
+	pipeline.SetBlendAlpha();
+
 	//スプライトでは背面カリングしない
 	pipeline.desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	pipeline.desc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;

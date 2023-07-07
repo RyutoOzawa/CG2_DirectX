@@ -3,7 +3,7 @@
 #include"SphereCollider.h"
 #include"Util.h"
 
-void Player::Initialize(Model* model)
+void Player::Initialize(Model* model, uint32_t reticleTexture)
 {
 	Object3d::Initialize();
 	SetModel(model);
@@ -20,6 +20,12 @@ void Player::Initialize(Model* model)
 	reticleObj.Initialize();
 	//モデルはオブジェクトと同じもの
 	reticleObj.SetModel(Object3d::model);
+
+	reticleSprite.Initialize(reticleTexture);
+
+	reticleSprite.SetPos({ 500.0f,500.0f });
+
+	reticleSprite.SetAnchorPoint({ 0.5f,0.5f });
 
 }
 
@@ -71,6 +77,11 @@ void Player::Draw()
 void Player::DrawParticle()
 {
 	hitParticle.Draw();
+}
+
+void Player::DrawUI()
+{
+	reticleSprite.Draw();
 }
 
 void Player::OnCollision(const CollisionInfo& info)
@@ -166,5 +177,22 @@ void Player::ReticleUpdate()
 	//座標設定
 	reticleObj.position = GetWorldPosition() + offset;
 	reticleObj.Update();
+
+	//3dのレティクル座標から2Dのレティクル座標を計算
+	Vector3 reticlePos = reticleObj.GetWorldPosition();
+
+	//ビューポート行列
+	Matrix4 matViewPort;
+	matViewPort.identity();
+	matViewPort.m[0][0] = ;
+	matViewPort.m[1][1] = ;
+	matViewPort.m[3][0] = ;
+	matViewPort.m[3][1] = ;
+
+	//カメラ行列との合成
+
+	//スクリーン座標変換
+
+	//座標設定
 
 }

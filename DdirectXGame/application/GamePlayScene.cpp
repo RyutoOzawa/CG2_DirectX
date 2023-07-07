@@ -80,7 +80,7 @@ void GamePlayScene::Initialize()
 	particleMan->Initialize(particleGraph);
 
 	player = std::make_unique<Player>();
-	player->Initialize(defaultModel.get());
+	player->Initialize(defaultModel.get(), reticleGraph);
 //	player->SetModel(defaultModel.get());
 	player->SetBulletModel(playerBulletModel.get());
 	
@@ -362,6 +362,8 @@ void GamePlayScene::Draw()
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();
+
+	player->DrawUI();
 
 	//sprite->Draw();
 	//sprite2->Draw();
