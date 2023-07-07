@@ -6,28 +6,47 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-
+std::string Texture::defaultBaseDirectory = "Resources/";
 ComPtr<ID3D12DescriptorHeap>Texture::descHeap;			//デスクリプタヒープ
 std::array<ComPtr<ID3D12Resource>, Texture::spriteSRVCount >Texture::texBuffuers;	//テクスチャバッファ
 D3D12_RESOURCE_DESC Texture::textureResourceDesc{};
 ID3D12Device* Texture::dev = nullptr;
 
-uint32_t Texture::LoadTexture(const wchar_t* fileName)
+uint32_t Texture::LoadTexture(std::string filename)
 {
+
+ 	std::string fullpath;
+
+	size_t a = filename.find(defaultBaseDirectory);
+	size_t max = SIZE_MAX;
+
+	//既にリソースファイルまでディレクトリを上っているならフルパス結合はしない
+	if(filename.find(defaultBaseDirectory) != SIZE_MAX){
+		fullpath = filename;
+	}
+	else {
+		fullpath = defaultBaseDirectory + filename;
+	}
+
+	//ユニコード文字列に変換する
+	wchar_t wfilepath[128];
+	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));
+
+
 	DirectX::TexMetadata metadata{};
 	DirectX::ScratchImage scratchImg{};
 	DirectX::ScratchImage mipChain{};
 
 	HRESULT result;
 	result = LoadFromWICFile(
-		fileName,
+		wfilepath,
 		WIC_FLAGS_NONE,
 		&metadata, scratchImg);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 
 	//ファイルが見つかったら通常のファイル読み込み
-	if (fileName != L"NULL") {
+	if (filename != "NULL") {
 		//ミップマップ生成
 		result = GenerateMipMaps(
 			scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),

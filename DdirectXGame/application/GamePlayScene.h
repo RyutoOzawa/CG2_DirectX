@@ -43,6 +43,7 @@ public://ƒƒ“ƒo•Ï”
 	uint32_t marioGraph = 0;
 	uint32_t reimuGraph = 0;
 	uint32_t particleGraph = 0;
+	uint32_t reticleGraph = 0;
 
 
 	std::unique_ptr<Sprite> backGroundSprite = nullptr;

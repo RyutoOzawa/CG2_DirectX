@@ -5,6 +5,7 @@
 #include"PlayerBullet.h"
 #include<list>
 #include"ParticleManager.h"
+#include"Sprite.h"
 
 //3Dオブジェクトなのでobj3dクラスを継承
 class Player :public Object3d
@@ -12,7 +13,7 @@ class Player :public Object3d
 public:	//メンバ関数
 
 	//初期化
-	void Initialize();
+	void Initialize(Model* model);
 
 	//更新
 	void Update();
@@ -23,7 +24,7 @@ public:	//メンバ関数
 
 	void SetBulletModel(Model* model) { bulletModel = model; }
 
-	Vector3 GetPosition()const { return { matWorld.m[3][0],matWorld.m[3][1] ,matWorld.m[3][2] }; }
+
 
 	void OnCollision(const CollisionInfo& info) override;
 
@@ -41,6 +42,8 @@ private://メンバ変数
 
 	Object3d reticleObj;
 
+	Sprite reticleSprite;
+
 
 private://内部処理用メンバ関数
 
@@ -49,6 +52,9 @@ private://内部処理用メンバ関数
 
 	//攻撃
 	void Attack();
+
+	//レティクルの更新
+	void ReticleUpdate();
 
 };
 

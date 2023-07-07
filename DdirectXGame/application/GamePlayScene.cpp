@@ -24,10 +24,11 @@ void GamePlayScene::Initialize()
 
 	//テクスチャデータ初期化
 
-	backGroundTexture = Texture::LoadTexture(L"Resources/dummyPlayGame.png");
-	marioGraph = Texture::LoadTexture(L"Resources/mario.jpg");
-	reimuGraph = Texture::LoadTexture(L"Resources/reimu.png");
-	particleGraph = Texture::LoadTexture(L"Resources/particle.png");
+	backGroundTexture = Texture::LoadTexture("dummyPlayGame.png");
+	marioGraph = Texture::LoadTexture("mario.jpg");
+	reimuGraph = Texture::LoadTexture("reimu.png");
+	particleGraph = Texture::LoadTexture("particle.png");
+	reticleGraph = Texture::LoadTexture("reticle.png");
 	backGroundSprite = std::make_unique<Sprite>();
 	sprite = std::make_unique<Sprite>();
 	sprite2 = std::make_unique<Sprite>();
@@ -79,8 +80,8 @@ void GamePlayScene::Initialize()
 	particleMan->Initialize(particleGraph);
 
 	player = std::make_unique<Player>();
-	player->Initialize();
-	player->SetModel(defaultModel.get());
+	player->Initialize(defaultModel.get());
+//	player->SetModel(defaultModel.get());
 	player->SetBulletModel(playerBulletModel.get());
 	
 	//当たり判定テスト用オブジェクト

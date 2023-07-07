@@ -7,6 +7,8 @@
 
 class Texture {
 public:
+
+	static std::string defaultBaseDirectory;
 	static const size_t spriteSRVCount = 2048;
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;			//デスクリプタヒープ
 	static std::array< Microsoft::WRL::ComPtr<ID3D12Resource>, spriteSRVCount >texBuffuers;	//テクスチャバッファ
@@ -16,7 +18,7 @@ public:
 
 	
 public:
-	static uint32_t LoadTexture(const wchar_t*fileName = L"NULL");
+	static uint32_t LoadTexture(std::string filename = "NULL");
 	static void Initialize(ID3D12Device* device);
 	static void CreateSRV(ID3D12Resource* texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 

@@ -77,6 +77,11 @@ public:
 
 	virtual void Draw();
 
+	//getter
+	Vector3 GetWorldPosition()const { return { matWorld.m[3][0],matWorld.m[3][1] ,matWorld.m[3][2] }; }
+	Vector3 GetLocalPosition()const { return { position }; }
+
+	//setter
 	void SetModel(Model* model_) { model = model_; }
 	
 	/// <summary>

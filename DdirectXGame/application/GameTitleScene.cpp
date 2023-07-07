@@ -14,7 +14,7 @@ void GameTitleScene::Initialize()
 	input = Input::GetInstance();
 
 	//テクスチャデータ初期化
-	titleTexture = Texture::LoadTexture(L"Resources/dummyTitle.png");
+	titleTexture = Texture::LoadTexture("dummyTitle.png");
 
 	titleSprite = new Sprite();
 	titleSprite->Initialize(titleTexture);

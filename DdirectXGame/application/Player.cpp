@@ -3,9 +3,10 @@
 #include"SphereCollider.h"
 #include"Util.h"
 
-void Player::Initialize()
+void Player::Initialize(Model* model)
 {
 	Object3d::Initialize();
+	SetModel(model);
 
 	position = { 0,0,50 };
 
@@ -17,6 +18,8 @@ void Player::Initialize()
 	hitParticle.Initialize(0);
 
 	reticleObj.Initialize();
+	//モデルはオブジェクトと同じもの
+	reticleObj.SetModel(Object3d::model);
 
 }
 
@@ -44,7 +47,11 @@ void Player::Update()
 		bullet->Update();
 	}
 
+	//命中時パーティクル更新
 	hitParticle.Update();
+
+	//レティクルのオブジェクトデータ更新
+	ReticleUpdate();
 
 }
 
@@ -58,7 +65,7 @@ void Player::Draw()
 		bullet->Draw();
 	}
 
-
+	reticleObj.Draw();
 }
 
 void Player::DrawParticle()
@@ -124,16 +131,40 @@ void Player::Attack()
 	if (Input::GetInstance()->IsKeyTrigger(DIK_SPACE)) {
 
 		//弾の速度
-		const float bulletSpdBase = 1.0f;
+		const float bulletSpdBase = 8.0f;
 		Vector3 velocity(0, 0, bulletSpdBase);
+
+		velocity = reticleObj.GetWorldPosition() - Object3d::GetWorldPosition();
+		velocity.normalize();
+		velocity *= bulletSpdBase;
 
 		//弾の生成と初期化
 		std::unique_ptr< PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(bulletModel, GetPosition(), velocity);
+		newBullet->Initialize(bulletModel, GetWorldPosition(), velocity);
 
 		//弾の登録
 		bullets.push_back(std::move(newBullet));
 	}
 
+
+}
+
+void Player::ReticleUpdate()
+{
+	reticleObj.SetModel(bulletModel);
+
+
+//自機からレティクルへの距離(スカラー)
+	const float distance = 50.0f;
+	//自機からレティクルへのオフセット
+	Vector3 offset = { 0,0,1.0f };
+	//自機の回転を反映
+	offset = Matrix4::transform(offset, matWorld);
+	//ベクトルの長さを整える
+	offset.normalize();
+	offset *= distance;
+	//座標設定
+	reticleObj.position = GetWorldPosition() + offset;
+	reticleObj.Update();
 
 }
