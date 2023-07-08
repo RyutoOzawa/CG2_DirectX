@@ -25,6 +25,8 @@ public:
 	//座標変換（ベクトルと行列の掛け算）
 	static Vector3 transform(const Vector3& v, const Matrix4& m);
 
+	static Vector3 transformDivW(const Vector3& v, const Matrix4& m);
+
 	//逆行列
 	Matrix4 Inverse();
 

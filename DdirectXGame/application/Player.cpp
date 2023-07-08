@@ -23,7 +23,7 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 
 	reticleSprite.Initialize(reticleTexture);
 
-	reticleSprite.SetPos({ 500.0f,500.0f });
+//	reticleSprite.SetPos({ 500.0f,500.0f });
 
 	reticleSprite.SetAnchorPoint({ 0.5f,0.5f });
 
@@ -184,15 +184,18 @@ void Player::ReticleUpdate()
 	//ビューポート行列
 	Matrix4 matViewPort;
 	matViewPort.identity();
-	matViewPort.m[0][0] = ;
-	matViewPort.m[1][1] = ;
-	matViewPort.m[3][0] = ;
-	matViewPort.m[3][1] = ;
+	matViewPort.m[0][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[1][1] = -(WindowsAPI::winH / 2.0f);
+	matViewPort.m[3][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[3][1] = WindowsAPI::winH / 2.0f;
 
 	//カメラ行列との合成
+	Matrix4 matViewProViewPort = Object3d::camera->GetViewProjection() * matViewPort;
 
 	//スクリーン座標変換
+	reticlePos = Matrix4::transformDivW(reticlePos, matViewProViewPort);
 
 	//座標設定
+	reticleSprite.SetPos( { reticlePos.x, reticlePos.y });
 
 }

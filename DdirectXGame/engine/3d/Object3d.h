@@ -30,6 +30,7 @@ public:
 	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
 	static Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
 	static ReDirectX* directX;
+	static Camera* camera;
 
 	//頂点座標情報
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;	//定数バッファマップ（行列用）
@@ -51,7 +52,7 @@ public:
 
 	Model* model = nullptr;	//モデルデータ
 
-	Camera* camera = nullptr;//ビルボード用のカメラ
+	
 	
 public:
 	/// <summary>
@@ -67,6 +68,7 @@ public:
 	//静的メンバ関数
 	static void StaticInitialize(ReDirectX* directX_);
 	static void BeginDraw(Camera* camera);
+	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
 
 	/// <summary>
 	/// 初期化

@@ -21,6 +21,7 @@ using namespace std;
 ComPtr<ID3D12PipelineState> Object3d::pipelineState;
 ComPtr<ID3D12RootSignature> Object3d::rootSignature;
 ReDirectX* Object3d::directX = nullptr;
+Camera* Object3d::camera = nullptr;
 
 
 
@@ -49,6 +50,9 @@ void Object3d::StaticInitialize(ReDirectX* directX_)
 
 void Object3d::BeginDraw(Camera* camera)
 {
+	Object3d::camera = camera;
+
+
 	//パイプラインステートの設定
 	directX->GetCommandList()->SetPipelineState(pipelineState.Get());
 	//ルートシグネチャの設定
@@ -59,6 +63,8 @@ void Object3d::BeginDraw(Camera* camera)
 	//3番定数バッファビューにカメラの定数バッファを設定
 	directX->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera->constBuff->GetGPUVirtualAddress());
 }
+
+
 
 void Object3d::Initialize()
 {

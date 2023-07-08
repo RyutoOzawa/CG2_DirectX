@@ -22,6 +22,8 @@ void GamePlayScene::Initialize()
 	//衝突マネージャにインスタンス取得
 	collisionManager = CollisionManager::GetInstance();
 
+
+
 	//テクスチャデータ初期化
 
 	backGroundTexture = Texture::LoadTexture("dummyPlayGame.png");
@@ -158,7 +160,8 @@ void GamePlayScene::Initialize()
 	railCamera = new RailCamera();
 	railCamera->Initialize({0,0,0}, {0,0,0});
 
-
+	//obj3dクラスにカメラをセット
+	Object3d::SetCamera(railCamera->GetCamera());
 
 }
 
