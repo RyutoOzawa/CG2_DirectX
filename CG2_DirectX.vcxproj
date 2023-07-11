@@ -120,13 +120,14 @@
     <ClCompile Include="DirectXGame\engine\base\DirectX.cpp" />
     <ClCompile Include="DirectXGame\engine\base\KEngineFramework.cpp" />
     <ClCompile Include="DirectXGame\engine\base\WindowsAPI.cpp" />
-    <ClCompile Include="DirectXGame\engine\CollisionManager.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\BaseCollider.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\Collision.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\CollisionInfo.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\CollisionManager.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\CollisionPrimitive.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\CollisionTypes.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\SphereCollider.cpp" />
     <ClCompile Include="DirectXGame\engine\Input.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\BaseCollider.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\Collision.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\CollisionInfo.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\CollisionPrimitive.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\CollisionTypes.cpp" />
     <ClCompile Include="DirectXGame\engine\math\EasingData.cpp" />
     <ClCompile Include="DirectXGame\engine\math\MathInfo.cpp" />
     <ClCompile Include="DirectXGame\engine\math\Matrix4.cpp" />
@@ -139,11 +140,10 @@
     <ClCompile Include="DirectXGame\engine\scene\GameBaseScene.cpp" />
     <ClCompile Include="DirectXGame\engine\scene\GameSceneManager.cpp" />
     <ClCompile Include="DirectXGame\engine\scene\SceneFactory.cpp" />
-    <ClCompile Include="DirectXGame\engine\SphereCollider.cpp" />
     <ClCompile Include="DirectXGame\main.cpp" />
-    <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
-    <ClCompile Include="SplineCurve.cpp" />
+    <ClCompile Include="DirectXGame\engine\3d\ParticleManager.cpp" />
+    <ClCompile Include="DirectXGame\engine\2d\PostEffect.cpp" />
+    <ClCompile Include="DirectXGame\engine\math\SplineCurve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicGeometryShader.hlsl">
@@ -271,13 +271,14 @@
     <ClInclude Include="DirectXGame\engine\base\DirectX.h" />
     <ClInclude Include="DirectXGame\engine\base\KEngineFramework.h" />
     <ClInclude Include="DirectXGame\engine\base\WindowsAPI.h" />
-    <ClInclude Include="DirectXGame\engine\CollisionManager.h" />
+    <ClInclude Include="DirectXGame\engine\collision\BaseCollider.h" />
+    <ClInclude Include="DirectXGame\engine\collision\Collision.h" />
+    <ClInclude Include="DirectXGame\engine\collision\CollisionInfo.h" />
+    <ClInclude Include="DirectXGame\engine\collision\CollisionManager.h" />
+    <ClInclude Include="DirectXGame\engine\collision\CollisionPrimitive.h" />
+    <ClInclude Include="DirectXGame\engine\collision\CollisionTypes.h" />
+    <ClInclude Include="DirectXGame\engine\collision\SphereCollider.h" />
     <ClInclude Include="DirectXGame\engine\Input.h" />
-    <ClInclude Include="DirectXGame\engine\math\BaseCollider.h" />
-    <ClInclude Include="DirectXGame\engine\math\Collision.h" />
-    <ClInclude Include="DirectXGame\engine\math\CollisionInfo.h" />
-    <ClInclude Include="DirectXGame\engine\math\CollisionPrimitive.h" />
-    <ClInclude Include="DirectXGame\engine\math\CollisionTypes.h" />
     <ClInclude Include="DirectXGame\engine\math\EasingData.h" />
     <ClInclude Include="DirectXGame\engine\math\MathInfo.h" />
     <ClInclude Include="DirectXGame\engine\math\Matrix4.h" />
@@ -291,7 +292,6 @@
     <ClInclude Include="DirectXGame\engine\scene\GameBaseScene.h" />
     <ClInclude Include="DirectXGame\engine\scene\GameSceneManager.h" />
     <ClInclude Include="DirectXGame\engine\scene\SceneFactory.h" />
-    <ClInclude Include="DirectXGame\engine\SphereCollider.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

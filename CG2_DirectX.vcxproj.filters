@@ -135,27 +135,6 @@
     <ClCompile Include="DirectXGame\engine\base\WindowsAPI.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\engine\CollisionManager.cpp">
-      <Filter>ソース ファイル\engine\collision</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\SphereCollider.cpp">
-      <Filter>ソース ファイル\engine\collision</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\BaseCollider.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\Collision.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\CollisionInfo.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\CollisionPrimitive.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\CollisionTypes.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\engine\math\EasingData.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
@@ -192,10 +171,10 @@
     <ClCompile Include="DirectXGame\engine\scene\SceneFactory.cpp">
       <Filter>ソース ファイル\engine\scene</Filter>
     </ClCompile>
-    <ClCompile Include="SplineCurve.cpp">
+    <ClCompile Include="DirectXGame\engine\math\SplineCurve.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleManager.cpp">
+    <ClCompile Include="DirectXGame\engine\3d\ParticleManager.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\main.cpp">
@@ -204,7 +183,7 @@
     <ClCompile Include="DirectXGame\application\RailCamera.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="PostEffect.cpp">
+    <ClCompile Include="DirectXGame\engine\2d\PostEffect.cpp">
       <Filter>ソース ファイル\engine\2D</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\Input.cpp">
@@ -212,6 +191,27 @@
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\AudioManager.cpp">
       <Filter>ソース ファイル\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\collision\BaseCollider.cpp">
+      <Filter>ソース ファイル\engine\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\collision\Collision.cpp">
+      <Filter>ソース ファイル\engine\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\collision\CollisionInfo.cpp">
+      <Filter>ソース ファイル\engine\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\collision\CollisionManager.cpp">
+      <Filter>ソース ファイル\engine\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\collision\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\engine\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\collision\CollisionTypes.cpp">
+      <Filter>ソース ファイル\engine\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\collision\SphereCollider.cpp">
+      <Filter>ソース ファイル\engine\collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,27 +357,6 @@
     <ClInclude Include="DirectXGame\engine\base\WindowsAPI.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\engine\CollisionManager.h">
-      <Filter>ヘッダー ファイル\engine\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\SphereCollider.h">
-      <Filter>ヘッダー ファイル\engine\collision</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\BaseCollider.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\Collision.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\CollisionInfo.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\CollisionPrimitive.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\CollisionTypes.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXGame\engine\math\EasingData.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
@@ -422,6 +401,27 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\AudioManager.h">
       <Filter>ヘッダー ファイル\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\collision\BaseCollider.h">
+      <Filter>ヘッダー ファイル\engine\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\collision\Collision.h">
+      <Filter>ヘッダー ファイル\engine\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\collision\CollisionInfo.h">
+      <Filter>ヘッダー ファイル\engine\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\collision\CollisionManager.h">
+      <Filter>ヘッダー ファイル\engine\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\collision\CollisionPrimitive.h">
+      <Filter>ヘッダー ファイル\engine\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\collision\CollisionTypes.h">
+      <Filter>ヘッダー ファイル\engine\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\collision\SphereCollider.h">
+      <Filter>ヘッダー ファイル\engine\collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
