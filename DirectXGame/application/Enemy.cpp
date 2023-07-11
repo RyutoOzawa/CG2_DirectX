@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include"SphereCollider.h"
 #include"Util.h"
+#include"CollisionAttribute.h"
 
 ParticleManager Enemy::particleManager{};
 
@@ -27,6 +28,7 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 	moveLine.SetPositions(points);
 
 	SetCollider(new SphereCollider({2,2,2},1.0f));
+	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 
 }
 

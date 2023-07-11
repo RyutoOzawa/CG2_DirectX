@@ -2,6 +2,7 @@
 #include<cassert>
 #include"Util.h"
 #include"SphereCollider.h"
+#include"CollisionAttribute.h"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
 {
@@ -17,6 +18,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	this->velocity = velocity;
 
 	SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
+	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 }
 
 void PlayerBullet::Update()

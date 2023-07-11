@@ -2,6 +2,7 @@
 #include"Input.h"
 #include"SphereCollider.h"
 #include"Util.h"
+#include"CollisionAttribute.h"
 
 void Player::Initialize(Model* model, uint32_t reticleTexture)
 {
@@ -14,6 +15,7 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 	float radius = 1.0f;
 	//半径分だけ浮いた座標を球の中心にする
 	SetCollider(new SphereCollider(Vector3(1, 1, 1),radius));
+	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	hitParticle.Initialize(0);
 
@@ -270,7 +272,7 @@ void Player::ReticleUpdate()
 	direction.normalize();
 
 	//カメラからレティクル(3D)への距離
-	const float distanceReticle3D = 100.0f;
+	const float distanceReticle3D = 75.0f;
 	reticleObj.position = posNear + direction * distanceReticle3D;
 
 

@@ -273,6 +273,7 @@
     <ClInclude Include="DirectXGame\engine\base\WindowsAPI.h" />
     <ClInclude Include="DirectXGame\engine\collision\BaseCollider.h" />
     <ClInclude Include="DirectXGame\engine\collision\Collision.h" />
+    <ClInclude Include="DirectXGame\engine\collision\CollisionAttribute.h" />
     <ClInclude Include="DirectXGame\engine\collision\CollisionInfo.h" />
     <ClInclude Include="DirectXGame\engine\collision\CollisionManager.h" />
     <ClInclude Include="DirectXGame\engine\collision\CollisionPrimitive.h" />

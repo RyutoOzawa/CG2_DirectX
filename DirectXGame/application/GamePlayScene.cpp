@@ -383,12 +383,12 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::EnemySpawn()
 {
-	Vector3 start{ -100,0,100 };
-	Vector3 p1 = { 0,30,100 };
-	Vector3 p2 = { -30,0,100 };
-	Vector3 p3 = { 0,-30,100 };
-	Vector3 p4 = { 30,0,100 };
-	Vector3 end = { 100,0,100 };
+	Vector3 start{ -100,0,75 };
+	Vector3 p1 = { 0,30,75};
+	Vector3 p2 = { -30,0,75};
+	Vector3 p3 = { 0,-30,75 };
+	Vector3 p4 = { 30,0,75 };
+	Vector3 end = { 100,0,75 };
 
 	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
 

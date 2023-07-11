@@ -26,6 +26,10 @@ public://メンバ関数
 	//すべての衝突チェック
 	void CheckAllCollisions();
 
+	//球同士の当たり判定(属性あり)
+	//void ColSphereToSphereAttrconst (Sphere& s1, const Sphere& s2, float* distance = nullptr, Vector3* inter = nullptr);
+
+
 private:
 	CollisionManager() = default;
 	CollisionManager(const CollisionManager& obj) = delete;

@@ -209,7 +209,7 @@ void ParticleManager::Draw()
 	commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 	//描画コマンド
 	commandList->DrawInstanced((UINT)std::distance(particles.begin(),particles.end()), 1, 0, 0);
-}
+ }
 
 void ParticleManager::Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd) {
 	//リストに要素を追加
