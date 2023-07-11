@@ -103,25 +103,32 @@ void Player::OnCollision(const CollisionInfo& info)
 
 void Player::Move()
 {
+	//ì¸óÕ
+	INT32 inputHorizontal = 0;
+	INT32 inputVertical = 0;
+
+	if (Input::GetInstance()->IsKeyPress(DIK_A) || Input::GetInstance()->IsDownLStickLeft()) {
+		inputHorizontal = -1;
+	}
+	else if (Input::GetInstance()->IsKeyPress(DIK_D) || Input::GetInstance()->IsDownLStickRight()) {
+		inputHorizontal = 1;
+	}
+
+	if (Input::GetInstance()->IsKeyPress(DIK_W) || Input::GetInstance()->IsDownLStickUp()) {
+		inputVertical = 1;
+	}
+	else if (Input::GetInstance()->IsKeyPress(DIK_S) || Input::GetInstance()->IsDownLStickDown()) {
+		inputVertical = -1;
+	}
+
 	//ç¿ïWÇ…â¡éZÇ∑ÇÈë¨ìx
 	Vector3 spd{};
 	float baseSpd = 0.5f;
 
 
-	//WASDà⁄ìÆ
-	if (Input::GetInstance()->IsKeyPress(DIK_A)) {
-		spd.x -= baseSpd;
-	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_D)) {
-		spd.x += baseSpd;
-	}
-
-	if (Input::GetInstance()->IsKeyPress(DIK_S)) {
-		spd.y -= baseSpd;
-	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_W)) {
-		spd.y += baseSpd;
-	}
+	spd.x += baseSpd * inputHorizontal;
+	spd.y += baseSpd * inputVertical;
+	
 
 
 
@@ -139,22 +146,30 @@ void Player::Move()
 void Player::Attack()
 {
 	//ÉXÉyÅ[ÉXÉLÅ[Ç≈íeî≠éÀ
-	if (Input::GetInstance()->IsKeyTrigger(DIK_SPACE)) {
+	if (shotInterval == 0) {
 
-		//íeÇÃë¨ìx
-		const float bulletSpdBase = 8.0f;
-		Vector3 velocity(0, 0, bulletSpdBase);
+		if (Input::GetInstance()->IsKeyPress(DIK_SPACE) || Input::GetInstance()->IsPadPress(XINPUT_GAMEPAD_A)) {
+			
+			shotInterval = shotCooltime;
 
-		velocity = reticleObj.GetWorldPosition() - Object3d::GetWorldPosition();
-		velocity.normalize();
-		velocity *= bulletSpdBase;
+			//íeÇÃë¨ìx
+			const float bulletSpdBase = 8.0f;
+			Vector3 velocity(0, 0, bulletSpdBase);
 
-		//íeÇÃê∂ê¨Ç∆èâä˙âª
-		std::unique_ptr< PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(bulletModel, GetWorldPosition(), velocity);
+			velocity = reticleObj.GetWorldPosition() - Object3d::GetWorldPosition();
+			velocity.normalize();
+			velocity *= bulletSpdBase;
 
-		//íeÇÃìoò^
-		bullets.push_back(std::move(newBullet));
+			//íeÇÃê∂ê¨Ç∆èâä˙âª
+			std::unique_ptr< PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+			newBullet->Initialize(bulletModel, GetWorldPosition(), velocity);
+
+			//íeÇÃìoò^
+			bullets.push_back(std::move(newBullet));
+		}
+	}
+	else {
+		shotInterval--;
 	}
 
 
@@ -178,21 +193,29 @@ void Player::ReticleUpdate()
 
 	//âÊñ è„ÇÃÉåÉeÉBÉNÉãç¿ïWÇìÆÇ©Ç∑
 	Vector2 reticleSpd = { 0,0 };
-	float reticleSpdBase = 4.0f;
+	float reticleSpdBase = 8.0f;
 
-	if (Input::GetInstance()->IsKeyPress(DIK_LEFT)) {
-		reticleSpd.x = -reticleSpdBase;
+	//ì¸óÕ
+	INT32 inputHorizontal = 0;
+	INT32 inputVertical = 0;
+
+	if (Input::GetInstance()->IsKeyPress(DIK_LEFT) || Input::GetInstance()->IsDownRStickLeft()) {
+		inputHorizontal = -1;
 	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_RIGHT)) {
-		reticleSpd.x = reticleSpdBase;
+	else if (Input::GetInstance()->IsKeyPress(DIK_RIGHT) || Input::GetInstance()->IsDownRStickRight()) {
+		inputHorizontal = 1;
 	}
 
-	if (Input::GetInstance()->IsKeyPress(DIK_UP)) {
-		reticleSpd.y = -reticleSpdBase;
+	if (Input::GetInstance()->IsKeyPress(DIK_UP) || Input::GetInstance()->IsDownRStickUp()) {
+		inputVertical = -1;
 	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_DOWN)) {
-		reticleSpd.y = reticleSpdBase;
+	else if (Input::GetInstance()->IsKeyPress(DIK_DOWN) || Input::GetInstance()->IsDownRStickDown()) {
+		inputVertical = 1;
 	}
+
+
+	reticleSpd.x = inputHorizontal * reticleSpdBase;
+	reticleSpd.y = inputVertical * reticleSpdBase;
 
 	reticlePosScreen += reticleSpd;
 
@@ -245,3 +268,4 @@ void Player::ReticleUpdate()
 	//reticleSprite.SetPos( { reticlePos.x, reticlePos.y });
 
 }
+

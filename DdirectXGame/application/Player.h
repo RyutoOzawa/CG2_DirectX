@@ -36,7 +36,10 @@ private://メンバ変数
 	Vector3 pos;
 
 	//画面上のレティクル座標
-	Vector2 reticlePosScreen{};
+	Vector2 reticlePosScreen{WindowsAPI::winW/2.0f,WindowsAPI::winH/2.0f};
+
+	INT32 shotInterval = 0;
+	const INT32 shotCooltime = 5;
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets;
