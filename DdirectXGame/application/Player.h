@@ -32,7 +32,11 @@ public:	//メンバ関数
 
 private://メンバ変数
 
+	//ローカル座標
 	Vector3 pos;
+
+	//画面上のレティクル座標
+	Vector2 reticlePosScreen{};
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets;

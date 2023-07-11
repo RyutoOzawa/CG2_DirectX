@@ -164,23 +164,6 @@ void Player::ReticleUpdate()
 {
 	reticleObj.SetModel(bulletModel);
 
-
-//自機からレティクルへの距離(スカラー)
-	const float distance = 50.0f;
-	//自機からレティクルへのオフセット
-	Vector3 offset = { 0,0,1.0f };
-	//自機の回転を反映
-	offset = Matrix4::transform(offset, matWorld);
-	//ベクトルの長さを整える
-	offset.normalize();
-	offset *= distance;
-	//座標設定
-	reticleObj.position = GetWorldPosition() + offset;
-	reticleObj.Update();
-
-	//3dのレティクル座標から2Dのレティクル座標を計算
-	Vector3 reticlePos = reticleObj.GetWorldPosition();
-
 	//ビューポート行列
 	Matrix4 matViewPort;
 	matViewPort.identity();
@@ -192,10 +175,73 @@ void Player::ReticleUpdate()
 	//カメラ行列との合成
 	Matrix4 matViewProViewPort = Object3d::camera->GetViewProjection() * matViewPort;
 
-	//スクリーン座標変換
-	reticlePos = Matrix4::transformDivW(reticlePos, matViewProViewPort);
+
+	//画面上のレティクル座標を動かす
+	Vector2 reticleSpd = { 0,0 };
+	float reticleSpdBase = 4.0f;
+
+	if (Input::GetInstance()->IsKeyPress(DIK_LEFT)) {
+		reticleSpd.x = -reticleSpdBase;
+	}
+	else if (Input::GetInstance()->IsKeyPress(DIK_RIGHT)) {
+		reticleSpd.x = reticleSpdBase;
+	}
+
+	if (Input::GetInstance()->IsKeyPress(DIK_UP)) {
+		reticleSpd.y = -reticleSpdBase;
+	}
+	else if (Input::GetInstance()->IsKeyPress(DIK_DOWN)) {
+		reticleSpd.y = reticleSpdBase;
+	}
+
+	reticlePosScreen += reticleSpd;
+
+	//座標をスプライトにセット
+	reticleSprite.SetPos(reticlePosScreen);
+
+	//ビュー、射影、ビューポートの行列を合成
+	Matrix4 matVBVInverse = matViewProViewPort;
+	matVBVInverse.Inverse();
+
+	//スクリーン座標
+	Vector3 posNear = {reticlePosScreen.x, reticlePosScreen.y, 0};
+	Vector3 posFar = {reticlePosScreen.x, reticlePosScreen.y, 1};
+
+	//ワールド座標系に変換
+	posNear = Matrix4::transformDivW(posNear, matVBVInverse);
+	posFar = Matrix4::transformDivW(posFar, matVBVInverse);
+
+	//レイの方向
+	Vector3 direction = posFar - posNear;
+	direction.normalize();
+
+	//カメラからレティクル(3D)への距離
+	const float distanceReticle3D = 100.0f;
+	reticleObj.position = posNear + direction * distanceReticle3D;
+
+
+//自機からレティクルへの距離(スカラー)
+	//const float distance = 50.0f;
+	////自機からレティクルへのオフセット
+	//Vector3 offset = { 0,0,1.0f };
+	////自機の回転を反映
+	//offset = Matrix4::transform(offset, matWorld);
+	////ベクトルの長さを整える
+	//offset.normalize();
+	//offset *= distance;
+	////座標設定
+	//reticleObj.position = GetWorldPosition() + offset;
+	reticleObj.Update();
+
+	////3dのレティクル座標から2Dのレティクル座標を計算
+	//Vector3 reticlePos = reticleObj.GetWorldPosition();
+
+	//
+
+	////スクリーン座標変換
+	//reticlePos = Matrix4::transformDivW(reticlePos, matViewProViewPort);
 
 	//座標設定
-	reticleSprite.SetPos( { reticlePos.x, reticlePos.y });
+	//reticleSprite.SetPos( { reticlePos.x, reticlePos.y });
 
 }
