@@ -38,6 +38,8 @@ void GamePlayScene::Initialize()
 	sprite->Initialize(marioGraph);
 	sprite2->Initialize(reimuGraph);
 
+	Enemy::EnemyInitialize(particleGraph);
+
 
 	skydome = std::make_unique<Model>();
 	skydome = Model::CreateModel("skydome");
@@ -90,8 +92,8 @@ void GamePlayScene::Initialize()
 	colTestObj = std::make_unique<Object3d>();
 	colTestObj->Initialize();
 	colTestObj->SetModel(defaultModel.get());
-	colTestObj->SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
-
+	//colTestObj->SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
+	colTestObj->Update();
 
 	
 	for (int i = 0; i < 100; i++) {
@@ -196,13 +198,18 @@ void GamePlayScene::Update()
 	player->Update();
 
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
-
 		enemy->Update();
 	}
 
 	if (ImGui::Button("Enemy spwan")) {
 		EnemySpawn();
 	}
+
+	if (Input::GetInstance()->IsKeyTrigger(DIK_0)) {
+		EnemySpawn();
+	}
+
+	Enemy::EnemyParticleUpdate();
 
 	ImGui::SliderFloat("cameraX", &currentCamera->eye.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("cameraY", &currentCamera->eye.y, -100.0f, 100.0f);
@@ -362,6 +369,8 @@ void GamePlayScene::Draw()
 	//particleMan->Draw();
 
 	player->DrawParticle();
+
+	Enemy::DrawParticle();
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();

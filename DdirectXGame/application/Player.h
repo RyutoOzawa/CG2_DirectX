@@ -65,5 +65,6 @@ private://内部処理用メンバ関数
 	//レティクルの更新
 	void ReticleUpdate();
 
+
 };
 

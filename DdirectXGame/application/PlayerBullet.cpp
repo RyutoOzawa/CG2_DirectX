@@ -1,6 +1,7 @@
 #include "PlayerBullet.h"
 #include<cassert>
 #include"Util.h"
+#include"SphereCollider.h"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
 {
@@ -14,6 +15,8 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	//引数の座標をセット
 	this->position = position;
 	this->velocity = velocity;
+
+	SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
 }
 
 void PlayerBullet::Update()

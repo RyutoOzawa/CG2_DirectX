@@ -13,7 +13,7 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 	//コライダーの追加
 	float radius = 1.0f;
 	//半径分だけ浮いた座標を球の中心にする
-	SetCollider(new SphereCollider(Vector3(0, 0, 0),radius));
+	SetCollider(new SphereCollider(Vector3(1, 1, 1),radius));
 
 	hitParticle.Initialize(0);
 
@@ -138,6 +138,36 @@ void Player::Move()
 	pos += spd;
 	position = pos;
 
+	const float bodyTurnBase = (float)PI / 180.0f;
+
+	//旋回の挙動
+	rotation.z -= bodyTurnBase * inputHorizontal;
+	rotation.x -= bodyTurnBase * inputVertical;
+
+	if (inputHorizontal == 0) {
+		if (rotation.z > 0) {
+			rotation.z -= bodyTurnBase * 3.0f;
+		}
+		else if (rotation.z < 0) {
+			rotation.z += bodyTurnBase * 3.0f;
+		}
+		else {
+			rotation.z = 0.0f;
+		}
+	}
+
+	if (inputVertical == 0) {
+		if (rotation.x > 0) {
+			rotation.x -= bodyTurnBase * 3.0f;
+		}
+		else if (rotation.x < 0) {
+			rotation.x += bodyTurnBase * 3.0f;
+		}
+		else {
+			rotation.x = 0.0f;
+		}
+	}
+
 	//obj3dの更新
 	Object3d::Update();
 
@@ -148,7 +178,7 @@ void Player::Attack()
 	//スペースキーで弾発射
 	if (shotInterval == 0) {
 
-		if (Input::GetInstance()->IsKeyPress(DIK_SPACE) || Input::GetInstance()->IsPadPress(XINPUT_GAMEPAD_A)) {
+		if (Input::GetInstance()->IsKeyPress(DIK_SPACE) || Input::GetInstance()->IsPadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 			
 			shotInterval = shotCooltime;
 
@@ -213,6 +243,7 @@ void Player::ReticleUpdate()
 		inputVertical = 1;
 	}
 
+	
 
 	reticleSpd.x = inputHorizontal * reticleSpdBase;
 	reticleSpd.y = inputVertical * reticleSpdBase;
@@ -243,29 +274,29 @@ void Player::ReticleUpdate()
 	reticleObj.position = posNear + direction * distanceReticle3D;
 
 
-//自機からレティクルへの距離(スカラー)
-	//const float distance = 50.0f;
-	////自機からレティクルへのオフセット
-	//Vector3 offset = { 0,0,1.0f };
-	////自機の回転を反映
-	//offset = Matrix4::transform(offset, matWorld);
-	////ベクトルの長さを整える
-	//offset.normalize();
-	//offset *= distance;
-	////座標設定
-	//reticleObj.position = GetWorldPosition() + offset;
+////自機からレティクルへの距離(スカラー)
+//	const float distance = 50.0f;
+//	//自機からレティクルへのオフセット
+//	Vector3 offset = { 0,0,1.0f };
+//	//自機の回転を反映
+//	offset = Matrix4::transform(offset, matWorld);
+//	//ベクトルの長さを整える
+//	offset.normalize();
+//	offset *= distance;
+//	//座標設定
+//	reticleObj.position = GetWorldPosition() + offset;
 	reticleObj.Update();
-
-	////3dのレティクル座標から2Dのレティクル座標を計算
-	//Vector3 reticlePos = reticleObj.GetWorldPosition();
-
-	//
-
-	////スクリーン座標変換
-	//reticlePos = Matrix4::transformDivW(reticlePos, matViewProViewPort);
-
-	//座標設定
-	//reticleSprite.SetPos( { reticlePos.x, reticlePos.y });
+//
+//	////3dのレティクル座標から2Dのレティクル座標を計算
+//	Vector3 reticlePos = reticleObj.GetWorldPosition();
+//
+//	//
+//
+//	////スクリーン座標変換
+//	reticlePos = Matrix4::transformDivW(reticlePos, matViewProViewPort);
+//
+//	//座標設定
+//	reticleSprite.SetPos( { reticlePos.x, reticlePos.y });
 
 }
 
