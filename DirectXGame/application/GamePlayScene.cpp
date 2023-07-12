@@ -32,11 +32,7 @@ void GamePlayScene::Initialize()
 	particleGraph = Texture::LoadTexture("particle.png");
 	reticleGraph = Texture::LoadTexture("reticle.png");
 	backGroundSprite = std::make_unique<Sprite>();
-	sprite = std::make_unique<Sprite>();
-	sprite2 = std::make_unique<Sprite>();
 	backGroundSprite->Initialize(backGroundTexture);
-	sprite->Initialize(marioGraph);
-	sprite2->Initialize(reimuGraph);
 
 	Enemy::EnemyInitialize(particleGraph);
 
@@ -51,16 +47,10 @@ void GamePlayScene::Initialize()
 	playerBulletModel = std::make_unique<Model>();
 	playerBulletModel = Model::CreateModel("PlayerBullet");
 
-	triangleModel = std::make_unique<Model>();
-	triangleModel = Model::CreateModel("triangle_mat");
-	//triangleModel->textureIndex = particleGraph;
-
 	//カメラ初期化
 	Vector3 eye(0, 20, -20);	//視点座標
 	Vector3 target(0, 0, 6);	//注視点座標
 	Vector3 up(0, 1, 0);		//上方向ベクトル
-
-	sprite2->SetPos({ 240, 240 });
 
 	currentCamera = new Camera();
 	currentCamera->Initialize(eye, target, up);
@@ -68,24 +58,13 @@ void GamePlayScene::Initialize()
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
-	skydomeObj->scale = { 1000,1000,1000 };
-
-	planeObj = std::make_unique<Object3d>();
-	planeObj->Initialize();
-	planeObj->SetModel(defaultModel.get());
-	planeObj->scale = { 10.0f,0.01f,10.0f };
-	planeObj->position.y = -2.0f;
-
-	triangleObj = std::make_unique<Object3d>();
-	triangleObj->Initialize();
-	triangleObj->SetModel(triangleModel.get());
+	skydomeObj->scale = { 1000,1000,1000 };;
 
 	particleMan = std::make_unique<ParticleManager>();
 	particleMan->Initialize(particleGraph);
 
 	player = std::make_unique<Player>();
 	player->Initialize(defaultModel.get(), reticleGraph);
-//	player->SetModel(defaultModel.get());
 	player->SetBulletModel(playerBulletModel.get());
 	
 	//当たり判定テスト用オブジェクト
@@ -118,29 +97,8 @@ void GamePlayScene::Initialize()
 		particleMan->Add(60, pos, vel, acc,1.0f,0.0f);
 	}
 
-	rayObj = std::make_unique<Object3d>();
-	rayObj->Initialize();
-	rayObj->SetModel(skydome.get());
-	//	rayObj->scale = { 0.01f,10.0f,0.01f };
-
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
-
-	//球の初期値を設定
-	sphere.pos = { -1,1,-0 };
-	sphere.radius = 1.0f;
-	//平面の初期値を設定
-	plane.normal = { 0,1,0 };
-	plane.distance = -2.0f;
-	//三角形の初期値を設定
-	triangle.p0 = { -1.0f,0,-1.0f };
-	triangle.p1 = { -1.0f,0,+1.0f };
-	triangle.p2 = { +1.0f,0,-1.0f };
-	triangle.normal = { 0.0f,1.0f,0.0f };
-	//レイの初期値を設定
-	ray.start = { 0,1,0 };
-	ray.dir = { 0,-1,0 };
-
 
 	//モデル名を指定してファイル読み込み
 	//model1 = std::make_unique<FbxModel>();
@@ -225,52 +183,12 @@ void GamePlayScene::Update()
 	//天球の操作
 	ImGui::Begin("skydome");
 	ImGui::SliderFloat("rotateY", &skydomeObj->rotation.y, 0.0f, 5.0f);
-	ImGui::SliderFloat("posX", &sphere.pos.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("posY", &sphere.pos.y, -10.0f, 10.0f);
-	ImGui::SliderFloat("posZ", &sphere.pos.z, -10.0f, 10.0f);
 	ImGui::SliderFloat("scaleX", &skydomeObj->scale.x, 0.0f, 5.0f);
 	ImGui::SliderFloat("scaleY", &skydomeObj->scale.y, 0.0f, 5.0f);
 	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
 	ImGui::End();
 
-	////レイの操作
-	//ImGui::Begin("Ray");
-	//ImGui::Text("cube wo scale de ookiku siteiru tame usiro ha hanntei arimasen");
-	//ImGui::SliderFloat("posX", &ray.start.x, -10.0f, 10.0f);
-	//ImGui::SliderFloat("posZ", &ray.start.z, -10.0f, 10.0f);
-	//ImGui::End();
-
-	Vector2 sprite1Pos = { sprite->GetPosition().x,sprite->GetPosition().y };
-	Vector2 sprite2Pos = { sprite2->GetPosition().x,sprite2->GetPosition().y };
-	float pos[2] = { sprite1Pos.x,sprite1Pos.y };
-	ImGui::Begin("Sprite");
-
-	ImGui::SliderFloat2("sprite1", pos, 0.0f, WindowsAPI::winW);
-	sprite->SetPos({ pos[0],pos[1] });
-
-
-	sprite->Update();
-	sprite2->Update();
-
-	ImGui::End();
-
-	skydomeObj->position = sphere.pos;
 	skydomeObj->Update();
-	planeObj->Update();
-
-	rayObj->position = { 1,1,0 };
-	rayObj->Update();
-
-
-	triangleObj->position = { 0,0,0 };
-
-	triangleObj->camera = currentCamera;
-
-	ImGui::Checkbox("is billboard", &triangleObj->isBillboard);
-	ImGui::Checkbox("is billboardY", &triangleObj->isBillboardY);
-
-
-	triangleObj->Update();
 
 	//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
 	{
@@ -356,10 +274,6 @@ void GamePlayScene::Draw()
 	}
 
 
-	//rayObj->Draw();
-	//planeObj->Draw();
-	//triangleObj->Draw();
-
 	//FBX
 	//object1->Draw();
 
@@ -377,8 +291,6 @@ void GamePlayScene::Draw()
 
 	player->DrawUI();
 
-	//sprite->Draw();
-	//sprite2->Draw();
 }
 
 void GamePlayScene::EnemySpawn()

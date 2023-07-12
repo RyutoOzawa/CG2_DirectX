@@ -9,12 +9,12 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 	Object3d::Initialize();
 	SetModel(model);
 
-	position = { 0,0,50 };
+	position = { 0,0,distanceCamera };
 
 	//コライダーの追加
 	float radius = 1.0f;
 	//半径分だけ浮いた座標を球の中心にする
-	SetCollider(new SphereCollider(Vector3(1, 1, 1),radius));
+	SetCollider(new SphereCollider(Vector3(0, 0, 0),radius));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	hitParticle.Initialize(0);
@@ -272,7 +272,7 @@ void Player::ReticleUpdate()
 	direction.normalize();
 
 	//カメラからレティクル(3D)への距離
-	const float distanceReticle3D = 75.0f;
+	const float distanceReticle3D = distanceCamera + 25.0f;
 	reticleObj.position = posNear + direction * distanceReticle3D;
 
 

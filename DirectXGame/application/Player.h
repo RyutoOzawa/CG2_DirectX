@@ -32,6 +32,9 @@ public:	//メンバ関数
 
 private://メンバ変数
 
+	//カメラからの自機の距離
+	const float distanceCamera = 50.0f;
+
 	//ローカル座標
 	Vector3 pos;
 

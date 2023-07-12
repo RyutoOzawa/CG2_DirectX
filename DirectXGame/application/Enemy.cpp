@@ -27,7 +27,7 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 
 	moveLine.SetPositions(points);
 
-	SetCollider(new SphereCollider({2,2,2},1.0f));
+	SetCollider(new SphereCollider({2,2,2},3.0f));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 
 }
@@ -66,7 +66,7 @@ void Enemy::OnCollision(const CollisionInfo& info)
 	isAlive = false;
 
 	//パーティクル追加
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 20; i++) {
 		Vector3 vel;
 		const float baseVel = 2.0f;
 		vel.x = Random(-baseVel, baseVel);
