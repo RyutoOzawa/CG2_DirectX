@@ -3,13 +3,13 @@
 
 void SplineCurve::Start(float allTime, bool isLoop)
 {
+	this->allTime = allTime;
+
 	//補間を行う回数
 	int32_t lerpCount;
 
 	//補間の回数は配列の総数-2
-
-
-	lerpCount = (int32_t)controllPoints.size() - 2;
+	lerpCount = (int32_t)controllPoints.size()-1;
 
 	if (isLoop) {
 		lerpCount++;
@@ -30,12 +30,19 @@ void SplineCurve::Start(float allTime, bool isLoop)
 	//開始時の要素番号を初期化してイージング開始
 	startIndex = 0;
 	eData.Start(allTimeOnce);
+	isActive = true;
 
+	count = 0;
 
 }
 
 void SplineCurve::Update()
 {
+	if (!isActive) {
+		return;
+	}
+
+	count++;
 	//イージングデータの更新
 	eData.Update();
 
@@ -48,6 +55,11 @@ void SplineCurve::Update()
 		t = 0.0f;
 	}
 
+	
+	ImGui::Text("count %d", count);
+	ImGui::Text("start index %d", startIndex);
+	ImGui::Text("once time %f", allTimeOnce);
+	ImGui::Text("progress %f", progress);
 
 	//補完用座標
 	Vector3 p0, p1, p2, p3;
@@ -63,6 +75,9 @@ void SplineCurve::Update()
 		lerpMax = controllPoints.size() - 2;
 	}
 
+	//現在の進行度の更新
+	progress = ((allTimeOnce * startIndex) + (eData.GetTimeRate()* allTimeOnce)) / allTime;
+
 	//最初の補間、最後の補間ではそれぞれp0,p3にダミーを使う
 	if (!isLoop) {
 		if (startIndex == lerpMax) {
@@ -70,6 +85,7 @@ void SplineCurve::Update()
 		}
 		else if (startIndex > lerpMax) {
 			currentPos = dummyPoints[1];
+			isActive = false;
 			return;
 		}
 		else {

@@ -27,16 +27,16 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	camera->Initialize(eye, target, up);
 
 
-	Vector3 start{ 0,0,-0 };
-	Vector3 p1{ -30,50,-50 };
-	Vector3 p2{ 30,-50,50 };
-	Vector3 end{ 100,0,-100 };
+	Vector3 start{ 0,0,0 };
+	Vector3 p1{ 20,20,50 };
+	Vector3 p2{ 0,-10,100 };
+	Vector3 p3{ -20,0,150 };
+	Vector3 p4{ 0,-20,250 };
+	Vector3 end{ 0,0,400 };
 
-	std::vector<Vector3> c{ start,p1,p2,end };
+	std::vector<Vector3> c{ start,p1,p2,p3,p4,end };
 
 	spline.SetPositions(c);
-
-
 }
 
 void RailCamera::Update()
@@ -45,7 +45,7 @@ void RailCamera::Update()
 	ImGui::Begin("railCamera");
 
 	if (ImGui::Button("start spline")) {
-		spline.Start(240.0f,true);
+		spline.Start(360.0f);
 	}
 
 	spline.Update();

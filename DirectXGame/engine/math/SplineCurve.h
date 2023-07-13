@@ -17,12 +17,15 @@ private:
 	//補完用データ
 	EasingData eData;
 	//一区間当たりの補間時間
-	float allTimeOnce;
-
+	float allTimeOnce = 0.0f;
 	//始点と終点をつないでループするかどうか
 	bool isLoop = false;
-
-	
+	//全体の時間
+	float allTime = 0.0f;
+	//現在の進行度
+	float progress = 0.0f;
+	bool isActive = false;
+	int count = 0;
 
 
 public:
