@@ -7,6 +7,8 @@
 #include"ParticleManager.h"
 #include"Sprite.h"
 
+class Enemy;
+
 //3Dオブジェクトなのでobj3dクラスを継承
 class Player :public Object3d
 {
@@ -16,7 +18,7 @@ public:	//メンバ関数
 	void Initialize(Model* model,uint32_t reticleTexture);
 
 	//更新
-	void Update();
+	void Update(std::list<std::unique_ptr<Enemy>>* enemys);
 
 	void Draw();
 
@@ -40,6 +42,7 @@ private://メンバ変数
 
 	//画面上のレティクル座標
 	Vector2 reticlePosScreen{WindowsAPI::winW/2.0f,WindowsAPI::winH/2.0f};
+	float reticleRadius = 32.0f;
 
 	INT32 shotInterval = 0;
 	const INT32 shotCooltime = 5;
@@ -66,7 +69,7 @@ private://内部処理用メンバ関数
 	void Attack();
 
 	//レティクルの更新
-	void ReticleUpdate();
+	void ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys);
 
 
 };

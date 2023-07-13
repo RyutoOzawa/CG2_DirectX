@@ -1,5 +1,6 @@
 #pragma once
 #include"Vector3.h"
+#include"Vector2.h"
 
 /// <summary>
 /// 当たり判定プリミティブ
@@ -50,4 +51,15 @@ struct Ray {
 	Vector3 start{ 0,0,0 };
 	//方向
 	Vector3 dir{ 1,0,0 };
+};
+
+/// <summary>
+/// 円(2D)データ
+/// </summary>
+struct Circle {
+	//中心座標
+	Vector2 pos{ 0,0 };
+	//半径
+	float radius = 0.0f;
+
 };

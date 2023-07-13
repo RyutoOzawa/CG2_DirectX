@@ -153,7 +153,7 @@ void GamePlayScene::Update()
 
 	//ƒŒ[ƒ‹ƒJƒƒ‰‚ðe‚É‚·‚é
 	player->parent = railCamera->GetObject3d();
-	player->Update();
+	player->Update(&enemys);
 
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 		enemy->Update();
@@ -295,12 +295,15 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::EnemySpawn()
 {
-	Vector3 start{ -100,0,75 };
-	Vector3 p1 = { 0,30,75};
-	Vector3 p2 = { -30,0,75};
-	Vector3 p3 = { 0,-30,75 };
-	Vector3 p4 = { 30,0,75 };
-	Vector3 end = { 100,0,75 };
+	float posZ = Random(50.0f, 100.0f);
+
+	Vector3 start{ -60,0,posZ };
+	Vector3 p1 = { 0,30,posZ };
+	Vector3 p2 = { -30,0,posZ };
+	Vector3 p3 = { 0,-30,posZ };
+	Vector3 p4 = { 30,0,posZ };
+	Vector3 end = { 60,0,posZ };
+
 
 	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
 

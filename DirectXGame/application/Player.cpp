@@ -3,6 +3,9 @@
 #include"SphereCollider.h"
 #include"Util.h"
 #include"CollisionAttribute.h"
+#include"Enemy.h"
+#include"Collision.h"
+#include"ImguiManager.h"
 
 void Player::Initialize(Model* model, uint32_t reticleTexture)
 {
@@ -31,7 +34,7 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 
 }
 
-void Player::Update()
+void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 {
 	//死んでる弾を消す
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
@@ -41,6 +44,7 @@ void Player::Update()
 		return false;
 		});
 
+	
 
 	//移動
 	Move();
@@ -59,7 +63,7 @@ void Player::Update()
 	hitParticle.Update();
 
 	//レティクルのオブジェクトデータ更新
-	ReticleUpdate();
+	ReticleUpdate(enemys);
 
 }
 
@@ -207,7 +211,7 @@ void Player::Attack()
 
 }
 
-void Player::ReticleUpdate()
+void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 {
 	reticleObj.SetModel(bulletModel);
 
@@ -246,10 +250,9 @@ void Player::ReticleUpdate()
 	}
 
 	
-
+	//入力値×レティクルスピードで移動
 	reticleSpd.x = inputHorizontal * reticleSpdBase;
 	reticleSpd.y = inputVertical * reticleSpdBase;
-
 	reticlePosScreen += reticleSpd;
 
 	//座標をスプライトにセット
@@ -272,33 +275,41 @@ void Player::ReticleUpdate()
 	direction.normalize();
 
 	//カメラからレティクル(3D)への距離
-	const float distanceReticle3D = distanceCamera + 25.0f;
+	float distanceReticle3D = distanceCamera + 25.0f;
+
+	//敵の座標をスクリーン座標に変換
+	std::list<std::unique_ptr<Enemy>>::iterator itE;
+	itE = enemys->begin();
+	for (; itE != enemys->end(); itE++) {
+		//敵のワールド座標を取得
+		Vector3 posEnemyWorld = itE->get()->GetWorldPosition();
+
+		//ビュー、プロジェクション、ビューポート行列を掛けてW除算
+		posEnemyWorld = Matrix4::transformDivW(posEnemyWorld, matViewProViewPort);
+
+		ImGui::Text("enemyPos:%f,%f,%f", posEnemyWorld.x, posEnemyWorld.y, posEnemyWorld.z);
+
+		Vector2 posEnemyScreen = { posEnemyWorld.x,posEnemyWorld.y };
+
+		Circle reticleC{ reticlePosScreen,reticleRadius };
+		Circle enemyC{ posEnemyScreen,1.0f };
+
+		//レティクルが敵に当たっているなら
+		if (Collision::ColCircleToCircle(reticleC, enemyC)) {
+			
+			//カメラからレティクルへの距離を敵-カメラの距離にする(自機の親がレールカメラのオブジェクトなのでそこから引っ張ってくる)
+			Vector3 vecEtoC = itE->get()->GetWorldPosition() - parent->GetWorldPosition();
+			distanceReticle3D = vecEtoC.length();
+			
+			ImGui::Text("reticle hit!!");
+		}
+
+	}
+
+	ImGui::Text("distance reticle object %f", distanceReticle3D);
+
 	reticleObj.position = posNear + direction * distanceReticle3D;
-
-
-////自機からレティクルへの距離(スカラー)
-//	const float distance = 50.0f;
-//	//自機からレティクルへのオフセット
-//	Vector3 offset = { 0,0,1.0f };
-//	//自機の回転を反映
-//	offset = Matrix4::transform(offset, matWorld);
-//	//ベクトルの長さを整える
-//	offset.normalize();
-//	offset *= distance;
-//	//座標設定
-//	reticleObj.position = GetWorldPosition() + offset;
 	reticleObj.Update();
-//
-//	////3dのレティクル座標から2Dのレティクル座標を計算
-//	Vector3 reticlePos = reticleObj.GetWorldPosition();
-//
-//	//
-//
-//	////スクリーン座標変換
-//	reticlePos = Matrix4::transformDivW(reticlePos, matViewProViewPort);
-//
-//	//座標設定
-//	reticleSprite.SetPos( { reticlePos.x, reticlePos.y });
 
 }
 

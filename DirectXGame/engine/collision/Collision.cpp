@@ -226,3 +226,15 @@ bool Collision::ColSphereToSphere(const Sphere& s1, const Sphere& s2, float* dis
 
 	return true;
 }
+
+bool Collision::ColCircleToCircle(const Circle& c1, const Circle& c2)
+{
+	float dis = (c2.pos.x - c1.pos.x) * (c2.pos.x - c1.pos.x) + (c2.pos.y - c1.pos.y) * (c2.pos.y - c1.pos.y);
+	float rr = (c1.radius + c2.radius) * (c1.radius + c2.radius);
+
+	if (dis > rr) {
+		return false;
+	}
+
+	return true;
+}

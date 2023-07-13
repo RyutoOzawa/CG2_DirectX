@@ -75,5 +75,13 @@ public:
 	/// <param name="inter">Œğ“_(o—Í—p)</param>
 	/// <returns>Õ“Ë‚µ‚Ä‚¢‚é‚©</returns>
 	static bool ColSphereToSphere(const Sphere& s1, const Sphere& s2, float* distance = nullptr, Vector3* inter = nullptr);
+
+	/// <summary>
+	/// ‰~‚Æ‰~‚Ì“–‚½‚è”»’è(2D)
+	/// </summary>
+	/// <param name="c1">‰~1</param>
+	/// <param name="c2">‰~2</param>
+	/// <returns></returns>
+	static bool ColCircleToCircle(const Circle& c1, const Circle& c2);
 };
 
