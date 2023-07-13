@@ -42,7 +42,7 @@ void GameTitleScene::Update()
 	//----------------------ゲーム内ループはここから---------------------//
 
 	//スペースキーでメインゲームへ
-	if (input->IsKeyTrigger(DIK_SPACE))
+	if (input->IsKeyTrigger(DIK_SPACE) || input->IsPadTrigger(XINPUT_GAMEPAD_START))
 	{
 		//シーンの切り替えを依頼
 		sceneManager->ChangeScene("GAMEPLAY");
