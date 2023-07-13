@@ -159,6 +159,14 @@ void GamePlayScene::Update()
 		enemy->Update();
 	}
 
+	//€‚ñ‚Å‚é’e‚ğÁ‚·
+	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+		if (!enemy->IsAlive()) {
+			return true;
+		}
+		return false;
+		});
+
 	if (ImGui::Button("Enemy spwan")) {
 		EnemySpawn();
 	}

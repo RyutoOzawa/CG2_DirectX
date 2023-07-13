@@ -29,6 +29,8 @@ public:
 
 	void OnCollision(const CollisionInfo& info) override;
 
+	bool IsAlive()const { return isAlive; }
+
 private:
 
 	static ParticleManager particleManager;

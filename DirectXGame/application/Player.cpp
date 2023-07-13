@@ -255,6 +255,23 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	reticleSpd.y = inputVertical * reticleSpdBase;
 	reticlePosScreen += reticleSpd;
 
+	//レティクル座標の移動制限
+	Vector2 reticlePosMin = { reticleRadius,reticleRadius };
+	Vector2 reticlePosMax = { WindowsAPI::winW - reticleRadius,WindowsAPI::winH - reticleRadius };
+	if (reticlePosScreen.x > reticlePosMax.x) {
+		reticlePosScreen.x = reticlePosMax.x;
+	}
+	else if (reticlePosScreen.x < reticlePosMin.x) {
+		reticlePosScreen.x = reticlePosMin.x;
+	}
+
+	if (reticlePosScreen.y > reticlePosMax.y) {
+		reticlePosScreen.y = reticlePosMax.y;
+	}
+	else if (reticlePosScreen.y < reticlePosMin.y) {
+		reticlePosScreen.y = reticlePosMin.y;
+	}
+
 	//座標をスプライトにセット
 	reticleSprite.SetPos(reticlePosScreen);
 
@@ -286,9 +303,6 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 		//ビュー、プロジェクション、ビューポート行列を掛けてW除算
 		posEnemyWorld = Matrix4::transformDivW(posEnemyWorld, matViewProViewPort);
-
-		ImGui::Text("enemyPos:%f,%f,%f", posEnemyWorld.x, posEnemyWorld.y, posEnemyWorld.z);
-
 		Vector2 posEnemyScreen = { posEnemyWorld.x,posEnemyWorld.y };
 
 		Circle reticleC{ reticlePosScreen,reticleRadius };
@@ -301,12 +315,9 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 			Vector3 vecEtoC = itE->get()->GetWorldPosition() - parent->GetWorldPosition();
 			distanceReticle3D = vecEtoC.length();
 			
-			ImGui::Text("reticle hit!!");
 		}
 
 	}
-
-	ImGui::Text("distance reticle object %f", distanceReticle3D);
 
 	reticleObj.position = posNear + direction * distanceReticle3D;
 	reticleObj.Update();
