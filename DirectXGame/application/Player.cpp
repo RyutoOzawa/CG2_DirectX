@@ -310,18 +310,22 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		Circle reticleC{ reticlePosScreen,reticleRadius };
 		Circle enemyC{ posEnemyScreen,1.0f };
 
+		//カメラからレティクルの距離を(敵のワールド×ビュー)のzにする
+		Vector3 posEnemyView = itE->get()->GetLocalPosition() * camera->GetView();
+		ImGui::Text("enemyView.z %f", posEnemyView.z);
+
 		//レティクルが敵に当たっているなら
 		if (Collision::ColCircleToCircle(reticleC, enemyC)) {
 			
-			//カメラからレティクルへの距離を敵-カメラの距離にする(自機の親がレールカメラのオブジェクトなのでそこから引っ張ってくる)
-			Vector3 vecEtoC = itE->get()->GetWorldPosition() - parent->GetWorldPosition();
+
 
 			//カメラから敵の距離が自機との距離より小さいなら狙わない
-			if (vecEtoC.length() < distanceCamera) {
+			if (posEnemyView.z < distanceCamera) {
 				continue;
 			}
 
-			distanceReticle3D = vecEtoC.length();
+
+			distanceReticle3D = posEnemyView.z;
 
 
 			//レティクルが動いているならロックオン

@@ -38,6 +38,8 @@ public:
 	Matrix4 GetViewProjection()const { return matView * matProjection; }
 
 	Vector3 GetEye()const { return eye; }
+
+	Matrix4 GetView()const { return matView; }
 		 
 };
 
