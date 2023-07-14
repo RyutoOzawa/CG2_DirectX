@@ -318,9 +318,9 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 			distanceReticle3D = vecEtoC.length();
 
 			//レティクルが動いているならロックオン
-			if (inputHorizontal != 0 || inputVertical != 0) {
+		/*	if (inputHorizontal != 0 || inputVertical != 0) {
 				reticlePosScreen = posEnemyScreen;
-			}
+			}*/
 			
 		}
 
