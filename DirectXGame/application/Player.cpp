@@ -31,6 +31,7 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 //	reticleSprite.SetPos({ 500.0f,500.0f });
 
 	reticleSprite.SetAnchorPoint({ 0.5f,0.5f });
+	reticleSprite.SetColor({ 1,1,1,0.5f });
 
 }
 
@@ -249,6 +250,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		inputVertical = 1;
 	}
 
+
 	
 	//入力値×レティクルスピードで移動
 	reticleSpd.x = inputHorizontal * reticleSpdBase;
@@ -275,24 +277,17 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	//座標をスプライトにセット
 	reticleSprite.SetPos(reticlePosScreen);
 
-	//ビュー、射影、ビューポートの行列を合成
-	Matrix4 matVBVInverse = matViewProViewPort;
-	matVBVInverse.Inverse();
+	
 
-	//スクリーン座標
-	Vector3 posNear = {reticlePosScreen.x, reticlePosScreen.y, 0};
-	Vector3 posFar = {reticlePosScreen.x, reticlePosScreen.y, 1};
-
-	//ワールド座標系に変換
-	posNear = Matrix4::transformDivW(posNear, matVBVInverse);
-	posFar = Matrix4::transformDivW(posFar, matVBVInverse);
-
-	//レイの方向
-	Vector3 direction = posFar - posNear;
-	direction.normalize();
+	
 
 	//カメラからレティクル(3D)への距離
 	float distanceReticle3D = distanceCamera + 100.0f;
+
+	//スクリーン座標変換した自機の座標
+	Vector3 posPlayerScreen = Matrix4::transformDivW(GetWorldPosition(), matViewProViewPort);
+
+	ImGui::Text("screen Z player %f", posPlayerScreen.z);
 
 	//敵の座標をスクリーン座標に変換
 	std::list<std::unique_ptr<Enemy>>::iterator itE;
@@ -304,6 +299,13 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		//ビュー、プロジェクション、ビューポート行列を掛けてW除算
 		posEnemyWorld = Matrix4::transformDivW(posEnemyWorld, matViewProViewPort);
 		Vector2 posEnemyScreen = { posEnemyWorld.x,posEnemyWorld.y };
+		
+		ImGui::Text("screen Z eyemy %f", posEnemyWorld.z);
+
+		//自機より後ろにいる奴は対象外;
+		if (posEnemyWorld.z < posPlayerScreen.z) {
+			continue;
+		}
 
 		Circle reticleC{ reticlePosScreen,reticleRadius };
 		Circle enemyC{ posEnemyScreen,1.0f };
@@ -314,10 +316,31 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 			//カメラからレティクルへの距離を敵-カメラの距離にする(自機の親がレールカメラのオブジェクトなのでそこから引っ張ってくる)
 			Vector3 vecEtoC = itE->get()->GetWorldPosition() - parent->GetWorldPosition();
 			distanceReticle3D = vecEtoC.length();
+
+			//レティクルが動いているならロックオン
+			if (inputHorizontal != 0 || inputVertical != 0) {
+				reticlePosScreen = posEnemyScreen;
+			}
 			
 		}
 
 	}
+
+	//ビュー、射影、ビューポートの行列を合成
+	Matrix4 matVBVInverse = matViewProViewPort;
+	matVBVInverse.Inverse();
+
+	//スクリーン座標
+	Vector3 posNear = { reticlePosScreen.x, reticlePosScreen.y, 0 };
+	Vector3 posFar = { reticlePosScreen.x, reticlePosScreen.y, 1 };
+
+	//ワールド座標系に変換
+	posNear = Matrix4::transformDivW(posNear, matVBVInverse);
+	posFar = Matrix4::transformDivW(posFar, matVBVInverse);
+
+	//レイの方向
+	Vector3 direction = posFar - posNear;
+	direction.normalize();
 
 	reticleObj.position = posNear + direction * distanceReticle3D;
 	reticleObj.Update();

@@ -56,10 +56,10 @@ void SplineCurve::Update()
 	}
 
 	
-	ImGui::Text("count %d", count);
-	ImGui::Text("start index %d", startIndex);
-	ImGui::Text("once time %f", allTimeOnce);
-	ImGui::Text("progress %f", progress);
+	//ImGui::Text("count %d", count);
+	//ImGui::Text("start index %d", startIndex);
+	//ImGui::Text("once time %f", allTimeOnce);
+	//ImGui::Text("progress %f", progress);
 
 	//ï‚äÆópç¿ïW
 	Vector3 p0, p1, p2, p3;
