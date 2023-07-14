@@ -292,7 +292,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	direction.normalize();
 
 	//カメラからレティクル(3D)への距離
-	float distanceReticle3D = distanceCamera + 25.0f;
+	float distanceReticle3D = distanceCamera + 100.0f;
 
 	//敵の座標をスクリーン座標に変換
 	std::list<std::unique_ptr<Enemy>>::iterator itE;

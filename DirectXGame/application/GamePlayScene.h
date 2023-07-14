@@ -53,7 +53,6 @@ public://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Object3d> skydomeObj = nullptr;
 	std::unique_ptr<FbxModel> model1 = nullptr;
 	std::unique_ptr<FbxObject3d> object1 = nullptr;
-	std::unique_ptr<ParticleManager> particleMan = nullptr;
 	std::unique_ptr<Player> player = nullptr;
 	std::list< std::unique_ptr<Enemy>> enemys;
 	std::unique_ptr<Object3d> colTestObj = nullptr;

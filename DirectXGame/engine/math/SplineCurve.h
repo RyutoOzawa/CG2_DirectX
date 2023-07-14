@@ -43,5 +43,6 @@ public:
 
 	Vector3 GetPosition()const { return currentPos; }
 
+	float GetProgress()const { return progress; }
 };
 

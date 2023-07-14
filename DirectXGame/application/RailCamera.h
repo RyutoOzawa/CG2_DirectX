@@ -16,6 +16,8 @@ public://メンバ関数
 	/// </summary>
 	void Initialize(const Vector3& position,const Vector3& rotation);
 
+	void Start();
+
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -24,6 +26,9 @@ public://メンバ関数
 	Object3d* GetObject3d()const { return world; }
 
 	Camera* GetCamera()const { return camera; }
+
+	//カメラ進行度
+	float GetProgress() const { return spline.GetProgress(); }
 
 private://メンバ変数
 

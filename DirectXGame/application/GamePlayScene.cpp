@@ -60,8 +60,6 @@ void GamePlayScene::Initialize()
 	skydomeObj->SetModel(skydome.get());
 	skydomeObj->scale = { 1000,1000,1000 };;
 
-	particleMan = std::make_unique<ParticleManager>();
-	particleMan->Initialize(particleGraph);
 
 	player = std::make_unique<Player>();
 	player->Initialize(defaultModel.get(), reticleGraph);
@@ -74,28 +72,6 @@ void GamePlayScene::Initialize()
 	//colTestObj->SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
 	colTestObj->Update();
 
-	
-	for (int i = 0; i < 100; i++) {
-		//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
-		const float randPos = 5.0f;
-		Vector3 pos{};
-		pos.x = Random(-randPos, randPos);
-		pos.y = Random(-randPos, randPos);
-		pos.z = Random(-randPos, randPos);
-		//x,y,zすべて±0.05で分布
-		const float randVel = 0.05f;
-		Vector3 vel{};
-		vel.x = Random(-randVel, randVel);
-		vel.y = Random(-randVel, randVel);
-		vel.z = Random(-randVel, randVel);
-		//重力に見立ててYのみ-0.001f~0でランダムに分布
-		Vector3 acc{};
-		const float randAcc = 0.001f;
-		acc.y = Random(-randAcc, 0.0f);
-
-		//追加
-		particleMan->Add(60, pos, vel, acc,1.0f,0.0f);
-	}
 
 	newAudio = std::make_unique<AudioManager>();
 	newAudio->SoundLoadWave("Resources/bgm_title.wav");
@@ -175,6 +151,17 @@ void GamePlayScene::Update()
 		EnemySpawn();
 	}
 
+	//スタートボタンでレールカメラ開始
+	if (Input::GetInstance()->IsPadTrigger(XINPUT_GAMEPAD_START)) {
+		railCamera->Start();
+	}
+
+	//レールカメラが5%進むごとに敵を一体スポーン
+	float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
+	if ((int)cameraProgressPercent % 5 == 1) {
+		EnemySpawn();
+	}
+
 	Enemy::EnemyParticleUpdate();
 
 	ImGui::SliderFloat("cameraX", &currentCamera->eye.x, -100.0f, 100.0f);
@@ -197,33 +184,6 @@ void GamePlayScene::Update()
 	ImGui::End();
 
 	skydomeObj->Update();
-
-	//X,Y,Zすべて[-5.0f,+5.0f]でランダムに分布
-	{
-		const float randPos = 5.0f;
-		Vector3 pos{};
-		pos.x = Random(-randPos, randPos);
-		pos.y = Random(-randPos, randPos);
-		pos.z = Random(-randPos, randPos);
-		//x,y,zすべて±0.05で分布
-		const float randVel = 0.05f;
-		Vector3 vel{};
-		vel.x = Random(-randVel, randVel);
-		vel.y = Random(-randVel, randVel);
-		vel.z = Random(-randVel, randVel);
-		//重力に見立ててYのみ-0.001f~0でランダムに分布
-		Vector3 acc{};
-		const float randAcc = 0.001f;
-		acc.y = Random(-randAcc, 0.0f);
-
-		//追加
-		particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
-
-
-	}
-	particleMan->Update();
-
-	colTestObj->Update();
 
 	//アニメーション開始ボタン
 	if (ImGui::Button("animation start")) {
@@ -287,8 +247,6 @@ void GamePlayScene::Draw()
 
 	//パーティクル描画
 	ParticleManager::BeginDraw(currentCamera);
-	//パーティクルテスト
-	//particleMan->Draw();
 
 	player->DrawParticle();
 
@@ -303,7 +261,10 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::EnemySpawn()
 {
-	float posZ = Random(50.0f, 100.0f);
+	float posZ = Random(200.0f, 300.0f);
+
+	//Z座標はカメラ基準に
+	//posZ += railCamera->GetObject3d()->GetWorldPosition().z;
 
 	Vector3 start{ -60,0,posZ };
 	Vector3 p1 = { 0,30,posZ };
@@ -312,8 +273,13 @@ void GamePlayScene::EnemySpawn()
 	Vector3 p4 = { 30,0,posZ };
 	Vector3 end = { 60,0,posZ };
 
-
+	
 	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
+
+	//曲線をカメラ基準に
+	for (auto& p : enemyMovePoints) {
+		p += railCamera->GetObject3d()->GetWorldPosition();
+	}
 
 	//敵の生成と初期化
 	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();

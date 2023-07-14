@@ -39,14 +39,16 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	spline.SetPositions(c);
 }
 
+void RailCamera::Start()
+{
+	spline.Start(360.0f);
+}
+
 void RailCamera::Update()
 {
 	//レールカメラ用デバッグテキスト
 	ImGui::Begin("railCamera");
 
-	if (ImGui::Button("start spline")) {
-		spline.Start(360.0f);
-	}
 
 	spline.Update();
 
