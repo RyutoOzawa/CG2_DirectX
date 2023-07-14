@@ -300,7 +300,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		posEnemyWorld = Matrix4::transformDivW(posEnemyWorld, matViewProViewPort);
 		Vector2 posEnemyScreen = { posEnemyWorld.x,posEnemyWorld.y };
 		
-		ImGui::Text("screen Z eyemy %f", posEnemyWorld.z);
+		//ImGui::Text("screen Z eyemy %f", posEnemyWorld.z);
 
 		//自機より後ろにいる奴は対象外;
 		if (posEnemyWorld.z < posPlayerScreen.z) {
@@ -315,16 +315,25 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 			
 			//カメラからレティクルへの距離を敵-カメラの距離にする(自機の親がレールカメラのオブジェクトなのでそこから引っ張ってくる)
 			Vector3 vecEtoC = itE->get()->GetWorldPosition() - parent->GetWorldPosition();
+
+			//カメラから敵の距離が自機との距離より小さいなら狙わない
+			if (vecEtoC.length() < distanceCamera) {
+				continue;
+			}
+
 			distanceReticle3D = vecEtoC.length();
 
+
 			//レティクルが動いているならロックオン
-		/*	if (inputHorizontal != 0 || inputVertical != 0) {
+			if (inputHorizontal != 0 || inputVertical != 0) {
 				reticlePosScreen = posEnemyScreen;
-			}*/
+			}
 			
 		}
 
 	}
+
+	ImGui::Text("distance retilce3d %f", distanceReticle3D);
 
 	//ビュー、射影、ビューポートの行列を合成
 	Matrix4 matVBVInverse = matViewProViewPort;
