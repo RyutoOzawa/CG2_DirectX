@@ -64,7 +64,7 @@ void GamePlayScene::Initialize()
 	player = std::make_unique<Player>();
 	player->Initialize(defaultModel.get(), reticleGraph);
 	player->SetBulletModel(playerBulletModel.get());
-	
+
 	//当たり判定テスト用オブジェクト
 	colTestObj = std::make_unique<Object3d>();
 	colTestObj->Initialize();
@@ -94,7 +94,7 @@ void GamePlayScene::Initialize()
 
 
 	railCamera = new RailCamera();
-	railCamera->Initialize({0,0,0}, {0,0,0});
+	railCamera->Initialize({ 0,0,0 }, { 0,0,0 });
 
 	//obj3dクラスにカメラをセット
 	Object3d::SetCamera(railCamera->GetCamera());
@@ -153,6 +153,10 @@ void GamePlayScene::Update()
 
 	//スタートボタンでレールカメラ開始
 	if (Input::GetInstance()->IsPadTrigger(XINPUT_GAMEPAD_START)) {
+		railCamera->Start();
+	}
+
+	if (ImGui::Button("game start")) {
 		railCamera->Start();
 	}
 
@@ -229,7 +233,7 @@ void GamePlayScene::Draw()
 
 	//天球
 	skydomeObj->Draw();
-	
+
 	//プレイヤー
 	player->Draw();
 
@@ -273,7 +277,7 @@ void GamePlayScene::EnemySpawn()
 	Vector3 p4 = { 30,0,posZ };
 	Vector3 end = { 60,0,posZ };
 
-	
+
 	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
 
 	//曲線をカメラ基準に
@@ -286,7 +290,7 @@ void GamePlayScene::EnemySpawn()
 	newEnemy->Initialize(enemyMovePoints);
 	newEnemy->SetModel(defaultModel.get());
 	newEnemy->Spawn();
-	
+
 	//リストに登録
 	enemys.push_back(std::move(newEnemy));
 
