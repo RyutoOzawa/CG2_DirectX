@@ -41,5 +41,6 @@ private://メンバ変数
 	//カメラ挙動用スプライン曲線
 	SplineCurve spline;
 
+	SplineCurve targetSpline;
 };
 

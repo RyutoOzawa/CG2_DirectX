@@ -41,6 +41,7 @@ public:
 	Vector3 scale = { 1,1,1 };	//アフィン変換情報
 	Vector3 rotation = { 0,0,0 };	//アフィン変換情報
 	Vector3 position = { 0,0,0 };	//アフィン変換情報
+	Matrix4 matRotation = matRotation.identity();
 	Matrix4 matWorld;	//ワールド変換行列
 
 	Object3d* parent = nullptr;	//親オブジェクトへのポインタ

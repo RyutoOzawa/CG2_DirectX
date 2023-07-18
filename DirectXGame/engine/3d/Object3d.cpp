@@ -114,9 +114,18 @@ void Object3d::Update()
 	matScale = matScale.scale(scale);
 
 	matRot = matRot.identity();
-	matRot *= matRot.rotateZ(rotation.z);
-	matRot *= matRot.rotateX(rotation.x);
-	matRot *= matRot.rotateY(rotation.y);
+	//回転行列が単位行列(何も入っていない)ならオイラー角でやる
+	if (this->matRotation == matRot) {
+
+		matRot *= matRot.rotateZ(rotation.z);
+		matRot *= matRot.rotateX(rotation.x);
+		matRot *= matRot.rotateY(rotation.y);
+
+	}
+	else {
+		matRot *= this->matRotation;
+	}
+
 
 	matTrans = matTrans.translate(position);
 

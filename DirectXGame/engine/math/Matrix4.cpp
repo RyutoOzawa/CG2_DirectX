@@ -111,6 +111,27 @@ Vector3 Matrix4::transformDivW(const Vector3& v, const Matrix4& m)
 
 	return result;
 }
+Matrix4 Matrix4::CreateMatRot(const Vector3& pos, const Vector3& target, const Vector3& up)
+{
+	Vector3 rX, rY, rZ;
+	rZ = target - pos;
+	rZ.normalize();
+
+	rX = up.cross(rZ);
+	rX.normalize();
+
+	rY = rZ.cross(rX);
+	rX.normalize();
+
+	Matrix4 result = {
+		rX.x,rX.y,rX.z,0,
+		rY.x,rY.y,rY.z,0,
+		rZ.x,rZ.y,rZ.z,0,
+		   0,   0,   0,1
+	};
+
+	return result;
+}
 //
 //Matrix4& operator*=(Matrix4& m1, const  Matrix4& m2)
 //{
@@ -305,6 +326,19 @@ Matrix4& Matrix4::operator*=(const Matrix4& mat)
 	*this = result;
 	return *this;
 
+}
+
+bool Matrix4::operator==(const Matrix4& mat)
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (m[i][j] != mat.m[i][j]) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 

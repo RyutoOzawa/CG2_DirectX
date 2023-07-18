@@ -27,6 +27,9 @@ public:
 
 	static Vector3 transformDivW(const Vector3& v, const Matrix4& m);
 
+	//回転行列の作成
+	static Matrix4 CreateMatRot(const Vector3& pos, const Vector3& target, const Vector3& up);
+
 	//逆行列
 	Matrix4 Inverse();
 
@@ -38,6 +41,7 @@ public:
 
 	//演算子オーバーロード
 	Matrix4& operator*=(const Matrix4& mat);
+	bool operator==(const Matrix4& mat);
 
 };
 

@@ -212,6 +212,11 @@ void ParticleManager::Draw()
  }
 
 void ParticleManager::Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd) {
+	//パーティクルの数が最大なら追加しない
+	if (std::distance(particles.begin(), particles.end()) >= vertexCount) {
+		return;
+	}
+	
 	//リストに要素を追加
 	particles.emplace_front();
 	//追加した要素の参照

@@ -37,11 +37,20 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	std::vector<Vector3> c{ start,p1,p2,p3,p4,end };
 
 	spline.SetPositions(c);
+
+	c.clear();
+	c = { start,p1,p3,p2,p4,end };
+	for (int i = 0; i < c.size(); i++) {
+		c[i].z += 10.0f;
+	}
+
+	targetSpline.SetPositions(c);
 }
 
 void RailCamera::Start()
 {
 	spline.Start(360.0f);
+	targetSpline.Start(360.0f);
 }
 
 void RailCamera::Update()
@@ -51,11 +60,18 @@ void RailCamera::Update()
 
 
 	spline.Update();
+	targetSpline.Update();
 
 	//ワールド座標の更新
 	ImGui::SliderFloat("posX", &world->position.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("posY", &world->position.y, -100.0f, 100.0f);
 	ImGui::SliderFloat("posZ", &world->position.z, -100.0f, 100.0f);
+
+	//前フレームの座標保存
+	Vector3 oldPos = world->GetWorldPosition();
+	if (spline.GetProgress() <= 0.0f) {
+		oldPos = { 0,0,-1 };
+	}
 
 	//スプライン曲線に沿って移動
 	world->position = spline.GetPosition();
@@ -65,6 +81,9 @@ void RailCamera::Update()
 	ImGui::SliderFloat("rotY", &rotation.y, (float)-PI, (float)PI);
 	ImGui::SliderFloat("rotZ", &rotation.z, (float)-PI, (float)PI);
 	world->rotation = rotation;
+
+	Matrix4 matRot = Matrix4::CreateMatRot(spline.GetPosition(), targetSpline.GetPosition(), camera->up);
+	world->matRotation = matRot;
 
 	world->Update();
 
