@@ -296,7 +296,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	//スクリーン座標変換した自機の座標
 	Vector3 posPlayerScreen = Matrix4::transformDivW(GetWorldPosition(), matViewProViewPort);
 
-	ImGui::Text("screen Z player %f", posPlayerScreen.z);
+	//ImGui::Text("screen Z player %f", posPlayerScreen.z);
 
 	//敵の座標をスクリーン座標に変換
 	std::list<std::unique_ptr<Enemy>>::iterator itE;
@@ -321,7 +321,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 		//カメラからレティクルの距離を(敵のワールド×ビュー)のzにする
 		Vector3 posEnemyView = itE->get()->GetLocalPosition() * camera->GetView();
-		ImGui::Text("enemyView.z %f", posEnemyView.z);
+		//ImGui::Text("enemyView.z %f", posEnemyView.z);
 
 		//レティクルが敵に当たっているなら
 		if (Collision::ColCircleToCircle(reticleC, enemyC)) {
@@ -339,14 +339,14 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 			//レティクルが動いているならロックオン
 			if (inputHorizontal != 0 || inputVertical != 0) {
-				reticlePosScreen = posEnemyScreen;
+			//	reticlePosScreen = posEnemyScreen;
 			}
 			
 		}
 
 	}
 
-	ImGui::Text("distance retilce3d %f", distanceReticle3D);
+//	ImGui::Text("distance retilce3d %f", distanceReticle3D);
 
 	//ビュー、射影、ビューポートの行列を合成
 	Matrix4 matVBVInverse = matViewProViewPort;
