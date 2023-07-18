@@ -338,7 +338,7 @@ void ParticleManager::CreatePipeline3D()
 	pipeline3D.desc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 	pipeline3D.SetBlendAdd();
-	pipeline3D.SetBlendSub();
+	//pipeline3D.SetBlendSub();
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};

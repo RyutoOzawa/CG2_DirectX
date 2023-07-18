@@ -21,7 +21,7 @@ void Player::Initialize(Model* model, uint32_t reticleTexture, uint32_t healthTe
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	//命中パーティクル
-	hitParticle.Initialize(0);
+	hitParticle.Initialize(healthTexture);
 
 	//レティクルオブジェクト
 	reticleObj.Initialize();
@@ -45,12 +45,34 @@ void Player::Initialize(Model* model, uint32_t reticleTexture, uint32_t healthTe
 	Vector3 healthColor = ColorCodeRGB(0x72b876);
 	healthSprite.SetColor({ healthColor.x,healthColor.y,healthColor.z,1.0f });
 	damageInterval = 0;
+	isAlive = true;
 
 }
 
 void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 {
 	ImGui::Begin("Player");
+
+	ImGui::Text("health %d", health);
+
+	if (isAlive) {
+		ImGui::Text("alive");
+	}
+	else {
+		ImGui::Text("alive false");
+	}
+
+	if (ImGui::Button("particle")) {
+		//パーティクルの速度
+		for (int i = 0; i < 25; i++) {
+			Vector3 vel = { 0,0,0 };
+			Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+
+
+			//パーティクル追加
+			hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
+		}
+	}
 
 
 	//死んでる弾を消す
@@ -61,15 +83,22 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		return false;
 		});
 
-	
+	//自機のHPが0なら操作させない
+	if (health != 0) {
 
-	//移動
-	Move();
+		//移動
+		Move();
 
-	//攻撃
-	Attack();
+		//攻撃
+		Attack();
 
-
+		//レティクルのオブジェクトデータ更新
+		ReticleUpdate(enemys);
+	}
+	//0なら死ぬアニメーション
+	else if (health == 0) {
+		UpdateDeath();
+	}
 
 	//弾の更新
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets) {
@@ -78,9 +107,6 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 
 	//命中時パーティクル更新
 	hitParticle.Update();
-
-	//レティクルのオブジェクトデータ更新
-	ReticleUpdate(enemys);
 
 	//HPバーの更新
 	HealthUpdate();
@@ -94,7 +120,7 @@ void Player::Draw()
 	//自分の描画
 
 	//ダメージのクールタイムによって点滅
-	if (damageInterval % 4 < 1) {
+	if (damageInterval % 4 < 1 && health != 0) {
 		Object3d::Draw();
 	}
 
@@ -125,17 +151,15 @@ void Player::OnCollision(const CollisionInfo& info)
 		return;
 	}
 
-
-	static int a = 0;
-	a++;
-
 	//パーティクルの速度
-	Vector3 vel = { 0,0,0 };
-	Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+	for (int i = 0; i < 25; i++) {
+		Vector3 vel = { 0,0,0 };
+		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
 
-	
-	//パーティクル追加
-	hitParticle.Add(15, info.inter, vel, acc, 3.0f, 0.0f);
+
+		//パーティクル追加
+		hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
+	}
 
 	//ダメージを受ける
 	Damage();
@@ -430,7 +454,44 @@ void Player::Damage()
 {
 	//hpを減らす
 	health--;
+
+	//HPが0になったら死亡させる
+	if (health == 0) {
+		Death();
+		return;
+	}
+
 	//次食らうクールタイムを設定
 	damageInterval = damageCooltime;
+}
+
+void Player::Death()
+{
+	//当たり判定をとりたくないので属性を無敵にする
+	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
+	//次シーンに移行するまでのカウントダウン開始
+	deathCount = deathCountMax;
+
+	
+}
+
+void Player::UpdateDeath()
+{
+	if (deathCount == 0) {
+		isAlive = false;
+		return;
+	}
+
+	Object3d::Update();
+
+	//死のカウントダウンを減らしながらパーティクルを出す
+	deathCount--;
+	//パーティクルの速度
+	for (int i = 0; i < 5; i++) {
+	Vector3 vel = { 0,0,0 };
+	Vector3 acc = { Random(-2.0f,2.0f),Random(-2.0f,2.0f) ,Random(-2.0f,2.0f) };
+
+		hitParticle.Add((int)Random(10,20),GetWorldPosition(),vel,acc,3.0f,0.0f);
+	}
 }
 

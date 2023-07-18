@@ -132,6 +132,12 @@ void GamePlayScene::Update()
 	player->parent = railCamera->GetObject3d();
 	player->Update(&enemys);
 
+	//自機の死亡が確認されたらシーン移動
+	if (!player->IsAlive()) {
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("GAMEOVER");
+	}
+
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 		enemy->Update();
 	}

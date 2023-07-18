@@ -28,9 +28,9 @@ public:	//メンバ関数
 
 	void SetBulletModel(Model* model) { bulletModel = model; }
 
-
-
 	void OnCollision(const CollisionInfo& info) override;
+
+	bool IsAlive()const { return isAlive; }
 
 private://メンバ変数
 
@@ -59,12 +59,15 @@ private://メンバ変数
 
 	//HP関連
 	Sprite healthSprite;
-	const int healthMax = 10;
+	const int healthMax = 2;
 	int health = healthMax;
 	int healthWidthMax = 0;
 	int healthWidth = healthWidthMax;
 	const int damageCooltime = 120;
 	int damageInterval = damageCooltime;
+	const int deathCountMax = 180;
+	int deathCount = deathCountMax;
+	bool isAlive = false;
 
 private://内部処理用メンバ関数
 
@@ -82,6 +85,12 @@ private://内部処理用メンバ関数
 
 	//ダメージを受けた時の処理
 	void Damage();
+
+	//死んだ瞬間の処理
+	void Death();
+
+	//死亡更新処理
+	void UpdateDeath();
 
 };
 
