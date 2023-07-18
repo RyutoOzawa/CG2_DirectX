@@ -24,3 +24,27 @@ float Random(float num1, float num2) {
 
 	return dist(engine);
 }
+
+int RGBColorCode(const Vector3& rgb)
+{
+	int code = 0x000000;
+
+	int r = (int)rgb.x;
+	int g = (int)rgb.y;
+	int b = (int)rgb.z;
+	r = r << 16;
+	g = g << 8;
+
+	code = r + g + b;
+
+
+	return code;
+
+	
+
+}
+
+Vector3 ColorCodeRGB(int colorCode)
+{
+	return { (float)(colorCode >> 16),(float)(colorCode >> 8),(float)(colorCode & 0xff) };
+}

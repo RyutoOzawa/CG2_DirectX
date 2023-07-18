@@ -37,6 +37,15 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 
 void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 {
+	Vector3 green = { 114,184,118 };
+
+
+	int codeGreen = RGBColorCode(green);
+
+	Vector3 color = ColorCodeRGB(codeGreen);
+
+	int a = 0;
+
 	//éÄÇÒÇ≈ÇÈíeÇè¡Ç∑
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		if (!bullet->IsAlive()) {
