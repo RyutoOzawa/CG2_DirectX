@@ -31,6 +31,7 @@ void GamePlayScene::Initialize()
 	reimuGraph = Texture::LoadTexture("reimu.png");
 	particleGraph = Texture::LoadTexture("particle.png");
 	reticleGraph = Texture::LoadTexture("reticle.png");
+	whiteGraph = Texture::LoadTexture("white1x1.png");
 	backGroundSprite = std::make_unique<Sprite>();
 	backGroundSprite->Initialize(backGroundTexture);
 
@@ -62,7 +63,7 @@ void GamePlayScene::Initialize()
 
 
 	player = std::make_unique<Player>();
-	player->Initialize(defaultModel.get(), reticleGraph);
+	player->Initialize(defaultModel.get(), reticleGraph, whiteGraph);
 	player->SetBulletModel(playerBulletModel.get());
 
 	//当たり判定テスト用オブジェクト

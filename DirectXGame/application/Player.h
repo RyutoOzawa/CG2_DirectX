@@ -15,7 +15,7 @@ class Player :public Object3d
 public:	//メンバ関数
 
 	//初期化
-	void Initialize(Model* model,uint32_t reticleTexture);
+	void Initialize(Model* model,uint32_t reticleTexture,uint32_t healthTexture);
 
 	//更新
 	void Update(std::list<std::unique_ptr<Enemy>>* enemys);
@@ -44,21 +44,25 @@ private://メンバ変数
 	Vector2 reticlePosScreen{WindowsAPI::winW/2.0f,WindowsAPI::winH/2.0f};
 	float reticleRadius = 32.0f;
 
+	//弾関連
 	INT32 shotInterval = 0;
 	const INT32 shotCooltime = 5;
-
-	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets;
-	//弾のモデルデータ
 	Model* bulletModel = nullptr;
 
 	//ヒットパーティクル
 	ParticleManager hitParticle;
 
+	//レティクル関連
 	Object3d reticleObj;
-
 	Sprite reticleSprite;
 
+	//HP関連
+	Sprite healthSprite;
+	const int healthMax = 10;
+	int health = healthMax;
+	int healthWidthMax = 0;
+	int healthWidth = healthWidthMax;
 
 private://内部処理用メンバ関数
 
@@ -71,6 +75,8 @@ private://内部処理用メンバ関数
 	//レティクルの更新
 	void ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys);
 
+	//HPバーの更新
+	void HealthBarUpdate();
 
 };
 

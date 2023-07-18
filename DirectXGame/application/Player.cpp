@@ -7,7 +7,7 @@
 #include"Collision.h"
 #include"ImguiManager.h"
 
-void Player::Initialize(Model* model, uint32_t reticleTexture)
+void Player::Initialize(Model* model, uint32_t reticleTexture, uint32_t healthTexture)
 {
 	Object3d::Initialize();
 	SetModel(model);
@@ -20,31 +20,37 @@ void Player::Initialize(Model* model, uint32_t reticleTexture)
 	SetCollider(new SphereCollider(Vector3(0, 0, 0),radius));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
+	//命中パーティクル
 	hitParticle.Initialize(0);
 
+	//レティクルオブジェクト
 	reticleObj.Initialize();
 	//モデルはオブジェクトと同じもの
 	reticleObj.SetModel(Object3d::model);
 
+	//レティクルスプライト
 	reticleSprite.Initialize(reticleTexture);
-
-//	reticleSprite.SetPos({ 500.0f,500.0f });
-
 	reticleSprite.SetAnchorPoint({ 0.5f,0.5f });
 	reticleSprite.SetColor({ 1,1,1,0.5f });
+
+	//HPの初期化
+	health = healthMax;
+	healthWidthMax = 720;
+	healthWidth = healthWidth;
+
+	//HPスプライト
+	healthSprite.Initialize(healthTexture);
+	healthSprite.SetPos({ 32,32 });
+	healthSprite.SetSize({ 720,32 });
+	Vector3 healthColor = ColorCodeRGB(0x72b876);
+	healthSprite.SetColor({ healthColor.x,healthColor.y,healthColor.z,1.0f });
 
 }
 
 void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 {
-	Vector3 green = { 114,184,118 };
+	ImGui::Begin("Player");
 
-
-	int codeGreen = RGBColorCode(green);
-
-	Vector3 color = ColorCodeRGB(codeGreen);
-
-	int a = 0;
 
 	//死んでる弾を消す
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
@@ -75,6 +81,11 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 	//レティクルのオブジェクトデータ更新
 	ReticleUpdate(enemys);
 
+	//HPバーの更新
+	HealthBarUpdate();
+
+	ImGui::End();
+
 }
 
 void Player::Draw()
@@ -93,11 +104,13 @@ void Player::Draw()
 void Player::DrawParticle()
 {
 	hitParticle.Draw();
+	
 }
 
 void Player::DrawUI()
 {
 	reticleSprite.Draw();
+	healthSprite.Draw();
 }
 
 void Player::OnCollision(const CollisionInfo& info)
@@ -366,6 +379,29 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 	reticleObj.position = posNear + direction * distanceReticle3D;
 	reticleObj.Update();
+
+}
+
+void Player::HealthBarUpdate()
+{
+	//ボタンで体力減らしたり増やしたり
+	if (ImGui::Button("damage!!")) {
+		health--;
+	}
+
+	if (ImGui::Button("healing")) {
+		health++;
+	}
+
+	//横幅最大値をHP最大値で分割して1HP当たりの横幅を計算
+	float widthOnce = (float)healthWidthMax / (float)healthMax;
+	//現在のHPに掛け算して横幅を割り出す
+	float nowWidth = widthOnce * health;
+	//HPバーサイズ取得
+	Vector2 hp = healthSprite.GetSize();
+	hp.x = nowWidth;
+	healthSprite.SetSize(hp);
+
 
 }
 

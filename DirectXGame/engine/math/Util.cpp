@@ -46,5 +46,7 @@ int RGBColorCode(const Vector3& rgb)
 
 Vector3 ColorCodeRGB(int colorCode)
 {
-	return { (float)(colorCode >> 16),(float)(colorCode >> 8),(float)(colorCode & 0xff) };
+	Vector3 rgb = { (float)(colorCode >> 16),(float)(colorCode >> 8),(float)(colorCode & 0xff) };
+
+	return rgb / 256.0f;
 }
