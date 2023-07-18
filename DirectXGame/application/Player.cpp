@@ -44,6 +44,7 @@ void Player::Initialize(Model* model, uint32_t reticleTexture, uint32_t healthTe
 	healthSprite.SetSize({ 720,32 });
 	Vector3 healthColor = ColorCodeRGB(0x72b876);
 	healthSprite.SetColor({ healthColor.x,healthColor.y,healthColor.z,1.0f });
+	damageInterval = 0;
 
 }
 
@@ -82,7 +83,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 	ReticleUpdate(enemys);
 
 	//HPバーの更新
-	HealthBarUpdate();
+	HealthUpdate();
 
 	ImGui::End();
 
@@ -91,7 +92,11 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 void Player::Draw()
 {
 	//自分の描画
-	Object3d::Draw();
+
+	//ダメージのクールタイムによって点滅
+	if (damageInterval % 4 < 1) {
+		Object3d::Draw();
+	}
 
 	//弾の描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets) {
@@ -115,6 +120,11 @@ void Player::DrawUI()
 
 void Player::OnCollision(const CollisionInfo& info)
 {
+	//ダメージのクールタイムが終わってないなら何もしない
+	if (damageInterval > 0) {
+		return;
+	}
+
 
 	static int a = 0;
 	a++;
@@ -126,6 +136,9 @@ void Player::OnCollision(const CollisionInfo& info)
 	
 	//パーティクル追加
 	hitParticle.Add(15, info.inter, vel, acc, 3.0f, 0.0f);
+
+	//ダメージを受ける
+	Damage();
 
 }
 
@@ -382,8 +395,14 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 }
 
-void Player::HealthBarUpdate()
+void Player::HealthUpdate()
 {
+	//ダメージのクールタイムを減らす
+	if (damageInterval > 0) {
+		damageInterval--;
+	}
+
+
 	//ボタンで体力減らしたり増やしたり
 	if (ImGui::Button("damage!!")) {
 		health--;
@@ -392,6 +411,8 @@ void Player::HealthBarUpdate()
 	if (ImGui::Button("healing")) {
 		health++;
 	}
+
+	ImGui::Text("interval %d", damageInterval);
 
 	//横幅最大値をHP最大値で分割して1HP当たりの横幅を計算
 	float widthOnce = (float)healthWidthMax / (float)healthMax;
@@ -403,5 +424,13 @@ void Player::HealthBarUpdate()
 	healthSprite.SetSize(hp);
 
 
+}
+
+void Player::Damage()
+{
+	//hpを減らす
+	health--;
+	//次食らうクールタイムを設定
+	damageInterval = damageCooltime;
 }
 

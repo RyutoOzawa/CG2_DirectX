@@ -63,6 +63,8 @@ private://メンバ変数
 	int health = healthMax;
 	int healthWidthMax = 0;
 	int healthWidth = healthWidthMax;
+	const int damageCooltime = 120;
+	int damageInterval = damageCooltime;
 
 private://内部処理用メンバ関数
 
@@ -76,7 +78,10 @@ private://内部処理用メンバ関数
 	void ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys);
 
 	//HPバーの更新
-	void HealthBarUpdate();
+	void HealthUpdate();
+
+	//ダメージを受けた時の処理
+	void Damage();
 
 };
 
