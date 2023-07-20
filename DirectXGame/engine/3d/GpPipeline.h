@@ -20,6 +20,15 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
 
 public:
+
+	/// <summary>
+	/// パイプラインの各設定
+	/// </summary>
+	/// <param name="vsBlob">頂点シェーダオブジェクト</param>
+	/// <param name="psBlob">ピクセルシェーダオブジェクト</param>
+	/// <param name="inputLayout_">頂点レイアウト配列</param>
+	/// <param name="blendmode">ブレンド設定(0:none 1:alpha 2:add 3:sub 4:inv)</param>
+	/// <param name="primitiveNum">プリミティブ形状(0:triangle 1:line)</param>
 	void SetPipeline(ID3DBlob* vsBlob, ID3DBlob* psBlob, std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout_, int blendmode = BLEND_NOBLEND,int primitiveNum = 0);
 	void SetPipelineState(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12PipelineState>& pipelineState_);
 	void SetBlendAlpha();

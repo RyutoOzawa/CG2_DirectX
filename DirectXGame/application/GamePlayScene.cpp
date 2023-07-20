@@ -7,6 +7,7 @@
 #include"FbxObject3d.h"
 #include"Util.h"
 #include"SphereCollider.h"
+#include"DebugLine.h"
 
 using namespace DirectX;
 
@@ -21,7 +22,6 @@ void GamePlayScene::Initialize()
 
 	//衝突マネージャにインスタンス取得
 	collisionManager = CollisionManager::GetInstance();
-
 
 
 	//テクスチャデータ初期化
@@ -262,6 +262,14 @@ void GamePlayScene::Draw()
 	player->DrawParticle();
 
 	Enemy::DrawParticle();
+
+	//------デバッグ線描画処理------//
+	DebugLine::BeginDraw(currentCamera);
+
+	DebugLine::Draw({ { -10,0,100 }, { 20,30,100 } }, { 1,0,0,1 });
+
+	railCamera->DrawMoveLine({ 1,0,0,1 });
+
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();

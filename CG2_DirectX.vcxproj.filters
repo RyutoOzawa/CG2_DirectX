@@ -111,7 +111,7 @@
     <ClCompile Include="DirectXGame\engine\3d\GpPipeline.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\engine\3d\Gridline.cpp">
+    <ClCompile Include="DirectXGame\engine\3d\DebugLine.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\3d\Material.cpp">
@@ -260,6 +260,12 @@
     <FxCompile Include="Resources\shaders\ParticleVS.hlsl">
       <Filter>シェーダーファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\DebugLineVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -278,6 +284,9 @@
       <Filter>シェーダーファイル</Filter>
     </None>
     <None Include="Resources\shaders\Particle.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\DebugLine.hlsli">
       <Filter>シェーダーファイル</Filter>
     </None>
   </ItemGroup>
@@ -333,7 +342,7 @@
     <ClInclude Include="DirectXGame\engine\3d\GpPipeline.h">
       <Filter>ヘッダー ファイル\engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\engine\3d\Gridline.h">
+    <ClInclude Include="DirectXGame\engine\3d\DebugLine.h">
       <Filter>ヘッダー ファイル\engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\3d\Material.h">

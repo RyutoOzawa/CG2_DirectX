@@ -2,6 +2,7 @@
 #include"FbxLoader.h"
 #include"FbxObject3d.h"
 #include"ParticleManager.h"
+#include"DebugLine.h"
 
 //KEngineFramework::KEngineFramework()
 //{
@@ -58,6 +59,9 @@ void KEngineFramework::Initialize()
 
 	//パーティクルマネージャ初期化
 	ParticleManager::StaticInitialize(directX);
+
+	//デバッグ線の初期化
+	DebugLine::StaticInitialize(directX);
 
 }
 

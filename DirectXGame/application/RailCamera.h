@@ -30,6 +30,10 @@ public://メンバ関数
 	//カメラ進行度
 	float GetProgress() const { return spline.GetProgress(); }
 
+	//動線描画
+	void DrawMoveLine(const Vector4& color);
+
+
 private://メンバ変数
 
 	//ワールド変換データ

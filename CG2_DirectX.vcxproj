@@ -111,7 +111,7 @@
     <ClCompile Include="DirectXGame\engine\3d\FbxModel.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\FbxObject3d.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\GpPipeline.cpp" />
-    <ClCompile Include="DirectXGame\engine\3d\Gridline.cpp" />
+    <ClCompile Include="DirectXGame\engine\3d\DebugLine.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\Material.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\Model.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\Object3d.cpp" />
@@ -147,6 +147,18 @@
     <ClCompile Include="DirectXGame\application\GameOverScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\DebugLineVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\shaders\BasicGeometryShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -229,6 +241,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\shaders\DebugLine.hlsli" />
     <None Include="Resources\shaders\Basic.hlsli" />
     <None Include="Resources\shaders\FBX.hlsli" />
     <None Include="Resources\shaders\Obj.hlsli" />
@@ -262,7 +275,7 @@
     <ClInclude Include="DirectXGame\engine\3d\FbxModel.h" />
     <ClInclude Include="DirectXGame\engine\3d\FbxObject3d.h" />
     <ClInclude Include="DirectXGame\engine\3d\GpPipeline.h" />
-    <ClInclude Include="DirectXGame\engine\3d\Gridline.h" />
+    <ClInclude Include="DirectXGame\engine\3d\DebugLine.h" />
     <ClInclude Include="DirectXGame\engine\3d\Material.h" />
     <ClInclude Include="DirectXGame\engine\3d\Model.h" />
     <ClInclude Include="DirectXGame\engine\3d\Object3d.h" />

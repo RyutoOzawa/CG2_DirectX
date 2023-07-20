@@ -2,6 +2,7 @@
 #include"EasingData.h"
 #include"Vector3.h"
 #include<vector>
+#include"Vector4.h"
 
 class SplineCurve
 {
@@ -44,5 +45,7 @@ public:
 	Vector3 GetPosition()const { return currentPos; }
 
 	float GetProgress()const { return progress; }
+
+	void DrawCurve(const Vector4& color,const Vector3& offset = {0,0,0});
 };
 

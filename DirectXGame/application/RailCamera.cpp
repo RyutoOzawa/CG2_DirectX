@@ -26,7 +26,6 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 
 	camera->Initialize(eye, target, up);
 
-
 	Vector3 start{ 0,0,0 };
 	Vector3 p1{ 20,20,50 };
 	Vector3 p2{ 0,-10,100 };
@@ -83,7 +82,7 @@ void RailCamera::Update()
 	world->rotation = rotation;
 
 	Matrix4 matRot = Matrix4::CreateMatRot(spline.GetPosition(), targetSpline.GetPosition(), camera->up);
-	world->matRotation = matRot;
+	//world->matRotation = matRot;
 
 	world->Update();
 
@@ -109,4 +108,9 @@ void RailCamera::Update()
 	ImGui::Text("target:%f,%f,%f", camera->target.x, camera->target.y, camera->target.z);
 	ImGui::End();
 
+}
+
+void RailCamera::DrawMoveLine(const Vector4& color)
+{
+	spline.DrawCurve(color,{0,-20,100});
 }
