@@ -120,7 +120,7 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 		//インターバルリセット
 		shotInterval = shotCoolTime;
 		//敵から自機のベクトル取得
-		Vector3 vecEtoP = playerWorldPos - GetWorldPosition();
+		Vector3 vecEtoP = playerWorldPos - GetLocalPosition();
 		vecEtoP.normalize();
 		//弾の速度
 		const float bulletSpdBase = 2.0f;
