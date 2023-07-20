@@ -35,7 +35,7 @@ void GamePlayScene::Initialize()
 	backGroundSprite = std::make_unique<Sprite>();
 	backGroundSprite->Initialize(backGroundTexture);
 
-	Enemy::EnemyInitialize(particleGraph);
+
 
 
 	skydome = std::make_unique<Model>();
@@ -47,6 +47,8 @@ void GamePlayScene::Initialize()
 
 	playerBulletModel = std::make_unique<Model>();
 	playerBulletModel = Model::CreateModel("PlayerBullet");
+
+	Enemy::EnemyInitialize(particleGraph, playerBulletModel.get());
 
 	//ƒJƒƒ‰‰Šú‰»
 	Vector3 eye(0, 20, -20);	//‹“_À•W
@@ -139,10 +141,10 @@ void GamePlayScene::Update()
 	}
 
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
-		enemy->Update();
+		enemy->Update(player->GetWorldPosition());
 	}
 
-	//€‚ñ‚Å‚é’e‚ğÁ‚·
+	//€‚ñ‚Å‚é“G‚ğÁ‚·
 	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
 		if (!enemy->IsAlive()) {
 			return true;

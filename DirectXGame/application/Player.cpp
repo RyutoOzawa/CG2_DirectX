@@ -249,7 +249,7 @@ void Player::Attack()
 			shotInterval = shotCooltime;
 
 			//弾の速度
-			const float bulletSpdBase = 8.0f;
+			const float bulletSpdBase = 16.0f;
 			Vector3 velocity(0, 0, bulletSpdBase);
 
 			velocity = reticleObj.GetWorldPosition() - Object3d::GetWorldPosition();
@@ -359,18 +359,15 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		posEnemyWorld = Matrix4::transformDivW(posEnemyWorld, matViewProViewPort);
 		Vector2 posEnemyScreen = { posEnemyWorld.x,posEnemyWorld.y };
 		
-		//ImGui::Text("screen Z eyemy %f", posEnemyWorld.z);
-
-		//自機より後ろにいる奴は対象外;
-		if (posEnemyWorld.z < posPlayerScreen.z) {
-			continue;
-		}
-
+		//ImGui::Text("screen Z eyemy %f", posEnemyWorld.z)
 		Circle reticleC{ reticlePosScreen,reticleRadius };
 		Circle enemyC{ posEnemyScreen,1.0f };
 
 		//カメラからレティクルの距離を(敵のワールド×ビュー)のzにする
-		Vector3 posEnemyView = itE->get()->GetLocalPosition() * camera->GetView();
+		Matrix4 matEnemyView = itE->get()->GetMatWorld() * camera->GetViewProjection();
+
+		ImGui::Text("posenemyView %f,%f,%f", matEnemyView.m[3][0], matEnemyView.m[3][1], matEnemyView.m[3][2]);
+
 		//ImGui::Text("enemyView.z %f", posEnemyView.z);
 
 		//レティクルが敵に当たっているなら
@@ -379,17 +376,17 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 
 			//カメラから敵の距離が自機との距離より小さいなら狙わない
-			if (posEnemyView.z < distanceCamera) {
+			if (matEnemyView.m[3][2] < distanceCamera) {
 				continue;
 			}
 
 
-			distanceReticle3D = posEnemyView.z;
+			//distanceReticle3D = matEnemyView.z;
 
 
 			//レティクルが動いているならロックオン
 			if (inputHorizontal != 0 || inputVertical != 0) {
-			//	reticlePosScreen = posEnemyScreen;
+				reticlePosScreen = posEnemyScreen;
 			}
 			
 		}

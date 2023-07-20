@@ -145,6 +145,7 @@
     <ClCompile Include="DirectXGame\engine\2d\PostEffect.cpp" />
     <ClCompile Include="DirectXGame\engine\math\SplineCurve.cpp" />
     <ClCompile Include="DirectXGame\application\GameOverScene.cpp" />
+    <ClCompile Include="DirectXGame\application\EnemyBullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -308,6 +309,7 @@
     <ClInclude Include="DirectXGame\engine\scene\GameSceneManager.h" />
     <ClInclude Include="DirectXGame\engine\scene\SceneFactory.h" />
     <ClInclude Include="DirectXGame\application\GameOverScene.h" />
+    <ClInclude Include="DirectXGame\application\EnemyBullet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
