@@ -46,7 +46,7 @@ void GamePlayScene::Initialize()
 	defaultModel->textureIndex = reimuGraph;
 
 	playerBulletModel = std::make_unique<Model>();
-	playerBulletModel = Model::CreateModel("PlayerBullet");
+	playerBulletModel = Model::CreateModel("BossBarrel");
 
 	Enemy::EnemyInitialize(particleGraph, playerBulletModel.get());
 
