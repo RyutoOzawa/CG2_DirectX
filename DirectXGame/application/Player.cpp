@@ -211,10 +211,10 @@ void Player::Move()
 	rotation.x -= bodyTurnBase * inputVertical;
 
 	if (inputHorizontal == 0) {
-		if (rotation.z > 0) {
+		if (rotation.z > 0 + bodyTurnBase) {
 			rotation.z -= bodyTurnBase * 3.0f;
 		}
-		else if (rotation.z < 0) {
+		else if (rotation.z < 0 - bodyTurnBase) {
 			rotation.z += bodyTurnBase * 3.0f;
 		}
 		else {
@@ -223,15 +223,23 @@ void Player::Move()
 	}
 
 	if (inputVertical == 0) {
-		if (rotation.x > 0) {
+		if (rotation.x > 0 + bodyTurnBase) {
 			rotation.x -= bodyTurnBase * 3.0f;
 		}
-		else if (rotation.x < 0) {
+		else if (rotation.x < 0 - bodyTurnBase) {
 			rotation.x += bodyTurnBase * 3.0f;
 		}
 		else {
 			rotation.x = 0.0f;
 		}
+	}
+
+	if (fabs(rotation.x) > (float)PI /180.0f *15.0f) {
+		rotation.x = -inputVertical * (float)PI / 180.0f * 15.0f;
+	}
+
+	if (fabs(rotation.z) > (float)PI / 180.0f * 15.0f) {
+		rotation.z = -inputHorizontal * (float)PI / 180.0f * 15.0f;
 	}
 
 	//obj3dÇÃçXêV

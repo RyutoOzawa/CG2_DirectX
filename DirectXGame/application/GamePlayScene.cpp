@@ -45,8 +45,11 @@ void GamePlayScene::Initialize()
 	defaultModel = Model::CreateModel();
 	defaultModel->textureIndex = reimuGraph;
 
+	playerModel = std::make_unique<Model>();
+	playerModel = Model::CreateModel("Player");
+
 	playerBulletModel = std::make_unique<Model>();
-	playerBulletModel = Model::CreateModel("BossBarrel");
+	playerBulletModel = Model::CreateModel("PlayerBullet");
 
 	Enemy::EnemyInitialize(particleGraph, playerBulletModel.get());
 
@@ -65,7 +68,7 @@ void GamePlayScene::Initialize()
 
 
 	player = std::make_unique<Player>();
-	player->Initialize(defaultModel.get(), reticleGraph, whiteGraph);
+	player->Initialize(playerModel.get(), reticleGraph, whiteGraph);
 	player->SetBulletModel(playerBulletModel.get());
 
 	//当たり判定テスト用オブジェクト

@@ -50,6 +50,7 @@ public://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Sprite> backGroundSprite = nullptr;
 	std::unique_ptr<Model> skydome = nullptr;
 	std::unique_ptr<Model> defaultModel = nullptr;
+	std::unique_ptr<Model> playerModel = nullptr;
 	std::unique_ptr<Model> playerBulletModel = nullptr;
 	std::unique_ptr<Object3d> skydomeObj = nullptr;
 	std::unique_ptr<FbxModel> model1 = nullptr;
