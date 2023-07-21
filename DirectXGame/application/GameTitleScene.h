@@ -21,7 +21,7 @@ public:
 	void Draw()override;
 
 
-public://ƒƒ“ƒo•Ï”
+private://ƒƒ“ƒo•Ï”
 
 	ImguiManager* imguiManager = nullptr;	//imgui—p
 	Input* input = nullptr;
