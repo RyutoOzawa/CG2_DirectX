@@ -1,6 +1,7 @@
 #pragma once
 #include"Object3d.h"
 #include"Model.h"
+#include<array>
 
 //ボスの行動列挙クラス
 enum class BossAct {
@@ -30,6 +31,10 @@ public:
 private:
 	Model* bodyModel;
 	Model* BarrelModel;
+
+	static const INT32 barrelCount = 4;
+
+	std::array<Object3d,barrelCount> barrelObject;
 
 	BossAct bossAct = BossAct::Move;
 

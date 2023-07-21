@@ -1,4 +1,6 @@
 #include "BossEnemy.h"
+#include"ImguiManager.h"
+#include"Util.h"
 
 void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 {
@@ -13,6 +15,20 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	SetModel(bodyModel);
 
 	//TODO:砲台オブジェクトの初期化、モデルセット
+	for (int i = 0; i < barrelObject.size();i++) {
+		barrelObject[i].Initialize();
+		barrelObject[i].SetModel(barrelModel);
+		barrelObject[i].parent = this;
+
+		//オブジェクトから等間隔に離す
+		Vector3 pos;
+		pos.x = sinf((float)PI / 180.0f * (90.0f * i)) * 10.0f;
+		pos.y = cosf((float)PI / 180.0f * (90.0f * i)) * 10.0f;
+		barrelObject[i].position = pos;
+
+	}
+
+	position = { 0,0,240.0f };
 
 }
 
@@ -51,7 +67,9 @@ void BossEnemy::Draw()
 	Object3d::Draw();
 
 	//TODO: 砲台の描画
-
+	for (Object3d& barrel : barrelObject) {
+		barrel.Draw();
+	}
 }
 
 void BossEnemy::Finalize()
@@ -64,6 +82,15 @@ void BossEnemy::UpdateSpawn()
 
 void BossEnemy::UpdateMove()
 {
+	ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
+	ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
+	ImGui::SliderFloat("z", &position.z, -100.0f, 100.0f);
+
+	Object3d::Update();
+
+	for (Object3d& barrel : barrelObject) {
+		barrel.Update();
+	}
 }
 
 void BossEnemy::UpdateAtkShot()

@@ -1,5 +1,7 @@
 #pragma once
 #include"GameBaseScene.h"
+#include"BossEnemy.h"
+#include"Camera.h"
 
 class TestScene : public GameBaseScene
 {
@@ -14,7 +16,12 @@ public:
 
 private:
 
+	BossEnemy boss;
 
+	std::unique_ptr<Model> bossBodyModel = nullptr;
+	std::unique_ptr<Model> bossBarrelModel = nullptr;
+
+	Camera* camera = nullptr;
 
 };
 

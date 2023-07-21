@@ -48,6 +48,12 @@ void GameTitleScene::Update()
 		sceneManager->ChangeScene("GAMEPLAY");
 	}
 
+	if (input->IsKeyTrigger(DIK_F1))
+	{
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("TESTSCENE");
+	}
+
 	//----------------------ゲーム内ループはここまで---------------------//
 
 
