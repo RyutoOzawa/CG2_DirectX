@@ -5,6 +5,7 @@
 
 ParticleManager Enemy::particleManager{};
 const INT32 Enemy::shotCoolTime = 120;
+Model* Enemy::model = nullptr;
 Model* Enemy::bulletModel = nullptr;
 
 
@@ -13,9 +14,10 @@ void Enemy::EnemyParticleUpdate()
 	particleManager.Update();
 }
 
-void Enemy::EnemyInitialize(uint32_t texIndex, Model* bulletModel)
+void Enemy::EnemyInitialize(uint32_t particleTex,Model* enemyModel, Model* bulletModel)
 {
-	particleManager.Initialize(texIndex);
+	particleManager.Initialize(particleTex);
+	Enemy::model = enemyModel;
 	Enemy::bulletModel = bulletModel;
 }
 
@@ -28,11 +30,14 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 {
 	//object3d‚Ì‰Šú‰»
 	Object3d::Initialize();
+	SetModel(model);
 
 	moveLine.SetPositions(points);
 
-	SetCollider(new SphereCollider({ 2,2,2 }, 3.0f));
+	SetCollider(new SphereCollider({ 0,0,0 }, 9.0f));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+
+	scale = { 3,3,3 };
 
 }
 

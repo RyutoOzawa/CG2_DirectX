@@ -51,7 +51,10 @@ void GamePlayScene::Initialize()
 	playerBulletModel = std::make_unique<Model>();
 	playerBulletModel = Model::CreateModel("PlayerBullet");
 
-	Enemy::EnemyInitialize(particleGraph, playerBulletModel.get());
+	enemyModel = std::make_unique<Model>();
+	enemyModel = Model::CreateModel("ZakoEnemy");
+
+	Enemy::EnemyInitialize(particleGraph, enemyModel.get(), playerBulletModel.get());
 
 	//カメラ初期化
 	Vector3 eye(0, 20, -20);	//視点座標
@@ -308,7 +311,6 @@ void GamePlayScene::EnemySpawn()
 	//敵の生成と初期化
 	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
 	newEnemy->Initialize(enemyMovePoints);
-	newEnemy->SetModel(defaultModel.get());
 	newEnemy->Spawn();
 
 	//リストに登録

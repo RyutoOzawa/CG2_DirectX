@@ -18,7 +18,7 @@ public:
 
 	static void EnemyParticleUpdate();
 
-	static void EnemyInitialize(uint32_t texIndex, Model* bulletModel);
+	static void EnemyInitialize(uint32_t texIndex, Model* enemyModel,Model* bulletModel);
 
 	static void DrawParticle();
 
@@ -55,6 +55,7 @@ private:
 	INT32 shotInterval = 0;
 	static const INT32 shotCoolTime;
 	std::list<std::unique_ptr<EnemyBullet>> bullets;
+	static Model* model;
 	static Model* bulletModel;
 
 

@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXGame\application\BossEnemy.cpp" />
     <ClCompile Include="DirectXGame\application\Enemy.cpp" />
     <ClCompile Include="DirectXGame\application\GamePlayScene.cpp" />
     <ClCompile Include="DirectXGame\application\GameTitleScene.cpp" />
@@ -260,6 +261,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectXGame\application\BossEnemy.h" />
     <ClInclude Include="DirectXGame\application\Enemy.h" />
     <ClInclude Include="DirectXGame\application\GamePlayScene.h" />
     <ClInclude Include="DirectXGame\application\GameTitleScene.h" />

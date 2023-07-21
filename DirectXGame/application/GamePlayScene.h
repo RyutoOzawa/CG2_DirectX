@@ -52,6 +52,7 @@ public://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Model> defaultModel = nullptr;
 	std::unique_ptr<Model> playerModel = nullptr;
 	std::unique_ptr<Model> playerBulletModel = nullptr;
+	std::unique_ptr<Model> enemyModel = nullptr;
 	std::unique_ptr<Object3d> skydomeObj = nullptr;
 	std::unique_ptr<FbxModel> model1 = nullptr;
 	std::unique_ptr<FbxObject3d> object1 = nullptr;
