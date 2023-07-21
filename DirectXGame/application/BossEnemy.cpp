@@ -22,8 +22,9 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 
 		//オブジェクトから等間隔に離す
 		Vector3 pos;
-		pos.x = sinf((float)PI / 180.0f * (90.0f * i)) * 10.0f;
-		pos.y = cosf((float)PI / 180.0f * (90.0f * i)) * 10.0f;
+		barrelRadian[i] = 90.0f * i;
+		pos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
+		pos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
 		barrelObject[i].position = pos;
 
 	}
@@ -88,8 +89,19 @@ void BossEnemy::UpdateMove()
 
 	Object3d::Update();
 
-	for (Object3d& barrel : barrelObject) {
-		barrel.Update();
+	for (size_t i = 0; i < barrelObject.size(); i++) {
+		barrelRadian[i] += 1.0f;
+		if (barrelRadian[i] >= 360.0f) {
+			barrelRadian[i] -= 360.0f;
+		}
+
+		Vector3 pos;
+		pos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
+		pos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
+		barrelObject[i].position = pos;
+
+		barrelObject[i].Update();
+
 	}
 }
 

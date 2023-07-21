@@ -33,8 +33,11 @@ private:
 	Model* BarrelModel;
 
 	static const INT32 barrelCount = 4;
+	const float baseBarrelDistance = 15.0f;
 
 	std::array<Object3d,barrelCount> barrelObject;
+	std::array<Vector3,barrelCount> barrelDistance;
+	std::array<float,barrelCount> barrelRadian;
 
 	BossAct bossAct = BossAct::Move;
 
