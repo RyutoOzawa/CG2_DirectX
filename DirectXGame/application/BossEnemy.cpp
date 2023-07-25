@@ -36,6 +36,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 void BossEnemy::Update(const Vector3& playerPos)
 {
 	static int a = 0;
+	a++;
 
 	//Šeact‚ÅXV•ª‚¯‚é
 	switch (bossAct)
