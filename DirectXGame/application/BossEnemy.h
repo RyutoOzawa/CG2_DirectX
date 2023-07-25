@@ -52,11 +52,11 @@ private:
 	float lissajousTheta = 0.0f;
 	std::vector<Vector3> curvePoints;
 
-	float radianX = 0.0f;
-	float radianY = 0.0f;
+	float radianX = 1.0f;
+	float radianY = 1.0f;
 
-	float amplitudeX = 0.0f;
-	float amplitudeY = 0.0f;
+	float amplitudeX = 20.0f;
+	float amplitudeY = 20.0f;
 
 	//各行動の更新処理
 	void UpdateSpawn();

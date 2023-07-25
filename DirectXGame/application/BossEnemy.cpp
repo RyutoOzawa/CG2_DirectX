@@ -52,15 +52,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	moveBezier.Start(240.0f, true);
 
 	float theta = 0;
-	for (size_t i = 0; i < 360; i++) {
-		theta = (float)i * (float)PI / 180.0f;
-		Vector3 point;
-		point.x = sinf(theta * 6.0f) * 60.0f;
-		point.y = sinf(theta * 7.0f) * 60.0f;
-		point.z = 250.0f;
 
-		curvePoints.push_back(point);
-	}
 
 }
 
@@ -110,6 +102,18 @@ void BossEnemy::DrawDebugLine()
 	moveSpline.DrawCurve({ 0,1,1,1 });
 	moveBezier.DrawCurve({ 1,0,0,1 });
 
+	curvePoints.clear();
+	for (size_t i = 0; i < 360; i++) {
+		Vector3 point;
+		float theta = (float)PI / 180.0f * i;
+
+		point.x = sinf(theta * radianX) * amplitudeX;
+		point.y = sinf(theta * radianY) * amplitudeY;
+		point.z = 250.0f;
+
+		curvePoints.push_back(point);
+	}
+
 	DebugLine::Draw(curvePoints, { 0,1,0,1 });
 }
 
@@ -139,17 +143,34 @@ void BossEnemy::UpdateMove()
 		lissajousTheta -= 360.0f;
 	}
 
-	ImGui::ShowDemoWindow();
 
 	ImGui::SliderFloat("amplitude X", &amplitudeX, 0.0f, 100.0f);
-	ImGui::SliderFloat("amplitude Y", &amplitudeX, 0.0f, 100.0f);
+	ImGui::SliderFloat("amplitude Y", &amplitudeY, 0.0f, 100.0f);
+
+	if (ImGui::Button("X+")) {
+		radianX++;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("X-")) {
+		radianX--;
+	}
+	ImGui::SameLine();
+	ImGui::Text("radX:%1f", radianX);
 
 
-
+	if (ImGui::Button("Y+")) {
+		radianY++;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Y-")) {
+		radianY--;
+	}
+	ImGui::SameLine();
+	ImGui::Text("radY:%1f", radianY);
 
 	Vector3 point;
-	point.x = sinf(lissajousTheta * 6.0f * (float)PI / 180.0f) * 60.0f;
-	point.y = sinf(lissajousTheta * 7.0f * (float)PI / 180.0f) * 60.0f;
+	point.x = sinf(lissajousTheta * radianX * (float)PI / 180.0f) * amplitudeX;
+	point.y = sinf(lissajousTheta * radianY * (float)PI / 180.0f) * amplitudeY;
 	point.z = position.z;
 	position = point;
 

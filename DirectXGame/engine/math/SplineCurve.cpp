@@ -39,15 +39,6 @@ void SplineCurve::Start(float allTime, bool isLoop)
 
 void SplineCurve::Update()
 {
-	//デバッグ用
-	for (size_t i = 0; i < controllPoints.size(); i++) {
-		Vector3 p = controllPoints[i];
-		float fp[3] = { p.x,p.y,p.z };
-		ImGui::SliderFloat3("point[%d]", fp, -100.0f, 100.0f);
-		controllPoints[i].x = fp[0];
-		controllPoints[i].y = fp[1];
-		controllPoints[i].z = fp[2];
-	}
 
 
 	if (!isActive) {
