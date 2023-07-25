@@ -45,18 +45,16 @@ private:
 
 	BossAct bossAct = BossAct::Move;
 
-	SplineCurve moveSpline;
-	BezierCurve moveBezier;
 
 	//曲線
 	float lissajousTheta = 0.0f;
 	std::vector<Vector3> curvePoints;
 
-	float radianX = 1.0f;
-	float radianY = 1.0f;
+	float radianX = 2.0f;
+	float radianY = 3.0f;
 
-	float amplitudeX = 20.0f;
-	float amplitudeY = 20.0f;
+	float amplitudeX = 160.0f;
+	float amplitudeY = 80.0f;
 
 	//各行動の更新処理
 	void UpdateSpawn();

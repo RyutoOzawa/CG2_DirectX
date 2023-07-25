@@ -45,15 +45,6 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 		p += position;
 	}
 
-	moveSpline.SetPositions(movePoints);
-	moveSpline.Start(240.0f, true);
-
-	moveBezier.SetPositions(movePoints);
-	moveBezier.Start(240.0f, true);
-
-	float theta = 0;
-
-
 }
 
 void BossEnemy::Update(const Vector3& playerPos)
@@ -99,9 +90,6 @@ void BossEnemy::Draw()
 void BossEnemy::DrawDebugLine()
 {
 
-	moveSpline.DrawCurve({ 0,1,1,1 });
-	moveBezier.DrawCurve({ 1,0,0,1 });
-
 	curvePoints.clear();
 	for (size_t i = 0; i < 360; i++) {
 		Vector3 point;
@@ -109,7 +97,7 @@ void BossEnemy::DrawDebugLine()
 
 		point.x = sinf(theta * radianX) * amplitudeX;
 		point.y = sinf(theta * radianY) * amplitudeY;
-		point.z = 250.0f;
+		point.z = 240.0f;
 
 		curvePoints.push_back(point);
 	}
@@ -132,20 +120,14 @@ void BossEnemy::UpdateMove()
 	ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
 	ImGui::SliderFloat("z", &position.z, -100.0f, 100.0f);
 
-	moveSpline.Update();
-	position = moveSpline.GetPosition();
-
-	moveBezier.Update();
-	position = moveBezier.GetPosition();
-
 	lissajousTheta++;
 	if (lissajousTheta > 360.0f) {
 		lissajousTheta -= 360.0f;
 	}
 
 
-	ImGui::SliderFloat("amplitude X", &amplitudeX, 0.0f, 100.0f);
-	ImGui::SliderFloat("amplitude Y", &amplitudeY, 0.0f, 100.0f);
+	ImGui::SliderFloat("amplitude X", &amplitudeX, 0.0f, 200.0f);
+	ImGui::SliderFloat("amplitude Y", &amplitudeY, 0.0f, 200.0f);
 
 	if (ImGui::Button("X+")) {
 		radianX++;
