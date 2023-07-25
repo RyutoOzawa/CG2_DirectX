@@ -28,6 +28,8 @@ public:
 	Vector3& operator/=(float s);
 
 
+	static Vector3 Lerp(const Vector3& p1, const Vector3& p2, float t);
+
 };
 
 // 2項演算子オーバーロード

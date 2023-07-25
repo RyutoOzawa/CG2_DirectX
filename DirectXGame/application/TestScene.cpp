@@ -1,4 +1,5 @@
 #include "TestScene.h"
+#include"DebugLine.h"
 
 void TestScene::Initialize()
 {
@@ -31,4 +32,8 @@ void TestScene::Draw()
 	Object3d::BeginDraw(camera);
 
 	boss.Draw();
+
+	DebugLine::BeginDraw(camera);
+
+	boss.DrawDebugLine();
 }

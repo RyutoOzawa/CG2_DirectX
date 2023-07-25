@@ -30,13 +30,30 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	}
 
 	position = { 0,0,240.0f };
+	Vector3 center = { 0,0,0 };
+	Vector3 leftEdge = { -100,0,0 };
+	Vector3 leftTop = { -50,50,0 };
+	Vector3 leftBottom = { -50,-50,0 };
+	Vector3 rightEdge = { 100,0,0 };
+	Vector3 rightTop = { 50,50,0 };
+	Vector3 rightBottom = { 50,-50,0 };
+
+
+	std::vector<Vector3> movePoints{ center,leftTop,leftEdge,leftBottom,center,rightTop,rightEdge,rightBottom };
+	for (Vector3& p : movePoints) {
+		p += position;
+	}
+
+	moveSpline.SetPositions(movePoints);
+	moveSpline.Start(240.0f, true);
+
+	moveBezier.SetPositions(movePoints);
+	moveBezier.Start(240.0f, true);
 
 }
 
 void BossEnemy::Update(const Vector3& playerPos)
 {
-	static int a = 0;
-	a++;
 
 	//äeactÇ≈çXêVï™ÇØÇÈ
 	switch (bossAct)
@@ -75,12 +92,20 @@ void BossEnemy::Draw()
 	}
 }
 
+void BossEnemy::DrawDebugLine()
+{
+
+	moveSpline.DrawCurve({ 0,1,1,1 });
+	moveBezier.DrawCurve({ 1,0,0,1 });
+}
+
 void BossEnemy::Finalize()
 {
 }
 
 void BossEnemy::UpdateSpawn()
 {
+
 }
 
 void BossEnemy::UpdateMove()
@@ -88,6 +113,12 @@ void BossEnemy::UpdateMove()
 	ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
 	ImGui::SliderFloat("z", &position.z, -100.0f, 100.0f);
+
+	moveSpline.Update();
+	position = moveSpline.GetPosition();
+
+	moveBezier.Update();
+	position = moveBezier.GetPosition();
 
 	Object3d::Update();
 

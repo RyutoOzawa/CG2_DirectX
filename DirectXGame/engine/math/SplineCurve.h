@@ -37,6 +37,7 @@ public:
 	/// 補間の開始
 	/// </summary>
 	/// <param name="allTime">補間にかかる時間</param>
+	/// <param name="isLoop">ループするか</param>
 	void Start(float allTime,bool isLoop = false);
 
 	//更新

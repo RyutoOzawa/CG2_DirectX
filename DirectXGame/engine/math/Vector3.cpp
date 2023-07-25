@@ -78,6 +78,11 @@ Vector3& Vector3::operator/=(float s)
 	return*this;
 }
 
+Vector3 Vector3::Lerp(const Vector3& p1, const Vector3& p2, float t)
+{
+	return p1 * (1.0f - t) + p2 * t;
+}
+
 const Vector3 operator+(const Vector3& v1, const Vector3& v2)
 {
 	Vector3 temp(v1);

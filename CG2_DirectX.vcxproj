@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXGame\engine\math\BezierCurve.cpp" />
     <ClCompile Include="DirectXGame\application\BossEnemy.cpp" />
     <ClCompile Include="DirectXGame\application\Enemy.cpp" />
     <ClCompile Include="DirectXGame\application\GamePlayScene.cpp" />
@@ -261,6 +262,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectXGame\engine\math\BezierCurve.h" />
     <ClInclude Include="DirectXGame\application\BossEnemy.h" />
     <ClInclude Include="DirectXGame\application\Enemy.h" />
     <ClInclude Include="DirectXGame\application\GamePlayScene.h" />

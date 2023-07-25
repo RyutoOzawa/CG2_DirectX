@@ -185,24 +185,29 @@ void SplineCurve::DrawCurve(const Vector4& color, const Vector3& offset)
 
 	//Še•âŠÔ‚Å100ŒÂ‚¸‚Âæ‚èo‚·
 	const size_t lineCount = 100;
-	for (size_t j = 0; j < controllPoints.size() - 1; j++) {
+	std::vector<Vector3> point = controllPoints;
+	if (isLoop) {
+		point.push_back(point.front());
+	}
+
+	for (size_t j = 0; j < point.size() - 1; j++) {
 		Vector3 p0, p1, p2, p3;
 		if (j == 0) {
-			p0 = controllPoints[j];
+			p0 = point[j];
 		}
 		else {
-			p0 = controllPoints[j - 1];
+			p0 = point[j - 1];
 		}
 
-		if (j == controllPoints.size() - 2) {
-			p3 = controllPoints.back();
+		if (j == point.size() - 2) {
+			p3 = point.back();
 		}
 		else {
-			p3 = controllPoints[j + 1];
+			p3 = point[j + 1];
 		}
 
-		p1 = controllPoints[j];
-		p2 = controllPoints[j + 1];
+		p1 = point[j];
+		p2 = point[j + 1];
 
 
 

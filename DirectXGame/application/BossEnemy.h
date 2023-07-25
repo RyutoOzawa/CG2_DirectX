@@ -2,6 +2,8 @@
 #include"Object3d.h"
 #include"Model.h"
 #include<array>
+#include"SplineCurve.h"
+#include"BezierCurve.h"
 
 //ボスの行動列挙クラス
 enum class BossAct {
@@ -25,6 +27,8 @@ public:
 	//描画
 	void Draw();
 
+	void DrawDebugLine();
+
 	//終了
 	void Finalize();
 
@@ -40,6 +44,9 @@ private:
 	std::array<float,barrelCount> barrelRadian;
 
 	BossAct bossAct = BossAct::Move;
+
+	SplineCurve moveSpline;
+	BezierCurve moveBezier;
 
 	//各行動の更新処理
 	void UpdateSpawn();
