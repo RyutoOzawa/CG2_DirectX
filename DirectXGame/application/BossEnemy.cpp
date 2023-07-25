@@ -1,6 +1,7 @@
 #include "BossEnemy.h"
 #include"ImguiManager.h"
 #include"Util.h"
+#include"DebugLine.h"
 
 void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 {
@@ -50,6 +51,17 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	moveBezier.SetPositions(movePoints);
 	moveBezier.Start(240.0f, true);
 
+	float theta = 0;
+	for (size_t i = 0; i < 360; i++) {
+		theta = (float)i * (float)PI / 180.0f;
+		Vector3 point;
+		point.x = sinf(theta * 6.0f) * 60.0f;
+		point.y = sinf(theta * 7.0f) * 60.0f;
+		point.z = 250.0f;
+
+		curvePoints.push_back(point);
+	}
+
 }
 
 void BossEnemy::Update(const Vector3& playerPos)
@@ -97,6 +109,8 @@ void BossEnemy::DrawDebugLine()
 
 	moveSpline.DrawCurve({ 0,1,1,1 });
 	moveBezier.DrawCurve({ 1,0,0,1 });
+
+	DebugLine::Draw(curvePoints, { 0,1,0,1 });
 }
 
 void BossEnemy::Finalize()
@@ -119,6 +133,25 @@ void BossEnemy::UpdateMove()
 
 	moveBezier.Update();
 	position = moveBezier.GetPosition();
+
+	lissajousTheta++;
+	if (lissajousTheta > 360.0f) {
+		lissajousTheta -= 360.0f;
+	}
+
+	ImGui::ShowDemoWindow();
+
+	ImGui::SliderFloat("amplitude X", &amplitudeX, 0.0f, 100.0f);
+	ImGui::SliderFloat("amplitude Y", &amplitudeX, 0.0f, 100.0f);
+
+
+
+
+	Vector3 point;
+	point.x = sinf(lissajousTheta * 6.0f * (float)PI / 180.0f) * 60.0f;
+	point.y = sinf(lissajousTheta * 7.0f * (float)PI / 180.0f) * 60.0f;
+	point.z = position.z;
+	position = point;
 
 	Object3d::Update();
 
