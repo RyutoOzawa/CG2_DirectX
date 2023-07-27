@@ -50,3 +50,19 @@ Vector3 ColorCodeRGB(int colorCode)
 
 	return rgb / 256.0f;
 }
+
+Vector3 ConvertScreenToWorld(const Vector2& v, float distanceZ, const Matrix4& matViewProjectionViewPort)
+{
+	Vector3 posNear = { v.x,v.y,0 };
+	Vector3 posFar = { v.x,v.y,1 };
+	Matrix4 matVBVInverse = matViewProjectionViewPort;
+	matVBVInverse.Inverse();
+
+	posNear = Matrix4::transformDivW(posNear, matVBVInverse);
+	posFar = Matrix4::transformDivW(posFar, matVBVInverse);
+	
+	Vector3 direction = posFar - posNear;
+	direction.normalize();
+
+	return posNear + direction * distanceZ;
+}

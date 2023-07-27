@@ -36,4 +36,7 @@ void TestScene::Draw()
 	DebugLine::BeginDraw(camera);
 
 	boss.DrawDebugLine();
+
+	Sprite::BeginDraw();
+	boss.DrawSprite();
 }
