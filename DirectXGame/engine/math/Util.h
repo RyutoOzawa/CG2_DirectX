@@ -11,3 +11,5 @@ Vector3 ColorCodeRGB(int colorCode);
 
 //スクリーン座標からワールド座標に変換
 Vector3 ConvertScreenToWorld(const Vector2& v,float distanceZ, const Matrix4& matViewProjectionViewPort);
+
+float EaseOut(float t);

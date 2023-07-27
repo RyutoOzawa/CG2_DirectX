@@ -69,8 +69,11 @@ private:
 
 	//射撃攻撃
 	static const INT32 shotPosMax = 4;
-	std::array<Vector2, shotPosMax> shotPosScreen;//射撃を行う座標配列(0:leftTop 1:leftBottom 2:rightTop 3:rightBottom)
-
+	std::array<Vector3, shotPosMax> shotPos;//射撃を行う座標配列(0:leftTop 1:leftBottom 2:rightTop 3:rightBottom)
+	EasingData eDataMove;//移動用イージングデータ
+	//移動補完用座標2つ
+	Vector3 movePosBefore{ 0,0,0 };
+	Vector3 movePosAfter{ 0,0,0 };
 
 	//各行動の更新処理
 	void UpdateSpawn();
@@ -86,5 +89,7 @@ private:
 	void InitDeath();
 
 	void ChangeAct(BossAct nextAct);
+
+	
 };
 

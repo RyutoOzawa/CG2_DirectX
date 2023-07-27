@@ -66,3 +66,8 @@ Vector3 ConvertScreenToWorld(const Vector2& v, float distanceZ, const Matrix4& m
 
 	return posNear + direction * distanceZ;
 }
+
+float EaseOut(float t)
+{
+	return 1.0f - powf(1-t,5);
+}

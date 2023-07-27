@@ -78,7 +78,7 @@ void BossEnemy::Update(const Vector3& playerPos)
 	}
 
 	for (size_t i = 0; i < shotPosMax; i++) {
-		ImGui::Text("pos screen[%d] %f:%f", i, shotPosScreen[i].x, shotPosScreen[i].y);
+		ImGui::Text("pos screen[%d] %f:%f", i, shotPos[i].x, shotPos[i].y);
 	}
 
 	//行動時間を減らす
@@ -251,32 +251,35 @@ void BossEnemy::UpdateMove()
 
 void BossEnemy::UpdateAtkShot()
 {
-	//TODO:現在の座標をｽｸﾘｰﾝ座標に変換
-
-	
-	//30f間隔で敵を動かす
+	//射撃ごとの時間
+	INT32 shotTimeOnce = actTime[(INT32)BossAct::AttackShot] / shotPosMax;
+	//何度目の射撃か
 	size_t currentPosIndex = shotPosMax - (INT32)nowActTime / 30 - 1;
-	if (fmodf((float)nowActTime, 30.0f) == 15.0f) {
-		
-		float posZ = position.z;
-		Matrix4 matViewPort;
-		matViewPort.identity();
-		matViewPort.m[0][0] = WindowsAPI::winW / 2.0f;
-		matViewPort.m[1][1] = -(WindowsAPI::winH / 2.0f);
-		matViewPort.m[3][0] = WindowsAPI::winW / 2.0f;
-		matViewPort.m[3][1] = WindowsAPI::winH / 2.0f;
+	if (fmodf((float)nowActTime, (float)shotTimeOnce) == 0.0f) {
+		if (currentPosIndex < 3) {
+			//movePosAfter = shotPos[currentPosIndex];
+			movePosBefore = shotPos[currentPosIndex];
+			movePosAfter = shotPos[currentPosIndex+1];
+		}
+		else {
+			
+		}
 
-		Matrix4 matVBV = Object3d::camera->GetViewProjection() * matViewPort;
-
-		position = ConvertScreenToWorld( shotPosScreen[currentPosIndex],240.0f,matVBV);
-		position.z = posZ;
-		Object3d::Update();
-
+		eDataMove.Start(20.0f);
 	}
 
-	ImGui::Text("time / 30 = %d", shotPosMax- (INT32)nowActTime / 30 - 1);
-	
+	eDataMove.Update();
+	if (eDataMove.GetTimeRate() < 1.0f) {
+		float t = EaseOut(eDataMove.GetTimeRate());
+		position = Vector3::Lerp(movePosBefore, movePosAfter, t);
+	}
 
+	ImGui::Text("current index %d",currentPosIndex);
+	ImGui::Text("before %f,%f,%f",movePosBefore.x,movePosBefore.y,movePosBefore.z);
+	ImGui::Text("after %f,%f,%f", movePosAfter.x, movePosAfter.y, movePosAfter.z);
+
+
+	Object3d::Update();
 
 	//砲台座標は常に親に追従
 	for (size_t i = 0; i < barrelMax; i++) {
@@ -309,18 +312,42 @@ void BossEnemy::InitAtkShot()
 
 	for (size_t i = 0; i < shotPosMax; i++) {
 		//x,y座標のみ決める(スクリーン座標で決めるので)
-		shotPosScreen[i].x = Random(0, randomPosAreaX);
-		shotPosScreen[i].y = Random(0, randomPosAreaY);
+		shotPos[i].x = Random(0, randomPosAreaX);
+		shotPos[i].y = Random(0, randomPosAreaY);
+
+		shotPos[i].x = randomPosAreaX / 2;
+		shotPos[i].y = randomPosAreaY /2;
+	}
+	//オフセット
+	shotPos[1].y += randomPosAreaY;
+	shotPos[2].x += randomPosAreaX;
+	shotPos[3].x += randomPosAreaX;
+	shotPos[3].y += randomPosAreaY;
+	for (size_t i = 0; i < 4; i++) {
+		sp[i].SetPos({ shotPos[i].x,shotPos[i].y });
 	}
 
-	//オフセット
-	shotPosScreen[1].y += randomPosAreaY;
-	shotPosScreen[2].x += randomPosAreaX;
-	shotPosScreen[3].x += randomPosAreaX;
-	shotPosScreen[3].y += randomPosAreaY;
-	for (size_t i = 0; i < 4; i++) {
-		sp[i].SetPos(shotPosScreen[i]);
+	//ｽｸﾘｰﾝ座標をワールドに
+	float posZ = position.z;
+	Matrix4 matViewPort;
+	matViewPort.identity();
+	matViewPort.m[0][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[1][1] = -(WindowsAPI::winH / 2.0f);
+	matViewPort.m[3][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[3][1] = WindowsAPI::winH / 2.0f;
+
+	Matrix4 matVBV = Object3d::camera->GetViewProjection() * matViewPort;
+
+	for (size_t i = 0; i < shotPosMax; i++) {
+		shotPos[i] = ConvertScreenToWorld({ shotPos[i].x,shotPos[i].y }, 240.0f, matVBV);
+		shotPos[i].z = posZ;
 	}
+	
+
+	//現在座標を移動用座標にセット
+	movePosBefore = position;
+	movePosAfter = shotPos.front();
+	eDataMove.Start(20.0f);
 
 	//行動変更
 
