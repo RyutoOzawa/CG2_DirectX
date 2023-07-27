@@ -5,6 +5,7 @@
 #include"SplineCurve.h"
 #include"BezierCurve.h"
 #include"Sprite.h"
+#include"EnemyBullet.h"
 
 //ボスの行動列挙クラス
 enum class BossAct {
@@ -39,13 +40,15 @@ public:
 private:
 	Model* bodyModel;
 	Model* BarrelModel;
+	std::unique_ptr<Model> bulletModel=nullptr;
 
 	//砲台関係
 	static const INT32 barrelMax = 4;
-	const float baseBarrelDistance = 15.0f;
+	const float baseBarrelDistance = 20.0f;
 	std::array<Object3d, barrelMax> barrelObject;
 	std::array<Vector3, barrelMax> barrelDistance;
 	std::array<float, barrelMax> barrelRadian;
+	Vector3 bulletOutOffset{ 0,0,0 };//モデルの弾が出る部分のオフセット
 
 	//ボスの行動管理
 	BossAct bossAct = BossAct::Move;
@@ -58,6 +61,9 @@ private:
 
 	Sprite sp[4];
 
+	//標的(自機)の座標
+	Vector3 targetPos{ 0,0,0 };
+
 	//移動曲線
 	float lissajousTheta = 0.0f;
 	float lThetaSpd = 0.5f;//リサージュ曲線用角速度
@@ -67,7 +73,10 @@ private:
 	float amplitudeX = 160.0f;
 	float amplitudeY = 80.0f;
 
+
+
 	//射撃攻撃
+	std::list < std::unique_ptr<EnemyBullet>> bullets;
 	static const INT32 shotPosMax = 4;
 	std::array<Vector3, shotPosMax> shotPos;//射撃を行う座標配列(0:leftTop 1:leftBottom 2:rightTop 3:rightBottom)
 	EasingData eDataMove;//移動用イージングデータ

@@ -11,9 +11,20 @@ void TestScene::Initialize()
 
 	boss.Initialize(bossBodyModel.get(), bossBarrelModel.get());
 
-	camera = new Camera();
-	camera->Initialize({0,0,0},{0,0,1},{0,1,0});
+	Vector3 eye = { 0,0,0 };
+	Vector3 target = { 0,0,1 };
+	Vector3 up = { 0,1,0 };
 
+	//eye = { 0,100,240 };
+	//target = { 0,0,230 };
+	//up = { 0,1,0 };
+
+	camera = new Camera();
+	camera->Initialize(eye,target,up);
+
+
+
+	Object3d::camera = camera;
 }
 
 void TestScene::Finalize()
@@ -22,7 +33,7 @@ void TestScene::Finalize()
 
 void TestScene::Update()
 {
-	Vector3 pos(0, 0, 0);
+	Vector3 pos(0, 0, 50);
 
 	boss.Update(pos);
 }

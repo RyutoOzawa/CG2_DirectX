@@ -22,7 +22,10 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	Object3d::Initialize();
 	SetModel(bodyModel);
 
-	//TODO:砲台オブジェクトの初期化、モデルセット
+	bulletModel = std::make_unique<Model>();
+	bulletModel = Model::CreateModel("PlayerBullet");
+
+	//砲台オブジェクトの初期化、モデルセット
 	for (int i = 0; i < barrelObject.size(); i++) {
 		barrelObject[i].Initialize();
 		barrelObject[i].SetModel(barrelModel);
@@ -36,6 +39,9 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 		barrelObject[i].position = pos;
 
 	}
+
+	//弾射出座標のオフセットを設定
+	bulletOutOffset = { 0,0,17.0f };
 
 	position = { 0,0,240.0f };
 	Vector3 center = { 0,0,0 };
@@ -62,23 +68,50 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	//行動時間初期化
 	actTime[(INT32)BossAct::Spawn] = 30;
 	actTime[(INT32)BossAct::Move] = 120;
-	actTime[(INT32)BossAct::AttackShot] = 150;
+	actTime[(INT32)BossAct::AttackShot] = 200;
 	actTime[(INT32)BossAct::AttackLaser] = 30;
 	actTime[(INT32)BossAct::Death] = 30;
 
 	ChangeAct(BossAct::Move);
+
+
 }
 
 void BossEnemy::Update(const Vector3& playerPos)
 {
+	targetPos = playerPos;
 
 	//デバッグ用:キーで各行動開始
 	if (Input::GetInstance()->IsKeyTrigger(DIK_1)) {
 		ChangeAct(BossAct::AttackShot);
 	}
 
+	//bossAct = BossAct::Spawn;
+
+	//ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
+	//ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
+	//ImGui::SliderFloat("z", &position.z, -100.0f, 100.0f);
+	//ImGui::SliderFloat("rotY", &rotation.y, -(float)PI,(float) PI);
+	//Object3d::Update();
+
 	for (size_t i = 0; i < shotPosMax; i++) {
 		ImGui::Text("pos screen[%d] %f:%f", i, shotPos[i].x, shotPos[i].y);
+	}
+
+	matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
+
+	//弾の更新
+	//死んでる弾を消す
+	bullets.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
+		if (!bullet->IsAlive()) {
+			return true;
+		}
+		return false;
+		});
+
+
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets) {
+		bullet->Update();
 	}
 
 	//行動時間を減らす
@@ -116,6 +149,9 @@ void BossEnemy::Update(const Vector3& playerPos)
 		switch (bossAct)
 		{
 		case BossAct::Spawn:
+
+
+
 			break;
 		case BossAct::Move:
 
@@ -145,6 +181,9 @@ void BossEnemy::Update(const Vector3& playerPos)
 
 void BossEnemy::Draw()
 {
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets) {
+		bullet->Draw();
+	}
 
 	//モデルの描画
 	Object3d::Draw();
@@ -254,8 +293,8 @@ void BossEnemy::UpdateAtkShot()
 	//射撃ごとの時間
 	INT32 shotTimeOnce = (actTime[(INT32)BossAct::AttackShot]-30) / shotPosMax;
 	//何度目の射撃か
-	size_t currentPosIndex = shotPosMax - (INT32)nowActTime / 30;
-	if (fmodf((float)nowActTime, (float)shotTimeOnce) == 0.0f) {
+	size_t currentPosIndex = shotPosMax - (INT32)nowActTime / shotTimeOnce;
+	if (nowActTime % shotTimeOnce == 0) {
 		if (currentPosIndex < 3) {
 			//movePosAfter = shotPos[currentPosIndex];
 			movePosBefore = shotPos[currentPosIndex];
@@ -268,6 +307,22 @@ void BossEnemy::UpdateAtkShot()
 			eDataMove.Start(30.0f);
 		}
 
+
+	}
+	else if (nowActTime % shotTimeOnce == 22) {
+		//砲台の数だけ行う
+		for (size_t i = 0; i < barrelMax; i++) {
+			
+			Vector3 outPos = Matrix4::transform(bulletOutOffset, barrelObject[i].matWorld) + barrelObject[i].GetWorldPosition();
+			float bulletSpd = 4.0f;
+			Vector3 vel = targetPos - outPos;
+			vel.normalize();
+			vel *= bulletSpd;
+			std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+			newBullet->Initialize(bulletModel.get(), outPos, vel);
+
+			bullets.push_back(std::move(newBullet));
+		}
 
 	}
 
