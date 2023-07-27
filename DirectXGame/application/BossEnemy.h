@@ -74,6 +74,7 @@ private:
 	//移動補完用座標2つ
 	Vector3 movePosBefore{ 0,0,0 };
 	Vector3 movePosAfter{ 0,0,0 };
+	Vector3 lastPosActMove{ 0,0,0 };//移動フェーズの最後の座標
 
 	//各行動の更新処理
 	void UpdateSpawn();

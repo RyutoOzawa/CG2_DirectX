@@ -62,7 +62,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	//行動時間初期化
 	actTime[(INT32)BossAct::Spawn] = 30;
 	actTime[(INT32)BossAct::Move] = 120;
-	actTime[(INT32)BossAct::AttackShot] = 120;
+	actTime[(INT32)BossAct::AttackShot] = 150;
 	actTime[(INT32)BossAct::AttackLaser] = 30;
 	actTime[(INT32)BossAct::Death] = 30;
 
@@ -252,20 +252,23 @@ void BossEnemy::UpdateMove()
 void BossEnemy::UpdateAtkShot()
 {
 	//射撃ごとの時間
-	INT32 shotTimeOnce = actTime[(INT32)BossAct::AttackShot] / shotPosMax;
+	INT32 shotTimeOnce = (actTime[(INT32)BossAct::AttackShot]-30) / shotPosMax;
 	//何度目の射撃か
-	size_t currentPosIndex = shotPosMax - (INT32)nowActTime / 30 - 1;
+	size_t currentPosIndex = shotPosMax - (INT32)nowActTime / 30;
 	if (fmodf((float)nowActTime, (float)shotTimeOnce) == 0.0f) {
 		if (currentPosIndex < 3) {
 			//movePosAfter = shotPos[currentPosIndex];
 			movePosBefore = shotPos[currentPosIndex];
 			movePosAfter = shotPos[currentPosIndex+1];
+			eDataMove.Start(20.0f);
 		}
-		else {
-			
+		else if(currentPosIndex == 3){
+			movePosBefore = shotPos[currentPosIndex];
+			movePosAfter = lastPosActMove;
+			eDataMove.Start(30.0f);
 		}
 
-		eDataMove.Start(20.0f);
+
 	}
 
 	eDataMove.Update();
@@ -346,6 +349,7 @@ void BossEnemy::InitAtkShot()
 
 	//現在座標を移動用座標にセット
 	movePosBefore = position;
+	lastPosActMove = position;
 	movePosAfter = shotPos.front();
 	eDataMove.Start(20.0f);
 
