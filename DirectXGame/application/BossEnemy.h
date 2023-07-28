@@ -37,10 +37,18 @@ public:
 	//終了
 	void Finalize();
 
+	//ボスのスポーン
+	void Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos);
+
 private:
 	Model* bodyModel;
 	Model* BarrelModel;
 	std::unique_ptr<Model> bulletModel=nullptr;
+
+	//命関係
+	bool isAlive = false;
+	INT32 lifeMax = 10;
+	INT32 life = lifeMax;
 
 	//砲台関係
 	static const INT32 barrelMax = 4;
@@ -73,8 +81,6 @@ private:
 	float amplitudeX = 160.0f;
 	float amplitudeY = 80.0f;
 
-
-
 	//射撃攻撃
 	std::list < std::unique_ptr<EnemyBullet>> bullets;
 	static const INT32 shotPosMax = 4;
@@ -84,6 +90,9 @@ private:
 	Vector3 movePosBefore{ 0,0,0 };
 	Vector3 movePosAfter{ 0,0,0 };
 	Vector3 lastPosActMove{ 0,0,0 };//移動フェーズの最後の座標
+
+	//生成処理関係
+	Vector3 spawnPosOffsetCamera;//スポーンするときのカメラからの距離(目玉)
 
 	//各行動の更新処理
 	void UpdateSpawn();

@@ -203,24 +203,39 @@ void BossEnemy::DrawSprite()
 
 void BossEnemy::DrawDebugLine()
 {
+	if (bossAct == BossAct::Move) {
 
-	curvePoints.clear();
-	for (size_t i = 0; i < 360; i++) {
-		Vector3 point;
-		float theta = (float)PI / 180.0f * i;
+		curvePoints.clear();
+		for (size_t i = 0; i < 360; i++) {
+			Vector3 point;
+			float theta = (float)PI / 180.0f * i;
 
-		point.x = sinf(theta * radianX) * amplitudeX;
-		point.y = sinf(theta * radianY) * amplitudeY;
-		point.z = 240.0f;
+			point.x = sinf(theta * radianX) * amplitudeX;
+			point.y = sinf(theta * radianY) * amplitudeY;
+			point.z = 240.0f;
 
-		curvePoints.push_back(point);
+			curvePoints.push_back(point);
+		}
+
+		DebugLine::Draw(curvePoints, { 0,1,0,1 });
+
 	}
-
-	DebugLine::Draw(curvePoints, { 0,1,0,1 });
 }
 
 void BossEnemy::Finalize()
 {
+}
+
+void BossEnemy::Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos)
+{
+	//目玉の移動開始地点を設定(カメラ行列と掛ける)
+	Vector3 posFirst = Matrix4::transform( spawnPos, cameraMatWorld);
+	//生存フラグとライフの設定
+	isAlive = true;
+	life = lifeMax;
+
+	//フェーズをスポーンにする
+	ChangeAct(BossAct::Spawn);
 }
 
 void BossEnemy::UpdateSpawn()
@@ -356,6 +371,8 @@ void BossEnemy::UpdateDeath()
 
 void BossEnemy::InitSpawn()
 {
+	
+
 }
 
 void BossEnemy::InitMove()

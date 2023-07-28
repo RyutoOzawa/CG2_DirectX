@@ -113,7 +113,7 @@ void Enemy::OnCollision(const CollisionInfo& info)
 		acc.y = Random(-baseAcc, baseAcc);
 		acc.z = Random(-baseAcc, baseAcc);
 
-		particleManager.Add(30, GetWorldPosition(), vel, acc, 1.0f, 0.0f);
+		particleManager.Add(30, GetWorldPosition(), vel, acc, 10.0f, 0.0f);
 	}
 
 }
