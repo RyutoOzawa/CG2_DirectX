@@ -22,7 +22,7 @@ class BossEnemy : public Object3d
 public: 
 
 	//初期化
-	void Initialize(Model* bodyModel,Model* barrelModel);
+	void Initialize(Model* bodyModel,Model* barrelModel,Object3d* parent);
 
 	//更新
 	void Update(const Vector3& playerPos);
@@ -57,6 +57,9 @@ private:
 	std::array<Vector3, barrelMax> barrelDistance;
 	std::array<float, barrelMax> barrelRadian;
 	Vector3 bulletOutOffset{ 0,0,0 };//モデルの弾が出る部分のオフセット
+	std::array<EasingData,barrelMax> eDataBarrelMove;//バレルの移動をイージングにするよう
+
+	//イベントシーン制御用
 
 	//ボスの行動管理
 	BossAct bossAct = BossAct::Move;

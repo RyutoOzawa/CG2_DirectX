@@ -21,6 +21,8 @@ private:
 	std::unique_ptr<Model> bossBodyModel = nullptr;
 	std::unique_ptr<Model> bossBarrelModel = nullptr;
 
+	Object3d objRailDummy;
+
 	Camera* camera = nullptr;
 
 };

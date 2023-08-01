@@ -9,7 +9,7 @@ void TestScene::Initialize()
 	bossBarrelModel = std::make_unique<Model>();
 	bossBarrelModel = Model::CreateModel("BossBarrel");
 
-	boss.Initialize(bossBodyModel.get(), bossBarrelModel.get());
+
 
 	Vector3 eye = { 0,0,0 };
 	Vector3 target = { 0,0,1 };
@@ -22,7 +22,10 @@ void TestScene::Initialize()
 	camera = new Camera();
 	camera->Initialize(eye,target,up);
 
+	objRailDummy.Initialize();
+	objRailDummy.matWorld.identity();
 
+	boss.Initialize(bossBodyModel.get(), bossBarrelModel.get(),&objRailDummy);
 
 	Object3d::camera = camera;
 }

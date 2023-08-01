@@ -4,7 +4,7 @@
 #include"DebugLine.h"
 #include"Input.h"
 
-void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
+void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* parent)
 {
 	//モデルのnullチェックとメンバへのセット
 	assert(bodyModel);
@@ -21,6 +21,8 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	//本体オブジェクト(継承元)の初期化
 	Object3d::Initialize();
 	SetModel(bodyModel);
+
+	this->parent = parent;
 
 	bulletModel = std::make_unique<Model>();
 	bulletModel = Model::CreateModel("PlayerBullet");
@@ -66,13 +68,13 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel)
 	moveCooltime[(INT32)BossAct::Death] = 30;
 
 	//行動時間初期化
-	actTime[(INT32)BossAct::Spawn] = 30;
+	actTime[(INT32)BossAct::Spawn] = 60;
 	actTime[(INT32)BossAct::Move] = 120;
 	actTime[(INT32)BossAct::AttackShot] = 200;
 	actTime[(INT32)BossAct::AttackLaser] = 30;
 	actTime[(INT32)BossAct::Death] = 30;
 
-	ChangeAct(BossAct::Move);
+	ChangeAct(BossAct::Spawn);
 
 
 }
@@ -240,6 +242,17 @@ void BossEnemy::Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos)
 
 void BossEnemy::UpdateSpawn()
 {
+	eDataMove.Update();
+
+	//最初の移動
+	Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, EaseOut(eDataMove.GetTimeRate()));
+
+	position = pos;
+	Object3d::Update();
+
+	if (eDataMove.GetTimeRate() >= 1.0f) {
+		ChangeAct(BossAct::Move);
+	}
 
 }
 
@@ -371,7 +384,20 @@ void BossEnemy::UpdateDeath()
 
 void BossEnemy::InitSpawn()
 {
-	
+	//親(カメラのワールド情報)がセットされてないならreturn
+	if (parent == nullptr) {
+		return;
+	}
+
+
+	//ボスのスポーン地点はカメラの後ろ
+	spawnPosOffsetCamera = Matrix4::transform({ 0,0,-50 }, parent->matWorld);
+
+	//移動用イージングを開始
+	movePosBefore = spawnPosOffsetCamera;
+	movePosAfter = Matrix4::transform({ 0,0,240 }, parent->matWorld);
+	eDataMove.Start((float)actTime[(INT32)BossAct::Spawn]);
+
 
 }
 
