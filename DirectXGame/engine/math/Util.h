@@ -1,4 +1,4 @@
-#define PI 3.1415926
+#define PI 3.1415926f
 #include"Vector2.h"
 #include"Vector3.h"
 #include"Matrix4.h"
@@ -13,3 +13,5 @@ Vector3 ColorCodeRGB(int colorCode);
 Vector3 ConvertScreenToWorld(const Vector2& v,float distanceZ, const Matrix4& matViewProjectionViewPort);
 
 float EaseOut(float t);
+
+float Lerp(float before, float after, float t);

@@ -57,7 +57,9 @@ private:
 	std::array<Vector3, barrelMax> barrelDistance;
 	std::array<float, barrelMax> barrelRadian;
 	Vector3 bulletOutOffset{ 0,0,0 };//モデルの弾が出る部分のオフセット
-	std::array<EasingData,barrelMax> eDataBarrelMove;//バレルの移動をイージングにするよう
+	std::array<EasingData,barrelMax> eDataBarrelMove;	//バレルの移動をイージングにするよう
+	std::array<Vector3,barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
+	std::array<Vector3,barrelMax> movePosAfterBarrel;	//バレルの移動後座標
 
 	//イベントシーン制御用
 
@@ -69,6 +71,8 @@ private:
 
 	INT32 nowActTime = 0;		//現在行動の残り時間
 	INT32 moveInterval = 0;		//次行動に移るまでの時間
+
+	int count = 0;
 
 	Sprite sp[4];
 

@@ -71,3 +71,8 @@ float EaseOut(float t)
 {
 	return 1.0f - powf(1-t,5);
 }
+
+float Lerp(float before, float after, float t)
+{
+	return before * (1.0f - t) + after * t;
+}

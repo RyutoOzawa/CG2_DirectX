@@ -68,7 +68,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* paren
 	moveCooltime[(INT32)BossAct::Death] = 30;
 
 	//行動時間初期化
-	actTime[(INT32)BossAct::Spawn] = 60;
+	actTime[(INT32)BossAct::Spawn] = 300;
 	actTime[(INT32)BossAct::Move] = 120;
 	actTime[(INT32)BossAct::AttackShot] = 200;
 	actTime[(INT32)BossAct::AttackLaser] = 30;
@@ -100,7 +100,7 @@ void BossEnemy::Update(const Vector3& playerPos)
 		ImGui::Text("pos screen[%d] %f:%f", i, shotPos[i].x, shotPos[i].y);
 	}
 
-	matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
+	//matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
 
 	//弾の更新
 	//死んでる弾を消す
@@ -244,13 +244,83 @@ void BossEnemy::UpdateSpawn()
 {
 	eDataMove.Update();
 
-	//最初の移動
-	Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, EaseOut(eDataMove.GetTimeRate()));
+	//イージングの進み具合を取得(計算しやすくするため100倍)
+	INT32 easeProgress = (INT32)(eDataMove.GetTimeRate() * 100.0f);
 
-	position = pos;
+	ImGui::Text("progress %d", easeProgress);
+
+
+
+	//最初の40%で砲台で砲台を動かす(10%ずつ)
+	if (easeProgress < 40) {
+		//10%ごとにイージングを開始していく
+		ImGui::Text("mod %d", easeProgress % 10);
+		ImGui::Text("index %d",easeProgress / 10);
+		ImGui::Text("count %d", count);
+
+		position = movePosBefore;
+		matRotation.identity();
+		//rotation.y = -PI;
+
+		if (easeProgress % 10 == 0) {
+			size_t index = (size_t)easeProgress / 10;	
+			eDataBarrelMove[index].Start(actTime[(INT32)BossAct::Spawn] / 10.0f);
+			count++;
+
+			if (index == 3) {
+				int a = 0;
+				a++;
+			}
+		}
+
+
+		for (size_t i = 0; i < barrelMax; i++) {
+		eDataBarrelMove[i].Update();
+		Vector3 pos = Vector3::Lerp(movePosBeforeBarrel[i], movePosAfterBarrel[i], eDataBarrelMove[i].GetTimeRate());
+		barrelObject[i].position = pos;
+		}
+
+	}
+	else if (easeProgress < 80) {
+		//最初の移動
+		float t = (easeProgress - 40.0f) /40.0f;
+
+		Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, EaseOut(t));
+		position = pos;
+	}
+	else {
+		//親を戻してzをリセット
+		for (size_t i = 0; i < barrelMax; i++) {
+			barrelObject[i].parent = this;
+			Vector3 pos{};
+			barrelRadian[i] = 90.0f * i;
+			pos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
+			pos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
+			barrelObject[i].position = pos;
+		}
+
+		//回転
+		float t = (easeProgress - 80) / 20.0f;
+		rotation.y = Lerp(0, PI, EaseOut(t));
+
+	}
+
+
+
+	//親と砲台オブジェクト更新
 	Object3d::Update();
+	for (size_t i = 0; i < barrelMax;i++) {
 
-	if (eDataMove.GetTimeRate() >= 1.0f) {
+
+
+		barrelObject[i].Update();
+
+		ImGui::Text("pos %f,%f,%f", barrelObject[i].position.x, barrelObject[i].position.y, barrelObject[i].position.z);
+	}
+
+
+
+	if (easeProgress >= 100.0f) {
 		ChangeAct(BossAct::Move);
 	}
 
@@ -398,6 +468,27 @@ void BossEnemy::InitSpawn()
 	movePosAfter = Matrix4::transform({ 0,0,240 }, parent->matWorld);
 	eDataMove.Start((float)actTime[(INT32)BossAct::Spawn]);
 
+	//砲台オブジェクトも親は一旦カメラobjにする(移動終わったら目玉objに戻す)
+	for (size_t i = 0; i < barrelMax;i++) {
+		barrelObject[i].parent = parent;
+		//Zは目玉と同じ
+		//x,yは移動後とつじつまを合わせる
+		//オブジェクトから等間隔に離す
+		Vector3 pos;
+		barrelRadian[i] = 90.0f * i;
+		pos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
+		pos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * baseBarrelDistance;
+		pos.z = movePosBefore.z;
+		movePosBeforeBarrel[i] = pos;
+		pos.z = movePosAfter.z;
+		movePosAfterBarrel[i] = pos;
+
+		barrelObject[i].position = pos;
+		//barrelObject[i].rotation.y = -PI;
+		barrelObject[i].Update();
+	}
+
+	eDataBarrelMove[0].Start(actTime[(INT32)BossAct::Spawn] / 10.0f);
 
 }
 
