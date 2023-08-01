@@ -27,10 +27,17 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	camera->Initialize(eye, target, up);
 
 	Vector3 start{ 0,0,0 };
-	Vector3 p1{ 20,20,50 };
-	Vector3 p2{ 0,-10,100 };
+
+	//左右
+	Vector3 p1{  20,0,50 };
+	Vector3 p2{ -20,0,100 };
+
+	//回転
 	Vector3 p3{ -20,0,150 };
-	Vector3 p4{ 0,-20,250 };
+	Vector3 p4{ -20,0,150 };
+	Vector3 p5{ -20,0,150 };
+	Vector3 p6{ -20,0,150 };
+	Vector3 p7{ 0,-20,250 };
 	Vector3 end{ 0,0,400 };
 
 	std::vector<Vector3> c{ start,p1,p2,p3,p4,end };
@@ -86,7 +93,7 @@ void RailCamera::Update()
 
 	world->Update();
 
-	camera->eye = { world->matWorld.m[3][0],world->matWorld.m[3][1],world->matWorld.m[3][2]};
+	camera->eye = { world->matWorld.m[3][0],world->matWorld.m[3][1],world->matWorld.m[3][2] };
 	//ワールド前方ベクトル
 	Vector3 forward(0, 0, 1);
 	//レールカメラの回転を反映
@@ -112,5 +119,5 @@ void RailCamera::Update()
 
 void RailCamera::DrawMoveLine(const Vector4& color)
 {
-	spline.DrawCurve(color,{0,-20,100});
+	spline.DrawCurve(color, { 0,-20,100 });
 }

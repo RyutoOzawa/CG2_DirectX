@@ -88,7 +88,6 @@ void BossEnemy::Update(const Vector3& playerPos)
 		ChangeAct(BossAct::AttackShot);
 	}
 
-	//bossAct = BossAct::Spawn;
 
 	//ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
 	//ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
@@ -100,7 +99,7 @@ void BossEnemy::Update(const Vector3& playerPos)
 		ImGui::Text("pos screen[%d] %f:%f", i, shotPos[i].x, shotPos[i].y);
 	}
 
-	//matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
+
 
 	//’e‚ÌXV
 	//€‚ñ‚Å‚é’e‚ğÁ‚·
@@ -368,6 +367,8 @@ void BossEnemy::UpdateMove()
 	point.z = position.z;
 	position = point;
 
+	matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
+
 	Object3d::Update();
 
 	for (size_t i = 0; i < barrelObject.size(); i++) {
@@ -434,7 +435,7 @@ void BossEnemy::UpdateAtkShot()
 	ImGui::Text("before %f,%f,%f",movePosBefore.x,movePosBefore.y,movePosBefore.z);
 	ImGui::Text("after %f,%f,%f", movePosAfter.x, movePosAfter.y, movePosAfter.z);
 
-
+	matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
 	Object3d::Update();
 
 	//–C‘äÀ•W‚Íí‚Ée‚É’Ç]
