@@ -41,13 +41,16 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 
 }
 
-void Enemy::Update(const Vector3& playerWorldPos)
+void Enemy::Update(const Vector3& playerWorldPos, const Matrix4& cameraMat)
 {
 
 
 	moveLine.Update();
 
-	position = moveLine.GetPosition();
+	//‹Èü‚ÉƒJƒƒ‰s—ñ‚ğŠ|‚¯‚ÄƒJƒƒ‰Šî€‚É‚·‚é
+	Vector3 cameraPos = { cameraMat.m[3][0],cameraMat.m[3][1] ,cameraMat.m[3][2] };
+
+	position = Matrix4::transform( moveLine.GetPosition(),cameraMat) + cameraPos;
 
 	Attack(playerWorldPos);
 

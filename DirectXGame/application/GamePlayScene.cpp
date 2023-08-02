@@ -147,7 +147,7 @@ void GamePlayScene::Update()
 	}
 
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
-		enemy->Update(player->GetWorldPosition());
+		enemy->Update(player->GetWorldPosition(),railCamera->GetObject3d()->matWorld);
 	}
 
 	//€‚ñ‚Å‚é“G‚ğÁ‚·
@@ -305,7 +305,7 @@ void GamePlayScene::EnemySpawn()
 
 	//‹Èü‚ğƒJƒƒ‰Šî€‚É
 	for (auto& p : enemyMovePoints) {
-		p += railCamera->GetObject3d()->GetWorldPosition();
+		//p += railCamera->GetObject3d()->GetWorldPosition();
 	}
 
 	//“G‚Ì¶¬‚Æ‰Šú‰»

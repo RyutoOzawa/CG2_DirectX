@@ -28,7 +28,7 @@ public:
 	/// <param name="points">移動用スプライン曲線の座標配列</param>
 	void Initialize(std::vector<Vector3>& points);
 
-	void Update(const Vector3& playerWorldPos);
+	void Update(const Vector3& playerWorldPos,const Matrix4& cameraMat);
 
 	
 	void Draw();
