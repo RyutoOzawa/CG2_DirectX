@@ -6,6 +6,7 @@
 #include"Model.h"
 #include"Camera.h"
 #include<forward_list>
+#include"Texture.h"
 
 class ParticleManager
 {
@@ -52,7 +53,7 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vbView;	//頂点バッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffB0;	//定数バッファマップ（行列用）
-	uint32_t textureIndex = 0;	//テクスチャ番号
+	TextureData* texData = nullptr;
 
 	ConstBufferData* constMap = nullptr;
 	Vector3 position;
@@ -67,13 +68,13 @@ public:
 	static void StaticInitialize(ReDirectX* directX_);
 	static void BeginDraw(Camera* camera);
 
-	void Initialize(uint32_t texIndex);
+	void Initialize(TextureData* texData);
 
 	void Update();
 
 	void Draw();
 
-	void SetTexture(uint32_t texIndex) { textureIndex = texIndex; }
+	void SetTexture(TextureData* texData) { this->texData = texData; }
 
 	/// <summary>
 	/// パーティクルの追加

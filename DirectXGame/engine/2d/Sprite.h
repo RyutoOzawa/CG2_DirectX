@@ -45,7 +45,7 @@ public://静的メンバ関数
 
 	static void BeginDraw();
 
-	static void SetTextureCommand(uint32_t index);
+
 
 	//スプライト用パイプラインステートとルートシグネチャの生成
 	static void CreatePipeline2D();
@@ -57,8 +57,8 @@ protected:	//メンバ変数
 	D3D12_VERTEX_BUFFER_VIEW vbView{};	//頂点バッファビュー
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff = nullptr;	//定数バッファ
-	uint32_t textureIndex = 0;	//テクスチャに割り当てられている番号
 	ConstBufferData* constMap = nullptr;//定数バッファ構造体
+	TextureData* texData = nullptr;
 
 	Matrix4 matWorld{};	//ワールド変換行列
 	float rotation = 0.0f;	//回転角
@@ -76,9 +76,10 @@ protected:	//メンバ変数
 public: //メンバ関数
 
 	Sprite();
-	Sprite(uint32_t texIdnex,Vector2 pos,Vector2 size_,Vector4 color_,Vector2 anchorP,bool isFlipX_,bool isFlipY_);
+	Sprite(TextureData* texData,Vector2 pos,Vector2 size_,Vector4 color_,Vector2 anchorP,bool isFlipX_,bool isFlipY_);
 
-	void Initialize(uint32_t textureNum = UINT32_MAX);
+	void Initialize(std::string filename);
+	void Initialize(TextureData* texData);
 
 	void Draw();
 	void SetColor(const Vector4& color_) { color = color_; }
@@ -89,7 +90,7 @@ public: //メンバ関数
 	void SetFlipX(bool flipX) { isFlipX = flipX; }
 	void SetFlipY(bool flipY) { isFlipY = flipY; }
 	void SetInvisible(bool flag) { isInvisible = flag; }
-	void SetTextureNum(uint32_t index) { textureIndex = index; }
+	void SetTexture(TextureData* data) { texData = data; }
 	void SetTextureLeftTop(const Vector2& leftTop) { textureLeftTop = leftTop; }
 	void SetTextureSize(const Vector2& size) { textureSize = size; }
 
@@ -101,7 +102,6 @@ public: //メンバ関数
 	bool GetIsFlipX()const { return isFlipX; }
 	bool GetIsFlipY()const { return isFlipY; }
 	bool GetIsInvisible()const { return isInvisible; }
-	uint32_t GetTextureNum()const { return textureIndex; }
 	const Vector2 GetTextureLeftTop()const { return textureLeftTop; }
 	const Vector2 GetTextureSize()const { return textureSize; }
 
@@ -111,6 +111,6 @@ private:
 	//テクスチャサイズをイメージサイズに合わせる
 	void AdjustTextureSize();
 
-
+	void SetTextureCommand();
 };
 

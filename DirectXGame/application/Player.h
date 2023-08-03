@@ -15,7 +15,7 @@ class Player :public Object3d
 public:	//メンバ関数
 
 	//初期化
-	void Initialize(Model* model,uint32_t reticleTexture,uint32_t healthTexture);
+	void Initialize(Model* model,TextureData* reticleTexture,TextureData* healthTexture);
 
 	//自機生成処理
 	void Spawn();
@@ -65,6 +65,9 @@ private://メンバ変数
 	//レティクル関連
 	Object3d reticleObj;
 	Sprite reticleSprite;
+
+	//生成演出用の物
+	std::unique_ptr<Model> haloModel = nullptr;
 
 	//HP関連
 	Sprite healthSprite;

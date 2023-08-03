@@ -4,26 +4,53 @@
 #include<wrl.h>
 #include<array>
 #include<string>
+#include<map>
+
+
+
+//テクスチャ構造体を値
+struct TextureData {
+	//テクスチャリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+	//SRVハンドル(CPU)
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuSRVHandle;
+	//SRVハンドル(GPU)
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuSRVHandle;
+
+};
+
 
 class Texture {
+
 public:
 
-	static std::string defaultBaseDirectory;
-	static const size_t spriteSRVCount = 2048;
-	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;			//デスクリプタヒープ
-	static std::array< Microsoft::WRL::ComPtr<ID3D12Resource>, spriteSRVCount >texBuffuers;	//テクスチャバッファ
-	static D3D12_RESOURCE_DESC textureResourceDesc;
-	static ID3D12Device* dev;
+
+private:
+
+	Texture() = default;
+	~Texture() = default;
+	Texture(const Texture&) = delete;
+	Texture& operator=(const Texture&) = delete;
+
+
+ static std::string defaultBaseDirectory ;
+ static const size_t spriteSRVCount = 2048;
+ static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;			//デスクリプタヒープ
+ static std::map<std::string,TextureData> textures;	//テクスチャバッファ
+ static ID3D12Device* dev;
+
 
 
 	
 public:
-	static uint32_t LoadTexture(std::string filename = "NULL");
-	static void Initialize(ID3D12Device* device);
-	static void CreateSRV(ID3D12Resource* texBuff, D3D12_CPU_DESCRIPTOR_HANDLE& srvHandle);
 
-	//指定番号のテクスチャバッファを取得
-	static ID3D12Resource* GetTextureBuffer(uint32_t index) { return texBuffuers[index].Get(); }
+	static Texture* GetInstance();
+
+	static TextureData* LoadTexture(std::string filename = "NULL");
+	static void Initialize(ID3D12Device* device);
+
+	static ID3D12DescriptorHeap* GetDescHeap() { return descHeap.Get(); }
+
 
 };
 

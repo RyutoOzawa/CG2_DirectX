@@ -35,9 +35,11 @@ void Model::Create(const std::string& modelname)
 
 	if (modelname == MODEL_CUBE) {
 		CreateModelCube();
+		texData = Texture::LoadTexture();
 	}
 	else if (modelname == MODEL_PLANE) {
 		CreateModelPlane();
+		texData = Texture::LoadTexture();
 	}
 	else {
 		CreateModelLoadFile(modelname);
@@ -136,7 +138,7 @@ void Model::LoadTexture(const std::string& directoryPath, const std::string& fil
 	//wchar_t wfilepath[128];
 	//int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, wfilepath, _countof(wfilepath));
 
-	textureIndex = Texture::LoadTexture(filePath);
+	texData = Texture::LoadTexture(filePath);
 }
 
 void Model::LoadMaterial(const std::string& directoryPath, const std::string& filename)
@@ -497,13 +499,10 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->IASetIndexBuffer(&ibView);
 
 	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::GetDescHeap()};
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
-	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvGpuHandle.ptr += incrementSize * textureIndex;
-	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	cmdList->SetGraphicsRootDescriptorTable(1, texData->gpuSRVHandle);
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);

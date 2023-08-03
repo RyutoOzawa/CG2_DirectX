@@ -48,12 +48,15 @@ private://ÉÅÉìÉoïœêî
 	Input* input = nullptr;
 	CollisionManager* collisionManager = nullptr;
 
-	uint32_t backGroundTexture = 0;
-	uint32_t marioGraph = 0;
-	uint32_t reimuGraph = 0;
-	uint32_t particleGraph = 0;
-	uint32_t whiteGraph = 0;
-	uint32_t reticleGraph = 0;
+	TextureData* backGroundTexture = nullptr;
+	TextureData* marioGraph = nullptr;
+	TextureData* reimuGraph = nullptr;
+	TextureData* particleGraph = nullptr;
+	TextureData* whiteGraph = nullptr;
+	TextureData* reticleGraph = nullptr;
+	TextureData* testTex1 = nullptr;
+	TextureData* testTex2 = nullptr;
+	TextureData* testTex3 = nullptr;
 
 
 	std::unique_ptr<Sprite> backGroundSprite = nullptr;

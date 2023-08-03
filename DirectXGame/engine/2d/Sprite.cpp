@@ -46,18 +46,14 @@ void Sprite::BeginDraw()
 
 }
 
-void Sprite::SetTextureCommand(uint32_t index)
+void Sprite::SetTextureCommand()
 {
 	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::GetDescHeap()};
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	//SRVヒープの先頭ハンドル取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
-	UINT incrementSize =device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvGpuHandle.ptr += incrementSize * index;
 	//SRVのハンドルをルートパラメータ1番に設定
-	cmdList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	cmdList->SetGraphicsRootDescriptorTable(1, texData->gpuSRVHandle);
 }
 
 void Sprite::CreatePipeline2D()
@@ -211,22 +207,27 @@ Sprite::Sprite()
 {
 }
 
-Sprite::Sprite(uint32_t texIdnex, Vector2 pos, Vector2 size_, Vector4 color_, Vector2 anchorP, bool isFlipX_, bool isFlipY_):
-textureIndex(texIdnex),position(pos),color(color_),anchorPoint(anchorP),size(size_),isFlipX(isFlipX_),isFlipY(isFlipY_)
+Sprite::Sprite(TextureData* texData, Vector2 pos, Vector2 size_, Vector4 color_, Vector2 anchorP, bool isFlipX_, bool isFlipY_):
+texData(texData),position(pos),color(color_),anchorPoint(anchorP),size(size_),isFlipX(isFlipX_),isFlipY(isFlipY_)
 
 {
 }
 
-void Sprite::Initialize(uint32_t textureNum)
+void Sprite::Initialize(std::string filename)
 {
-	HRESULT result{  };
+	texData = Texture::LoadTexture(filename);
 
-	if (textureNum != UINT32_MAX) {
-		textureIndex = textureNum;
-		AdjustTextureSize();
-		//テクスチャサイズをスプライトのサイズに適用
-		size = textureSize;
-	}
+	Initialize(texData);
+}
+
+void Sprite::Initialize(TextureData* texData)
+{
+	this->texData = texData;
+
+	HRESULT result{  };
+	AdjustTextureSize();
+	//テクスチャサイズをスプライトのサイズに適用
+	size = textureSize;
 
 	//頂点データ
 	VertexPosUv vertices_[] = {
@@ -328,7 +329,7 @@ void Sprite::Draw()
 	}
 
 	//テクスチャの設定コマンド
-	SetTextureCommand(textureIndex);
+	SetTextureCommand();
 
 	Update();
 
@@ -368,7 +369,7 @@ void Sprite::Update()
 	vertices[RT].pos = { right,top,0.0f };
 
 	//テクスチャバッファ取得
-	ID3D12Resource* textureBuffer = Texture::GetTextureBuffer(textureIndex);
+	ID3D12Resource* textureBuffer = texData->resource.Get();
 	//指定番号のテクスチャが読み込み済みなら
 	if (textureBuffer) {
 		//テクスチャ情報取得
@@ -411,7 +412,7 @@ void Sprite::Update()
 }
 
 void Sprite::AdjustTextureSize() {
-	ID3D12Resource* textureBuffer = Texture::GetTextureBuffer(textureIndex);
+	ID3D12Resource* textureBuffer = texData->resource.Get();
 	assert(textureBuffer);
 
 	//テクスチャ情報取得

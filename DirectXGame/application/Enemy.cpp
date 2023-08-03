@@ -14,9 +14,9 @@ void Enemy::EnemyParticleUpdate()
 	particleManager.Update();
 }
 
-void Enemy::EnemyInitialize(uint32_t particleTex,Model* enemyModel, Model* bulletModel)
+void Enemy::EnemyInitialize(TextureData* texData,Model* enemyModel, Model* bulletModel)
 {
-	particleManager.Initialize(particleTex);
+	particleManager.Initialize(texData);
 	Enemy::model = enemyModel;
 	Enemy::bulletModel = bulletModel;
 }

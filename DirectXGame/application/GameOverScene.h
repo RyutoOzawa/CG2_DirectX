@@ -19,7 +19,7 @@ public:
 
 private:
 
-	uint32_t gameoverTexture = 0;
+	TextureData* gameoverTexture = 0;
 	Sprite* gameoverSprite = nullptr;
 };
 

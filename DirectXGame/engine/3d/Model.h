@@ -6,11 +6,14 @@
 #include<d3d12.h>
 #include<wrl.h>
 #include<memory>
+#include"Texture.h"
 
 #define MODEL_CUBE "MODEL_CUBE"
 #define MODEL_PLANE "MODEL_PLANE"
 
 class Model {
+
+private:
 
 	//サブクラス
 	//頂点データ構造体
@@ -57,11 +60,14 @@ class Model {
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffMaterial;	//定数バッファ
 	Material material;			//マテリアル
 
+	TextureData* texData = nullptr;
+
 public:
 	static ID3D12Device* device;
-	uint32_t textureIndex = 0;	//テクスチャ番号
 	//メンバ関数
 	static std::unique_ptr< Model> CreateModel(const std::string& filename = MODEL_CUBE);
+	
+	void SetTexture(TextureData* texData) { this->texData = texData; }
 
 	static void SetDevice(ID3D12Device* dev) { device = dev; }
 

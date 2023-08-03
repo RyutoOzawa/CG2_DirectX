@@ -35,15 +35,20 @@ void GamePlayScene::Initialize()
 	backGroundSprite = std::make_unique<Sprite>();
 	backGroundSprite->Initialize(backGroundTexture);
 
+	//画像重複テスト
+	testTex1 = Texture::LoadTexture("mario.jpg");
+	testTex2 = Texture::LoadTexture("mario.jpg");
+	testTex3 = Texture::LoadTexture("mario.jpg");
 
-
+	static int a = 0;
+	a++;
 
 	skydome = std::make_unique<Model>();
 	skydome = Model::CreateModel("skydome");
 
 	defaultModel = std::make_unique<Model>();
 	defaultModel = Model::CreateModel();
-	defaultModel->textureIndex = reimuGraph;
+	defaultModel->SetTexture(reimuGraph);
 
 	playerModel = std::make_unique<Model>();
 	playerModel = Model::CreateModel("Player");

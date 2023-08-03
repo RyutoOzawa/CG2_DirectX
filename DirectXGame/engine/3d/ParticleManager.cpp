@@ -36,10 +36,10 @@ void ParticleManager::BeginDraw(Camera* camera_)
 
 }
 
-void ParticleManager::Initialize(uint32_t texIndex)
+void ParticleManager::Initialize(TextureData* texData)
 {
 	//テクスチャセット
-	SetTexture(texIndex);
+	SetTexture(texData);
 
 	ID3D12Device* device = directX->GetDevice();
 
@@ -199,14 +199,11 @@ void ParticleManager::Draw()
 	commandList->IASetVertexBuffers(0, 1, &vbView);
 
 	//デスクリプタヒープの配列セット
-	ID3D12DescriptorHeap* ppHeaps[] = { Texture::descHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::GetDescHeap() };
 	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	//ハンドルをテクスチャ番号分進める
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::descHeap->GetGPUDescriptorHandleForHeapStart();
-	UINT incrementSize = directX->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvGpuHandle.ptr += incrementSize * textureIndex;
-	commandList->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	//ハンドルをセット
+	commandList->SetGraphicsRootDescriptorTable(1, texData->gpuSRVHandle);
 	//描画コマンド
 	commandList->DrawInstanced((UINT)std::distance(particles.begin(),particles.end()), 1, 0, 0);
  }

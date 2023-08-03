@@ -7,7 +7,7 @@
 #include"Collision.h"
 #include"ImguiManager.h"
 
-void Player::Initialize(Model* model, uint32_t reticleTexture, uint32_t healthTexture)
+void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* healthTexture)
 {
 	Object3d::Initialize();
 	SetModel(model);
@@ -47,6 +47,14 @@ void Player::Initialize(Model* model, uint32_t reticleTexture, uint32_t healthTe
 	damageInterval = 0;
 	isAlive = true;
 
+}
+
+void Player::Spawn()
+{
+	//åıó÷ÉÇÉfÉãê∂ê¨
+	haloModel = std::make_unique<Model>();
+	haloModel = Model::CreateModel(MODEL_PLANE);
+	
 }
 
 void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)

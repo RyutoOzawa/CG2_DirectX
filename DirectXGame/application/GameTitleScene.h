@@ -28,7 +28,7 @@ private://メンバ変数
 
 	//ゲーム内で使用する変数まとめ
 
-	uint32_t titleTexture = 0;	//背景画像(現在はダミー
+	TextureData* titleTexture = nullptr;	//背景画像(現在はダミー
 	Sprite* titleSprite = nullptr;
 
 };

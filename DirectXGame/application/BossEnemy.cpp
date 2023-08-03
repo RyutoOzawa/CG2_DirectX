@@ -11,7 +11,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* paren
 	assert(barrelModel);
 	this->bodyModel = bodyModel;
 	this->BarrelModel = barrelModel;
-	uint32_t tex = Texture::LoadTexture("reticle.png");
+	TextureData* tex = Texture::LoadTexture("reticle.png");
 
 	for (size_t i = 0; i < 4; i++) {
 		sp[i].Initialize(tex);

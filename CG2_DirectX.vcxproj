@@ -262,6 +262,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectXGame\engine\3d\ParticleManager.h" />
     <ClInclude Include="DirectXGame\engine\math\BezierCurve.h" />
     <ClInclude Include="DirectXGame\application\BossEnemy.h" />
     <ClInclude Include="DirectXGame\application\Enemy.h" />
