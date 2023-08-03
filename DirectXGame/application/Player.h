@@ -9,6 +9,7 @@
 
 class Enemy;
 
+
 //3Dオブジェクトなのでobj3dクラスを継承
 class Player :public Object3d
 {
@@ -67,10 +68,12 @@ private://メンバ変数
 	Sprite reticleSprite;
 
 	//生成演出用の物
-	std::unique_ptr<Model> haloModel = nullptr;
-	Object3d haloObject;
+	static const INT32 haloMax = 4;
 
-	float haloSize = 1.0f;
+	std::unique_ptr<Model> haloModel = nullptr;
+	std::array<Object3d,haloMax> haloObjects;
+	std::array<float, haloMax> haloAlphaVel;
+	std::array<float, haloMax> haloScaleVel;
 
 
 	//HP関連

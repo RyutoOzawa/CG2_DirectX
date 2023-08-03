@@ -53,17 +53,32 @@ void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* 
 	haloModel = Model::CreateModel(MODEL_PLANE);
 	haloModel->SetTexture(Texture::LoadTexture("halo.png"));
 
-	haloObject.Initialize();
-	haloObject.SetModel(haloModel.get());
+	for (Object3d& haloObject : haloObjects) {
+		haloObject.Initialize();
+		haloObject.SetModel(haloModel.get());
+	}
 }
 
 void Player::Spawn()
 {
-	haloSize = 0.5f;
-	haloObject.scale = { 1,1,1 };
-	haloObject.color.w = 1.0f;
-	haloObject.parent = this;
-	haloObject.Update();
+	for (size_t i = 0; i < haloMax; i++) {
+		haloObjects[i].scale = { 1,1,1 };
+
+		//大きさの速度をランダムに
+		haloScaleVel[i] = Random(0.5f, 1.5f);
+
+		//色の透過速度もランダムに
+		haloAlphaVel[i] = Random(0.05f, 0.15f);
+//		haloAlphaVel[i] = 0.01f;
+
+		//角度もランダムに
+		haloObjects[i].rotation = { Random(-PI,PI),Random(-PI,PI) ,Random(-PI,PI) };
+		haloObjects[i].parent = this;
+		haloObjects[i].color.w = 1.0f;
+		haloObjects[i].Update();
+
+	}
+
 
 	isSpawn = true;
 }
@@ -156,7 +171,9 @@ void Player::Draw()
 		bullet->Draw();
 	}
 
-	haloObject.Draw();
+	for (Object3d& haloObject : haloObjects) {
+		haloObject.Draw();
+	}
 
 	reticleObj.Draw();
 }
@@ -532,13 +549,16 @@ void Player::UpdateDeath()
 void Player::UpdateSpawn()
 {
 	//光輪がおおきくなりながら薄く
-	haloObject.scale += {haloSize, haloSize, haloSize};
-	haloObject.color.w -= 0.05f;
-	haloObject.Update();
+	for (size_t i = 0; i < haloMax; i++) {
 
-	if (haloObject.color.w < 0.0f) {
-		isSpawn = false;
+		haloObjects[i].scale += {haloScaleVel[i], haloScaleVel[i], haloScaleVel[i]};
+		haloObjects[i].color.w -= haloAlphaVel[i];
+		haloObjects[i].Update();
 	}
+
+	//if (haloObject.color.w < 0.0f) {
+	//	isSpawn = false;
+	//}
 
 }
 
