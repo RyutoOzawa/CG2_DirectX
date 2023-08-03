@@ -69,12 +69,14 @@ private://メンバ変数
 
 	//生成演出用の物
 	static const INT32 haloMax = 4;
-
 	std::unique_ptr<Model> haloModel = nullptr;
+	//TODO:光輪関係を1つの構造体にまとめる
 	std::array<Object3d,haloMax> haloObjects;
 	std::array<float, haloMax> haloAlphaVel;
 	std::array<float, haloMax> haloScaleVel;
-
+	INT32 spawnTimer = 0;
+	INT32 spawnTimerMax = 120;
+	EasingData eDataPlayerScale;
 
 	//HP関連
 	Sprite healthSprite;

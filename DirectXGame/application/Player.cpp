@@ -79,6 +79,8 @@ void Player::Spawn()
 
 	}
 
+	//タイマ―セット
+	spawnTimer = spawnTimer;
 
 	isSpawn = true;
 }
@@ -116,6 +118,8 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		UpdateSpawn();
 	}
 
+	eDataPlayerScale.Update();
+	scale *= EaseOut(eDataPlayerScale.GetTimeRate());
 
 	//死んでる弾を消す
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
@@ -548,6 +552,15 @@ void Player::UpdateDeath()
 
 void Player::UpdateSpawn()
 {
+	if(spawnTimer > 0){
+		Vector3 pos = { Random(-5.0f, 5.0f),Random(-5.0f, 5.0f),Random(-5.0f, 5.0f) };
+		pos += GetWorldPosition();
+
+	hitParticle.Add()
+
+	}
+
+
 	//光輪がおおきくなりながら薄く
 	for (size_t i = 0; i < haloMax; i++) {
 

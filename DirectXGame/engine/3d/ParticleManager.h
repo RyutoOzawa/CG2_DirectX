@@ -39,6 +39,14 @@ public:
 		float scaleStart = 1.0f;
 		//スケール終了値
 		float scaleEnd = 0.0f;
+
+		//補間かどうか
+		float isInter = false;
+		//始点
+		Vector3 start = {};
+		//終点
+		Vector3 end = {};
+
 	};
 
 private:
@@ -86,6 +94,17 @@ public:
 	/// <param name="scaleStart">開始時スケール</param>
 	/// <param name="scaleEnd">終了時スケール</param>
 	void Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel,float scaleStart,float scaleEnd);
+
+	/// <summary>
+	/// パーティクルの追加(線形補間ver)
+	/// </summary>
+	/// <param name="t">時間</param>
+	/// <param name="start">始点</param>
+	/// <param name="end">終点</param>
+	/// <param name="scaleStart">開始時スケール</param>
+	/// <param name="scaleEnd">終了時スケール</param>
+	void AddLerp(float t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd);
+
 private:
 	static void CreatePipeline3D();
 

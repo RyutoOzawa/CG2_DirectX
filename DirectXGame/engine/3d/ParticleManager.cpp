@@ -228,6 +228,22 @@ void ParticleManager::Add(int life, const Vector3& position, const Vector3& velo
 	p.scaleEnd = scaleEnd;
 }
 
+void ParticleManager::AddLerp(float t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd)
+{//パーティクルの数が最大なら追加しない
+	if (std::distance(particles.begin(), particles.end()) >= vertexCount) {
+		return;
+	}
+
+	//リストに要素を追加
+	particles.emplace_front();
+	//追加した要素の参照
+	Particle& p = particles.front();
+	p.start = start;
+	p.end = end;
+	p.scaleStart = scaleStart;
+	p.scaleEnd = scaleEnd;
+}
+
 void ParticleManager::CreatePipeline3D()
 {
 	HRESULT result;
