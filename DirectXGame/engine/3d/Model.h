@@ -7,6 +7,9 @@
 #include<wrl.h>
 #include<memory>
 
+#define MODEL_CUBE "MODEL_CUBE"
+#define MODEL_PLANE "MODEL_PLANE"
+
 class Model {
 
 	//サブクラス
@@ -58,7 +61,7 @@ public:
 	static ID3D12Device* device;
 	uint32_t textureIndex = 0;	//テクスチャ番号
 	//メンバ関数
-	static std::unique_ptr< Model> CreateModel(const std::string& filename = "NULL");
+	static std::unique_ptr< Model> CreateModel(const std::string& filename = MODEL_CUBE);
 
 	static void SetDevice(ID3D12Device* dev) { device = dev; }
 
@@ -74,4 +77,14 @@ private:
 	void LoadTexture(const std::string& directoryPath, const std::string& filename);
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 	void CreateBuffers();
+
+	//ファイルから読み込んでモデル生成
+	void CreateModelLoadFile(const std::string& modelname);
+
+	//キューブのモデル生成
+	void CreateModelCube();
+
+	//平面のモデルを生成
+	void CreateModelPlane();
+
 };

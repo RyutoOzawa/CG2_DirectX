@@ -31,211 +31,16 @@ void Model::Create(const std::string& modelname)
 {
 	HRESULT result;
 
-	if (modelname != "NULL") {
-		HRESULT result = S_FALSE;
-
-		//ファイルストリーム
-		ifstream file;
-		//.objファイルを開く
-		const string filename = modelname + ".obj";
-		const string directoryPath = "Resources/" + modelname + "/";
-		file.open(directoryPath + filename);
-
-		//ファイルオープン失敗をチェック
-		if (file.fail()) {
-			assert(0);
-		}
-
-		vector<Vector3> positions;	//頂点座標
-		vector<Vector3> normals;	//法線ベクトル
-		vector<Vector2> texcords;	//テクスチャUV
-		//1行ずつ読み込む
-		string line;
-		while (getline(file, line)) {
-
-			//1行分の文字列をストリームに変換して解析しやすくする
-			istringstream line_stream(line);
-
-			//半角スペース区切りで行の先頭文字列を取得
-			string key;
-			getline(line_stream, key, ' ');
-
-			//先頭文字列がmtllibならマテリアル
-			if (key == "mtllib") {
-				//マテリアルのファイル名読み込み
-				string filename;
-				line_stream >> filename;
-				//マテリアル読み込み
-				LoadMaterial(directoryPath, filename);
-			}
-			//先頭文字列がvなら頂点座標
-			if (key == "v") {
-				//X,Y,Z座標読み込み
-				Vector3 position{};
-				line_stream >> position.x;
-				line_stream >> position.y;
-				line_stream >> position.z;
-				//座標データに追加
-				positions.emplace_back(position);
-				//頂点データに追加
-			/*	Vertex vertex{};
-				vertex.pos = position;
-				vertices.emplace_back(vertex);*/
-			}
-			//先頭文字列がvtならテクスチャ
-			if (key == "vt") {
-				//U,V成分読み込み
-				Vector2 texcoord{};
-				line_stream >> texcoord.x;
-				line_stream >> texcoord.y;
-				//V方向反転
-				texcoord.y = 1.0f - texcoord.y;
-				//テクスチャ座標データに追加
-				texcords.emplace_back(texcoord);
-			}
-			//先頭文字列がvnなら法線ベクトル
-			if (key == "vn") {
-				//X,Y,Z成分読み込み
-				Vector3 normal{};
-				line_stream >> normal.x;
-				line_stream >> normal.y;
-				line_stream >> normal.z;
-				//法線ベクトルデータに追加
-				normals.emplace_back(normal);
-			}
-			//先頭文字列がfならポリゴン(三角形)
-			if (key == "f") {
-				//半角スペース区切りで行の続きを読み込む
-				string index_string;
-				while (getline(line_stream, index_string, ' ')) {
-					//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
-					istringstream index_stream(index_string);
-					unsigned short indexPosition, indexNormal, indexTexcoord;
-					index_stream >> indexPosition;
-					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
-					index_stream >> indexTexcoord;
-					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
-					index_stream >> indexNormal;
-					//頂点データの追加
-					Vertex vertex{};
-					vertex.pos = positions[indexPosition - 1];
-					vertex.normal = normals[indexNormal - 1];
-					vertex.uv = texcords[indexTexcoord - 1];
-					vertices.emplace_back(vertex);
-					//頂点インデックスに追加
-					indices.emplace_back((unsigned short)indices.size());
-				}
-
-			}
-
-		}
-		//ファイルを閉じる
-		file.close();
 
 
-
+	if (modelname == MODEL_CUBE) {
+		CreateModelCube();
+	}
+	else if (modelname == MODEL_PLANE) {
+		CreateModelPlane();
 	}
 	else {
-		//	頂点データと頂点バッファビューの生成
-			 //頂点データ
-		Vertex vertices_[] = {
-			//     x     y    z     法線  u    v
-
-				//前
-				{{-1.0f,-1.0f,-1.0f}, {},{0.0f,1.0f}}, // 左下
-				{{-1.0f, 1.0f,-1.0f}, {},{0.0f,0.0f}}, // 左上
-				{{ 1.0f,-1.0f,-1.0f}, {},{1.0f,1.0f}}, // 右下
-				{{ 1.0f, 1.0f,-1.0f}, {},{1.0f,0.0f}}, // 右上
-
-				//後
-				{{-1.0f,-1.0f, 1.0f}, {},{0.0f,1.0f}}, // 左下
-				{{-1.0f, 1.0f, 1.0f}, {},{0.0f,0.0f}}, // 左上
-				{{ 1.0f,-1.0f, 1.0f}, {},{1.0f,1.0f}}, // 右下
-				{{ 1.0f, 1.0f, 1.0f}, {},{1.0f,0.0f}}, // 右上
-
-				//左
-				{{-1.0f,-1.0f,-1.0f}, {} ,{0.0f,1.0f}}, // 左下
-				{{-1.0f,-1.0f, 1.0f}, {} ,{0.0f,0.0f}}, // 左上
-				{{-1.0f, 1.0f,-1.0f}, {} ,{1.0f,1.0f}}, // 右下
-				{{-1.0f, 1.0f, 1.0f}, {} ,{1.0f,0.0f}}, // 右上
-
-				//右　
-				{{ 1.0f,-1.0f,-1.0f}, {} ,{0.0f,1.0f}}, // 左下
-				{{ 1.0f,-1.0f, 1.0f}, {} ,{0.0f,0.0f}}, // 左上
-				{{ 1.0f, 1.0f,-1.0f}, {} ,{1.0f,1.0f}}, // 右下
-				{{ 1.0f, 1.0f, 1.0f}, {} ,{1.0f,0.0f}}, // 右上
-
-				//下
-				{{-1.0f, 1.0f,-1.0f}, {},{0.0f,1.0f}}, // 左下
-				{{ 1.0f, 1.0f,-1.0f}, {},{0.0f,0.0f}}, // 左上
-				{{-1.0f, 1.0f, 1.0f}, {},{1.0f,1.0f}}, // 右下
-				{{ 1.0f, 1.0f, 1.0f}, {},{1.0f,0.0f}}, // 右上
-
-				//上
-				{{-1.0f,-1.0f,-1.0f}, {},{0.0f,1.0f}}, // 左下
-				{{ 1.0f,-1.0f,-1.0f}, {},{0.0f,0.0f}}, // 左上
-				{{-1.0f,-1.0f, 1.0f}, {},{1.0f,1.0f}}, // 右下
-				{{ 1.0f,-1.0f, 1.0f}, {},{1.0f,0.0f}}, // 右上
-		};
-
-		for (int i = 0; i < _countof(vertices_); i++) {
-			vertices.push_back(vertices_[i]);
-		}
-
-
-
-		//インデックスデータ
-		unsigned short indices_[] = {
-
-			//前
-			0,1,2,		//三角形1つ目
-			2,1,3,		//三角形2つ目
-			//後	
-			5,4,7,		//三角形3つ目
-			7,4,6,		//三角形4つ目
-			//左
-			8,9,10,		//三角形5つ目
-			10,9,11,	//三角形6つ目
-			//右
-			13,12,15,	//三角形7つ目
-			15,12,14,	//三角形8つ目
-			//下
-			17,16,19,	//三角形9つ目
-			19,16,18,	//三角形10つ目
-			//上
-			20,21,22,	//三角形11つ目
-			22,21,23,	//三角形12つ目
-		};
-
-		for (int i = 0; i < _countof(indices_); i++) {
-			indices.push_back(indices_[i]);
-		}
-
-		//法線計算がvec3に対応していないため、いったんコメントアウト
-
-
-		//法線の計算
-		//for (int i = 0; i < indices.size() / 3; i++) {
-		//	unsigned short indices0 = indices[i * 3 + 0];
-		//	unsigned short indices1 = indices[i * 3 + 1];
-		//	unsigned short indices2 = indices[i * 3 + 2];
-		//	//三角形を構成する頂点座標をベクトルに代入
-		//	XMVECTOR p0 = XMLoadFloat3(&vertices[indices0].pos);
-		//	XMVECTOR p1 = XMLoadFloat3(&vertices[indices1].pos);
-		//	XMVECTOR p2 = XMLoadFloat3(&vertices[indices2].pos);
-		//	//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
-		//	XMVECTOR v1 = XMVectorSubtract(p1, p0);
-		//	XMVECTOR v2 = XMVectorSubtract(p2, p0);
-		//	//外積は両方から垂直なベクトル
-		//	XMVECTOR normal = XMVector3Cross(v1, v2);
-		//	//正規化
-		//	normal = XMVector3Normalize(normal);
-		//	//求めた法線を頂点データに代入
-		//	XMStoreFloat3(&vertices[indices0].normal, normal);
-		//	XMStoreFloat3(&vertices[indices1].normal, normal);
-		//	XMStoreFloat3(&vertices[indices2].normal, normal);
-		//}
-
+		CreateModelLoadFile(modelname);
 	}
 
 	//頂点データ全体のサイズ
@@ -429,6 +234,260 @@ void Model::CreateBuffers()
 	constMap->alpha = material.alpha;
 	constBuffMaterial->Unmap(0, nullptr);
 
+}
+
+void Model::CreateModelLoadFile(const std::string& modelname)
+{
+	HRESULT result = S_FALSE;
+
+	//ファイルストリーム
+	ifstream file;
+	//.objファイルを開く
+	const string filename = modelname + ".obj";
+	const string directoryPath = "Resources/" + modelname + "/";
+	file.open(directoryPath + filename);
+
+	//ファイルオープン失敗をチェック
+	if (file.fail()) {
+		assert(0);
+	}
+
+	vector<Vector3> positions;	//頂点座標
+	vector<Vector3> normals;	//法線ベクトル
+	vector<Vector2> texcords;	//テクスチャUV
+	//1行ずつ読み込む
+	string line;
+	while (getline(file, line)) {
+
+		//1行分の文字列をストリームに変換して解析しやすくする
+		istringstream line_stream(line);
+
+		//半角スペース区切りで行の先頭文字列を取得
+		string key;
+		getline(line_stream, key, ' ');
+
+		//先頭文字列がmtllibならマテリアル
+		if (key == "mtllib") {
+			//マテリアルのファイル名読み込み
+			string filename;
+			line_stream >> filename;
+			//マテリアル読み込み
+			LoadMaterial(directoryPath, filename);
+		}
+		//先頭文字列がvなら頂点座標
+		if (key == "v") {
+			//X,Y,Z座標読み込み
+			Vector3 position{};
+			line_stream >> position.x;
+			line_stream >> position.y;
+			line_stream >> position.z;
+			//座標データに追加
+			positions.emplace_back(position);
+			//頂点データに追加
+		/*	Vertex vertex{};
+			vertex.pos = position;
+			vertices.emplace_back(vertex);*/
+		}
+		//先頭文字列がvtならテクスチャ
+		if (key == "vt") {
+			//U,V成分読み込み
+			Vector2 texcoord{};
+			line_stream >> texcoord.x;
+			line_stream >> texcoord.y;
+			//V方向反転
+			texcoord.y = 1.0f - texcoord.y;
+			//テクスチャ座標データに追加
+			texcords.emplace_back(texcoord);
+		}
+		//先頭文字列がvnなら法線ベクトル
+		if (key == "vn") {
+			//X,Y,Z成分読み込み
+			Vector3 normal{};
+			line_stream >> normal.x;
+			line_stream >> normal.y;
+			line_stream >> normal.z;
+			//法線ベクトルデータに追加
+			normals.emplace_back(normal);
+		}
+		//先頭文字列がfならポリゴン(三角形)
+		if (key == "f") {
+			//半角スペース区切りで行の続きを読み込む
+			string index_string;
+			while (getline(line_stream, index_string, ' ')) {
+				//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
+				istringstream index_stream(index_string);
+				unsigned short indexPosition, indexNormal, indexTexcoord;
+				index_stream >> indexPosition;
+				index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+				index_stream >> indexTexcoord;
+				index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+				index_stream >> indexNormal;
+				//頂点データの追加
+				Vertex vertex{};
+				vertex.pos = positions[indexPosition - 1];
+				vertex.normal = normals[indexNormal - 1];
+				vertex.uv = texcords[indexTexcoord - 1];
+				vertices.emplace_back(vertex);
+				//頂点インデックスに追加
+				indices.emplace_back((unsigned short)indices.size());
+			}
+
+		}
+
+	}
+	//ファイルを閉じる
+	file.close();
+}
+
+void Model::CreateModelCube()
+{
+	//	頂点データと頂点バッファビューの生成
+	//頂点データ
+	Vertex vertices_[] = {
+		//     x     y    z     法線  u    v
+
+			//前
+			{{-1.0f,-1.0f,-1.0f}, {},{0.0f,1.0f}}, // 左下
+			{{-1.0f, 1.0f,-1.0f}, {},{0.0f,0.0f}}, // 左上
+			{{ 1.0f,-1.0f,-1.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 1.0f, 1.0f,-1.0f}, {},{1.0f,0.0f}}, // 右上
+
+			//後
+			{{-1.0f,-1.0f, 1.0f}, {},{0.0f,1.0f}}, // 左下
+			{{-1.0f, 1.0f, 1.0f}, {},{0.0f,0.0f}}, // 左上
+			{{ 1.0f,-1.0f, 1.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 1.0f, 1.0f, 1.0f}, {},{1.0f,0.0f}}, // 右上
+
+			//左
+			{{-1.0f,-1.0f,-1.0f}, {} ,{0.0f,1.0f}}, // 左下
+			{{-1.0f,-1.0f, 1.0f}, {} ,{0.0f,0.0f}}, // 左上
+			{{-1.0f, 1.0f,-1.0f}, {} ,{1.0f,1.0f}}, // 右下
+			{{-1.0f, 1.0f, 1.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+			//右　
+			{{ 1.0f,-1.0f,-1.0f}, {} ,{0.0f,1.0f}}, // 左下
+			{{ 1.0f,-1.0f, 1.0f}, {} ,{0.0f,0.0f}}, // 左上
+			{{ 1.0f, 1.0f,-1.0f}, {} ,{1.0f,1.0f}}, // 右下
+			{{ 1.0f, 1.0f, 1.0f}, {} ,{1.0f,0.0f}}, // 右上
+
+			//下
+			{{-1.0f, 1.0f,-1.0f}, {},{0.0f,1.0f}}, // 左下
+			{{ 1.0f, 1.0f,-1.0f}, {},{0.0f,0.0f}}, // 左上
+			{{-1.0f, 1.0f, 1.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 1.0f, 1.0f, 1.0f}, {},{1.0f,0.0f}}, // 右上
+
+			//上
+			{{-1.0f,-1.0f,-1.0f}, {},{0.0f,1.0f}}, // 左下
+			{{ 1.0f,-1.0f,-1.0f}, {},{0.0f,0.0f}}, // 左上
+			{{-1.0f,-1.0f, 1.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 1.0f,-1.0f, 1.0f}, {},{1.0f,0.0f}}, // 右上
+	};
+
+	for (int i = 0; i < _countof(vertices_); i++) {
+		vertices.push_back(vertices_[i]);
+	}
+
+	//インデックスデータ
+	unsigned short indices_[] = {
+
+		//前
+		0,1,2,		//三角形1つ目
+		2,1,3,		//三角形2つ目
+		//後	
+		5,4,7,		//三角形3つ目
+		7,4,6,		//三角形4つ目
+		//左
+		8,9,10,		//三角形5つ目
+		10,9,11,	//三角形6つ目
+		//右
+		13,12,15,	//三角形7つ目
+		15,12,14,	//三角形8つ目
+		//下
+		17,16,19,	//三角形9つ目
+		19,16,18,	//三角形10つ目
+		//上
+		20,21,22,	//三角形11つ目
+		22,21,23,	//三角形12つ目
+	};
+
+	for (int i = 0; i < _countof(indices_); i++) {
+		indices.push_back(indices_[i]);
+	}
+
+	//法線の計算
+	for (int i = 0; i < indices.size() / 3; i++) {
+		unsigned short indices0 = indices[i * 3 + 0];
+		unsigned short indices1 = indices[i * 3 + 1];
+		unsigned short indices2 = indices[i * 3 + 2];
+		//三角形を構成する頂点座標をベクトルに代入
+		Vector3 p0 = vertices[indices0].pos;
+		Vector3 p1 = vertices[indices1].pos;
+		Vector3 p2 = vertices[indices2].pos;
+		//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
+		Vector3 v1 = p1 - p0;
+		Vector3 v2 = p2 - p0;
+		//外積は両方から垂直なベクトル
+		Vector3 normal = v1.cross(v2);
+		//正規化
+		normal.normalize();
+		//求めた法線を頂点データに代入
+		vertices[indices0].normal = normal;
+		vertices[indices1].normal = normal;
+		vertices[indices2].normal = normal;
+	}
+}
+
+void Model::CreateModelPlane()
+{
+	//	頂点データと頂点バッファビューの生成
+	//頂点データ
+	Vertex vertices_[] = {
+		//     x     y    z     法線  u    v
+			//前
+			{{-1.0f,-1.0f,0.0f}, {},{0.0f,1.0f}}, // 左下
+			{{-1.0f, 1.0f,0.0f}, {},{0.0f,0.0f}}, // 左上
+			{{ 1.0f,-1.0f,0.0f}, {},{1.0f,1.0f}}, // 右下
+			{{ 1.0f, 1.0f,0.0f}, {},{1.0f,0.0f}}, // 右上
+
+
+	};
+
+	for (int i = 0; i < _countof(vertices_); i++) {
+		vertices.push_back(vertices_[i]);
+	}
+
+	//インデックスデータ
+	unsigned short indices_[] = {
+		//前
+		0,1,2,		//三角形1つ目
+		2,1,3,		//三角形2つ目
+	};
+
+	for (int i = 0; i < _countof(indices_); i++) {
+		indices.push_back(indices_[i]);
+	}
+
+	//法線の計算
+	for (int i = 0; i < indices.size() / 3; i++) {
+		unsigned short indices0 = indices[i * 3 + 0];
+		unsigned short indices1 = indices[i * 3 + 1];
+		unsigned short indices2 = indices[i * 3 + 2];
+		//三角形を構成する頂点座標をベクトルに代入
+		Vector3 p0 = vertices[indices0].pos;
+		Vector3 p1 = vertices[indices1].pos;
+		Vector3 p2 = vertices[indices2].pos;
+		//p0→p1ベクトル、p0→p2ベクトルを計算（ベクトルの減算）
+		Vector3 v1 = p1 - p0;
+		Vector3 v2 = p2 - p0;
+		//外積は両方から垂直なベクトル
+		Vector3 normal = v1.cross(v2);
+		//正規化
+		normal.normalize();
+		//求めた法線を頂点データに代入
+		vertices[indices0].normal = normal;
+		vertices[indices1].normal = normal;
+		vertices[indices2].normal = normal;
+	}
 }
 
 void Model::Draw(ID3D12GraphicsCommandList* cmdList)

@@ -16,6 +16,15 @@
 #include"Enemy.h"
 #include"CollisionManager.h"
 
+enum class GamePhase {
+	Event_GameStart,//ゲーム開始イベント(自機の出撃)
+	Game_Main,//メインのゲーム(雑魚敵戦)
+	Event_BossSpawn,//ボスのスポーンイベント
+	Game_Boss,//ボス戦
+	Event_GameClear,//ゲームクリアイベント
+
+};
+
 class GamePlayScene :public GameBaseScene
 {
 public:
@@ -34,7 +43,7 @@ public:
 	void EnemySpawn();
 
 
-public://メンバ変数
+private://メンバ変数
 
 	Input* input = nullptr;
 	CollisionManager* collisionManager = nullptr;
@@ -64,6 +73,14 @@ public://メンバ変数
 
 	Camera* currentCamera = nullptr;
 	RailCamera* railCamera = nullptr;
+
+	//ゲームフェーズ
+	GamePhase gamePhase = GamePhase::Event_GameStart;
+
+private:
+
+	//各フェーズの更新
+
 
 };
 

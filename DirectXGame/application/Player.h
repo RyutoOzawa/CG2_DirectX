@@ -17,19 +17,28 @@ public:	//メンバ関数
 	//初期化
 	void Initialize(Model* model,uint32_t reticleTexture,uint32_t healthTexture);
 
+	//自機生成処理
+	void Spawn();
+
 	//更新
 	void Update(std::list<std::unique_ptr<Enemy>>* enemys);
 
+	//3Dモデル描画
 	void Draw();
 
+	//パーティクル描画
 	void DrawParticle();
 
+	//UI(2D)描画
 	void DrawUI();
 
+	//setter
 	void SetBulletModel(Model* model) { bulletModel = model; }
 
+	//当たり判定コールバック
 	void OnCollision(const CollisionInfo& info) override;
 
+	//生存判定
 	bool IsAlive()const { return isAlive; }
 
 private://メンバ変数
@@ -91,6 +100,8 @@ private://内部処理用メンバ関数
 
 	//死亡更新処理
 	void UpdateDeath();
+
+
 
 };
 
