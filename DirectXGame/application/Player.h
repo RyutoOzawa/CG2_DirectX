@@ -68,6 +68,10 @@ private://メンバ変数
 
 	//生成演出用の物
 	std::unique_ptr<Model> haloModel = nullptr;
+	Object3d haloObject;
+
+	float haloSize = 1.0f;
+
 
 	//HP関連
 	Sprite healthSprite;
@@ -80,6 +84,8 @@ private://メンバ変数
 	const int deathCountMax = 180;
 	int deathCount = deathCountMax;
 	bool isAlive = false;
+
+	bool isSpawn = false;
 
 private://内部処理用メンバ関数
 
@@ -104,7 +110,8 @@ private://内部処理用メンバ関数
 	//死亡更新処理
 	void UpdateDeath();
 
-
+	//生成更新処理
+	void UpdateSpawn();
 
 };
 

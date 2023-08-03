@@ -47,14 +47,25 @@ void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* 
 	damageInterval = 0;
 	isAlive = true;
 
+
+	//光輪モデル生成
+	haloModel = std::make_unique<Model>();
+	haloModel = Model::CreateModel(MODEL_PLANE);
+	haloModel->SetTexture(Texture::LoadTexture("halo.png"));
+
+	haloObject.Initialize();
+	haloObject.SetModel(haloModel.get());
 }
 
 void Player::Spawn()
 {
-	//光輪モデル生成
-	haloModel = std::make_unique<Model>();
-	haloModel = Model::CreateModel(MODEL_PLANE);
-	
+	haloSize = 0.5f;
+	haloObject.scale = { 1,1,1 };
+	haloObject.color.w = 1.0f;
+	haloObject.parent = this;
+	haloObject.Update();
+
+	isSpawn = true;
 }
 
 void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
@@ -80,6 +91,14 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 			//パーティクル追加
 			hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
 		}
+	}
+
+	if (Input::GetInstance()->IsKeyTrigger(DIK_2)) {
+		Spawn();
+	}
+
+	if (isSpawn) {
+		UpdateSpawn();
 	}
 
 
@@ -136,6 +155,8 @@ void Player::Draw()
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets) {
 		bullet->Draw();
 	}
+
+	haloObject.Draw();
 
 	reticleObj.Draw();
 }
@@ -506,5 +527,18 @@ void Player::UpdateDeath()
 
 		hitParticle.Add((int)Random(10,20),GetWorldPosition(),vel,acc,3.0f,0.0f);
 	}
+}
+
+void Player::UpdateSpawn()
+{
+	//光輪がおおきくなりながら薄く
+	haloObject.scale += {haloSize, haloSize, haloSize};
+	haloObject.color.w -= 0.05f;
+	haloObject.Update();
+
+	if (haloObject.color.w < 0.0f) {
+		isSpawn = false;
+	}
+
 }
 

@@ -1,6 +1,7 @@
 cbuffer cbuff0 : register(b0)
 {
 	matrix world; // ‚R‚c•ÏŠ·s—ñ
+	float4 color;	//F
 };
 
 cbuffer cbuff1 : register(b1)

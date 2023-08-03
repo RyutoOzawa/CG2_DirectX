@@ -10,6 +10,7 @@
 #include"Model.h"
 #include"Camera.h"
 #include"Matrix4.h"
+#include"Vector4.h"
 #include"CollisionInfo.h"
 #include"CollisionManager.h"
 
@@ -24,6 +25,7 @@ public:
 	struct ConstBufferData {
 		//DirectX::XMFLOAT4 color;
 		Matrix4 mat;
+		Vector4 color;
 	};
 
 
@@ -37,7 +39,7 @@ public:
 	
 	ConstBufferData* constMap = nullptr;
 
-	DirectX::XMFLOAT4 color = { 1,1,1,1 };
+	Vector4 color = { 1,1,1,1 };
 	Vector3 scale = { 1,1,1 };	//アフィン変換情報
 	Vector3 rotation = { 0,0,0 };	//アフィン変換情報
 	Vector3 position = { 0,0,0 };	//アフィン変換情報

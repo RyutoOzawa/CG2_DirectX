@@ -99,6 +99,7 @@ void Object3d::Initialize()
 
 	Matrix4 matrix = matrix.identity();
 	constMap->mat = matrix;
+	constMap->color = { 1,1,1,1 };
 
 	//クラス名の文字列を取得
 	name = typeid(*this).name();
@@ -156,6 +157,7 @@ void Object3d::Update()
 	//constMap->mat = matWorld * matView * matProjection;
 
 	constMap->mat = matWorld;
+	constMap->color = color;
 
 	//当たり判定更新
 	if (collider) {
@@ -293,7 +295,7 @@ void Object3d::CreatePipeline3D()
 		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		});
 
-	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout);
+	pipeline3D.SetPipeline(vsBlob.Get(), psBlob.Get(), inputLayout,1);
 	//ジオメトリシェーダーの設定を追加
 	//pipeline3D.desc.GS.BytecodeLength = gsBlob->GetBufferSize();
 	//pipeline3D.desc.GS.pShaderBytecode = gsBlob->GetBufferPointer();
