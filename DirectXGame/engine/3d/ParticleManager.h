@@ -46,6 +46,8 @@ public:
 		Vector3 start = {};
 		//I“_
 		Vector3 end = {};
+		//ŠÔ
+		float time = 0.0f;
 
 	};
 
