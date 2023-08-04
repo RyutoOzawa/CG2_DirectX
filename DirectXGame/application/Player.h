@@ -69,12 +69,13 @@ private://メンバ変数
 	Sprite reticleSprite;
 
 	//生成演出用の物
-	static const INT32 haloMax = 4;
+	static const INT32 haloMax = 8;
 	std::unique_ptr<Model> haloModel = nullptr;
 	//TODO:光輪関係を1つの構造体にまとめる
 	std::array<Object3d,haloMax> haloObjects;
 	std::array<float, haloMax> haloAlphaVel;
 	std::array<float, haloMax> haloScaleVel;
+	std::array<Vector3, haloMax> haloRotaVel;
 	INT32 spawnTimer = 0;
 	INT32 spawnTimerMax = 120;
 	EasingData eDataPlayerScale;

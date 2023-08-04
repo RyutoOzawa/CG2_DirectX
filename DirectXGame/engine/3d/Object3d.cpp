@@ -303,10 +303,10 @@ void Object3d::CreatePipeline3D()
 	//pipeline3D.desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
 	//デプスの書き込みを禁止する
-	pipeline3D.desc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	//pipeline3D.desc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	
 	//Zが0以下なら書き込まない
-	//pipeline3D.desc.BlendState.AlphaToCoverageEnable = true;
+	pipeline3D.desc.BlendState.AlphaToCoverageEnable = true;
 
 	//デスクリプタレンジの設定
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};

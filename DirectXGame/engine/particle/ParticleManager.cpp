@@ -124,11 +124,13 @@ void ParticleManager::Initialize(TextureData* texData)
 void ParticleManager::Update()
 {
 	//寿命がつきたパーティクルを全削除
-	particles.remove_if([](BaseParticle& x) {return x.IsAlive(); });
+	particles.remove_if([](BaseParticle* x) {return x->IsAlive(); });
 
 	//全パーティクル更新
-	for (std::forward_list<BaseParticle>::iterator it = particles.begin(); it != particles.end(); it++) {
-		it->Update();
+	for (std::forward_list<BaseParticle*>::iterator it = particles.begin(); it != particles.end(); it++) {
+
+		BaseParticle* p = *it;
+		p->Update();
 
 	}
 	//頂点バッファへデータ転送
@@ -136,11 +138,13 @@ void ParticleManager::Update()
 	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		//パーティクルの情報を1つずつ反映
-		for (std::forward_list<BaseParticle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		for (std::forward_list<BaseParticle*>::iterator it = particles.begin(); it != particles.end(); it++) {
+			BaseParticle* p = *it;
+
 			//座標
-			vertMap->pos = it->GetPosition();
+			vertMap->pos = p->GetPosition();
 			//スケール
-			vertMap->scale = it->GetScale();
+			vertMap->scale = p->GetScale();
 			//次の順番へ
 			vertMap++;
 		}
@@ -204,28 +208,27 @@ void ParticleManager::Add(int life, const Vector3& position, const Vector3& velo
 		return;
 	}
 	
-	//リストに要素を追加
-	particles.emplace_front();
+
 	//追加した要素の参照
-	BaseParticle& p = particles.front();
-	//値のセット
-	p.Add(life, position, velocity, accel, scaleStart,scaleEnd);
+	BaseParticle* p = new BaseParticle();
+	p->Add(life, position, velocity, accel, scaleStart,scaleEnd);
+	//リストに要素を追加
+	particles.push_front(p);
 }
 
-void ParticleManager::AddLerp(float t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd)
+void ParticleManager::AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType)
 {//パーティクルの数が最大なら追加しない
 	if (std::distance(particles.begin(), particles.end()) >= vertexCount) {
 		return;
 	}
 
-	//リストに要素を追加
-	particles.emplace_front();
+
 	//追加した要素の参照
-	/*Particle& p = particles.front();
-	p.start = start;
-	p.end = end;
-	p.scaleStart = scaleStart;
-	p.scaleEnd = scaleEnd;*/
+	LerpParticle* p = new LerpParticle();
+	p->Add(t, start, end, scaleStart, scaleEnd,interType);
+	//リストに要素を追加
+	particles.push_front(p);
+
 }
 
 void ParticleManager::CreatePipeline3D()

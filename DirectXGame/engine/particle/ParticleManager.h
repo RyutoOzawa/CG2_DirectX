@@ -8,6 +8,8 @@
 #include<forward_list>
 #include"Texture.h"
 #include"BaseParticle.h"
+#include"LerpParticle.h"
+
 
 class ParticleManager
 {
@@ -73,7 +75,7 @@ private:
 	Matrix4 matBillBoardY = matBillBoardY.identity();
 
 //パーティクル配列
-	std::forward_list<BaseParticle> particles;
+	std::forward_list<BaseParticle*> particles;
 
 public:
 	static void StaticInitialize(ReDirectX* directX_);
@@ -106,7 +108,7 @@ public:
 	/// <param name="end">終点</param>
 	/// <param name="scaleStart">開始時スケール</param>
 	/// <param name="scaleEnd">終了時スケール</param>
-	void AddLerp(float t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd);
+	void AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType = InterType::Lerp);
 
 private:
 	static void CreatePipeline3D();

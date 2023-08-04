@@ -62,14 +62,19 @@ void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* 
 void Player::Spawn()
 {
 	for (size_t i = 0; i < haloMax; i++) {
-		haloObjects[i].scale = { 1,1,1 };
+		float scale = Random(1.0f, 3.0f);
+		haloObjects[i].scale = { scale ,scale ,scale };
+
+		haloObjects[i].color.z = Random(0.8f, 1.0f);
 
 		//大きさの速度をランダムに
-		haloScaleVel[i] = Random(0.5f, 1.5f);
+		haloScaleVel[i] = Random(0.5f, 2.5f);
 
 		//色の透過速度もランダムに
-		haloAlphaVel[i] = Random(0.05f, 0.15f);
+		haloAlphaVel[i] = Random(0.01f, 0.05f);
 //		haloAlphaVel[i] = 0.01f;
+
+		haloRotaVel[i] = { Random(0,PI / 16.0f),Random(0,PI / 16.0f) ,Random(0,PI / 16.0f) };
 
 		//角度もランダムに
 		haloObjects[i].rotation = { Random(-PI,PI),Random(-PI,PI) ,Random(-PI,PI) };
@@ -80,7 +85,7 @@ void Player::Spawn()
 	}
 
 	//タイマ―セット
-	spawnTimer = spawnTimer;
+	spawnTimer = spawnTimerMax;
 
 	isSpawn = true;
 }
@@ -98,17 +103,9 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		ImGui::Text("alive false");
 	}
 
-	if (ImGui::Button("particle")) {
-		//パーティクルの速度
-		for (int i = 0; i < 25; i++) {
-			Vector3 vel = { 0,0,0 };
-			Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+	Vector3 w = scale;
 
-
-			//パーティクル追加
-			hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
-		}
-	}
+	ImGui::Text("world pos %f,%f,%f", w.x, w.y, w.z);
 
 	if (Input::GetInstance()->IsKeyTrigger(DIK_2)) {
 		Spawn();
@@ -130,8 +127,9 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		UpdateSpawn();
 	}
 
-	/*eDataPlayerScale.Update();
-	scale *= EaseOut(eDataPlayerScale.GetTimeRate());*/
+	eDataPlayerScale.Update();
+	ImGui::Text("scale timerate %f", eDataPlayerScale.GetTimeRate());
+
 
 	//死んでる弾を消す
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
@@ -179,7 +177,9 @@ void Player::Draw()
 
 	//ダメージのクールタイムによって点滅
 	if (damageInterval % 4 < 1 && health != 0) {
-		Object3d::Draw();
+		if (spawnTimer <= 0) {
+			Object3d::Draw();
+		}
 	}
 
 	//弾の描画
@@ -564,22 +564,39 @@ void Player::UpdateDeath()
 
 void Player::UpdateSpawn()
 {
+
+
 	if(spawnTimer > 0){
-		Vector3 pos = { Random(-5.0f, 5.0f),Random(-5.0f, 5.0f),Random(-5.0f, 5.0f) };
+		Vector3 pos = { Random(-50.0f, 50.0f),Random(-50.0f, 50.0f),Random(-50.0f, 50.0f) };
 		pos += GetWorldPosition();
 
-	//hitParticle.Add()
+		hitParticle.AddLerp(15, pos, GetWorldPosition(), 3.0f, 0.0f,InterType::EaseOut);
 
+		Vector3 vel = { 0,0,0 };
+		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+
+		spawnTimer--;
+		eDataPlayerScale.Start(30);
+
+		//scale = { 0,0,0 };
+	}
+	else {
+		Vector3 defaultScale = { 1,1,1 };
+		scale = defaultScale * EaseOut(eDataPlayerScale.GetTimeRate());
+		//光輪がおおきくなりながら薄く
+		for (size_t i = 0; i < haloMax; i++) {
+
+			haloObjects[i].scale += {haloScaleVel[i], haloScaleVel[i], haloScaleVel[i]};
+			haloObjects[i].color.w -= haloAlphaVel[i];
+			
+		}
 	}
 
-
-	//光輪がおおきくなりながら薄く
 	for (size_t i = 0; i < haloMax; i++) {
-
-		haloObjects[i].scale += {haloScaleVel[i], haloScaleVel[i], haloScaleVel[i]};
-		haloObjects[i].color.w -= haloAlphaVel[i];
+		haloObjects[i].rotation += haloRotaVel[i];
 		haloObjects[i].Update();
 	}
+	
 
 	//if (haloObject.color.w < 0.0f) {
 	//	isSpawn = false;

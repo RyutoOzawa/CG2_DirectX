@@ -76,7 +76,7 @@ void GamePlayScene::Initialize()
 
 
 	player = std::make_unique<Player>();
-	player->Initialize(playerModel.get(), reticleGraph, whiteGraph);
+	player->Initialize(playerModel.get(), reticleGraph, particleGraph);
 	player->SetBulletModel(playerBulletModel.get());
 
 	//当たり判定テスト用オブジェクト

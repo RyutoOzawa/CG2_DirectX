@@ -150,6 +150,7 @@
     <ClCompile Include="DirectXGame\application\GameOverScene.cpp" />
     <ClCompile Include="DirectXGame\application\EnemyBullet.cpp" />
     <ClCompile Include="DirectXGame\application\TestScene.cpp" />
+    <ClCompile Include="DirectXGame\engine\particle\LerpParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -319,6 +320,7 @@
     <ClInclude Include="DirectXGame\application\GameOverScene.h" />
     <ClInclude Include="DirectXGame\application\EnemyBullet.h" />
     <ClInclude Include="DirectXGame\application\TestScene.h" />
+    <ClInclude Include="DirectXGame\engine\particle\LerpParticle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
