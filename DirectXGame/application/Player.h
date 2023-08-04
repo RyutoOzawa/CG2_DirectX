@@ -6,6 +6,7 @@
 #include<list>
 #include"ParticleManager.h"
 #include"Sprite.h"
+#include"EasingData.h"
 
 class Enemy;
 

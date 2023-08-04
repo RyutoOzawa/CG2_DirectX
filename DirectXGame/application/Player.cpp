@@ -114,12 +114,24 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		Spawn();
 	}
 
+	if (Input::GetInstance()->IsKeyTrigger(DIK_3)) {
+		//パーティクルの速度
+		for (int i = 0; i < 25; i++) {
+			Vector3 vel = { 0,0,0 };
+			Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+			//acc = { 0.1f,0,0.1f };
+
+			//パーティクル追加
+			hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
+		}
+	}
+
 	if (isSpawn) {
 		UpdateSpawn();
 	}
 
-	eDataPlayerScale.Update();
-	scale *= EaseOut(eDataPlayerScale.GetTimeRate());
+	/*eDataPlayerScale.Update();
+	scale *= EaseOut(eDataPlayerScale.GetTimeRate());*/
 
 	//死んでる弾を消す
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
@@ -556,7 +568,7 @@ void Player::UpdateSpawn()
 		Vector3 pos = { Random(-5.0f, 5.0f),Random(-5.0f, 5.0f),Random(-5.0f, 5.0f) };
 		pos += GetWorldPosition();
 
-	hitParticle.Add()
+	//hitParticle.Add()
 
 	}
 

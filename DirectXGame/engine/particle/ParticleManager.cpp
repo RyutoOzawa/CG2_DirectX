@@ -124,21 +124,11 @@ void ParticleManager::Initialize(TextureData* texData)
 void ParticleManager::Update()
 {
 	//寿命がつきたパーティクルを全削除
-	particles.remove_if([](Particle& x) {return x.frame > x.num_frame; });
+	particles.remove_if([](BaseParticle& x) {return x.IsAlive(); });
 
 	//全パーティクル更新
-	for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
-		//経過フレーム数をカウント
-		it->frame++;
-		//速度に加速度を加算
-		it->velocity += it->accel;
-		//速度による移動
-		it->position += it->velocity;
-		//パーティクルの現在時間を計算
-		float f = (float)it->frame / it->num_frame;
-		//スケールの線形補間
-		it->scale = (it->scaleEnd - it->scaleStart) * f;
-		it->scale += it->scaleStart;
+	for (std::forward_list<BaseParticle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		it->Update();
 
 	}
 	//頂点バッファへデータ転送
@@ -146,11 +136,11 @@ void ParticleManager::Update()
 	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		//パーティクルの情報を1つずつ反映
-		for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		for (std::forward_list<BaseParticle>::iterator it = particles.begin(); it != particles.end(); it++) {
 			//座標
-			vertMap->pos = it->position;
+			vertMap->pos = it->GetPosition();
 			//スケール
-			vertMap->scale = it->scale;
+			vertMap->scale = it->GetScale();
 			//次の順番へ
 			vertMap++;
 		}
@@ -217,15 +207,9 @@ void ParticleManager::Add(int life, const Vector3& position, const Vector3& velo
 	//リストに要素を追加
 	particles.emplace_front();
 	//追加した要素の参照
-	Particle& p = particles.front();
+	BaseParticle& p = particles.front();
 	//値のセット
-	p.position = position;
-	p.velocity = velocity;
-	p.accel = accel;
-	p.num_frame = life;
-	p.scale = scaleStart;
-	p.scaleStart = scaleStart;
-	p.scaleEnd = scaleEnd;
+	p.Add(life, position, velocity, accel, scaleStart,scaleEnd);
 }
 
 void ParticleManager::AddLerp(float t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd)
@@ -237,11 +221,11 @@ void ParticleManager::AddLerp(float t, const Vector3& start, const Vector3& end,
 	//リストに要素を追加
 	particles.emplace_front();
 	//追加した要素の参照
-	Particle& p = particles.front();
+	/*Particle& p = particles.front();
 	p.start = start;
 	p.end = end;
 	p.scaleStart = scaleStart;
-	p.scaleEnd = scaleEnd;
+	p.scaleEnd = scaleEnd;*/
 }
 
 void ParticleManager::CreatePipeline3D()

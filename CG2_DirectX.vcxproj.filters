@@ -174,7 +174,7 @@
     <ClCompile Include="DirectXGame\engine\math\SplineCurve.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\engine\3d\ParticleManager.cpp">
+    <ClCompile Include="DirectXGame\engine\particle\ParticleManager.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\main.cpp">
@@ -226,6 +226,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\math\BezierCurve.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\engine\particle\BaseParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -463,6 +466,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\math\BezierCurve.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\particle\ParticleManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\engine\particle\BaseParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

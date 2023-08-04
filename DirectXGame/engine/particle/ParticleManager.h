@@ -7,6 +7,7 @@
 #include"Camera.h"
 #include<forward_list>
 #include"Texture.h"
+#include"BaseParticle.h"
 
 class ParticleManager
 {
@@ -72,7 +73,7 @@ private:
 	Matrix4 matBillBoardY = matBillBoardY.identity();
 
 //パーティクル配列
-	std::forward_list<Particle> particles;
+	std::forward_list<BaseParticle> particles;
 
 public:
 	static void StaticInitialize(ReDirectX* directX_);

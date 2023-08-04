@@ -65,7 +65,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame\engine\collision;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine/particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame\engine\collision;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -84,7 +84,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\collision;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine/particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\collision;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXGame\engine\particle\BaseParticle.cpp" />
     <ClCompile Include="DirectXGame\engine\math\BezierCurve.cpp" />
     <ClCompile Include="DirectXGame\application\BossEnemy.cpp" />
     <ClCompile Include="DirectXGame\application\Enemy.cpp" />
@@ -143,7 +144,7 @@
     <ClCompile Include="DirectXGame\engine\scene\GameSceneManager.cpp" />
     <ClCompile Include="DirectXGame\engine\scene\SceneFactory.cpp" />
     <ClCompile Include="DirectXGame\main.cpp" />
-    <ClCompile Include="DirectXGame\engine\3d\ParticleManager.cpp" />
+    <ClCompile Include="DirectXGame\engine\particle\ParticleManager.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\PostEffect.cpp" />
     <ClCompile Include="DirectXGame\engine\math\SplineCurve.cpp" />
     <ClCompile Include="DirectXGame\application\GameOverScene.cpp" />
@@ -262,7 +263,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectXGame\engine\3d\ParticleManager.h" />
+    <ClInclude Include="DirectXGame\engine\particle\BaseParticle.h" />
+    <ClInclude Include="DirectXGame\engine\particle\ParticleManager.h" />
     <ClInclude Include="DirectXGame\engine\math\BezierCurve.h" />
     <ClInclude Include="DirectXGame\application\BossEnemy.h" />
     <ClInclude Include="DirectXGame\application\Enemy.h" />
