@@ -307,9 +307,9 @@ void GamePlayScene::EnemySpawn()
 
 	Vector3 lTop, lBtm, rTop, rBtm;
 	lTop = { -60,30,posZ };
-	lBtm = { -60,30,posZ };
-	rTop = { -60,30,posZ };
-	rBtm = { -60,30,posZ };
+	lBtm = { -60,-30,posZ };
+	rTop = { 60,30,posZ };
+	rBtm = { 60,-30,posZ };
 
 
 
