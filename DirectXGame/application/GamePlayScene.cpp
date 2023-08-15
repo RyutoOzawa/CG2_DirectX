@@ -305,8 +305,22 @@ void GamePlayScene::EnemySpawn()
 	Vector3 p4 = { 30,0,posZ };
 	Vector3 end = { 60,0,posZ };
 
+	Vector3 lTop, lBtm, rTop, rBtm;
+	lTop = { -60,30,posZ };
+	lBtm = { -60,30,posZ };
+	rTop = { -60,30,posZ };
+	rBtm = { -60,30,posZ };
+
+
 
 	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
+	std::vector<Vector3> rightForLeftUpper;//上側右から左
+	std::vector<Vector3> rightForLeftLower;//下側右から左
+	std::vector<Vector3> leftForRightUpper;//上側左から右
+	std::vector<Vector3> leftForRightLower;//下側左から右
+
+
+
 
 	//曲線をカメラ基準に
 	for (auto& p : enemyMovePoints) {
