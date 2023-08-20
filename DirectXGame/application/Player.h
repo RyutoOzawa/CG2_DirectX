@@ -43,6 +43,8 @@ public:	//メンバ関数
 	//生存判定
 	bool IsAlive()const { return isAlive; }
 
+	INT32 GetSpawnTimer() const { return spawnTimer; }
+
 private://メンバ変数
 
 	//カメラからの自機の距離

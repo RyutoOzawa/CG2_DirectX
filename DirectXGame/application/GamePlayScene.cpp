@@ -138,30 +138,9 @@ void GamePlayScene::Update()
 	//----------------------ゲーム内ループはここから---------------------//
 
 
-	//レールカメラの更新
-	railCamera->Update();
+	
 
-	//レールカメラを親にする
-	player->parent = railCamera->GetObject3d();
-	player->Update(&enemys);
-
-	//自機の死亡が確認されたらシーン移動
-	if (!player->IsAlive()) {
-		//シーンの切り替えを依頼
-		sceneManager->ChangeScene("GAMEOVER");
-	}
-
-	for (std::unique_ptr<Enemy>& enemy : enemys) {
-		enemy->Update(player->GetWorldPosition(),railCamera->GetObject3d()->matWorld);
-	}
-
-	//死んでる敵を消す
-	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
-		if (!enemy->IsAlive()) {
-			return true;
-		}
-		return false;
-		});
+#pragma region デバッグ用コード
 
 	if (ImGui::Button("Enemy spwan")) {
 		EnemySpawn();
@@ -180,9 +159,43 @@ void GamePlayScene::Update()
 		railCamera->Start();
 	}
 
+#pragma endregion デバッグ用コード
+
+
+
+	//レールカメラの更新
+	railCamera->Update();
+
+	//レールカメラを親にする
+	player->parent = railCamera->GetObject3d();
+	player->Update(&enemys);
+
+	//自機の死亡が確認されたらシーン移動
+	if (!player->IsAlive()) {
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("GAMEOVER");
+	}
+
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+		enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
+	}
+
+	//死んでる敵を消す
+	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+		if (!enemy->IsAlive()) {
+			return true;
+		}
+		return false;
+		});
+
+	//自機のスポーン終了でレールカメラを開始
+	if (player->GetSpawnTimer() == 0) {
+		railCamera->Start();
+	}
+
 	//レールカメラが5%進むごとに敵を一体スポーン
 	float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
-	if (fmodf( cameraProgressPercent,5.0f) == 0.0f && cameraProgressPercent != 0) {
+	if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
 		EnemySpawn();
 	}
 
@@ -319,13 +332,32 @@ void GamePlayScene::EnemySpawn()
 	std::vector<Vector3> leftForRightUpper;//上側左から右
 	std::vector<Vector3> leftForRightLower;//下側左から右
 
-
+	rightForLeftUpper = { rTop, rTop,lTop,lTop };
+	rightForLeftLower = { rBtm, rBtm,lBtm,lBtm };
+	leftForRightUpper = { lTop, lTop,rTop,rTop };
+	leftForRightLower = { lBtm, lBtm,rBtm,rBtm };
 
 
 	//曲線をカメラ基準に
 	for (auto& p : enemyMovePoints) {
 		//p += railCamera->GetObject3d()->GetWorldPosition();
 	}
+
+	int pasent = (INT32)Random(0, 100) % 4;
+
+	if (pasent == 0) {
+		enemyMovePoints = rightForLeftUpper;
+	}
+	else if (pasent == 1) {
+		enemyMovePoints = rightForLeftLower;
+	}
+	else if (pasent == 2) {
+		enemyMovePoints = leftForRightUpper;
+	}
+	else {
+		enemyMovePoints = leftForRightLower;
+	}
+
 
 	//敵の生成と初期化
 	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
@@ -334,6 +366,34 @@ void GamePlayScene::EnemySpawn()
 
 	//リストに登録
 	enemys.push_back(std::move(newEnemy));
+	
 
+}
 
+void GamePlayScene::UpdateAllPhase()
+{
+}
+
+void GamePlayScene::UpdateGamePhase()
+{
+}
+
+void GamePlayScene::UpdateGameStart()
+{
+}
+
+void GamePlayScene::UpdateMain()
+{
+}
+
+void GamePlayScene::UpdateBossSpawn()
+{
+}
+
+void GamePlayScene::UpdateBoss()
+{
+}
+
+void GamePlayScene::UpdateClear()
+{
 }

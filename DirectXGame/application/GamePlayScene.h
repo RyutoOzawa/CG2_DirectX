@@ -83,7 +83,13 @@ private://メンバ変数
 private:
 
 	//各フェーズの更新
-
+	void UpdateAllPhase();	//全フェーズで絶対に更新する処理
+	void UpdateGamePhase();	//ゲームフェーズで更新する処理
+	void UpdateGameStart();	//ゲーム開始
+	void UpdateMain();		//メインゲーム
+	void UpdateBossSpawn();	//ボス発生
+	void UpdateBoss();		//ボス戦
+	void UpdateClear();		//ゲームクリア
 
 };
 

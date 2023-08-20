@@ -57,6 +57,9 @@ void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* 
 		haloObject.Initialize();
 		haloObject.SetModel(haloModel.get());
 	}
+
+	//スポーン処理
+	Spawn();
 }
 
 void Player::Spawn()
@@ -319,7 +322,7 @@ void Player::Attack()
 			shotInterval = shotCooltime;
 
 			//弾の速度
-			const float bulletSpdBase = 16.0f;
+			const float bulletSpdBase = 32.0f;
 			Vector3 velocity(0, 0, bulletSpdBase);
 
 			velocity = reticleObj.GetWorldPosition() - Object3d::GetWorldPosition();
