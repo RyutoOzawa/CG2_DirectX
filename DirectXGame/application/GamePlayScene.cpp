@@ -151,11 +151,11 @@ void GamePlayScene::Update()
 	}
 
 	//スタートボタンでレールカメラ開始
-	if (Input::GetInstance()->IsPadTrigger(XINPUT_GAMEPAD_START)) {
+	if (Input::GetInstance()->IsPadTrigger(XINPUT_GAMEPAD_START) || Input::GetInstance()->IsKeyTrigger(DIK_F2)) {
 		railCamera->Start();
 	}
 
-	if (ImGui::Button("game start")) {
+	if (ImGui::Button("game start") ) {
 		railCamera->Start();
 	}
 
@@ -190,7 +190,7 @@ void GamePlayScene::Update()
 
 	//自機のスポーン終了でレールカメラを開始
 	if (player->GetSpawnTimer() == 0) {
-		railCamera->Start();
+	railCamera->Start();
 	}
 
 	//レールカメラが5%進むごとに敵を一体スポーン
