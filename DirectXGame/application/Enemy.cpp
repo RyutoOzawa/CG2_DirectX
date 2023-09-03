@@ -68,6 +68,9 @@ void Enemy::Update(const Vector3& playerWorldPos, const Matrix4& cameraMat)
 		bullet->Update();
 	}
 
+	//スケール制御
+	ScaleControll();
+
 	Object3d::Update();
 
 	//カメラのビュー行列と掛け算してzがマイナスなら殺す
@@ -140,8 +143,33 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 
 		//登録
 		bullets.push_back(std::move(newBullet));
+
+		//スケールを3倍に
+		scale = { 3,3,3 };
+
 	}
 	else {
 		shotInterval--;
 	}
+}
+
+void Enemy::ScaleControll()
+{
+	//大きさが1を超えていたら少しずつ小さく
+	//x,y,z全てスケールが同値のものだと仮定してサイズの調整を行う
+	if (scale.x > 1.0f) {
+		scale.x -= 0.5f;
+		scale.y -= 0.5f;
+		scale.z -= 0.5f;
+	}
+	else if (scale.x < 1.0f) {
+		scale.x = 1.0f;
+		scale.y = 1.0f;
+		scale.z = 1.0f;
+	}
+
+}
+
+void Enemy::Spin()
+{
 }

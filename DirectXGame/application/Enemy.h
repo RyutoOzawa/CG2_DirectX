@@ -58,6 +58,10 @@ private:
 	static Model* model;
 	static Model* bulletModel;
 
+	//‘å‚«‚³‚Ì§Œä
+	void ScaleControll();
 
+	//ƒXƒsƒ“
+	void Spin();
 };
 
