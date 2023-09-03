@@ -63,5 +63,7 @@ private:
 
 	//ƒXƒsƒ“
 	void Spin();
+
+	Vector3 baseScale = { 3,3,3 };
 };
 

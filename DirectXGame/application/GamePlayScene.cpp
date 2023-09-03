@@ -163,43 +163,43 @@ void GamePlayScene::Update()
 
 
 
-	//レールカメラの更新
-	railCamera->Update();
 
-	//レールカメラを親にする
-	player->parent = railCamera->GetObject3d();
-	player->Update(&enemys);
+	////レールカメラの更新
+	//railCamera->Update();
 
-	//自機の死亡が確認されたらシーン移動
-	if (!player->IsAlive()) {
-		//シーンの切り替えを依頼
-		sceneManager->ChangeScene("GAMEOVER");
-	}
+	////レールカメラを親にする
+	//player->parent = railCamera->GetObject3d();
+	//player->Update(&enemys);
 
-	for (std::unique_ptr<Enemy>& enemy : enemys) {
-		enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
-	}
+	////自機の死亡が確認されたらシーン移動
+	//if (!player->IsAlive()) {
+	//	//シーンの切り替えを依頼
+	//	sceneManager->ChangeScene("GAMEOVER");
+	//}
 
-	//死んでる敵を消す
-	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
-		if (!enemy->IsAlive()) {
-			return true;
-		}
-		return false;
-		});
+	////敵配列の更新
+	//for (std::unique_ptr<Enemy>& enemy : enemys) {
+	//	enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
+	//}
 
-	//自機のスポーン終了でレールカメラを開始
-	if (player->GetSpawnTimer() == 0) {
-	railCamera->Start();
-	}
+	////死んでる敵を消す
+	//enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+	//	if (!enemy->IsAlive()) {
+	//		return true;
+	//	}
+	//	return false;
+	//	});
 
-	//レールカメラが5%進むごとに敵を一体スポーン
-	float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
-	if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
-		EnemySpawn();
-	}
 
-	Enemy::EnemyParticleUpdate();
+
+
+	////レールカメラが5%進むごとに敵を一体スポーン
+	//float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
+	//if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
+	//	EnemySpawn();
+	//}
+
+	//Enemy::EnemyParticleUpdate();
 
 	ImGui::SliderFloat("cameraX", &currentCamera->eye.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("cameraY", &currentCamera->eye.y, -100.0f, 100.0f);
@@ -208,9 +208,6 @@ void GamePlayScene::Update()
 	//camera->target = camera->eye;
 	//camera->target.z += 1.0f;
 
-	//現在のカメラ情報をレールカメラのものに
-	currentCamera = railCamera->GetCamera();
-	currentCamera->UpdateMatrix();
 
 	//天球の操作
 	ImGui::Begin("skydome");
@@ -235,6 +232,37 @@ void GamePlayScene::Update()
 
 	//object1->SetRot({ 0,3.14f / 2,0 });
 	object1->Update();
+
+	//全フェーズ共通の更新
+	UpdateAllPhase();
+
+	//ﾌｪｰｽﾞごとの更新
+	switch (gamePhase)
+	{
+	case GamePhase::Event_GameStart:
+		UpdateGameStart();
+		break;
+	case GamePhase::Game_Main:
+		UpdateGamePhase();
+		UpdateMain();
+		break;
+	case GamePhase::Event_BossSpawn:
+		UpdateBossSpawn();
+		break;
+	case GamePhase::Game_Boss:
+		UpdateGamePhase();
+		UpdateBoss();
+		break;
+	case GamePhase::Event_GameClear:
+		UpdateClear();
+		break;
+	default:
+		break;
+	}
+
+	//現在のカメラ情報をレールカメラのものに
+currentCamera = railCamera->GetCamera();
+currentCamera->UpdateMatrix();
 
 	//当たり判定チェック
 	collisionManager->CheckAllCollisions();
@@ -372,18 +400,58 @@ void GamePlayScene::EnemySpawn()
 
 void GamePlayScene::UpdateAllPhase()
 {
+	//レールカメラの更新
+	railCamera->Update();
+
+	//レールカメラを親にする
+	player->parent = railCamera->GetObject3d();
+	player->Update(&enemys);
 }
 
 void GamePlayScene::UpdateGamePhase()
 {
+
+
+	//自機の死亡が確認されたらシーン移動
+	if (!player->IsAlive()) {
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("GAMEOVER");
+	}
+
 }
 
 void GamePlayScene::UpdateGameStart()
 {
+	//自機のスポーン終了でレールカメラを開始
+	if (player->GetSpawnTimer() == 0) {
+		railCamera->Start();
+
+		//ﾌｪｰｽﾞをメインゲームに移行
+		gamePhase = GamePhase::Game_Main;
+	}
+
 }
 
 void GamePlayScene::UpdateMain()
 {
+	//敵配列の更新
+	for (std::unique_ptr<Enemy>& enemy : enemys) {
+		enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
+	}
+
+	//死んでる敵を消す
+	enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
+		if (!enemy->IsAlive()) {
+			return true;
+		}
+		return false;
+		});
+
+	//レールカメラが5%進むごとに敵を一体スポーン
+	float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
+	if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
+		EnemySpawn();
+	}
 }
 
 void GamePlayScene::UpdateBossSpawn()
