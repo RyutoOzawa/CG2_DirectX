@@ -334,7 +334,7 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::EnemySpawn()
 {
-	float posZ = Random(200.0f, 300.0f);
+	float posZ = Random(150.0f, 200.0f);
 
 	//Z座標はカメラ基準に
 	//posZ += railCamera->GetObject3d()->GetWorldPosition().z;
@@ -452,6 +452,10 @@ void GamePlayScene::UpdateMain()
 	if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
 		EnemySpawn();
 	}
+
+	//敵のパーティクル更新
+	Enemy::EnemyParticleUpdate();
+
 }
 
 void GamePlayScene::UpdateBossSpawn()
