@@ -113,6 +113,7 @@ void RailCamera::Update()
 
 	ImGui::Text("eye:%f,%f,%f", camera->eye.x, camera->eye.y, camera->eye.z);
 	ImGui::Text("target:%f,%f,%f", camera->target.x, camera->target.y, camera->target.z);
+	ImGui::Text("progress %f", GetProgress());
 	ImGui::End();
 
 }

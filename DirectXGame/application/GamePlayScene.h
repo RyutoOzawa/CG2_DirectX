@@ -15,6 +15,7 @@
 #include"RailCamera.h"
 #include"Enemy.h"
 #include"CollisionManager.h"
+#include"BossEnemy.h"
 
 enum class GamePhase {
 	Event_GameStart,//ゲーム開始イベント(自機の出撃)
@@ -73,6 +74,13 @@ private://メンバ変数
 	std::unique_ptr<Object3d> colTestObj = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
+
+	//ボス　
+	std::unique_ptr<BossEnemy> boss = nullptr;
+
+	std::unique_ptr<Model> bossBodyModel = nullptr;
+	std::unique_ptr<Model> bossBarrelModel = nullptr;
+
 
 	Camera* currentCamera = nullptr;
 	RailCamera* railCamera = nullptr;

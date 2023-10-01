@@ -36,8 +36,8 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 
 	SetCollider(new SphereCollider({ 0,0,0 }, 9.0f));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
-
 	scale = baseScale;
+	shotInterval = shotCoolTime;
 
 }
 
@@ -68,6 +68,15 @@ void Enemy::Update(const Vector3& playerWorldPos, const Matrix4& cameraMat)
 
 	//スケール制御
 	ScaleControll();
+
+	//イージング中なら回転
+	easeAtkRot.Update();
+	if (easeAtkRot.GetTimeRate() < 1.0f) {
+		rotation.z =  Lerp(0.0f, PI, Out( easeAtkRot.GetTimeRate()));
+	}
+	else {
+		rotation.z = 0.0f;
+	}
 
 	Object3d::Update();
 
@@ -145,10 +154,18 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 		//スケールを3倍に
 		scale *= 1.5f;
 
+		//回転
+		easeAtkRot.Start(30.0f);
+
 	}
 	else {
 		shotInterval--;
 	}
+}
+
+void Enemy::Death()
+{
+	isAlive = false;
 }
 
 void Enemy::ScaleControll()

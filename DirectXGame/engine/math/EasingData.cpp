@@ -28,3 +28,8 @@ void EasingData::Start(float allFrame)
 	//最大フレームのセット
 	maxTime = allFrame;
 }
+
+float Out(float t)
+{
+	return 1 - powf(1 - t, 3);
+}

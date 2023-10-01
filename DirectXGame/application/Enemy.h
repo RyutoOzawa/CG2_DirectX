@@ -42,6 +42,8 @@ public:
 
 	void Attack(const Vector3& playerWorldPos);
 
+	void Death();
+
 private:
 
 	static ParticleManager particleManager;
@@ -63,6 +65,9 @@ private:
 
 	//スピン
 	void Spin();
+
+	//攻撃時回転のイージングデータ
+	EasingData easeAtkRot;
 
 	Vector3 baseScale = { 3,3,3 };
 };

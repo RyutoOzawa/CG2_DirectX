@@ -74,7 +74,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* paren
 	actTime[(INT32)BossAct::AttackLaser] = 30;
 	actTime[(INT32)BossAct::Death] = 30;
 
-	ChangeAct(BossAct::Spawn);
+	//ChangeAct(BossAct::Spawn);
 
 
 }
@@ -87,6 +87,10 @@ void BossEnemy::Update(const Vector3& playerPos)
 	if (Input::GetInstance()->IsKeyTrigger(DIK_1)) {
 		ChangeAct(BossAct::AttackShot);
 	}
+	else if (Input::GetInstance()->IsKeyTrigger(DIK_2)) {
+		ChangeAct(BossAct::Spawn);
+	}
+
 
 
 	//ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
@@ -389,6 +393,10 @@ void BossEnemy::UpdateMove()
 
 void BossEnemy::UpdateAtkShot()
 {
+	if (!isAlive) {
+		return;
+	}
+
 	//ŽËŒ‚‚²‚Æ‚ÌŽžŠÔ
 	INT32 shotTimeOnce = (actTime[(INT32)BossAct::AttackShot]-30) / shotPosMax;
 	//‰½“x–Ú‚ÌŽËŒ‚‚©

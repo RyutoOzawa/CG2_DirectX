@@ -19,3 +19,5 @@ public:
 
 };
 
+float Out(float t);
+

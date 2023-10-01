@@ -113,6 +113,16 @@ void GamePlayScene::Initialize()
 	//obj3dクラスにカメラをセット
 	Object3d::SetCamera(railCamera->GetCamera());
 
+	//ボスの初期化
+	bossBodyModel = std::make_unique<Model>();
+	bossBodyModel = Model::CreateModel("BossBody");
+
+	bossBarrelModel = std::make_unique<Model>();
+	bossBarrelModel = Model::CreateModel("BossBarrel");
+
+	boss = std::make_unique<BossEnemy>();
+	boss->Initialize(bossBodyModel.get(), bossBarrelModel.get(), railCamera->GetObject3d());
+
 }
 
 void GamePlayScene::Finalize()
@@ -304,6 +314,9 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 
 		enemy->Draw();
+
+
+
 	}
 
 
@@ -437,6 +450,18 @@ void GamePlayScene::UpdateMain()
 	//敵配列の更新
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 		enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
+
+		//レールカメラが進行しきったら敵を全消滅
+		if (railCamera->GetProgress() >= 1.0f) {
+			enemy->Death();
+		}
+
+	}
+
+	//ボスのスポーン
+	if (railCamera->GetProgress() >= 1.0f) {
+		//boss->Spawn()
+		sceneManager->ChangeScene("GAMECLEAR");
 	}
 
 	//死んでる敵を消す
