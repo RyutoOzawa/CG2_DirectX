@@ -421,6 +421,10 @@ void GamePlayScene::UpdateAllPhase()
 	//レールカメラを親にする
 	player->parent = railCamera->GetObject3d();
 	player->Update(&enemys);
+
+	//天球をちょっと回転させる
+	skydomeObj->rotation.y += PI / 14400.0f;
+
 }
 
 void GamePlayScene::UpdateGamePhase()
@@ -452,21 +456,16 @@ void GamePlayScene::UpdateMain()
 	//敵配列の更新
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
 		enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
-
 		//レールカメラが進行しきったら敵を全消滅
 		if (railCamera->GetProgress() >= 1.0f) {
 			enemy->Death();
 		}
-
 	}
 
 	//ゲームフェーズをボス戦(ボス戦イベント)にしてボスをスポーン
 	if (railCamera->GetProgress() >= 1.0f) {
 		boss->Spawn(railCamera->GetObject3d()->matWorld);
-		
 		gamePhase = GamePhase::Game_Boss;
-
-
 	}
 
 	//死んでる敵を消す
