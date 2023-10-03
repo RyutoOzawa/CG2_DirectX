@@ -151,7 +151,7 @@ void GameTitleScene::Update()
 	}
 	else if(logoRotTimer == 0){
 		logoRotTimer = logoRotTimeMax;
-		//300•b‚Éˆê‰ñ30%‚ÅƒƒS‰ñ“]
+		//5•b‚Éˆê‰ñŠm—¦‚ÅƒƒS‰ñ“]
 		if ((uint16_t)Random(0.0f, 10.0f) % 10 <= 1) {
 			easeLogoRot.Start(60.0f);
 		}
