@@ -5,6 +5,7 @@ using namespace DirectX;
 #include"GameSceneManager.h"
 #include"WindowsAPI.h"
 #include"Util.h"
+#include"ImguiManager.h"
 
 void GameTitleScene::Initialize()
 {
@@ -46,6 +47,25 @@ void GameTitleScene::Initialize()
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
 	skydomeObj->scale = { 1000,1000,1000 };
+
+	//敵
+	enemyModel = std::make_unique<Model>();
+	enemyModel = Model::CreateModel("ZakoEnemy");
+
+	float enemyPosZ = 100.0f;
+	for (uint8_t i = 0; i < enemyMax; i++) {
+		enemysObj[i] = std::make_unique<Object3d>();
+		enemysObj[i]->Initialize();
+		enemysObj[i]->SetModel(enemyModel.get());
+		enemysObj[i]->position.z = enemyPosZ;
+		float posX = 200.0f;
+		if (i == 0) {
+			enemysObj[i]->position.x = posX;
+		}
+		else {
+			enemysObj[i]->position.x = enemysObj[i - 1]->position.x + 15.0f;
+		}
+	}
 
 	//カメラ初期化
 	camera = std::make_unique<Camera>();
@@ -107,6 +127,24 @@ void GameTitleScene::Update()
 	skydomeObj->rotation.y += PI / 14400.0f;
 	skydomeObj->Update();
 
+	//敵の移動制御
+	ImGui::SliderFloat("enemy[0].x", &enemysObj[0]->position.x, -100.0f, 100.0f);
+
+	for (uint8_t i = 0; i < enemyMax; i++) {
+		enemysObj[i]->rotation.y = PI / 2.0f;
+		float enemyRad = textColorRad - 18.0f * i;
+		float enemyPosY = ((sinf(enemyRad* PI / 180.0f) + 1.0f) / 2.0f) * 60.0f - 30.0f;
+		enemysObj[i]->position.y = enemyPosY;
+		enemysObj[i]->position.x -= 0.75f;
+		if (enemysObj[i]->position.x < -100.0f) {
+			enemysObj[i]->position.x += 400.0f;
+		}
+
+		enemysObj[i]->Update();
+		ImGui::Text("posY %f", enemyPosY);
+
+	}
+
 	//----------------------ゲーム内ループはここまで---------------------//
 
 
@@ -120,6 +158,9 @@ void GameTitleScene::Draw()
 
 	skydomeObj->Draw();
 
+	for (std::unique_ptr<Object3d>& enemy : enemysObj) {
+		enemy->Draw();
+	}
 
 	//-------スプライト描画処理-------//
 	Sprite::BeginDraw();

@@ -47,6 +47,9 @@ private://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Model> skydome = nullptr;
 	std::unique_ptr<Object3d> skydomeObj = nullptr;
 
+	std::unique_ptr<Model> enemyModel = nullptr;
+	static const uint8_t enemyMax = 10;
+	std::unique_ptr<Object3d> enemysObj[enemyMax];
 
 	float textColorRad = 0.0f;
 };
