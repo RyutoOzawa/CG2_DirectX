@@ -8,6 +8,7 @@
 #include"Model.h"
 #include"Object3d.h"
 #include"Camera.h"
+#include"EasingData.h"
 
 class GameTitleScene :public GameBaseScene
 {
@@ -52,5 +53,9 @@ private://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Object3d> enemysObj[enemyMax];
 
 	float textColorRad = 0.0f;
+
+	const uint16_t logoRotTimeMax = 300;
+	uint16_t logoRotTimer = logoRotTimeMax;
+	EasingData easeLogoRot;
 };
 

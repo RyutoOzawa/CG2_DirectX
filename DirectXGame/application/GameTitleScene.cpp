@@ -145,6 +145,22 @@ void GameTitleScene::Update()
 
 	}
 
+	//タイトルロゴの回転
+	if (logoRotTimer > 0) {
+		logoRotTimer--;
+	}
+	else if(logoRotTimer == 0){
+		logoRotTimer = logoRotTimeMax;
+		//300秒に一回30%でロゴ回転
+		if ((uint16_t)Random(0.0f, 10.0f) % 10 <= 1) {
+			easeLogoRot.Start(60.0f);
+		}
+	}
+
+	easeLogoRot.Update();
+	float rot = Lerp(0.0f, PI * 6.0f, Out(easeLogoRot.GetTimeRate()));
+	spTextTitleLogo->SetRotation(rot);
+
 	//----------------------ゲーム内ループはここまで---------------------//
 
 
