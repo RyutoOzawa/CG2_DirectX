@@ -72,7 +72,7 @@ void GamePlayScene::Initialize()
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
-	skydomeObj->scale = { 1000,1000,1000 };;
+	skydomeObj->scale = { 1000,1000,1000 };
 
 
 	player = std::make_unique<Player>();
@@ -227,6 +227,8 @@ void GamePlayScene::Update()
 	ImGui::SliderFloat("scaleZ", &skydomeObj->scale.z, 0.0f, 5.0f);
 	ImGui::End();
 
+	//天球をちょっと回転させる
+	skydomeObj->rotation.y += PI / 14400.0f;
 	skydomeObj->Update();
 
 	//アニメーション開始ボタン
@@ -422,8 +424,7 @@ void GamePlayScene::UpdateAllPhase()
 	player->parent = railCamera->GetObject3d();
 	player->Update(&enemys);
 
-	//天球をちょっと回転させる
-	skydomeObj->rotation.y += PI / 14400.0f;
+
 
 }
 

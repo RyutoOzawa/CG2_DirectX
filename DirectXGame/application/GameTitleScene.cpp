@@ -3,6 +3,8 @@
 #include"DirectX.h"
 using namespace DirectX;
 #include"GameSceneManager.h"
+#include"WindowsAPI.h"
+#include"Util.h"
 
 void GameTitleScene::Initialize()
 {
@@ -15,9 +17,44 @@ void GameTitleScene::Initialize()
 
 	//テクスチャデータ初期化
 	titleTexture = Texture::LoadTexture("dummyTitle.png");
+	texTextTitleLogo = Texture::LoadTexture("titleLogo.png");
+	texTextPressA = Texture::LoadTexture("textPressA.png");
 
 	titleSprite = new Sprite();
 	titleSprite->Initialize(titleTexture);
+
+	spTextTitleLogo = std::make_unique<Sprite>();
+	spTextTitleLogo->Initialize(texTextTitleLogo);
+	spTextTitleLogo->SetAnchorPoint({ 0.5f,0.5f });
+	spTextTitleLogo->SetPos({ WindowsAPI::winW / 2.0f,WindowsAPI::winH / 2.0f - WindowsAPI::winH / 4.0f });
+	//タイトルのサイズをn倍にする
+	Vector2 size = spTextTitleLogo->GetSize();
+	size *= 1.5f;
+	spTextTitleLogo->SetSize(size);
+
+
+
+	spTextPressA = std::make_unique<Sprite>();
+	spTextPressA->Initialize(texTextPressA);
+	spTextPressA->SetAnchorPoint({ 0.5f,0.5f });
+	spTextPressA->SetPos({ WindowsAPI::winW / 2.0f,WindowsAPI::winH / 2.0f + WindowsAPI::winH / 4.0f });
+
+	skydome = std::make_unique<Model>();
+	skydome = Model::CreateModel("skydome");
+
+	skydomeObj = std::make_unique<Object3d>();
+	skydomeObj->Initialize();
+	skydomeObj->SetModel(skydome.get());
+	skydomeObj->scale = { 1000,1000,1000 };
+
+	//カメラ初期化
+	camera = std::make_unique<Camera>();
+	Vector3 eye, target, up;
+	eye = { 0,0,0 };
+	target = { 0,0,1 };
+	up = { 0,1,0 };
+
+	camera->Initialize(eye, target, up);
 
 }
 
@@ -42,7 +79,7 @@ void GameTitleScene::Update()
 	//----------------------ゲーム内ループはここから---------------------//
 
 	//スペースキーでメインゲームへ
-	if (input->IsKeyTrigger(DIK_SPACE) || input->IsPadTrigger(XINPUT_GAMEPAD_START))
+	if (input->IsKeyTrigger(DIK_SPACE) || input->IsPadTrigger(XINPUT_GAMEPAD_A))
 	{
 		//シーンの切り替えを依頼
 		sceneManager->ChangeScene("GAMEPLAY");
@@ -54,6 +91,22 @@ void GameTitleScene::Update()
 		sceneManager->ChangeScene("TESTSCENE");
 	}
 
+	//テキストの色を明るくしたり暗くしたりする
+	float colorRadSpd = 2.5f;
+	textColorRad+= colorRadSpd;
+	if (textColorRad > 360.0f) {
+		textColorRad -= 360.0f;
+	}
+	float alpha = (sinf(textColorRad * PI / 180.0f) + 1.0f) / 2.0f;
+	Vector4 texColor = spTextPressA->GetColor();
+	texColor.w = alpha;
+	spTextPressA->SetColor(texColor);
+
+	//天球を回す
+	
+	skydomeObj->rotation.y += PI / 14400.0f;
+	skydomeObj->Update();
+
 	//----------------------ゲーム内ループはここまで---------------------//
 
 
@@ -61,9 +114,21 @@ void GameTitleScene::Update()
 
 void GameTitleScene::Draw()
 {
+	//-------3Dオブジェクト描画------//
+	Object3d::BeginDraw(camera.get());
+
+
+	skydomeObj->Draw();
+
+
 	//-------スプライト描画処理-------//
 	Sprite::BeginDraw();
 
-	titleSprite->Draw();
+	//titleSprite->Draw();
+
+	spTextTitleLogo->Draw();
+
+	spTextPressA->Draw();
+
 
 }
