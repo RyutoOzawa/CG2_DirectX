@@ -79,7 +79,7 @@ void SplineCurve::Update()
 	}
 
 	//現在の進行度の更新
-	progress = ((allTimeOnce * startIndex) + (eData.GetTimeRate() * allTimeOnce)) / allTime;
+	progress = ((allTimeOnce * startIndex) + (t * allTimeOnce)) / allTime;
 
 	//最初の補間、最後の補間ではそれぞれp0,p3にダミーを使う
 	if (!isLoop) {
@@ -89,6 +89,7 @@ void SplineCurve::Update()
 		else if (startIndex > lerpMax) {
 			currentPos = dummyPoints[1];
 			isActive = false;
+			progress = 1.0f;
 			return;
 		}
 		else {

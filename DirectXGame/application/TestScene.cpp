@@ -1,5 +1,6 @@
 #include "TestScene.h"
 #include"DebugLine.h"
+#include"Input.h"
 
 void TestScene::Initialize()
 {
@@ -36,7 +37,12 @@ void TestScene::Finalize()
 
 void TestScene::Update()
 {
-	Vector3 pos(0, 0, 50);
+	Vector3 pos(0, 0,50);
+
+	//1キーでボススポーン
+	if (Input::GetInstance()->IsKeyTrigger(DIK_0)) {
+		boss.Spawn(objRailDummy.matWorld);
+	}
 
 	boss.Update(pos);
 }

@@ -25,7 +25,7 @@ public:
 	void Initialize(Model* bodyModel,Model* barrelModel,Object3d* parent);
 
 	//更新
-	void Update(const Vector3& playerPos);
+	void Update(const Vector3& playerPos = {0.0f,0.0f,0.0f});
 
 	//描画
 	void Draw();
@@ -38,7 +38,7 @@ public:
 	void Finalize();
 
 	//ボスのスポーン
-	void Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos);
+	void Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos = {0,0,240.0f});
 
 private:
 	Model* bodyModel;

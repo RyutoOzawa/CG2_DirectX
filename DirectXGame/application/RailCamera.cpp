@@ -55,7 +55,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 
 void RailCamera::Start()
 {
-	spline.Start(360.0f);
+	spline.Start(600.0f);
 	targetSpline.Start(360.0f);
 }
 

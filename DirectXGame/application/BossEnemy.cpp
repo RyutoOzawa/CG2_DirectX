@@ -45,6 +45,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* paren
 	//弾射出座標のオフセットを設定
 	bulletOutOffset = { 0,0,17.0f };
 
+	//初期座標設定
 	position = { 0,0,240.0f };
 	Vector3 center = { 0,0,0 };
 	Vector3 leftEdge = { -100,0,0 };
@@ -119,6 +120,12 @@ void BossEnemy::Update(const Vector3& playerPos)
 		bullet->Update();
 	}
 
+	//死んでいるなら更新しない
+	if (!isAlive) {
+		return;
+	}
+
+
 	//行動時間を減らす
 	if (nowActTime > 0) {
 		nowActTime--;
@@ -188,6 +195,12 @@ void BossEnemy::Draw()
 {
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets) {
 		bullet->Draw();
+	}
+
+
+	//体と砲台は死んでるなら描画しない(弾だけ例外)
+	if (!isAlive) {
+		return;
 	}
 
 	//モデルの描画

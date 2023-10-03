@@ -319,6 +319,8 @@ void GamePlayScene::Draw()
 
 	}
 
+	//ボス
+	boss->Draw();
 
 	//FBX
 	//object1->Draw();
@@ -458,10 +460,13 @@ void GamePlayScene::UpdateMain()
 
 	}
 
-	//ボスのスポーン
+	//ゲームフェーズをボス戦(ボス戦イベント)にしてボスをスポーン
 	if (railCamera->GetProgress() >= 1.0f) {
-		//boss->Spawn()
-		sceneManager->ChangeScene("GAMECLEAR");
+		boss->Spawn(railCamera->GetObject3d()->matWorld);
+		
+		gamePhase = GamePhase::Game_Boss;
+
+
 	}
 
 	//死んでる敵を消す
@@ -485,10 +490,14 @@ void GamePlayScene::UpdateMain()
 
 void GamePlayScene::UpdateBossSpawn()
 {
+	//ボスの更新
+	boss->Update(player->GetWorldPosition());
 }
 
 void GamePlayScene::UpdateBoss()
 {
+	//
+	boss->Update(player->GetLocalPosition());
 }
 
 void GamePlayScene::UpdateClear()
