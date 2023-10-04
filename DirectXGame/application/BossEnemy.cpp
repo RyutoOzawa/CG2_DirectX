@@ -598,6 +598,13 @@ void BossEnemy::InitAtkShot()
 
 void BossEnemy::InitAtkLaser()
 {
+	//本体を真ん中に移動
+	eDataMove.Start(60.0f);
+	//移動前は今の座標、移動後はカメラ中央
+	movePosBefore = position;
+	movePosAfter = movePosBefore;
+	movePosAfter.x = 0.0f;
+	movePosAfter.y = 0.0f;
 }
 
 void BossEnemy::InitDeath()
