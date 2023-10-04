@@ -355,8 +355,6 @@ void BossEnemy::UpdateSpawn()
 	Object3d::Update();
 	for (size_t i = 0; i < barrelMax;i++) {
 
-
-
 		barrelObject[i].Update();
 
 		ImGui::Text("pos %f,%f,%f", barrelObject[i].position.x, barrelObject[i].position.y, barrelObject[i].position.z);

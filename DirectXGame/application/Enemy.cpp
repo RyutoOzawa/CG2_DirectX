@@ -72,7 +72,7 @@ void Enemy::Update(const Vector3& playerWorldPos, const Matrix4& cameraMat)
 	//イージング中なら回転
 	easeAtkRot.Update();
 	if (easeAtkRot.GetTimeRate() < 1.0f) {
-		rotation.z =  Lerp(0.0f, PI, Out( easeAtkRot.GetTimeRate()));
+		rotation.z =  Lerp(0.0f, 2 * PI, Out( easeAtkRot.GetTimeRate()));
 	}
 	else {
 		rotation.z = 0.0f;
@@ -152,7 +152,7 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 		bullets.push_back(std::move(newBullet));
 
 		//スケールを3倍に
-		scale *= 1.5f;
+		scale *= 2.5f;
 
 		//回転
 		easeAtkRot.Start(30.0f);
