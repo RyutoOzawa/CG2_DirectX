@@ -410,7 +410,7 @@ void BossEnemy::UpdateMove()
 	point.z = position.z;
 	position = point;
 
-	matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
+	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
 
 	Object3d::Update();
 
@@ -435,6 +435,8 @@ void BossEnemy::UpdateAtkShot()
 	if (!isAlive) {
 		return;
 	}
+
+	ImGui::Text("target %f,%f,%f", targetPos.x, targetPos.y, targetPos.z);
 
 	//ËŒ‚‚²‚Æ‚ÌŠÔ
 	INT32 shotTimeOnce = (actTime[(INT32)BossAct::AttackShot]-30) / shotPosMax;
@@ -482,7 +484,7 @@ void BossEnemy::UpdateAtkShot()
 	ImGui::Text("before %f,%f,%f",movePosBefore.x,movePosBefore.y,movePosBefore.z);
 	ImGui::Text("after %f,%f,%f", movePosAfter.x, movePosAfter.y, movePosAfter.z);
 
-	matRotation = Matrix4::CreateMatRot(position, targetPos, camera->up);
+	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
 	Object3d::Update();
 
 	//–C‘äÀ•W‚Íí‚Ée‚É’Ç]

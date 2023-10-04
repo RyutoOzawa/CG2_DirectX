@@ -327,7 +327,7 @@ void Player::Attack()
 			shotInterval = shotCooltime;
 
 			//’e‚Ì‘¬“x
-			const float bulletSpdBase = 8.0f;
+			const float bulletSpdBase = 32.0f;
 			Vector3 velocity(0, 0, bulletSpdBase);
 
 			velocity = reticleObj.GetWorldPosition() - Object3d::GetWorldPosition();

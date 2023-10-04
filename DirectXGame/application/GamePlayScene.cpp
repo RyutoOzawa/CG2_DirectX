@@ -517,7 +517,7 @@ void GamePlayScene::UpdateBoss()
 
 
 	//
-	boss->Update(player->GetLocalPosition());
+	boss->Update(player->GetWorldPosition());
 }
 
 void GamePlayScene::UpdateClear()
