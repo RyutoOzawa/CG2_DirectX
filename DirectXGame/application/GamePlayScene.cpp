@@ -500,12 +500,20 @@ void GamePlayScene::UpdateMain()
 
 void GamePlayScene::UpdateBossSpawn()
 {
+	
+
+
 	//ボスの更新
 	boss->Update(player->GetWorldPosition());
 }
 
 void GamePlayScene::UpdateBoss()
 {
+	//TODO:この辺の処理はボス登場のカメラワークが完成したらボス登場更新に持ってく
+	//最後の敵が死んでもパーティクルが更新されるように
+	Enemy::EnemyParticleUpdate();
+
+
 	//
 	boss->Update(player->GetLocalPosition());
 }
