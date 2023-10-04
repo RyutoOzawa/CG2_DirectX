@@ -21,3 +21,6 @@ public:
 
 float Out(float t);
 
+float In(float t);
+
+float InOut(float t);

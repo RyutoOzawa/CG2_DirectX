@@ -33,3 +33,13 @@ float Out(float t)
 {
 	return 1 - powf(1 - t, 3);
 }
+
+float In(float t)
+{
+	return t * t * t;
+}
+
+float InOut(float t)
+{
+	return t < 0.5f ? 4 * t * t * t : 1 - powf(-2 * t + 2, 3) / 2.0f;
+}

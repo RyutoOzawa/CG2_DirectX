@@ -17,16 +17,15 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* paren
 	healthTexture = Texture::LoadTexture("white1x1.png");
 	healthSprite = std::make_unique<Sprite>();
 	healthSprite->Initialize(healthTexture);
-	healthSprite->SetAnchorPoint({ 0.5f,0.5f });
 	Vector2 healthSize, healthPos,window;
 	window = { WindowsAPI::winW,WindowsAPI::winH };
 	
-	healthSize = { window.x - 64.0f,window.y / 24.0f };
+	healthSize = { window.x - 64.0f,32.0f };
 	//サイズの横幅をとっておく
 	healthSizeWidth = healthSize.x;
 	healthSize.x = 0.0f;
 
-	healthPos = { window.x / 2.0f,window.y - 32.0f };
+	healthPos = { 32.0f,window.y - 80.0f };
 	healthSprite->SetSize(healthSize);
 	healthSprite->SetPos(healthPos);
 
@@ -347,8 +346,10 @@ void BossEnemy::UpdateSpawn()
 
 	//HPをスポーン演出に依存しておおきくする
 	Vector2 sizeUI = healthSprite->GetSize();
-	sizeUI.x = Lerp(0.0f, healthSizeWidth, eDataMove.GetTimeRate());
+	sizeUI.x = Lerp(0.0f, healthSizeWidth,  eDataMove.GetTimeRate());
 	healthSprite->SetSize(sizeUI);
+
+
 
 	//親と砲台オブジェクト更新
 	Object3d::Update();
