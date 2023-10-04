@@ -194,7 +194,7 @@ void Player::Draw()
 		haloObject.Draw();
 	}
 
-	reticleObj.Draw();
+	//reticleObj.Draw();
 }
 
 void Player::DrawParticle()
@@ -414,7 +414,8 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	//座標をスプライトにセット
 	reticleSprite.SetPos(reticlePosScreen);
 
-	
+	//レティクルの色を初期化
+	reticleColor = { 1,1,1,1 };
 
 	
 
@@ -448,6 +449,8 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 		//ImGui::Text("enemyView.z %f", posEnemyView.z);
 
+
+
 		//レティクルが敵に当たっているなら
 		if (Collision::ColCircleToCircle(reticleC, enemyC)) {
 			
@@ -465,11 +468,17 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 			//レティクルが動いているならロックオン
 			if (inputHorizontal != 0 || inputVertical != 0) {
 				reticlePosScreen = posEnemyScreen;
+				reticleColor = { 1,1,0,1 };
 			}
+
+
 			
 		}
 
 	}
+
+	//レティクルの色を設定
+	reticleSprite.SetColor(reticleColor);
 
 //	ImGui::Text("distance retilce3d %f", distanceReticle3D);
 

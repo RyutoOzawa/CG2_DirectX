@@ -69,6 +69,7 @@ private://メンバ変数
 	//レティクル関連
 	Object3d reticleObj;
 	Sprite reticleSprite;
+	Vector4 reticleColor = { 1,1,1,1 };
 
 	//生成演出用の物
 	static const INT32 haloMax = 8;

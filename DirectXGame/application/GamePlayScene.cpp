@@ -76,7 +76,7 @@ void GamePlayScene::Initialize()
 
 
 	player = std::make_unique<Player>();
-	player->Initialize(playerModel.get(), reticleGraph, particleGraph);
+	player->Initialize(playerModel.get(), reticleGraph, whiteGraph);
 	player->SetBulletModel(playerBulletModel.get());
 
 	//当たり判定テスト用オブジェクト
@@ -459,14 +459,28 @@ void GamePlayScene::UpdateMain()
 		enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
 		//レールカメラが進行しきったら敵を全消滅
 		if (railCamera->GetProgress() >= 1.0f) {
-			enemy->Death();
+			//enemy->Death();
 		}
 	}
 
+	ImGui::Text("enemy count %d", enemys.size());
+
 	//ゲームフェーズをボス戦(ボス戦イベント)にしてボスをスポーン
 	if (railCamera->GetProgress() >= 1.0f) {
-		boss->Spawn(railCamera->GetObject3d()->matWorld);
-		gamePhase = GamePhase::Game_Boss;
+
+		//敵が全員倒されたらゲーム進行
+		if (enemys.empty()) {
+
+			boss->Spawn(railCamera->GetObject3d()->matWorld);
+			gamePhase = GamePhase::Game_Boss;
+		}
+	}
+	else {
+		//レールカメラが5%進むごとに敵を一体スポーン
+		float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
+		if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
+			EnemySpawn();
+		}
 	}
 
 	//死んでる敵を消す
@@ -477,11 +491,7 @@ void GamePlayScene::UpdateMain()
 		return false;
 		});
 
-	//レールカメラが5%進むごとに敵を一体スポーン
-	float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
-	if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
-		EnemySpawn();
-	}
+
 
 	//敵のパーティクル更新
 	Enemy::EnemyParticleUpdate();
