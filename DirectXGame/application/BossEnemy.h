@@ -49,6 +49,9 @@ private:
 	bool isAlive = false;
 	INT32 lifeMax = 10;
 	INT32 life = lifeMax;
+	TextureData* healthTexture = nullptr;
+	std::unique_ptr<Sprite> healthSprite = nullptr;
+	float healthSizeWidth = 0.0f;
 
 	//–C‘äŠÖŒW
 	static const INT32 barrelMax = 4;

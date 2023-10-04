@@ -347,6 +347,8 @@ void GamePlayScene::Draw()
 
 	player->DrawUI();
 
+	boss->DrawSprite();
+
 }
 
 void GamePlayScene::EnemySpawn()

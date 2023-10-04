@@ -36,7 +36,6 @@ void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* 
 	//HPの初期化
 	health = healthMax;
 	healthWidthMax = 720;
-	healthWidth = healthWidth;
 
 	//HPスプライト
 	healthSprite.Initialize(healthTexture);
@@ -142,8 +141,8 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		return false;
 		});
 
-	//自機のHPが0なら操作させない
-	if (health != 0) {
+	//自機のHPが0、スポーンアニメ中なら操作させない
+	if (health != 0  && !isSpawn) {
 
 		//移動
 		Move();
@@ -164,9 +163,12 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		bullet->Update();
 	}
 
+
+
+	//obj3dの更新
+	Object3d::Update();
 	//命中時パーティクル更新
 	hitParticle.Update();
-
 	//HPバーの更新
 	HealthUpdate();
 
@@ -312,8 +314,6 @@ void Player::Move()
 		rotation.z = -inputHorizontal * (float)PI / 180.0f * 15.0f;
 	}
 
-	//obj3dの更新
-	Object3d::Update();
 
 }
 
@@ -582,7 +582,7 @@ void Player::UpdateDeath()
 void Player::UpdateSpawn()
 {
 
-
+	//パーティクルが収束する
 	if(spawnTimer > 0){
 		Vector3 pos = { Random(-50.0f, 50.0f),Random(-50.0f, 50.0f),Random(-50.0f, 50.0f) };
 		pos += GetWorldPosition();
@@ -596,7 +596,7 @@ void Player::UpdateSpawn()
 		eDataPlayerScale.Start(30);
 
 		//scale = { 0,0,0 };
-	}
+	}//光輪を出しながらおおきくなる
 	else {
 		Vector3 defaultScale = { 1,1,1 };
 		scale = defaultScale * EaseOut(eDataPlayerScale.GetTimeRate());
@@ -607,6 +607,12 @@ void Player::UpdateSpawn()
 			haloObjects[i].color.w -= haloAlphaVel[i];
 			
 		}
+
+		//自機が大きくなりきったらスポーン処理おわり
+		if (eDataPlayerScale.GetTimeRate() >= 1.0f) {
+			isSpawn = false;
+		}
+
 	}
 
 	for (size_t i = 0; i < haloMax; i++) {
