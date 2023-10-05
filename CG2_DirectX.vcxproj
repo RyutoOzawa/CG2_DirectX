@@ -67,6 +67,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine/particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame\engine\collision;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,6 +86,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine/particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\collision;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
