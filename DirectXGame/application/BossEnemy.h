@@ -22,7 +22,7 @@ class BossEnemy : public Object3d
 public: 
 
 	//èâä˙âª
-	void Initialize(Model* bodyModel,Model* barrelModel,Object3d* parent);
+	void Initialize(Model* bodyModel_,Model* barrelModel_,Object3d* parent_);
 
 	//çXêV
 	void Update(const Vector3& playerPos = {0.0f,0.0f,0.0f});
@@ -42,7 +42,7 @@ public:
 
 private:
 	Model* bodyModel;
-	Model* BarrelModel;
+	Model* barrelModel;
 	std::unique_ptr<Model> bulletModel=nullptr;
 
 	//ñΩä÷åW

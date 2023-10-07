@@ -67,7 +67,7 @@ public:
 	//ƒƒ“ƒoŠÖ”
 	static std::unique_ptr< Model> CreateModel(const std::string& filename = MODEL_CUBE);
 	
-	void SetTexture(TextureData* texData) { this->texData = texData; }
+	void SetTexture(TextureData* texData_) { texData = texData_; }
 
 	static void SetDevice(ID3D12Device* dev) { device = dev; }
 

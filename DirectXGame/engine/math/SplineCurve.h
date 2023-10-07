@@ -38,7 +38,7 @@ public:
 	/// </summary>
 	/// <param name="allTime">補間にかかる時間</param>
 	/// <param name="isLoop">ループするか</param>
-	void Start(float allTime,bool isLoop = false);
+	void Start(float allTime_,bool isLoop_ = false);
 
 	//更新
 	void Update();

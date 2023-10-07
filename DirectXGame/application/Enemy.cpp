@@ -14,11 +14,11 @@ void Enemy::EnemyParticleUpdate()
 	particleManager.Update();
 }
 
-void Enemy::EnemyInitialize(TextureData* texData,Model* enemyModel, Model* bulletModel)
+void Enemy::EnemyInitialize(TextureData* texData,Model* enemyModel, Model* bulletModel_)
 {
 	particleManager.Initialize(texData);
 	Enemy::model = enemyModel;
-	Enemy::bulletModel = bulletModel;
+	Enemy::bulletModel = bulletModel_;
 }
 
 void Enemy::DrawParticle()
@@ -111,6 +111,8 @@ void Enemy::Spawn()
 
 void Enemy::OnCollision(const CollisionInfo& info)
 {
+	Object3d::OnCollision(info);
+
 	isAlive = false;
 
 	//パーティクル追加

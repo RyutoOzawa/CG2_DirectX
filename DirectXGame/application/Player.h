@@ -17,7 +17,7 @@ class Player :public Object3d
 public:	//メンバ関数
 
 	//初期化
-	void Initialize(Model* model,TextureData* reticleTexture,TextureData* healthTexture);
+	void Initialize(Model* model_,TextureData* reticleTexture,TextureData* healthTexture);
 
 	//自機生成処理
 	void Spawn();
@@ -35,7 +35,7 @@ public:	//メンバ関数
 	void DrawUI();
 
 	//setter
-	void SetBulletModel(Model* model) { bulletModel = model; }
+	void SetBulletModel(Model* model_) { bulletModel = model_; }
 
 	//当たり判定コールバック
 	void OnCollision(const CollisionInfo& info) override;
@@ -51,7 +51,7 @@ private://メンバ変数
 	const float distanceCamera = 50.0f;
 
 	//ローカル座標
-	Vector3 pos;
+	Vector3 localPos;
 
 	//画面上のレティクル座標
 	Vector2 reticlePosScreen{WindowsAPI::winW/2.0f,WindowsAPI::winH/2.0f};

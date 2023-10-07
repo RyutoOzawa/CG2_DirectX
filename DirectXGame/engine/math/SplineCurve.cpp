@@ -2,9 +2,9 @@
 #include"ImguiManager.h"
 #include"DebugLine.h"
 
-void SplineCurve::Start(float allTime, bool isLoop)
+void SplineCurve::Start(float allTime_, bool isLoop_)
 {
-	this->allTime = allTime;
+	allTime = allTime_;
 
 	//補間を行う回数
 	int32_t lerpCount;
@@ -26,7 +26,7 @@ void SplineCurve::Start(float allTime, bool isLoop)
 	currentPos = controllPoints[0];
 
 	//ループ制御フラグ
-	this->isLoop = isLoop;
+	isLoop = isLoop_;
 
 	//開始時の要素番号を初期化してイージング開始
 	startIndex = 0;

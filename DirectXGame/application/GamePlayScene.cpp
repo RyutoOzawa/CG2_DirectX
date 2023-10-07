@@ -386,9 +386,9 @@ void GamePlayScene::EnemySpawn()
 
 
 	//‹Èü‚ðƒJƒƒ‰Šî€‚É
-	for (auto& p : enemyMovePoints) {
-		//p += railCamera->GetObject3d()->GetWorldPosition();
-	}
+	//for (auto& p : enemyMovePoints) {
+	//	//p += railCamera->GetObject3d()->GetWorldPosition();
+	//}
 
 	int pasent = (INT32)Random(0, 100) % 4;
 

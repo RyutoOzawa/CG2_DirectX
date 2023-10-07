@@ -81,13 +81,13 @@ public:
 	static void StaticInitialize(ReDirectX* directX_);
 	static void BeginDraw(Camera* camera);
 
-	void Initialize(TextureData* texData);
+	void Initialize(TextureData* texData_);
 
 	void Update();
 
 	void Draw();
 
-	void SetTexture(TextureData* texData) { this->texData = texData; }
+	void SetTexture(TextureData* texData_) { texData = texData_; }
 
 	/// <summary>
 	/// パーティクルの追加
@@ -98,7 +98,7 @@ public:
 	/// <param name="accel">加速度</param>
 	/// <param name="scaleStart">開始時スケール</param>
 	/// <param name="scaleEnd">終了時スケール</param>
-	void Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel,float scaleStart,float scaleEnd);
+	void Add(int life, const Vector3& position_, const Vector3& velocity, const Vector3& accel,float scaleStart,float scaleEnd);
 
 	/// <summary>
 	/// パーティクルの追加(線形補間ver)

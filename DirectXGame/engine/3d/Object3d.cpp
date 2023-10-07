@@ -48,9 +48,9 @@ void Object3d::StaticInitialize(ReDirectX* directX_)
 	CreatePipeline3D();
 }
 
-void Object3d::BeginDraw(Camera* camera)
+void Object3d::BeginDraw(Camera* camera_)
 {
-	Object3d::camera = camera;
+	camera = camera_;
 
 
 	//パイプラインステートの設定
@@ -179,10 +179,10 @@ void Object3d::Draw()
 	model->Draw(commandList);
 }
 
-void Object3d::SetCollider(BaseCollider* collider)
+void Object3d::SetCollider(BaseCollider* collider_)
 {
-	collider->SetObject(this);
-	this->collider = collider;
+	collider_->SetObject(this);
+	collider = collider_;
 	//コリジョンマネージャに登録
 	CollisionManager::GetInstance()->AddCollider(collider);
 	//コライダーを更新しておく

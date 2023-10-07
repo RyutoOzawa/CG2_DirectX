@@ -7,10 +7,10 @@
 #include"Collision.h"
 #include"ImguiManager.h"
 
-void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* healthTexture)
+void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData* healthTexture)
 {
 	Object3d::Initialize();
-	SetModel(model);
+	SetModel(model_);
 
 	position = { 0,0,distanceCamera };
 
@@ -64,8 +64,8 @@ void Player::Initialize(Model* model, TextureData* reticleTexture, TextureData* 
 void Player::Spawn()
 {
 	for (size_t i = 0; i < haloMax; i++) {
-		float scale = Random(1.0f, 3.0f);
-		haloObjects[i].scale = { scale ,scale ,scale };
+		float sc = Random(1.0f, 3.0f);
+		haloObjects[i].scale = { sc ,sc ,sc };
 
 		haloObjects[i].color.z = Random(0.8f, 1.0f);
 
@@ -213,6 +213,8 @@ void Player::DrawUI()
 
 void Player::OnCollision(const CollisionInfo& info)
 {
+	Object3d::OnCollision(info);
+
 	//ダメージのクールタイムが終わってないなら何もしない
 	if (damageInterval > 0) {
 		return;
@@ -266,10 +268,10 @@ void Player::Move()
 
 
 	//現在座標を取得
-	pos = position;
+	localPos = position;
 	//加算して代入
-	pos += spd;
-	position = pos;
+	localPos += spd;
+	position = localPos;
 
 	const float bodyTurnBase = (float)PI / 180.0f;
 

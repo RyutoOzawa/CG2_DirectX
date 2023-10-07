@@ -240,7 +240,6 @@ void Model::CreateBuffers()
 
 void Model::CreateModelLoadFile(const std::string& modelname)
 {
-	HRESULT result = S_FALSE;
 
 	//ファイルストリーム
 	ifstream file;
@@ -271,10 +270,10 @@ void Model::CreateModelLoadFile(const std::string& modelname)
 		//先頭文字列がmtllibならマテリアル
 		if (key == "mtllib") {
 			//マテリアルのファイル名読み込み
-			string filename;
-			line_stream >> filename;
+			string mtFilename;
+			line_stream >> mtFilename;
 			//マテリアル読み込み
-			LoadMaterial(directoryPath, filename);
+			LoadMaterial(directoryPath, mtFilename);
 		}
 		//先頭文字列がvなら頂点座標
 		if (key == "v") {

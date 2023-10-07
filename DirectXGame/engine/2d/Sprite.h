@@ -79,12 +79,12 @@ public: //ÉÅÉìÉoä÷êî
 	Sprite(TextureData* texData,Vector2 pos,Vector2 size_,Vector4 color_,Vector2 anchorP,bool isFlipX_,bool isFlipY_);
 
 	void Initialize(std::string filename);
-	void Initialize(TextureData* texData);
+	void Initialize(TextureData* texData_);
 
 	void Draw();
 	void SetColor(const Vector4& color_) { color = color_; }
 	void SetPos(const Vector2& pos) { position = pos; }
-	void SetRotation(float rotation) { this->rotation = rotation; }
+	void SetRotation(float rotation_) { rotation = rotation_; }
 	void SetSize(const Vector2& size_) { size = size_; }
 	void SetAnchorPoint(const Vector2& point) { anchorPoint = point; }
 	void SetFlipX(bool flipX) { isFlipX = flipX; }
@@ -92,7 +92,7 @@ public: //ÉÅÉìÉoä÷êî
 	void SetInvisible(bool flag) { isInvisible = flag; }
 	void SetTexture(TextureData* data) { texData = data; }
 	void SetTextureLeftTop(const Vector2& leftTop) { textureLeftTop = leftTop; }
-	void SetTextureSize(const Vector2& size) { textureSize = size; }
+	void SetTextureSize(const Vector2& size_) { textureSize = size_; }
 
 	const Vector2& GetPosition()const { return position; }
 	float GetRotation()const { return rotation; }

@@ -28,7 +28,7 @@ public:
 	/// </summary>
 	/// <param name="allTime">補間の時間</param>
 	/// <param name="isloop">ループするか</param>
-	void Start(float allTime, bool isloop);
+	void Start(float allTime_, bool isLoop_);
 
 	//更新
 	void Update();

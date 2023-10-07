@@ -36,10 +36,10 @@ void ParticleManager::BeginDraw(Camera* camera_)
 
 }
 
-void ParticleManager::Initialize(TextureData* texData)
+void ParticleManager::Initialize(TextureData* texData_)
 {
 	//テクスチャセット
-	SetTexture(texData);
+	SetTexture(texData_);
 
 	ID3D12Device* device = directX->GetDevice();
 
@@ -202,7 +202,7 @@ void ParticleManager::Draw()
 	commandList->DrawInstanced((UINT)std::distance(particles.begin(),particles.end()), 1, 0, 0);
  }
 
-void ParticleManager::Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd) {
+void ParticleManager::Add(int life, const Vector3& position_, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd) {
 	//パーティクルの数が最大なら追加しない
 	if (std::distance(particles.begin(), particles.end()) >= vertexCount) {
 		return;
@@ -211,7 +211,7 @@ void ParticleManager::Add(int life, const Vector3& position, const Vector3& velo
 
 	//追加した要素の参照
 	BaseParticle* p = new BaseParticle();
-	p->Add(life, position, velocity, accel, scaleStart,scaleEnd);
+	p->Add(life, position_, velocity, accel, scaleStart,scaleEnd);
 	//リストに要素を追加
 	particles.push_front(p);
 }

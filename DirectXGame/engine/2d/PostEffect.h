@@ -36,7 +36,7 @@ public://メンバ関数
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize(ID3D12Device* device);
+    void Initialize(ID3D12Device* device_);
 
     /// <summary>
     /// シーン描画前処理
@@ -65,7 +65,7 @@ private://メンバ変数
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
 
     D3D12_VERTEX_BUFFER_VIEW vbView;
-    GpPipeline pipeline;
+    //GpPipeline pipeline;
 
     VertexPosUv vertices[4] = {};		//頂点座標データ
     Vector4 color = { 1,1,1,1 };

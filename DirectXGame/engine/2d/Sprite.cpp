@@ -220,9 +220,9 @@ void Sprite::Initialize(std::string filename)
 	Initialize(texData);
 }
 
-void Sprite::Initialize(TextureData* texData)
+void Sprite::Initialize(TextureData* texData_)
 {
-	this->texData = texData;
+	texData = texData_;
 
 	HRESULT result{  };
 	AdjustTextureSize();

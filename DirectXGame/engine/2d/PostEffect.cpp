@@ -55,9 +55,9 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->DrawInstanced(_countof(vertices), 1, 0, 0);
 }
 
-void PostEffect::Initialize(ID3D12Device* device)
+void PostEffect::Initialize(ID3D12Device* device_)
 {
-	this->device = device;
+	device = device_;
 
 	//パイプライン生成
 	CreatePipeline2D();

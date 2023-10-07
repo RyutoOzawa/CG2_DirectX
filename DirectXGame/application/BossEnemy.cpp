@@ -4,13 +4,13 @@
 #include"DebugLine.h"
 #include"Input.h"
 
-void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* parent)
+void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* parent_)
 {
 	//モデルのnullチェックとメンバへのセット
-	assert(bodyModel);
-	assert(barrelModel);
-	this->bodyModel = bodyModel;
-	this->BarrelModel = barrelModel;
+	assert(bodyModel_);
+	assert(barrelModel_);
+	bodyModel = bodyModel_;
+	barrelModel = barrelModel_;
 	TextureData* tex = Texture::LoadTexture("reticle.png");
 
 	//HPバーの設定
@@ -39,7 +39,7 @@ void BossEnemy::Initialize(Model* bodyModel, Model* barrelModel, Object3d* paren
 	Object3d::Initialize();
 	SetModel(bodyModel);
 
-	this->parent = parent;
+	parent = parent_;
 
 	bulletModel = std::make_unique<Model>();
 	bulletModel = Model::CreateModel("PlayerBullet");

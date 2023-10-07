@@ -19,7 +19,7 @@ public:
 	/// </summary>
 	void Update();
 
-	inline void SetRadius(float radius) { this->radius = radius; }
+	inline void SetRadius(float radius_) { radius = radius_; }
 
 private:
 	//オブジェクト中心からのオフセット

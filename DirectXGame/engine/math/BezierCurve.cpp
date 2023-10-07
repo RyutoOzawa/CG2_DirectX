@@ -1,12 +1,12 @@
 #include "BezierCurve.h"
 #include"DebugLine.h"
 
-void BezierCurve::Start(float allTime, bool isloop)
+void BezierCurve::Start(float allTime_, bool isLoop_)
 {
-	this->allTime = allTime;
+	allTime = allTime_;
 	eData.Start(allTime);
 	currentPos = controllPoints.front();
-	this->isLoop = isloop;
+	isLoop = isLoop_;
 }
 
 void BezierCurve::Update()
@@ -49,6 +49,8 @@ void BezierCurve::DrawCurve(const Vector4& color, const Vector3& offset)
 		//1.0をpointCountで分割して点を割り出していく
 		float t = 1.0f / pointCount * i;
 		Vector3 p = BezierPoints(points, t);
+		//オフセット加算
+		p += offset;
 		drawPoints.push_back(p);
 
 	}

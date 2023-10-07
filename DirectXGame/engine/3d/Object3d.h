@@ -65,8 +65,8 @@ public:
 
 	//静的メンバ関数
 	static void StaticInitialize(ReDirectX* directX_);
-	static void BeginDraw(Camera* camera);
-	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
+	static void BeginDraw(Camera* camera_);
+	static void SetCamera(Camera* camera_) { camera = camera_; }
 
 	/// <summary>
 	/// 初期化
@@ -94,9 +94,10 @@ public:
 	/// コライダーのセット
 	/// </summary>
 	/// <param name="collider">コライダー</param>
-	void SetCollider(BaseCollider* collider);
+	void SetCollider(BaseCollider* collider_);
 
-	virtual void OnCollision(const CollisionInfo& info) {}
+	//衝突コールバック
+	virtual void OnCollision(const CollisionInfo& info) { CollisionInfo c = info; }
 
 protected:
 	//クラス名

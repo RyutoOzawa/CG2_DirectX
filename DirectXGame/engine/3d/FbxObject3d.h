@@ -20,9 +20,9 @@ protected:
 
 public://静的メンバ関数
 	//setter
-	static void SetDevice(ID3D12Device* device) { FbxObject3d::device = device; }
-	static void SetCmdList(ID3D12GraphicsCommandList* cmdList) { FbxObject3d::cmdList = cmdList; }
-	static void SetCamera(Camera* camera) { FbxObject3d::camera = camera; }
+	static void SetDevice(ID3D12Device* device_) { device = device_; }
+	static void SetCmdList(ID3D12GraphicsCommandList* cmdList_) { cmdList = cmdList_; }
+	static void SetCamera(Camera* camera_) { camera = camera_; }
 
 	/// <summary>
 	/// グラフィックスパイプラインの生成
@@ -77,7 +77,7 @@ public://メンバ関数
 	/// モデルのセット
 	/// </summary>
 	/// <param name="fbxModel">fbxモデルデータ</param>
-	void SetModel(FbxModel* fbxModel) { this->fbxModel = fbxModel; }
+	void SetModel(FbxModel* fbxModel_) { fbxModel = fbxModel_; }
 
 	/// <summary>
 	/// 描画
@@ -89,7 +89,7 @@ public://メンバ関数
 	/// </summary>
 	void PlayAnitimation();
 
-	void SetRot(const Vector3& rotation) { this->rotation = rotation; }
+	void SetRot(const Vector3& rotation_) { rotation = rotation_; }
 
 	FbxTime BaGetCurrentTime() { return currentTime; }
 

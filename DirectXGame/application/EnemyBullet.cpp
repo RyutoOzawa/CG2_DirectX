@@ -3,9 +3,9 @@
 #include"CollisionAttribute.h"
 #include"Util.h"
 
-void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
+void EnemyBullet::Initialize(Model* model_, const Vector3& position_, const Vector3& velocity_)
 {
-	assert(model);
+	assert(model_);
 
 	//objの初期化
 	Object3d::Initialize();
@@ -13,8 +13,8 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	SetModel(model);
 
 	//引数の座標をセット
-	this->position = position;
-	this->velocity = velocity;
+	position = position_;
+	velocity = velocity_;
 
 	SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);

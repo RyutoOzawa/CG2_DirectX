@@ -4,18 +4,18 @@
 #include"SphereCollider.h"
 #include"CollisionAttribute.h"
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
+void PlayerBullet::Initialize(Model* model_, const Vector3& position_, const Vector3& velocity_)
 {
-	assert(model);
+	assert(model_);
 
 	//object3dの初期化
 	Object3d::Initialize();
 	//モデルのセット
-	SetModel(model);
+	SetModel(model_);
 
 	//引数の座標をセット
-	this->position = position;
-	this->velocity = velocity;
+	position = position_;
+	velocity = velocity_;
 
 	SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);

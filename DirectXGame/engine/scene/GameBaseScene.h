@@ -19,7 +19,7 @@ public:
 
 	virtual ~GameBaseScene() = default;
 
-	virtual void SetSceneManager(GameSceneManager* sceneManager) { this->sceneManager = sceneManager; }
+	virtual void SetSceneManager(GameSceneManager* sceneManager_) { this->sceneManager = sceneManager_; }
 
 protected:
 	//借りてくるシーンマネージャ

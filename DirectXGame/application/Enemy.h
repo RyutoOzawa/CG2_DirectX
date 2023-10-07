@@ -18,7 +18,7 @@ public:
 
 	static void EnemyParticleUpdate();
 
-	static void EnemyInitialize(TextureData* texData, Model* enemyModel,Model* bulletModel);
+	static void EnemyInitialize(TextureData* texData, Model* enemyModel,Model* bulletModel_);
 
 	static void DrawParticle();
 
