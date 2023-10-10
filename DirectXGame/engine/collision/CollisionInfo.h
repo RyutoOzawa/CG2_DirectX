@@ -11,10 +11,10 @@ class BaseCollider;
 class CollisionInfo
 {
 public:
-	CollisionInfo(Object3d* object, BaseCollider* collider, const Vector3& inter) {
-		this->object = object;
-		this->collider = collider;
-		this->inter = inter;
+	CollisionInfo(Object3d* object_, BaseCollider* collider_, const Vector3& inter_) {
+		object = object_;
+		collider = collider_;
+		inter = inter_;
 	}
 
 	//衝突相手のオブジェクト

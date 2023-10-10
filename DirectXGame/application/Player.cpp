@@ -163,7 +163,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		bullet->Update();
 	}
 
-
+	ImGui::Text("bullet %d", bullets.size());
 
 	//obj3dÇÃçXêV
 	Object3d::Update();
@@ -191,6 +191,8 @@ void Player::Draw()
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets) {
 		bullet->Draw();
 	}
+
+
 
 	for (Object3d& haloObject : haloObjects) {
 		haloObject.Draw();

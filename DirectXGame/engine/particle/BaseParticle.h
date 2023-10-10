@@ -18,7 +18,8 @@ protected:
 public:
 	virtual void Update();
 
-	virtual void Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd);
+	virtual void Add(int life, const Vector3& position_, const Vector3& velocity_,
+		const Vector3& accel_, float scaleStart_, float scaleEnd_);
 
 	bool IsAlive() { return frame > num_frame; }
 

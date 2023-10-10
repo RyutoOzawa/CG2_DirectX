@@ -35,13 +35,13 @@ void LerpParticle::Update()
 
 }
 
-void LerpParticle::Add(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd, InterType type)
+void LerpParticle::Add(int t, const Vector3& start_, const Vector3& end_, float scaleStart_, float scaleEnd_, InterType type)
 {
-	this->start = start;
-	this->end = end;
-	this->scale = scaleStart;
-	this->scaleStart = scaleStart;
-	this->scaleEnd = scaleEnd;
-	this->num_frame = t;
-	this->interType = type;
+	start = start_;
+	end = end_;
+	scale = scaleStart_;
+	scaleStart = scaleStart_;
+	scaleEnd = scaleEnd_;
+	num_frame = t;
+	interType = type;
 }

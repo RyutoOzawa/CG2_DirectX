@@ -16,13 +16,14 @@ void BaseParticle::Update()
 
 }
 
-void BaseParticle::Add(int life, const Vector3& position, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd)
+void BaseParticle::Add(int life, const Vector3& position_, const Vector3& velocity_,
+	const Vector3& accel_, float scaleStart_, float scaleEnd_)
 {
-	this->position = position;
-	this->velocity = velocity;
-	this->accel = accel;
-	this->num_frame = life;
-	this->scale = scaleStart;
-	this->scaleStart = scaleStart;
-	this->scaleEnd = scaleEnd;
+	position = position_;
+	velocity = velocity_;
+	accel = accel_;
+	num_frame = life;
+	scale = scaleStart_;
+	scaleStart = scaleStart_;
+	scaleEnd = scaleEnd_;
 }

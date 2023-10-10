@@ -10,7 +10,7 @@ void EnemyBullet::Initialize(Model* model_, const Vector3& position_, const Vect
 	//objの初期化
 	Object3d::Initialize();
 	//モデルセット
-	SetModel(model);
+	SetModel(model_);
 
 	//引数の座標をセット
 	position = position_;

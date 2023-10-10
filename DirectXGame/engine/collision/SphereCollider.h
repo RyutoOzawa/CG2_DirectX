@@ -8,8 +8,8 @@
 class SphereCollider : public BaseCollider, public Sphere
 {
 public:
-	SphereCollider(Vector3 offset = {0,0,0},float radius = 0):
-	offset(offset),radius(radius) {
+	SphereCollider(Vector3 offset_ = {0,0,0},float radius_ = 0):
+	offset(offset_),radius(radius_) {
 		//球形状をセット
 		shapeType = COLLISIONSHAPE_SPHERE;
 	}
