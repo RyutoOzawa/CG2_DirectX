@@ -97,7 +97,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseSceneTransition.cpp" />
+    <ClCompile Include="DirectXGame\engine\scene\BaseSceneTransition.cpp" />
     <ClCompile Include="DirectXGame\engine\particle\BaseParticle.cpp" />
     <ClCompile Include="DirectXGame\engine\math\BezierCurve.cpp" />
     <ClCompile Include="DirectXGame\application\BossEnemy.cpp" />
@@ -155,7 +155,7 @@
     <ClCompile Include="DirectXGame\application\TestScene.cpp" />
     <ClCompile Include="DirectXGame\engine\particle\LerpParticle.cpp" />
     <ClCompile Include="DirectXGame\application\GameClearScene.cpp" />
-    <ClCompile Include="FadeSceneTransition.cpp" />
+    <ClCompile Include="DirectXGame\application\FadeSceneTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -269,7 +269,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseSceneTransition.h" />
+    <ClInclude Include="DirectXGame\engine\scene\BaseSceneTransition.h" />
     <ClInclude Include="DirectXGame\engine\particle\BaseParticle.h" />
     <ClInclude Include="DirectXGame\engine\particle\ParticleManager.h" />
     <ClInclude Include="DirectXGame\engine\math\BezierCurve.h" />
@@ -328,7 +328,7 @@
     <ClInclude Include="DirectXGame\application\TestScene.h" />
     <ClInclude Include="DirectXGame\engine\particle\LerpParticle.h" />
     <ClInclude Include="DirectXGame\application\GameClearScene.h" />
-    <ClInclude Include="FadeSceneTransition.h" />
+    <ClInclude Include="DirectXGame\application\FadeSceneTransition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

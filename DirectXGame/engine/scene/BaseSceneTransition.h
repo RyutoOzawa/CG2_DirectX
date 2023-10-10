@@ -32,18 +32,21 @@ public:
 	//シーン閉じる
 	virtual void Close() = 0;
 
-	//シーン変更
-	virtual void Change() = 0;
-
 	//シーン開ける
 	virtual void Open() = 0;
 
 	virtual ~BaseSceneTransition() = default;
+
+	bool IsTransition()const { return isTransition; }
+
+	TransitionPhase GetPhase()const { return transitionPhase; }
 
 protected:
 	
 	//シーン遷移フェーズ
 	TransitionPhase transitionPhase = TransitionPhase::Close;
 
+	//シーン遷移管理フラグ
+	bool isTransition = false;
 };
 
