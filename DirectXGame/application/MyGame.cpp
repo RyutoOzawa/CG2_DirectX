@@ -59,7 +59,10 @@ void MyGame::Draw()
 
 	//シーン描画処理
 //	sceneManager->Draw();
+	
+#ifdef _DEBUG
 	imguiManager->Draw();
+#endif
 
 	directX->EndDraw();
 }
