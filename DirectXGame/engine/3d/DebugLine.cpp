@@ -11,18 +11,18 @@ ComPtr<ID3D12RootSignature> DebugLine::rootSignature;
 ReDirectX* DebugLine::directX = nullptr;
 Camera* DebugLine::camera = nullptr;
 
-void DebugLine::StaticInitialize(ReDirectX* directX)
+void DebugLine::StaticInitialize(ReDirectX* directX_)
 {
 	//nullチェック
-	assert(directX);
-	DebugLine::directX = directX;
+	assert(directX_);
+	directX = directX_;
 
 	//パイプライン生成
 	CreatePipeline();
 
 }
 
-void DebugLine::BeginDraw(Camera* camera)
+void DebugLine::BeginDraw(Camera* camera_)
 {
 	//パイプライン設定
 	directX->GetCommandList()->SetPipelineState(pipelineState.Get());
@@ -32,7 +32,7 @@ void DebugLine::BeginDraw(Camera* camera)
 	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 	//1番定数バッファにカメラの定数バッファを設定
-	directX->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera->constBuff->GetGPUVirtualAddress());
+	directX->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera_->constBuff->GetGPUVirtualAddress());
 
 }
 

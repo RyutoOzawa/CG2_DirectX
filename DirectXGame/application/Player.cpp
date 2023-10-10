@@ -213,9 +213,8 @@ void Player::DrawUI()
 	healthSprite.Draw();
 }
 
-void Player::OnCollision(const CollisionInfo& info)
+void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
 {
-	Object3d::OnCollision(info);
 
 	//ダメージのクールタイムが終わってないなら何もしない
 	if (damageInterval > 0) {

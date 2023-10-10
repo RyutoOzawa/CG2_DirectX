@@ -184,9 +184,9 @@ void Object3d::SetCollider(BaseCollider* collider_)
 	collider_->SetObject(this);
 	collider = collider_;
 	//コリジョンマネージャに登録
-	CollisionManager::GetInstance()->AddCollider(collider);
+	CollisionManager::GetInstance()->AddCollider(collider_);
 	//コライダーを更新しておく
-	collider->Update();
+	collider_->Update();
 }
 
 void Object3d::CreatePipeline3D()

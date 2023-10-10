@@ -38,7 +38,7 @@ public:	//メンバ関数
 	void SetBulletModel(Model* model_) { bulletModel = model_; }
 
 	//当たり判定コールバック
-	void OnCollision(const CollisionInfo& info) override;
+	void OnCollision([[maybe_unused]] const CollisionInfo& info) override;
 
 	//生存判定
 	bool IsAlive()const { return isAlive; }

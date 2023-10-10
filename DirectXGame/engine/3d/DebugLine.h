@@ -12,10 +12,10 @@ public://静的メンバ関数
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	static void StaticInitialize(ReDirectX* directX);
+	static void StaticInitialize(ReDirectX* directX_);
 
 	//描画前処理	
-	static void BeginDraw(Camera* camera);
+	static void BeginDraw(Camera* camera_);
 
 	/// <summary>
 	/// 描画

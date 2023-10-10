@@ -31,7 +31,7 @@ public:
 public:
 
 
-	void Initialize(const Vector3& eye, const Vector3& target, const Vector3& up);
+	void Initialize(const Vector3& eye_, const Vector3& target_, const Vector3& up_);
 
 	void UpdateMatrix();
 
