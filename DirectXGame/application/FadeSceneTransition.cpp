@@ -5,12 +5,12 @@
 void FadeSceneTransition::Initialize()
 {
 	blackSprite = std::make_unique<Sprite>();
-	whiteTex = Texture::LoadTexture("white1x1.png");
+	whiteTex = Texture::LoadTexture("black1x1.png");
 
 	blackSprite->Initialize(whiteTex);
 	//スプライトのrgbを0にして黒画像にする
 	Vector4 black = { 0,0,0,1 };
-	blackSprite->SetColor(black);
+	//blackSprite->SetColor(black);
 	Vector2 size = { WindowsAPI::winW,WindowsAPI::winH };
 	blackSprite->SetSize(size);
 	blackSprite->SetAnchorPoint({ 0.5f,0.5f });
@@ -42,21 +42,25 @@ void FadeSceneTransition::Update()
 		//スプライトのアルファ値を0→1に
 		alpha = Lerp(0.0f, 1.0f, easeSpriteAlpha.GetTimeRate());
 
+
+
+		//イージング終わったらフェーズをchangeに
+		if (easeSpriteAlpha.GetTimeRate() >= 1.0f) {
+			alpha = 1.0f;
+			transitionPhase = TransitionPhase::Change;
+		}
+
+		//設定された色をセット
 		c = blackSprite->GetColor();
 		c.w = alpha;
 		blackSprite->SetColor(c);
 
-		ImGui::Text("alpha %f", alpha);
-
-		//イージング終わったらフェーズをchangeに
-		if (easeSpriteAlpha.GetTimeRate() > 1.0f) {
-			transitionPhase = TransitionPhase::Change;
-		}
-
 		break;
 	case TransitionPhase::Change:
 
-		//何もしない
+		c = blackSprite->GetColor();
+		c.w = 1.0f;
+		blackSprite->SetColor(c);
 
 		break;
 	case TransitionPhase::Open:
@@ -67,20 +71,25 @@ void FadeSceneTransition::Update()
 		alpha = Lerp(1.0f, 0.0f, easeSpriteAlpha.GetTimeRate());
 
 
-		c = blackSprite->GetColor();
-		c.w = alpha;
-		blackSprite->SetColor(c);
 
 		//イージング終わったら管理フラグおろす
 		if (easeSpriteAlpha.GetTimeRate() >= 1.0f) {
+			alpha = 0.0f;
 			isTransition = false;
 		}
 
+
+		c = blackSprite->GetColor();
+		c.w = alpha;
+		blackSprite->SetColor(c);
 
 		break;
 	default:
 		break;
 	}
+
+	ImGui::Text("alpha %f", alpha);
+
 }
 
 void FadeSceneTransition::Draw()

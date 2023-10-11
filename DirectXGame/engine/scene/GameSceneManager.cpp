@@ -63,6 +63,24 @@ void GameSceneManager::Update()
 	}
 	else {
 
+		//次シーンの予約を検知
+		if (nextScene) {
+			//旧シーン終了
+			if (activeScene) {
+				activeScene->Finalize();
+				delete activeScene;
+			}
+
+			//シーン切り替え
+			activeScene = nextScene;
+			nextScene = nullptr;
+
+			//シーン側からシーン切り替えを依頼できるように、シーンマネージャをセットする
+			activeScene->SetSceneManager(this);
+
+			//次シーン初期化
+			activeScene->Initialize();
+		}
 		//実行シーンの更新
 		activeScene->Update();
 	}
@@ -88,7 +106,7 @@ void GameSceneManager::Finalize()
 	delete activeScene;
 }
 
-void GameSceneManager::ChangeScene(const std::string& sceneName)
+void GameSceneManager::ChangeScene(const std::string& sceneName,bool isTransition, const std::string& transitionName)
 {
 	//nullチェック
 	assert(sceneFactory);
@@ -96,9 +114,18 @@ void GameSceneManager::ChangeScene(const std::string& sceneName)
 	//次シーンの生成
 	nextScene = sceneFactory->CreateScene(sceneName);
 
-	//TODO:changesceneの引数に対応した遷移を行う(デフォルトはフェード)
-	sceneTransition = new FadeSceneTransition();
+	//遷移を行わないなら生成しない
+	if (!isTransition) {
+		return;
+	}
+
+	//引数に対応した遷移クラスを生成(デフォルトはフェード)
+	if (transitionName == "FADE") {
+		sceneTransition = new FadeSceneTransition();
+
+	}
+
+	//シーン遷移初期化
 	sceneTransition->Initialize();
-	//シーン遷移の開始
 	sceneTransition->Close();
 }

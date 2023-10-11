@@ -28,7 +28,7 @@ public:
 	//終了処理
 	void Finalize();
 
-	void ChangeScene(const std::string& sceneName);
+	void ChangeScene(const std::string& sceneName,bool isTransition = true,const std::string& transitionName = "FADE");
 
 	//シーンファクトリーのセッター
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory_) { sceneFactory = sceneFactory_; }
