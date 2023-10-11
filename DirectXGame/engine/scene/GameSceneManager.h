@@ -1,6 +1,7 @@
 #pragma once
 #include"GameBaseScene.h"
 #include"AbstractSceneFactory.h"
+#include"BaseSceneTransition.h"
 
 class GameSceneManager
 {
@@ -40,6 +41,8 @@ private:
 	//借りてくるシーンファクトリー
 	AbstractSceneFactory* sceneFactory = nullptr;
 
+	//シーン遷移クラス
+	BaseSceneTransition* sceneTransition = nullptr;
 
 };
 

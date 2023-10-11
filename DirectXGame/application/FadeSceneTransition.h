@@ -1,6 +1,7 @@
 #pragma once
 #include"BaseSceneTransition.h"
-
+#include"Sprite.h"
+#include"EasingData.h"
 
 class FadeSceneTransition:public BaseSceneTransition
 {
@@ -16,8 +17,15 @@ public:
 
 	void Close()override;
 
-	void Change()override;
 
 	void Open()override;
+
+private:
+
+	std::unique_ptr<Sprite> blackSprite = nullptr;
+	TextureData* whiteTex = nullptr;
+
+	EasingData  easeSpriteAlpha;
+
 };
 
