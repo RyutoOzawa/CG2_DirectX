@@ -108,7 +108,7 @@ void GameTitleScene::Update()
 	if (input->IsKeyTrigger(DIK_F1))
 	{
 		//シーンの切り替えを依頼
-		sceneManager->ChangeScene("TESTSCENE");
+		sceneManager->ChangeScene("TESTSCENE",false);
 	}
 
 	//テキストの色を明るくしたり暗くしたりする
