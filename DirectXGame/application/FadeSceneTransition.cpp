@@ -62,6 +62,10 @@ void FadeSceneTransition::Update()
 		c.w = 1.0f;
 		blackSprite->SetColor(c);
 
+		//ƒV[ƒ“ó‘Ô‚ğopen‚É
+		transitionPhase = TransitionPhase::Open;
+
+		Open();
 		break;
 	case TransitionPhase::Open:
 

@@ -28,6 +28,12 @@ public:
 	//終了処理
 	void Finalize();
 
+	/// <summary>
+	/// シーン変更依頼
+	/// </summary>
+	/// <param name="sceneName">次シーン</param>
+	/// <param name="isTransition">遷移を行うか</param>
+	/// <param name="transitionName">遷移のパターン</param>
 	void ChangeScene(const std::string& sceneName,bool isTransition = true,const std::string& transitionName = "FADE");
 
 	//シーンファクトリーのセッター
@@ -43,6 +49,9 @@ private:
 
 	//シーン遷移クラス
 	BaseSceneTransition* sceneTransition = nullptr;
+
+	//次シーンの予約の検知
+	void CheckNextScene();
 
 };
 

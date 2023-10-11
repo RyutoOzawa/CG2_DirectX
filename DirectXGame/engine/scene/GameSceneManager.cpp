@@ -9,7 +9,7 @@ GameSceneManager::GameSceneManager()
 
 GameSceneManager::~GameSceneManager()
 {
-	
+
 }
 
 GameSceneManager* GameSceneManager::GetInstance()
@@ -25,33 +25,16 @@ void GameSceneManager::Update()
 {
 
 
-
-
-
 	//シーン遷移が生成されているなら遷移させる
 	if (sceneTransition) {
 		sceneTransition->Update();
 
-		//シーン遷移フェーズがchangeならシーンの変更
-		if (sceneTransition->GetPhase() == TransitionPhase::Change) {
-			//旧シーン終了
-			if (activeScene) {
-				activeScene->Finalize();
-				delete activeScene;
-			}
-
-			//シーン切り替え
-			activeScene = nextScene;
-			nextScene = nullptr;
-
-			//シーン側からシーン切り替えを依頼できるように、シーンマネージャをセットする
-			activeScene->SetSceneManager(this);
-
-			//次シーン初期化
-			activeScene->Initialize();
-			activeScene->Update();
+		//シーン遷移フェーズがopenならシーンの変更
+		if (sceneTransition->GetPhase() == TransitionPhase::Open) {
+			
+			CheckNextScene();
 			//シーンを開ける
-			sceneTransition->Open();
+			//sceneTransition->Open();
 
 		}
 
@@ -63,24 +46,8 @@ void GameSceneManager::Update()
 	}
 	else {
 
-		//次シーンの予約を検知
-		if (nextScene) {
-			//旧シーン終了
-			if (activeScene) {
-				activeScene->Finalize();
-				delete activeScene;
-			}
+		CheckNextScene();
 
-			//シーン切り替え
-			activeScene = nextScene;
-			nextScene = nullptr;
-
-			//シーン側からシーン切り替えを依頼できるように、シーンマネージャをセットする
-			activeScene->SetSceneManager(this);
-
-			//次シーン初期化
-			activeScene->Initialize();
-		}
 		//実行シーンの更新
 		activeScene->Update();
 	}
@@ -106,7 +73,7 @@ void GameSceneManager::Finalize()
 	delete activeScene;
 }
 
-void GameSceneManager::ChangeScene(const std::string& sceneName,bool isTransition, const std::string& transitionName)
+void GameSceneManager::ChangeScene(const std::string& sceneName, bool isTransition, const std::string& transitionName)
 {
 	//nullチェック
 	assert(sceneFactory);
@@ -128,4 +95,27 @@ void GameSceneManager::ChangeScene(const std::string& sceneName,bool isTransitio
 	//シーン遷移初期化
 	sceneTransition->Initialize();
 	sceneTransition->Close();
+}
+
+void GameSceneManager::CheckNextScene()
+{
+	//次シーンの予約を検知
+	if (nextScene) {
+		//旧シーン終了
+		if (activeScene) {
+			activeScene->Finalize();
+			delete activeScene;
+		}
+
+		//シーン切り替え
+		activeScene = nextScene;
+		nextScene = nullptr;
+
+		//シーン側からシーン切り替えを依頼できるように、シーンマネージャをセットする
+		activeScene->SetSceneManager(this);
+
+		//次シーン初期化
+		activeScene->Initialize();
+		activeScene->Update();
+	}
 }
