@@ -20,6 +20,7 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	SetCollider(new SphereCollider(Vector3(0, 0, 0),radius));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
+
 	//命中パーティクル
 	hitParticle.Initialize(healthTexture);
 
