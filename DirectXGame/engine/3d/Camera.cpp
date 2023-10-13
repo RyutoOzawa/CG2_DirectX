@@ -13,12 +13,12 @@ void Camera::StaticInitialize(ID3D12Device* dev)
 	device = dev;
 }
 
-void Camera::Initialize(const Vector3& eye, const Vector3& target, const Vector3& up)
+void Camera::Initialize(const Vector3& eye_, const Vector3& target_, const Vector3& up_)
 {
 	//引数をメンバに移して行列更新
-	this->eye = eye;
-	this->target = target;
-	this->up = up;
+	eye = eye_;
+	target = target_;
+	up = up_;
 
 
 

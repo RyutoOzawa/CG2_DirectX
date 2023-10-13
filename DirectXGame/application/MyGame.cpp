@@ -22,7 +22,7 @@ void MyGame::Initialize()
 	sceneFactory = std::make_unique< SceneFactory>();
 	GameSceneManager::GetInstance()->SetSceneFactory(sceneFactory.get());
 	//シーンマネージャに最初のシーンをセット
-	GameSceneManager::GetInstance()->ChangeScene("TITLE");
+	GameSceneManager::GetInstance()->ChangeScene("TITLE",false);
 }
 
 void MyGame::Finalize()
@@ -66,7 +66,10 @@ void MyGame::Draw()
 
 	//シーン描画処理
 //	sceneManager->Draw();
-	//imguiManager->Draw();
+	
+#ifdef _DEBUG
+	imguiManager->Draw();
+#endif
 
 	directX->EndDraw();
 }

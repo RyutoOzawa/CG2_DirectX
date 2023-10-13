@@ -112,9 +112,9 @@ void Enemy::Spawn()
 	isAlive = true;
 }
 
-void Enemy::OnCollision(const CollisionInfo& info)
+void Enemy::OnCollision([[maybe_unused]] const CollisionInfo& info)
 {
-	Object3d::OnCollision(info);
+
 
 	isAlive = false;
 

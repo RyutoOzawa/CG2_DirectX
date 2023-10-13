@@ -1,6 +1,7 @@
 #include "CollisionManager.h"
 #include"BaseCollider.h"
 #include"Collision.h"
+#include"ImguiManager.h"
 
 CollisionManager* CollisionManager::GetInstance()
 {
@@ -13,6 +14,9 @@ void CollisionManager::CheckAllCollisions()
 {
 	std::forward_list<BaseCollider*>::iterator itA;
 	std::forward_list<BaseCollider*>::iterator itB;
+
+	ImGui::Text("collider %d", std::distance(colliders.begin(), colliders.end()));
+
 	//すべての組み合わせについて総当たりチェック
 	itA = colliders.begin();
 	for (; itA != colliders.end(); ++itA) {

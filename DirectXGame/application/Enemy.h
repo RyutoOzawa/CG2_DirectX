@@ -39,7 +39,7 @@ public:
 	//ÉXÉ|Å[Éì
 	void Spawn();
 
-	void OnCollision(const CollisionInfo& info) override;
+	void OnCollision([[maybe_unused]] const CollisionInfo& info) override;
 
 	bool IsAlive()const { return isAlive; }
 

@@ -282,6 +282,7 @@ currentCamera->UpdateMatrix();
 	//当たり判定チェック
 	collisionManager->CheckAllCollisions();
 
+
 	//スペースキーでメインゲームへ
 	if (input->IsKeyTrigger(DIK_F1))
 	{

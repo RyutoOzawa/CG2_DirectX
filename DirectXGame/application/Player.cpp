@@ -23,6 +23,7 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	SetCollider(new SphereCollider(Vector3(0, 0, 0),radius));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
+
 	//命中パーティクル
 	hitParticle.Initialize(healthTexture);
 
@@ -116,17 +117,17 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		Spawn();
 	}
 
-	if (Input::GetInstance()->IsKeyTrigger(DIK_3)) {
-		//パーティクルの速度
-		for (int i = 0; i < 25; i++) {
-			Vector3 vel = { 0,0,0 };
-			Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
-			//acc = { 0.1f,0,0.1f };
+	//if (Input::GetInstance()->IsKeyTrigger(DIK_3)) {
+	//	//パーティクルの速度
+	//	for (int i = 0; i < 25; i++) {
+	//		Vector3 vel = { 0,0,0 };
+	//		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+	//		//acc = { 0.1f,0,0.1f };
 
-			//パーティクル追加
-			hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
-		}
-	}
+	//		//パーティクル追加
+	//		hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
+	//	}
+	//}
 
 	if (isSpawn) {
 		UpdateSpawn();
@@ -166,7 +167,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		bullet->Update();
 	}
 
-
+	ImGui::Text("bullet %d", bullets.size());
 
 	//obj3dの更新
 	Object3d::Update();
@@ -195,6 +196,8 @@ void Player::Draw()
 		bullet->Draw();
 	}
 
+
+
 	for (Object3d& haloObject : haloObjects) {
 		haloObject.Draw();
 	}
@@ -214,9 +217,8 @@ void Player::DrawUI()
 	healthSprite.Draw();
 }
 
-void Player::OnCollision(const CollisionInfo& info)
+void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
 {
-	Object3d::OnCollision(info);
 
 	//ダメージのクールタイムが終わってないなら何もしない
 	if (damageInterval > 0) {

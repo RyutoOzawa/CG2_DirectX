@@ -27,6 +27,6 @@ private:
 public:
 	void Update() override;
 
-	void Add(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd, InterType type = InterType::Lerp);
+	void Add(int t, const Vector3& start_, const Vector3& end_, float scaleStart_, float scaleEnd_, InterType type);
 };
 

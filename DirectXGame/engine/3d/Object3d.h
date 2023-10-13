@@ -97,7 +97,7 @@ public:
 	void SetCollider(BaseCollider* collider_);
 
 	//衝突コールバック
-	virtual void OnCollision(const CollisionInfo& info) { CollisionInfo c = info; }
+	virtual void OnCollision([[maybe_unused]] const CollisionInfo& info) {}
 
 protected:
 	//クラス名

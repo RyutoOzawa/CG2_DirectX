@@ -36,8 +36,9 @@ public:
 	/// 衝突時コールバック関数
 	/// </summary>
 	/// <param name="info">衝突情報</param>
-	inline void OnCollision(const CollisionInfo& info) {
+	inline void OnCollision([[maybe_unused]] const CollisionInfo& info) {
 		object3d->OnCollision(info);
+	
 	}
 
 	inline void SetAttribute(unsigned short attribute_) { attribute = attribute_; }
