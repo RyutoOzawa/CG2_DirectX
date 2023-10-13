@@ -1,4 +1,8 @@
 #pragma once
+
+//プレイヤークラス
+//ユーザーが操作するプレイヤー全般の処理はここで行う
+
 #include"Object3d.h"
 #include"Model.h"
 #include"Vector3.h"

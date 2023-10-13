@@ -1,4 +1,7 @@
 #pragma once
+//タイトルシーンクラス
+//ゲームを起動したときの最初の画面の処理を行う
+
 #include"GameBaseScene.h"
 
 #include"ImguiManager.h"
@@ -54,7 +57,7 @@ private://メンバ変数
 
 	float textColorRad = 0.0f;
 
-	const uint16_t logoRotTimeMax = 300;
+	const uint16_t logoRotTimeMax = 180;
 	uint16_t logoRotTimer = logoRotTimeMax;
 	EasingData easeLogoRot;
 };

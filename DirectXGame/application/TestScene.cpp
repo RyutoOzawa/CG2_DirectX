@@ -1,3 +1,5 @@
+//動作テスト用シーン
+//オブジェクト単体の動きの確認や、ボス等のモーションの作成等を一度こちらでチェックし、本編のゲームシーンに実装する
 #include "TestScene.h"
 #include"DebugLine.h"
 #include"Input.h"

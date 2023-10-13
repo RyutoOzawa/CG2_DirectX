@@ -1,4 +1,7 @@
 #pragma once
+//“GƒNƒ‰ƒX
+//ƒQ[ƒ€‚É“oê‚·‚é“G’P‘Ì‚Ìˆ—‚ğs‚¤
+
 #include"Object3d.h"
 #include"SplineCurve.h"
 #include"ParticleManager.h"

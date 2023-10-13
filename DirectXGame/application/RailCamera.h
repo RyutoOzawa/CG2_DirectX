@@ -1,4 +1,8 @@
 #pragma once
+
+//レールカメラクラス
+//任意に決めたスプライン曲線の軌道上を移動するカメラオブジェクトクラス
+
 #include"Camera.h"
 #include"Object3d.h"
 #include"SplineCurve.h"

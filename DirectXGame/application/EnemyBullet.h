@@ -1,4 +1,7 @@
 #pragma once
+//“G‚Ì’eƒNƒ‰ƒX
+//“G‚ª”­Ë‚·‚é’e‚Ìˆ—‚ğs‚¤
+
 #include"Object3d.h"
 #include"Model.h"
 

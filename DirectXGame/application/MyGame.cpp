@@ -1,6 +1,13 @@
-﻿#include "MyGame.h"
+﻿//毎ゲームクラス
+//エンジンのフレームワークを継承したゲームの大元
+//ゲームループなどを多なう
+
+
+#include "MyGame.h"
 using namespace DirectX;
 #include"SceneFactory.h"
+
+
 
 MyGame::MyGame()
 {
@@ -59,7 +66,7 @@ void MyGame::Draw()
 
 	//シーン描画処理
 //	sceneManager->Draw();
-	imguiManager->Draw();
+	//imguiManager->Draw();
 
 	directX->EndDraw();
 }

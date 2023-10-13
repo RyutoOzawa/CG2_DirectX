@@ -1,3 +1,6 @@
+//“G‚Ì’eƒNƒ‰ƒX
+//“G‚ª”­Ë‚·‚é’e‚Ìˆ—‚ğs‚¤
+
 #include "EnemyBullet.h"
 #include"SphereCollider.h"
 #include"CollisionAttribute.h"

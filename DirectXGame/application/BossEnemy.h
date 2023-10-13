@@ -1,4 +1,7 @@
 #pragma once
+//ボス敵クラス
+//ゲーム最後に登場するボスの処理を行う
+
 #include"Object3d.h"
 #include"Model.h"
 #include<array>

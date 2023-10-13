@@ -1,4 +1,7 @@
-﻿#include "RailCamera.h"
+﻿
+//レールカメラクラス
+//任意に決めたスプライン曲線の軌道上を移動するカメラオブジェクトクラス
+#include "RailCamera.h"
 #include"ImguiManager.h"
 #include"Util.h"
 

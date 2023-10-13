@@ -1,3 +1,6 @@
+//タイトルシーンクラス
+//ゲームを起動したときの最初の画面の処理を行う
+
 #include "GameTitleScene.h"
 #include"Texture.h"
 #include"DirectX.h"
@@ -152,10 +155,12 @@ void GameTitleScene::Update()
 	else if(logoRotTimer == 0){
 		logoRotTimer = logoRotTimeMax;
 		//5秒に一回確率でロゴ回転
-		if ((uint16_t)Random(0.0f, 10.0f) % 10 <= 1) {
+		if ((uint16_t)Random(0.0f, 10.0f) % 10 <= 2) {
 			easeLogoRot.Start(60.0f);
 		}
 	}
+
+	ImGui::Text("ease %f", easeLogoRot.GetTimeRate());
 
 	easeLogoRot.Update();
 	float rot = Lerp(0.0f, PI * 6.0f, Out(easeLogoRot.GetTimeRate()));

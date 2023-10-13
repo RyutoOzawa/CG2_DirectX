@@ -1,4 +1,7 @@
 #pragma once
+//ゲームシーンクラス
+//ゲーム本編の処理を行う
+
 #include"GameBaseScene.h"
 #include"ImguiManager.h"
 #include"Input.h"

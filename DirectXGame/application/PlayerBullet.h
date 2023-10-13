@@ -1,4 +1,8 @@
 #pragma once
+
+//自機の弾クラス
+//自機が生成する弾
+
 #include"Object3d.h"
 #include"Model.h"
 #include"Vector3.h"

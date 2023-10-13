@@ -1,3 +1,6 @@
+//プレイヤークラス
+//ユーザーが操作するプレイヤー全般の処理はここで行う
+
 #include "Player.h"
 #include"Input.h"
 #include"SphereCollider.h"

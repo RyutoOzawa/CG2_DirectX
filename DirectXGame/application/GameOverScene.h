@@ -1,4 +1,7 @@
 #pragma once
+//ゲームオーバーシーンクラス
+//ゲームオーバーになった際に以降する画面の処理を行う
+
 #include"GameBaseScene.h"
 #include"Sprite.h"
 

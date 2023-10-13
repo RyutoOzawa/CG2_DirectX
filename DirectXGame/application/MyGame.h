@@ -1,4 +1,9 @@
 ﻿#pragma once
+
+//毎ゲームクラス
+//エンジンのフレームワークを継承したゲームの大元
+//ゲームループなどを多なう
+
 #include"KEngineFramework.h"
 #include"GamePlayScene.h"
 #include"GameTitleScene.h"

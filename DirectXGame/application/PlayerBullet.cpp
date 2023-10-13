@@ -1,3 +1,6 @@
+//自機の弾クラス
+//自機が生成する弾
+
 #include "PlayerBullet.h"
 #include<cassert>
 #include"Util.h"

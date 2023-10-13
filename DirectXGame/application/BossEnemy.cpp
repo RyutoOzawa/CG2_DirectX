@@ -1,3 +1,6 @@
+//ボス敵クラス
+//ゲーム最後に登場するボスの処理を行う
+
 #include "BossEnemy.h"
 #include"ImguiManager.h"
 #include"Util.h"

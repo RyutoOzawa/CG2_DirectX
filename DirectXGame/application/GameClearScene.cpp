@@ -1,3 +1,6 @@
+//ゲームクリアシーンクラス
+//ゲームをクリアしたときに以降するシーンの処理を行う
+
 #include "GameClearScene.h"
 #include"Input.h"
 #include"GameSceneManager.h"

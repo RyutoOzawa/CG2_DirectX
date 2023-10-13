@@ -1,3 +1,6 @@
+//ゲームシーンクラス
+//ゲーム本編の処理を行う
+
 #include "GamePlayScene.h"
 #include"Texture.h"
 #include"DirectX.h"

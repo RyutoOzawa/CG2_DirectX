@@ -1,4 +1,7 @@
 #pragma once
+//ゲームクリアシーンクラス
+//ゲームをクリアしたときに以降するシーンの処理を行う
+
 #include"GameBaseScene.h"
 #include"Sprite.h"
 class GameClearScene : public GameBaseScene

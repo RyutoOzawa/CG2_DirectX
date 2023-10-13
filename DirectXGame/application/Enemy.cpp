@@ -1,3 +1,6 @@
+//敵クラス
+//ゲームに登場する敵単体の処理を行う
+
 #include "Enemy.h"
 #include"SphereCollider.h"
 #include"Util.h"
