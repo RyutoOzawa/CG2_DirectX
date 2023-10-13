@@ -1,4 +1,7 @@
 #pragma once
+//基本パーティクルクラス
+//マネージャによって生成されるパーティクルのパラメータ等を持つ
+
 #include"Vector3.h"
 
 class BaseParticle

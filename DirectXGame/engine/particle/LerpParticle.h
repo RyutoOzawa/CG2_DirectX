@@ -1,4 +1,7 @@
 #pragma once
+//線形補間パーティクルクラス　
+//基本のパーティクルクラスを継承し、パーティクルの移動を線形補間で行うクラス
+
 #include"BaseParticle.h"
 
 enum class InterType {

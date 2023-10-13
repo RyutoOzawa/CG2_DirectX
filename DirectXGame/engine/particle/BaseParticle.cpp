@@ -1,3 +1,5 @@
+//基本パーティクルクラス
+//マネージャによって生成されるパーティクルのパラメータ等を持つ
 #include "BaseParticle.h"
 
 void BaseParticle::Update()
