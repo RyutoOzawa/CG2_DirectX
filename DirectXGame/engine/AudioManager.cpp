@@ -1,3 +1,6 @@
+//オーディオマネージャークラス
+//音関係のファイルの読み込みや再生を行うクラス
+
 #include "AudioManager.h"
 
 Microsoft::WRL::ComPtr<IXAudio2>AudioManager::xAudio2_;

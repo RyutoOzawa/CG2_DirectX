@@ -1,4 +1,7 @@
 #pragma once
+//パーティクルマネージャクラス
+//パーティクルの生成、生成されたパーティクルの更新や削除、描画を行う
+
 #include"Vector2.h"
 #include"Vector3.h"
 #include"Vector4.h"

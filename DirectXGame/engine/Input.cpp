@@ -1,3 +1,6 @@
+//入力クラス
+//キーボード、パッドの接続や入力を取得するクラス
+
 #include "Input.h"
 #include<wrl.h>
 #include<cassert>

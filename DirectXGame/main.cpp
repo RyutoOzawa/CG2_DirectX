@@ -1,4 +1,5 @@
-﻿
+﻿//ゲームループを実行する処理
+
 #include"MyGame.h"
 #include"KEngineFramework.h"
 

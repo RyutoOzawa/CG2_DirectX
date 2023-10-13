@@ -1,4 +1,7 @@
 #pragma once
+//シーン管理クラス
+//シーンの生成や現在シーンの実行、シーン遷移などを行う
+
 #include"GameBaseScene.h"
 #include"AbstractSceneFactory.h"
 #include"BaseSceneTransition.h"

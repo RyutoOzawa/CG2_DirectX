@@ -1,3 +1,7 @@
+//シーン工場クラス
+//シーンマネージャからの命令でシーンを作成するクラス
+//シーンマネージャが各シーンに依存しない為
+
 #include "SceneFactory.h"
 #include"GamePlayScene.h"
 #include"GameTitleScene.h"

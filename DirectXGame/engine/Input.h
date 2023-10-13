@@ -1,4 +1,6 @@
 #pragma once
+//入力クラス
+//キーボード、パッドの接続や入力を取得するクラス
 
 #include"DirectX.h"
 #include"windows.h"

@@ -1,3 +1,5 @@
+//シーン管理クラス
+//シーンの生成や現在シーンの実行、シーン遷移などを行う
 #include "GameSceneManager.h"
 #include<cassert>
 #include"FadeSceneTransition.h"

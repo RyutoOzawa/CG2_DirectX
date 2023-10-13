@@ -1,3 +1,6 @@
+//パーティクルマネージャクラス
+//パーティクルの生成、生成されたパーティクルの更新や削除、描画を行う
+
 #include "ParticleManager.h"
 using namespace Microsoft::WRL;
 #include <d3dcompiler.h>

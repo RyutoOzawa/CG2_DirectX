@@ -1,4 +1,6 @@
 #pragma once
+//オーディオマネージャークラス
+//音関係のファイルの読み込みや再生を行うクラス
 
 #include <xaudio2.h>
 #pragma comment(lib,"xaudio2.lib")
