@@ -108,7 +108,6 @@
     <ClCompile Include="DirectXGame\application\Player.cpp" />
     <ClCompile Include="DirectXGame\application\PlayerBullet.cpp" />
     <ClCompile Include="DirectXGame\application\RailCamera.cpp" />
-    <ClCompile Include="DirectXGame\engine\2d\DrawInfo.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\ImguiManager.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\Sprite.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\Texture.cpp" />
@@ -121,7 +120,6 @@
     <ClCompile Include="DirectXGame\engine\3d\Material.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\Model.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\Object3d.cpp" />
-    <ClCompile Include="DirectXGame\engine\3d\Sphere.cpp" />
     <ClCompile Include="DirectXGame\engine\AudioManager.cpp" />
     <ClCompile Include="DirectXGame\engine\base\DirectX.cpp" />
     <ClCompile Include="DirectXGame\engine\base\KEngineFramework.cpp" />
@@ -135,14 +133,11 @@
     <ClCompile Include="DirectXGame\engine\collision\SphereCollider.cpp" />
     <ClCompile Include="DirectXGame\engine\Input.cpp" />
     <ClCompile Include="DirectXGame\engine\math\EasingData.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\MathInfo.cpp" />
     <ClCompile Include="DirectXGame\engine\math\Matrix4.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\Transform.cpp" />
     <ClCompile Include="DirectXGame\engine\math\Util.cpp" />
     <ClCompile Include="DirectXGame\engine\math\Vector2.cpp" />
     <ClCompile Include="DirectXGame\engine\math\Vector3.cpp" />
     <ClCompile Include="DirectXGame\engine\math\Vector4.cpp" />
-    <ClCompile Include="DirectXGame\engine\math\Vertex.cpp" />
     <ClCompile Include="DirectXGame\engine\scene\GameBaseScene.cpp" />
     <ClCompile Include="DirectXGame\engine\scene\GameSceneManager.cpp" />
     <ClCompile Include="DirectXGame\engine\scene\SceneFactory.cpp" />
@@ -281,7 +276,6 @@
     <ClInclude Include="DirectXGame\application\Player.h" />
     <ClInclude Include="DirectXGame\application\PlayerBullet.h" />
     <ClInclude Include="DirectXGame\application\RailCamera.h" />
-    <ClInclude Include="DirectXGame\engine\2d\DrawInfo.h" />
     <ClInclude Include="DirectXGame\engine\2d\ImguiManager.h" />
     <ClInclude Include="DirectXGame\engine\2d\PostEffect.h" />
     <ClInclude Include="DirectXGame\engine\2d\Sprite.h" />
@@ -295,7 +289,6 @@
     <ClInclude Include="DirectXGame\engine\3d\Material.h" />
     <ClInclude Include="DirectXGame\engine\3d\Model.h" />
     <ClInclude Include="DirectXGame\engine\3d\Object3d.h" />
-    <ClInclude Include="DirectXGame\engine\3d\Sphere.h" />
     <ClInclude Include="DirectXGame\engine\AudioManager.h" />
     <ClInclude Include="DirectXGame\engine\base\AbstractSceneFactory.h" />
     <ClInclude Include="DirectXGame\engine\base\DirectX.h" />
@@ -311,15 +304,12 @@
     <ClInclude Include="DirectXGame\engine\collision\SphereCollider.h" />
     <ClInclude Include="DirectXGame\engine\Input.h" />
     <ClInclude Include="DirectXGame\engine\math\EasingData.h" />
-    <ClInclude Include="DirectXGame\engine\math\MathInfo.h" />
     <ClInclude Include="DirectXGame\engine\math\Matrix4.h" />
     <ClInclude Include="DirectXGame\engine\math\SplineCurve.h" />
-    <ClInclude Include="DirectXGame\engine\math\Transform.h" />
     <ClInclude Include="DirectXGame\engine\math\Util.h" />
     <ClInclude Include="DirectXGame\engine\math\Vector2.h" />
     <ClInclude Include="DirectXGame\engine\math\Vector3.h" />
     <ClInclude Include="DirectXGame\engine\math\Vector4.h" />
-    <ClInclude Include="DirectXGame\engine\math\Vertex.h" />
     <ClInclude Include="DirectXGame\engine\scene\GameBaseScene.h" />
     <ClInclude Include="DirectXGame\engine\scene\GameSceneManager.h" />
     <ClInclude Include="DirectXGame\engine\scene\SceneFactory.h" />

@@ -58,7 +58,8 @@ void Input::Update()
 
 	//パッドの接続確認
 	oldPadState = padState;
-	DWORD flag = XInputGetState(0, &padState);
+	DWORD flag;
+	flag = XInputGetState(0, &padState);
 
 
 }

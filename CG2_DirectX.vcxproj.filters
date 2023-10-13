@@ -84,9 +84,6 @@
     <ClCompile Include="DirectXGame\application\PlayerBullet.cpp">
       <Filter>ソース ファイル\application</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\engine\2d\DrawInfo.cpp">
-      <Filter>ソース ファイル\engine\2D</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\engine\2d\ImguiManager.cpp">
       <Filter>ソース ファイル\engine\2D</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
     <ClCompile Include="DirectXGame\engine\3d\Object3d.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\engine\3d\Sphere.cpp">
-      <Filter>ソース ファイル\engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\engine\base\DirectX.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
@@ -138,13 +132,7 @@
     <ClCompile Include="DirectXGame\engine\math\EasingData.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\MathInfo.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\engine\math\Matrix4.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\Transform.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\math\Util.cpp">
@@ -157,9 +145,6 @@
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\math\Vector4.cpp">
-      <Filter>ソース ファイル\engine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\engine\math\Vertex.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\scene\GameBaseScene.cpp">
@@ -336,9 +321,6 @@
     <ClInclude Include="DirectXGame\application\MyGame.h">
       <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\engine\2d\DrawInfo.h">
-      <Filter>ヘッダー ファイル\engine\2D</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXGame\engine\2d\PostEffect.h">
       <Filter>ヘッダー ファイル\engine\2D</Filter>
     </ClInclude>
@@ -381,9 +363,6 @@
     <ClInclude Include="DirectXGame\engine\3d\Object3d.h">
       <Filter>ヘッダー ファイル\engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\engine\3d\Sphere.h">
-      <Filter>ヘッダー ファイル\engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXGame\engine\base\AbstractSceneFactory.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
@@ -399,16 +378,10 @@
     <ClInclude Include="DirectXGame\engine\math\EasingData.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\MathInfo.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXGame\engine\math\Matrix4.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\math\SplineCurve.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\Transform.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\math\Util.h">
@@ -421,9 +394,6 @@
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\math\Vector4.h">
-      <Filter>ヘッダー ファイル\engine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\math\Vertex.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\scene\GameBaseScene.h">

@@ -3,7 +3,6 @@
 #include<DirectXMath.h>
 #include<d3d12.h>
 #include<wrl.h>
-#include"Transform.h"
 #include"DirectX.h"
 #include<vector>
 #include<string>
