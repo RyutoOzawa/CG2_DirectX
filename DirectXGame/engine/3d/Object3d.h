@@ -1,4 +1,6 @@
 #pragma once
+//3dオブジェクト(.objファイル版)
+//ゲームで利用するオブジェクトの操作、描画を行う
 
 #include<DirectXMath.h>
 #include<d3d12.h>

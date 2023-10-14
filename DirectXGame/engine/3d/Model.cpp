@@ -1,3 +1,6 @@
+//3Dモデル(objファイル版)
+//外部からobjファイルを読み込み、頂点情報やマテリアルの情報などを持つ
+
 #include"Model.h"
 #include<fstream>
 #include<sstream>

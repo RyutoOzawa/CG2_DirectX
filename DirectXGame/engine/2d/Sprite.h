@@ -2,7 +2,6 @@
 
 
 #include<DirectXMath.h>
-#include"Material.h"
 #include"Texture.h"
 #include<string>
 #include"Vector2.h"

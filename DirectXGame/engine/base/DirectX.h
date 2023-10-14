@@ -1,4 +1,8 @@
 #pragma once
+//DirectX
+//ゲームに必要なDirectX12側の処理を行う
+//描画コマンドやGPUリソース生成に使うデバイス等も持つ
+
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include<wrl.h>
@@ -39,7 +43,7 @@ private:
 	std::chrono::steady_clock::time_point reference_;
 public:
 	//初期化
-	void Initialize(WindowsAPI* windowsAPI);
+	void Initialize(WindowsAPI* windowsAPI_);
 
 	//描画前処理(毎フレーム処理)
 	void BeginDraw();

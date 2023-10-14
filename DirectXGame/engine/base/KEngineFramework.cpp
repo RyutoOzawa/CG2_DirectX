@@ -1,3 +1,6 @@
+//ゲームエンジンのフレームワーク
+//ゲームに最低限必要な変数をもち、基盤システムの初期化等を行う基底クラス
+
 #include "KEngineFramework.h"
 #include"FbxLoader.h"
 #include"FbxObject3d.h"

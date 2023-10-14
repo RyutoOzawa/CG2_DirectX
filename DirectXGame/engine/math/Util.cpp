@@ -1,3 +1,5 @@
+//ユーティリティクラス
+//色々便利な関数達をまとめたクラス
 #include"Util.h"
 #include<random>
 

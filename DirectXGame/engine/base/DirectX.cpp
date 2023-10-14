@@ -1,3 +1,7 @@
+//DirectX
+//ゲームに必要なDirectX12側の処理を行う
+//描画コマンドやGPUリソース生成に使うデバイス等も持つ
+
 #include "DirectX.h"
 #include <cassert>
 #pragma comment(lib, "d3d12.lib")
@@ -6,13 +10,13 @@
 #include<thread>
 using namespace Microsoft::WRL;
 
-void ReDirectX::Initialize(WindowsAPI* windowsAPI)
+void ReDirectX::Initialize(WindowsAPI* windowsAPI_)
 {
 	//FPS初期化
 	InitializeFixFPS();
 
-	assert(windowsAPI);
-	this->windowsAPI = windowsAPI;
+	assert(windowsAPI_);
+	windowsAPI = windowsAPI_;
 
 	//デバイスの初期化
 	InitializeDevice();

@@ -1,5 +1,7 @@
-#include "Object3d.h"
+//3dオブジェクト(.objファイル版)
+//ゲームで利用するオブジェクトの操作、描画を行う
 
+#include "Object3d.h"
 #include"WindowsAPI.h"
 #include<cassert>
 using namespace DirectX;

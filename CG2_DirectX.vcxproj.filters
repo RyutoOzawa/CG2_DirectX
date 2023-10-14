@@ -111,9 +111,6 @@
     <ClCompile Include="DirectXGame\engine\3d\DebugLine.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\engine\3d\Material.cpp">
-      <Filter>ソース ファイル\engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\engine\3d\Model.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
@@ -352,9 +349,6 @@
       <Filter>ヘッダー ファイル\engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\3d\DebugLine.h">
-      <Filter>ヘッダー ファイル\engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\engine\3d\Material.h">
       <Filter>ヘッダー ファイル\engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\3d\Model.h">

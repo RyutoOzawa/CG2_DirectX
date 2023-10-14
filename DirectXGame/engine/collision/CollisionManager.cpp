@@ -1,3 +1,6 @@
+//当たり判定マネージャ
+//コライダーのまとまりを持ち、全ての当たり判定をチェックする
+
 #include "CollisionManager.h"
 #include"BaseCollider.h"
 #include"Collision.h"

@@ -1,4 +1,6 @@
 #pragma once
+//ベクター3クラス
+//3つのfloat型を同時に扱うためのクラス
 class Vector3
 {
 public:

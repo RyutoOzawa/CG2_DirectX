@@ -1,3 +1,5 @@
+//ベクター3クラス
+//3つのfloat型を同時に扱うためのクラス
 #include "Vector3.h"
 #include<cmath>
 

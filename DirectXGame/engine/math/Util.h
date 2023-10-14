@@ -1,3 +1,6 @@
+//ユーティリティクラス
+//色々便利な関数達をまとめたクラス
+
 #define PI 3.1415926f
 #include"Vector2.h"
 #include"Vector3.h"

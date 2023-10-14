@@ -1,3 +1,6 @@
+//マトリックス4クラス
+//4*4の行列を扱うクラス
+
 #include "Matrix4.h"
 #include "Vector3.h"
 #include <cmath>

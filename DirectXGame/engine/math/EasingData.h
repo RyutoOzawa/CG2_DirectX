@@ -1,4 +1,6 @@
 #pragma once
+//イージングデータクラス1
+//イージングで使う時間の管理や開始等を行う
 
 class EasingData
 {

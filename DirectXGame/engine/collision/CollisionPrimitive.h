@@ -1,4 +1,6 @@
 #pragma once
+//当たり判定プリミティブのデータ方のまとまり
+
 #include"Vector3.h"
 #include"Vector2.h"
 

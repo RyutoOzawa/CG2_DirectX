@@ -1,3 +1,6 @@
+//“–‚½‚è”»’è•â•
+//“–‚½‚è”»’èŽ®‚ð‚í‚©‚è‚â‚·‚­‚·‚é‚½‚ß‚ÉÕ“ËŒvŽZŽ®‚ðŠÖ”‰»‚µ‚Ä‚¢‚é
+
 #include "Collision.h"
 #include<cmath>
 

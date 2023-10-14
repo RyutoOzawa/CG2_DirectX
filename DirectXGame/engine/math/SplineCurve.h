@@ -1,4 +1,7 @@
 #pragma once
+//スプライン曲線クラス
+//スプライン補間を行う
+
 #include"EasingData.h"
 #include"Vector3.h"
 #include<vector>

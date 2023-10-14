@@ -1,3 +1,4 @@
+//当たり判定プリミティブのデータ方のまとまり
 #include "CollisionPrimitive.h"
 
 void Triangle::ComputeNormal()

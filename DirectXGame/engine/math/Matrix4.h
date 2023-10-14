@@ -1,4 +1,6 @@
 #pragma once
+//マトリックス4クラス
+//4*4の行列を扱うクラス
 
 #include"Vector3.h"
 class Matrix4

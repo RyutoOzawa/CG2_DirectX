@@ -25,8 +25,6 @@ TextureData* Texture::LoadTexture(std::string filename)
 
 	std::string fullpath;
 
-	size_t a = filename.find(defaultBaseDirectory);
-	size_t max = SIZE_MAX;
 
 	//既にリソースファイルまでディレクトリを上っているならフルパス結合はしない
 	if (filename.find(defaultBaseDirectory) != SIZE_MAX) {
@@ -38,7 +36,8 @@ TextureData* Texture::LoadTexture(std::string filename)
 
 	//ユニコード文字列に変換する
 	wchar_t wfilepath[128];
-	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));
+	int iBufferSize;
+	iBufferSize = MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilepath, _countof(wfilepath));
 
 	//テクスチャコンテナに同様のキーがあるか検索
 	decltype(textures)::iterator it = textures.find(filename);

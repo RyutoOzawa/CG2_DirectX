@@ -1,4 +1,7 @@
 #pragma once
+//シーン工場の基盤
+//ゲームによってシーン生成に必要なものが変わることが予想されるため、基底クラスとしている
+
 #include"GameBaseScene.h"
 #include<string>
 

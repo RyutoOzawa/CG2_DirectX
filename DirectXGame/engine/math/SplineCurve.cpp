@@ -1,3 +1,6 @@
+//スプライン曲線クラス
+//スプライン補間を行う
+
 #include "SplineCurve.h"
 #include"ImguiManager.h"
 #include"DebugLine.h"

@@ -1,3 +1,5 @@
+//ベクター4クラス
+//4つのfloat型を同時に扱うためのクラス
 #include "Vector4.h"
 #include<cmath>
 

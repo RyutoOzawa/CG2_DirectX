@@ -1,3 +1,6 @@
+//ベクター2クラス
+//2つのfloat型を同時に扱うためのクラス
+
 #include "Vector2.h"
 #include <cmath>    // sqrt
 

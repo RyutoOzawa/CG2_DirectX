@@ -29,7 +29,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="device">D3D12デバイス</param>
-	void Initialize(ID3D12Device* device);
+	void Initialize(ID3D12Device* device_);
 
 	/// <summary>
 	/// 後始末

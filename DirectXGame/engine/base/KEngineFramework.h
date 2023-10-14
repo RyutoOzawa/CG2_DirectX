@@ -1,4 +1,7 @@
 #pragma once
+//ゲームエンジンのフレームワーク
+//ゲームに最低限必要な変数をもち、基盤システムの初期化等を行う基底クラス
+
 #include"WindowsAPI.h"
 #include"DirectX.h"
 #include"Input.h"

@@ -1,3 +1,7 @@
+//ベジエ曲線クラス
+//n次ベジエ補間を行う
+//制御点をいくらでも設定できるため、n次に対応可能
+
 #include "BezierCurve.h"
 #include"DebugLine.h"
 

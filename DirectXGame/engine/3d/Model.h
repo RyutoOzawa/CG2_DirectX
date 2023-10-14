@@ -1,4 +1,7 @@
 #pragma once
+//3Dモデル(objファイル版)
+//外部からobjファイルを読み込み、頂点情報やマテリアルの情報などを持つ
+
 #include"Vector2.h"
 #include"Vector3.h"
 #include<string>

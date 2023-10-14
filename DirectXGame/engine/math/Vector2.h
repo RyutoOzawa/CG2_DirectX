@@ -1,4 +1,6 @@
 #pragma once
+//ベクター2クラス
+//2つのfloat型を同時に扱うためのクラス
 class Vector2
 {
 public:

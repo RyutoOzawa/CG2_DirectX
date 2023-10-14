@@ -1,4 +1,7 @@
 #pragma once
+//windowsAPI
+//ウィンドウを作ったり大きさを設定したりするとこ
+
 #include<Windows.h>
 
 class WindowsAPI

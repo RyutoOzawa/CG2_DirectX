@@ -1,6 +1,9 @@
 #pragma once
 
 #include"CollisionTypes.h"
+//コライダー基盤
+//全てのコライダーの基盤となる情報を持つ
+
 #include"Object3d.h"
 #include"CollisionInfo.h"
 

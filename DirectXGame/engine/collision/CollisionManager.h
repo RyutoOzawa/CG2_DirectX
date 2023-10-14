@@ -1,4 +1,7 @@
 #pragma once
+//当たり判定マネージャ
+//コライダーのまとまりを持ち、全ての当たり判定をチェックする
+
 #include<forward_list>
 #include<list>
 

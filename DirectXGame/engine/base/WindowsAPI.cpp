@@ -1,3 +1,6 @@
+//windowsAPI
+//ウィンドウを作ったり大きさを設定したりするとこ
+
 #include "WindowsAPI.h"
 #pragma comment(lib,"winmm.lib")
 #include<imgui_impl_win32.h>

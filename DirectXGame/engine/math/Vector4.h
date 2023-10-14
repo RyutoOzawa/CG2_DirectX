@@ -1,4 +1,7 @@
 #pragma once
+//ベクター4クラス
+//4つのfloat型を同時に扱うためのクラス
+
 class Vector4
 {
 public:

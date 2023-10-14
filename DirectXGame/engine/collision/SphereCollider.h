@@ -1,4 +1,6 @@
 #pragma once
+//球体コライダークラス
+//球体の当たり判定を持つクラス
 
 #include"BaseCollider.h"
 #include"CollisionPrimitive.h"

@@ -117,7 +117,6 @@
     <ClCompile Include="DirectXGame\engine\3d\FbxObject3d.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\GpPipeline.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\DebugLine.cpp" />
-    <ClCompile Include="DirectXGame\engine\3d\Material.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\Model.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\Object3d.cpp" />
     <ClCompile Include="DirectXGame\engine\AudioManager.cpp" />
@@ -286,7 +285,6 @@
     <ClInclude Include="DirectXGame\engine\3d\FbxObject3d.h" />
     <ClInclude Include="DirectXGame\engine\3d\GpPipeline.h" />
     <ClInclude Include="DirectXGame\engine\3d\DebugLine.h" />
-    <ClInclude Include="DirectXGame\engine\3d\Material.h" />
     <ClInclude Include="DirectXGame\engine\3d\Model.h" />
     <ClInclude Include="DirectXGame\engine\3d\Object3d.h" />
     <ClInclude Include="DirectXGame\engine\AudioManager.h" />

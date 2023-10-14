@@ -1,3 +1,5 @@
+//球体コライダークラス
+//球体の当たり判定を持つクラス
 #include "SphereCollider.h"
 
 void SphereCollider::Update()

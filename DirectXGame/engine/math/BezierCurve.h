@@ -1,4 +1,8 @@
 #pragma once
+//ベジエ曲線クラス
+//n次ベジエ補間を行う
+//制御点をいくらでも設定できるため、n次に対応可能
+
 #include"EasingData.h"
 #include"Vector3.h"
 #include"Vector4.h"
