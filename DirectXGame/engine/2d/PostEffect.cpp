@@ -1,3 +1,6 @@
+//ポストエフェクト
+//画面に様々な効果をかける為のクラス
+
 #include "PostEffect.h"
 #include"WindowsAPI.h"
 #include<d3dx12.h>

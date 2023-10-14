@@ -1,4 +1,7 @@
 #pragma once
+//グラフィックスパイプライン
+//パイプラインの生成を助けたり、ブレンド設定を変えやすくするためのクラス
+
 #include<d3d12.h>
 #include<vector>
 #include<wrl.h>

@@ -1,5 +1,6 @@
 #pragma once
-
+//スプライト
+//2Dの画像を描画するための情報を持つクラス
 
 #include<DirectXMath.h>
 #include"Texture.h"

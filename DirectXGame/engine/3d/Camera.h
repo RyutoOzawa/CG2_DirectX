@@ -1,4 +1,7 @@
 #pragma once
+//カメラオブジェクト
+//オブジェクトをウィンドウに映すためのカメラの情報を持つ
+
 #include"DirectX.h"
 #include<DirectXMath.h>
 #include<d3d12.h>

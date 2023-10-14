@@ -1,3 +1,6 @@
+//カメラオブジェクト
+//オブジェクトをウィンドウに映すためのカメラの情報を持つ
+
 #include "Camera.h"
 #include"WindowsAPI.h"
 using namespace DirectX;

@@ -1,4 +1,7 @@
 #pragma once
+//テクスチャ
+//外部からのテクスチャデータの読み込み、テクスチャデータ配列などを持つ
+
 #include<DirectXTex.h>
 #include"DirectX.h"
 #include<wrl.h>

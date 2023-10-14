@@ -1,3 +1,6 @@
+//FBXモデル
+//FBXモデルのアフィン変換情報やボーンの情報などを持つ
+
 #include "FbxModel.h"
 
 FbxModel::~FbxModel()

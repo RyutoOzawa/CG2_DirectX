@@ -1,4 +1,7 @@
 #pragma once
+//デバッグ用線
+//デバッグ用に線を引けるクラス
+
 #include "Vector3.h"
 #include"Vector4.h"
 #include"Camera.h"

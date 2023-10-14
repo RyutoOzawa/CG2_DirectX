@@ -1,4 +1,6 @@
 ﻿#pragma once
+//FBXファイルローダー
+//FBXファイルの読み込みが煩雑なため、objと違いローダーとモデルでわかれている
 
 #include "fbxsdk.h"
 

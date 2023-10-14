@@ -1,3 +1,6 @@
+//imguiマネージャ
+//デバッグ用のimguiを使うためのクラス
+
 #include "ImguiManager.h"
 #include"WindowsAPI.h"
 #include"DirectX.h"

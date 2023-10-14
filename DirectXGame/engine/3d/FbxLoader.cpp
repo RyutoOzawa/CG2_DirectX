@@ -1,4 +1,7 @@
-﻿#include "FbxLoader.h"
+﻿//FBXファイルローダー
+//FBXファイルの読み込みが煩雑なため、objと違いローダーとモデルでわかれている
+
+#include "FbxLoader.h"
 #include<cassert>
 using namespace std;
 using namespace DirectX;

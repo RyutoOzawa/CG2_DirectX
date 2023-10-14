@@ -1,4 +1,7 @@
 #pragma once
+//FBXモデル
+//FBXモデルのアフィン変換情報やボーンの情報などを持つ
+
 #include<string>
 #include<DirectXMath.h>
 #include<vector>

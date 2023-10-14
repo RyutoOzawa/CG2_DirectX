@@ -1,4 +1,7 @@
 #pragma once
+//ポストエフェクト
+//画面に様々な効果をかける為のクラス
+
 #include "Sprite.h"
 #include"GpPipeline.h"
 

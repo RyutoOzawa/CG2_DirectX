@@ -1,3 +1,6 @@
+//スプライト
+//2Dの画像を描画するための情報を持つクラス
+
 #include "Sprite.h"
 using namespace DirectX;
 #include<wrl.h>

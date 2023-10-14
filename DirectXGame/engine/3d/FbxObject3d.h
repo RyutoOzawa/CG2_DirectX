@@ -1,4 +1,6 @@
 #pragma once
+//オブジェクト3d(fbx版)
+//Object3dクラスとほぼ同じ
 
 #include"FbxModel.h"
 #include"Camera.h"

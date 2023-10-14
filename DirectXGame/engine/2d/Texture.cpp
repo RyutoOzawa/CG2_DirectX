@@ -1,3 +1,6 @@
+//テクスチャ
+//外部からのテクスチャデータの読み込み、テクスチャデータ配列などを持つ
+
 #include "Texture.h"
 #include<string.h>
 #include<cassert>
