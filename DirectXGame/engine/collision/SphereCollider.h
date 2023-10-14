@@ -21,6 +21,7 @@ public:
 	/// </summary>
 	void Update();
 
+	//setter
 	inline void SetRadius(float radius_) { radius = radius_; }
 
 private:

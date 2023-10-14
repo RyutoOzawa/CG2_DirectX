@@ -58,23 +58,37 @@ public:
 	XINPUT_STATE padState;
 	XINPUT_STATE oldPadState;
 
+	//初期化
 	void Initialize(WindowsAPI* winApp);
+	//更新
 	void Update();
+	//キーボード押下(瞬間)
 	bool IsKeyTrigger(BYTE key_);
+	//キーボード押下(押しっぱなし)
 	bool IsKeyPress(BYTE key_);
+	//キーボード押下(離した瞬間)
 	bool IsKeyRelease(BYTE key_);
-
+	//パッド押下(瞬間)
 	bool IsPadTrigger(WORD Button);
+	//パッド押下(押しっぱなし)
 	bool IsPadPress(WORD Button);
+	//パッド押下(離した瞬間)
 	bool IsPadRelease(WORD Button);
-
+	//Lスティックが左に倒れたか
 	bool IsDownLStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Lスティックが右に倒れたか
 	bool IsDownLStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Lスティックが上に倒れたか
 	bool IsDownLStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Lスティックが下に倒れたか
 	bool IsDownLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Rスティックが左に倒れたか
 	bool IsDownRStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Rスティックが右に倒れたか
 	bool IsDownRStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Rスティックが上に倒れたか
 	bool IsDownRStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Rスティックが下に倒れたか
 	bool IsDownRStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
 };
 

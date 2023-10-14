@@ -36,10 +36,13 @@ public:
 	//シーン開ける
 	virtual void Open() = 0;
 
+	//仮想デストラクタ
 	virtual ~BaseSceneTransition() = default;
 
+	//遷移フラグ
 	bool IsTransition()const { return isTransition; }
 
+	//getter
 	TransitionPhase GetPhase()const { return transitionPhase; }
 
 protected:

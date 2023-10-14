@@ -46,12 +46,15 @@ private:
 
 	
 public:
-
+	//シングルトンインスタンス祝
 	static Texture* GetInstance();
 
+	//テクスチャファイルロード
 	static TextureData* LoadTexture(std::string filename = "NULL");
-	static void Initialize(ID3D12Device* device);
 
+	//静的初期化
+	static void Initialize(ID3D12Device* device);
+	//getter
 	static ID3D12DescriptorHeap* GetDescHeap() { return descHeap.Get(); }
 
 

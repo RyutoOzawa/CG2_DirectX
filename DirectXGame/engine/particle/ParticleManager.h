@@ -81,15 +81,22 @@ private:
 	std::forward_list<BaseParticle*> particles;
 
 public:
+	//静的初期化
 	static void StaticInitialize(ReDirectX* directX_);
+	
+	//描画前処理
 	static void BeginDraw(Camera* camera);
 
+	//初期化
 	void Initialize(TextureData* texData_);
 
+	//更新
 	void Update();
 
+	//描画
 	void Draw();
 
+	//テクスチャデータセット
 	void SetTexture(TextureData* texData_) { texData = texData_; }
 
 	/// <summary>
@@ -114,6 +121,7 @@ public:
 	void AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType = InterType::Lerp);
 
 private:
+	//パイプライン生成
 	static void CreatePipeline3D();
 
 };

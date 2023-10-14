@@ -70,12 +70,12 @@ public:
 	//メンバ関数
 	static std::unique_ptr< Model> CreateModel(const std::string& filename = MODEL_CUBE);
 	
+	//setter
 	void SetTexture(TextureData* texData_) { texData = texData_; }
-
 	static void SetDevice(ID3D12Device* dev) { device = dev; }
-
+	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-
+	//getter
 	ID3D12Resource* GetCBMaterial()const { return constBuffMaterial.Get(); }
 
 	//内部処理用の非公開メンバ関数

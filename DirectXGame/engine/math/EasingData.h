@@ -13,16 +13,19 @@ private:
 
 public:
 
+	//更新
 	void Update();
 
+	//開始
 	void Start(float allFrame);
-
+	
+	//getter
 	float GetTimeRate() { return timeRate; }
 
 };
 
+//イージング
 float Out(float t);
-
 float In(float t);
 
 float InOut(float t);

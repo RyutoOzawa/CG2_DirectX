@@ -19,10 +19,13 @@ class Enemy : public Object3d
 {
 public:
 
+	//パーティクル更新
 	static void EnemyParticleUpdate();
 
+	//敵の静的初期化
 	static void EnemyInitialize(TextureData* texData, Model* enemyModel,Model* bulletModel_);
 
+	//パーティクル描画
 	static void DrawParticle();
 
 	/// <summary>
@@ -30,21 +33,21 @@ public:
 	/// </summary>
 	/// <param name="points">移動用スプライン曲線の座標配列</param>
 	void Initialize(std::vector<Vector3>& points);
-
+	//更新
 	void Update(const Vector3& playerWorldPos,const Matrix4& cameraMat);
 
-	
+	//描画
 	void Draw();
 
 	//スポーン
 	void Spawn();
-
+	//当たり判定コールバック
 	void OnCollision([[maybe_unused]] const CollisionInfo& info) override;
-
+	//生存フラグ
 	bool IsAlive()const { return isAlive; }
-
+	//攻撃
 	void Attack(const Vector3& playerWorldPos);
-
+	//死亡
 	void Death();
 
 private:

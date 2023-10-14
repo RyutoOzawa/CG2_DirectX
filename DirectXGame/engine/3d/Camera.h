@@ -33,15 +33,13 @@ public:
 
 public:
 
-
+	//‰Šú‰»
 	void Initialize(const Vector3& eye_, const Vector3& target_, const Vector3& up_);
-
+	//s—ñXV
 	void UpdateMatrix();
-
+	//getter
 	Matrix4 GetViewProjection()const { return matView * matProjection; }
-
 	Vector3 GetEye()const { return eye; }
-
 	Matrix4 GetView()const { return matView; }
 		 
 };

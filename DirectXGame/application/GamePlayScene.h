@@ -44,6 +44,7 @@ public:
 	//•`‰æ
 	void Draw()override;
 
+	//“G‚Ì¶¬
 	void EnemySpawn();
 
 

@@ -46,7 +46,7 @@ public:	//ƒƒ“ƒoŠÖ”
 
 	//¶‘¶”»’è
 	bool IsAlive()const { return isAlive; }
-
+	//getter
 	INT32 GetSpawnTimer() const { return spawnTimer; }
 
 private://ƒƒ“ƒo•Ï”

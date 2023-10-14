@@ -7,12 +7,16 @@
 class GameClearScene : public GameBaseScene
 {
 public:
+	//‰Šú‰»
 	void Initialize() override;
 
+	//I—¹
 	void Finalize() override;
 
+	//XV
 	void Update() override;
 
+	//•`‰æ
 	void Draw() override;
 private:
 

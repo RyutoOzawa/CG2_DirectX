@@ -37,6 +37,7 @@ public:
 	//XV
 	void Update();
 
+	//getter
 	Vector3 GetPosition()const { return currentPos; }
 
 

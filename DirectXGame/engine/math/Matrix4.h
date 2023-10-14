@@ -27,6 +27,7 @@ public:
 	//座標変換（ベクトルと行列の掛け算）
 	static Vector3 transform(const Vector3& v, const Matrix4& m);
 
+	//W除算あり座標返還
 	static Vector3 transformDivW(const Vector3& v, const Matrix4& m);
 
 	//回転行列の作成
@@ -35,10 +36,11 @@ public:
 	//逆行列
 	Matrix4 Inverse();
 
+	//ビュー行列生成
 	Matrix4 CreateViewMat(const Vector3& eye, const Vector3& target, const Vector3& up );
-
+	//射影変換行列生成
 	Matrix4 CreatePerspectiveProjection(float fovY,float aspectRatio,float nearZ,float farZ);
-
+	//平行投影行列生成
 	Matrix4 CreateParallelProjection(float windowW,float windowH);
 
 	//演算子オーバーロード

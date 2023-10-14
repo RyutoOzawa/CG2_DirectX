@@ -15,6 +15,7 @@ public:
 	//更新
 	void Update();
 
+	//生存フラグ
 	bool IsAlive()const { return isAlive; }
 
 private:

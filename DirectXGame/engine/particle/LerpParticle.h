@@ -28,8 +28,18 @@ private:
 	InterType interType = InterType::Lerp;
 
 public:
+	//更新
 	void Update() override;
 
+	/// <summary>
+	/// パーティクル追加
+	/// </summary>
+	/// <param name="t">生存時間</param>
+	/// <param name="start_">始点</param>
+	/// <param name="end_">終点</param>
+	/// <param name="scaleStart_">開始スケール</param>
+	/// <param name="scaleEnd_">終了スケール</param>
+	/// <param name="type">補間の種類</param>
 	void Add(int t, const Vector3& start_, const Vector3& end_, float scaleStart_, float scaleEnd_, InterType type);
 };
 

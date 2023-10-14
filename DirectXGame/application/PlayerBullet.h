@@ -14,8 +14,10 @@ public:
 	//初期化
 	void Initialize(Model* model_,const Vector3& position_,const Vector3& velocity_);
 
+	//更新
 	void Update();
 
+	//生存フラグ
 	bool IsAlive()const { return isAlive; }
 
 private:

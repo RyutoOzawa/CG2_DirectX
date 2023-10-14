@@ -74,8 +74,10 @@ public:
 	/// </summary>
 	virtual void Initialize();
 
+	//XV
 	virtual void Update();
 
+	//•`‰æ
 	virtual void Draw();
 
 	//getter

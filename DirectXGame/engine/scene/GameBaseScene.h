@@ -19,8 +19,10 @@ public:
 	//描画
 	virtual void Draw() = 0;
 
+	//仮想デストラクタ
 	virtual ~GameBaseScene() = default;
 
+	//setter
 	virtual void SetSceneManager(GameSceneManager* sceneManager_) { this->sceneManager = sceneManager_; }
 
 protected:

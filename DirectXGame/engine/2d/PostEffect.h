@@ -74,6 +74,7 @@ private://メンバ変数
     Vector4 color = { 1,1,1,1 };
 
 private:
+    //各種初期化の関数分け
     void InitCrreteTexBuff();
     void InitCreateSRV();
     void InitCreateRTV();
@@ -82,6 +83,7 @@ private:
     void InitVertBuff();
     void InitConstBuff();
 
+    //パイプライン生成
     void CreatePipeline2D();
     
 

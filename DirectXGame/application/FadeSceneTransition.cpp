@@ -1,3 +1,6 @@
+//フェードインアウト
+//シーン遷移(フェードイン、アウト)を行う
+
 #include "FadeSceneTransition.h"
 #include"Util.h"
 #include"ImguiManager.h"

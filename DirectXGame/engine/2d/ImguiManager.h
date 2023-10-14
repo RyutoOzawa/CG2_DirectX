@@ -29,14 +29,19 @@ public:
 
 	ReDirectX* directX = nullptr;
 
+	//初期化
 	void Initialize(WindowsAPI* winApp_, ReDirectX* directX_);
 
+	//コマンド収集開始
 	void Begin();
 
+	//コマンド収集終了
 	void End();
 
+	//描画
 	void Draw();
 
+	//終了
 	void Finalize();
 };
 

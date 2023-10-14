@@ -20,6 +20,7 @@ public://メンバ関数
 	/// </summary>
 	void Initialize(const Vector3& position,const Vector3& rotation);
 
+	//レール開始
 	void Start();
 
 	/// <summary>
@@ -27,11 +28,9 @@ public://メンバ関数
 	/// </summary>
 	void Update();
 
+	//getter
 	Object3d* GetObject3d()const { return world; }
-
 	Camera* GetCamera()const { return camera; }
-
-	//カメラ進行度
 	float GetProgress() const { return spline.GetProgress(); }
 
 	//動線描画

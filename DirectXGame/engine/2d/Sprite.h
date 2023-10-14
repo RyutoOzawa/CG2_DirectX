@@ -78,10 +78,14 @@ public: //メンバ関数
 	Sprite();
 	Sprite(TextureData* texData,Vector2 pos,Vector2 size_,Vector4 color_,Vector2 anchorP,bool isFlipX_,bool isFlipY_);
 
+	//初期化
 	void Initialize(std::string filename);
 	void Initialize(TextureData* texData_);
 
+	//描画
 	void Draw();
+
+	//setter
 	void SetColor(const Vector4& color_) { color = color_; }
 	void SetPos(const Vector2& pos) { position = pos; }
 	void SetRotation(float rotation_) { rotation = rotation_; }
@@ -94,6 +98,7 @@ public: //メンバ関数
 	void SetTextureLeftTop(const Vector2& leftTop) { textureLeftTop = leftTop; }
 	void SetTextureSize(const Vector2& size_) { textureSize = size_; }
 
+	//getter
 	const Vector2& GetPosition()const { return position; }
 	float GetRotation()const { return rotation; }
 	const Vector4 GetColor()const { return color; }
@@ -105,12 +110,14 @@ public: //メンバ関数
 	const Vector2 GetTextureLeftTop()const { return textureLeftTop; }
 	const Vector2 GetTextureSize()const { return textureSize; }
 
+	//更新
 	void Update();
 
 private:
 	//テクスチャサイズをイメージサイズに合わせる
 	void AdjustTextureSize();
 
+	//テクスチャコマンドセット
 	void SetTextureCommand();
 };
 

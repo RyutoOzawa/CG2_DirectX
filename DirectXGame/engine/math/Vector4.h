@@ -14,9 +14,14 @@ public:
 	//コンストラクタ
 	Vector4();										//零ベクトルとする
 	Vector4(float x, float y, float z, float w);	//各成分を指定して生成
-
+	
+	//ベクトルの大きさ
 	float length()const;
+
+	//正規化
 	Vector4& normalize();
+	
+	//内積
 	float dot(const Vector4& v);
 
 	//単項演算子オーバーロード

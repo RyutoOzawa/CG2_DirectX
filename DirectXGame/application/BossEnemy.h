@@ -33,8 +33,10 @@ public:
 	//描画
 	void Draw();
 
+	//スプライト描画
 	void DrawSprite();
 
+	//デバッグ線描画
 	void DrawDebugLine();
 
 	//終了
@@ -108,18 +110,29 @@ private:
 	Vector3 spawnPosOffsetCamera;//スポーンするときのカメラからの距離(目玉)
 
 	//各行動の更新処理
+	//スポーン更新
 	void UpdateSpawn();
+	//移動更新
 	void UpdateMove();
+	//射撃攻撃更新
 	void UpdateAtkShot();
+	//レーザー攻撃更新
 	void UpdateAtkLaser();
+	//死亡更新
 	void UpdateDeath();
 
+	//スポーン初期化
 	void InitSpawn();
+	//移動初期化
 	void InitMove();
+	//射撃攻撃初期化
 	void InitAtkShot();
+	//レーザー攻撃初期化
 	void InitAtkLaser();
+	//死亡初期化
 	void InitDeath();
 
+	//行動変化
 	void ChangeAct(BossAct nextAct);
 
 	
