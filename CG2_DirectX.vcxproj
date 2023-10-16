@@ -150,6 +150,7 @@
     <ClCompile Include="DirectXGame\engine\particle\LerpParticle.cpp" />
     <ClCompile Include="DirectXGame\application\GameClearScene.cpp" />
     <ClCompile Include="DirectXGame\application\FadeSceneTransition.cpp" />
+    <ClCompile Include="DirectXGame\application\SlideSceneTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -317,6 +318,7 @@
     <ClInclude Include="DirectXGame\engine\particle\LerpParticle.h" />
     <ClInclude Include="DirectXGame\application\GameClearScene.h" />
     <ClInclude Include="DirectXGame\application\FadeSceneTransition.h" />
+    <ClInclude Include="DirectXGame\application\SlideSceneTransition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

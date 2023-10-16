@@ -105,7 +105,7 @@ void GameTitleScene::Update()
 	if (input->IsKeyTrigger(DIK_SPACE) || input->IsPadTrigger(XINPUT_GAMEPAD_A))
 	{
 		//ƒV[ƒ“‚ÌØ‚è‘Ö‚¦‚ðˆË—Š
-		sceneManager->ChangeScene("GAMEPLAY");
+		sceneManager->ChangeScene("GAMEPLAY",true,"SLIDE");
 	}
 
 	if (input->IsKeyTrigger(DIK_F1))

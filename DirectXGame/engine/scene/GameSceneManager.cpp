@@ -3,6 +3,7 @@
 #include "GameSceneManager.h"
 #include<cassert>
 #include"FadeSceneTransition.h"
+#include"SlideSceneTransition.h"
 
 GameSceneManager::GameSceneManager()
 {
@@ -92,6 +93,9 @@ void GameSceneManager::ChangeScene(const std::string& sceneName, bool isTransiti
 	if (transitionName == "FADE") {
 		sceneTransition = new FadeSceneTransition();
 
+	}
+	else if (transitionName == "SLIDE") {
+		sceneTransition = new SlideSceneTransition();
 	}
 
 	//ƒV[ƒ“‘JˆÚ‰Šú‰»
