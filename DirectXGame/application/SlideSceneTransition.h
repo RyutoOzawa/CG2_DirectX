@@ -30,12 +30,23 @@ public:
 
 private:
 
+	//スライドのスプライト系
 	std::unique_ptr<Sprite> slideSprite = nullptr;
 	TextureData* slideTex = nullptr;
-	Vector2 spritePosOpen = { -WindowsAPI::winW,0.0f };
-	Vector2 spritePosClose = { 0.0f,0.0f };
+	Vector2 slidePosOpen = { -WindowsAPI::winW,0.0f };
+	Vector2 slidePosClose = { 0.0f,0.0f };
 
 	EasingData easeSpritePos;
+
+	//タイトルロゴ関係
+	std::unique_ptr<Sprite> titleLogoSprite = nullptr;
+	TextureData* titleLogoTex = nullptr;
+	Vector2 logoPosTop = { (float)WindowsAPI::winW / 2.0f,-160.0f };
+	Vector2 logoPosBottom = { logoPosTop.x,WindowsAPI::winH / 2.0f };
+	EasingData easeLogoPos;
+	bool isLogoFall = false;//ロゴが降下するか
+	const uint16_t easeCooltimeMax = 60;
+	uint16_t easeCooltime = easeCooltimeMax;
 
 };
 
