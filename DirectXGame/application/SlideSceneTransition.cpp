@@ -78,7 +78,7 @@ void SlideSceneTransition::Update()
 					easeCooltime = easeCooltimeMax;
 
 					isLogoFall = false;
-					easeLogoPos.Start(60.0f);
+					easeLogoPos.Start(30.0f);
 				}
 			}
 			else {
