@@ -51,14 +51,38 @@ void SlideSceneTransition::Update()
 		//spritePos.x = Lerp(spritePosOpen.x, spritePosClose.x, easeSpirtePos.GetTimeRate());
 
 		//イージング終わったらﾌｪｰｽﾞ変える
-		if (easeSpritePos.GetTimeRate() >= 1.0f) {
+		if (easeSpritePos.GetTimeRate() >= 1.0f && !isLogoFall) {
 			slidePos.x = slidePosClose.x;
-			transitionPhase = TransitionPhase::Change;
 			//ロゴを落とすイージング開始
 			easeLogoPos.Start(60.0f);
 			isLogoFall = true;
 			//画面シェイク開始
 			easeCameraShake.Start(30.0f);
+		}
+
+		//ロゴが降下中なら画面揺らしたりする
+		if (isLogoFall) {
+			easeLogoPos.Update();
+			if (easeLogoPos.GetTimeRate() >= 1.0f) {
+				//遷移をchangeに
+				transitionPhase = TransitionPhase::Change;
+			}
+
+			Vector2 logoPos;
+			logoPos.x = Lerp(logoPosTop.x, logoPosBottom.x, OutBounce(easeLogoPos.GetTimeRate()));
+			logoPos.y = Lerp(logoPosTop.y, logoPosBottom.y, OutBounce(easeLogoPos.GetTimeRate()));
+
+			titleLogoSprite->SetPos(logoPos);
+
+			//カメラシェイク
+			easeCameraShake.Update();
+			//振動幅を調節
+			absShake.x = Lerp(absShakeMax.x, 0.0f, Out(easeCameraShake.GetTimeRate()));
+			absShake.y = Lerp(absShakeMax.y, 0.0f, Out(easeCameraShake.GetTimeRate()));
+			//カメラの振れ幅を設定
+			cameraOffset.x = Random(-absShake.x, absShake.x);
+			cameraOffset.y = Random(-absShake.y, absShake.y);
+
 		}
 
 		break;
@@ -110,14 +134,7 @@ void SlideSceneTransition::Update()
 			titleLogoSprite->SetPos(logoPos);
 		}
 
-		//カメラシェイク
-		easeCameraShake.Update();
-		//振動幅を調節
-		absShake.x = Lerp(absShakeMax.x,0.0f , Out(easeCameraShake.GetTimeRate()));
-		absShake.y = Lerp( absShakeMax.y,0.0f, Out(easeCameraShake.GetTimeRate()));
-		//カメラの振れ幅を設定
-		cameraOffset.x = Random(-absShake.x, absShake.x);
-		cameraOffset.y = Random(-absShake.y, absShake.y);
+
 
 		break;
 	case TransitionPhase::Open:
