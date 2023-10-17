@@ -56,13 +56,13 @@ void GamePlayScene::Initialize()
 	playerModel = std::make_unique<Model>();
 	playerModel = Model::CreateModel("Player");
 
-	playerBulletModel = std::make_unique<Model>();
-	playerBulletModel = Model::CreateModel("PlayerBullet");
+	bulletModel = std::make_unique<Model>();
+	bulletModel = Model::CreateModel("PlayerBullet");
 
 	enemyModel = std::make_unique<Model>();
 	enemyModel = Model::CreateModel("ZakoEnemy");
 
-	Enemy::EnemyInitialize(particleGraph, enemyModel.get(), playerBulletModel.get());
+	Enemy::EnemyInitialize(particleGraph, enemyModel.get(), bulletModel.get());
 
 	//カメラ初期化
 	Vector3 eye(0, 20, -20);	//視点座標
@@ -80,7 +80,6 @@ void GamePlayScene::Initialize()
 
 	player = std::make_unique<Player>();
 	player->Initialize(playerModel.get(), reticleGraph, whiteGraph);
-	player->SetBulletModel(playerBulletModel.get());
 
 	//当たり判定テスト用オブジェクト
 	colTestObj = std::make_unique<Object3d>();

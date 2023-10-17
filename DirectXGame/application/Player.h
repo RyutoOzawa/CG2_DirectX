@@ -38,9 +38,6 @@ public:	//メンバ関数
 	//UI(2D)描画
 	void DrawUI();
 
-	//setter
-	void SetBulletModel(Model* model_) { bulletModel = model_; }
-
 	//当たり判定コールバック
 	void OnCollision([[maybe_unused]] const CollisionInfo& info) override;
 
@@ -65,21 +62,21 @@ private://メンバ変数
 	INT32 shotInterval = 0;
 	const INT32 shotCooltime = 5;
 	std::list<std::unique_ptr<PlayerBullet>> bullets;
-	Model* bulletModel = nullptr;
+	std::unique_ptr<Model> bulletModel = nullptr;
 
 	//ヒットパーティクル
-	ParticleManager hitParticle;
+	std::unique_ptr<ParticleManager> hitParticle = nullptr;
 
 	//レティクル関連
-	Object3d reticleObj;
-	Sprite reticleSprite;
+	std::unique_ptr<Object3d> reticleObj = nullptr;
+	std::unique_ptr<Sprite> reticleSprite = nullptr;
 	Vector4 reticleColor = { 1,1,1,1 };
 
 	//生成演出用の物
 	static const INT32 haloMax = 8;
 	std::unique_ptr<Model> haloModel = nullptr;
 	//TODO:光輪関係を1つの構造体にまとめる
-	std::array<Object3d,haloMax> haloObjects;
+	std::array<std::unique_ptr<Object3d>,haloMax> haloObjects;
 	std::array<float, haloMax> haloAlphaVel;
 	std::array<float, haloMax> haloScaleVel;
 	std::array<Vector3, haloMax> haloRotaVel;
@@ -88,7 +85,7 @@ private://メンバ変数
 	EasingData eDataPlayerScale;
 
 	//HP関連
-	Sprite healthSprite;
+	std::unique_ptr<Sprite> healthSprite = nullptr;
 	const int healthMax = 2;
 	int health = healthMax;
 	int healthWidthMax = 0;

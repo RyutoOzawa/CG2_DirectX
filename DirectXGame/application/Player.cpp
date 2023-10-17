@@ -25,28 +25,32 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 
 
 	//命中パーティクル
-	hitParticle.Initialize(Texture::LoadTexture("particle.png"));
+	hitParticle = std::make_unique<ParticleManager>();
+	hitParticle->Initialize(Texture::LoadTexture("particle.png"));
 
 	//レティクルオブジェクト
-	reticleObj.Initialize();
+	reticleObj = std::make_unique<Object3d>();
+	reticleObj->Initialize();
 	//モデルはオブジェクトと同じもの
-	reticleObj.SetModel(Object3d::model);
+	reticleObj->SetModel(Object3d::model);
 
 	//レティクルスプライト
-	reticleSprite.Initialize(reticleTexture);
-	reticleSprite.SetAnchorPoint({ 0.5f,0.5f });
-	reticleSprite.SetColor({ 1,1,1,0.5f });
+	reticleSprite = std::make_unique<Sprite>();
+	reticleSprite->Initialize(reticleTexture);
+	reticleSprite->SetAnchorPoint({ 0.5f,0.5f });
+	reticleSprite->SetColor({ 1,1,1,0.5f });
 
 	//HPの初期化
 	health = healthMax;
 	healthWidthMax = 720;
 
 	//HPスプライト
-	healthSprite.Initialize(healthTexture);
-	healthSprite.SetPos({ 32,32 });
-	healthSprite.SetSize({ 720,32 });
+	healthSprite = std::make_unique<Sprite>();
+	healthSprite->Initialize(healthTexture);
+	healthSprite->SetPos({ 32,32 });
+	healthSprite->SetSize({ 720,32 });
 	Vector3 healthColor = ColorCodeRGB(0x72b876);
-	healthSprite.SetColor({ healthColor.x,healthColor.y,healthColor.z,1.0f });
+	healthSprite->SetColor({ healthColor.x,healthColor.y,healthColor.z,1.0f });
 	damageInterval = 0;
 	isAlive = true;
 
@@ -56,9 +60,14 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	haloModel = Model::CreateModel(MODEL_PLANE);
 	haloModel->SetTexture(Texture::LoadTexture("halo.png"));
 
-	for (Object3d& haloObject : haloObjects) {
-		haloObject.Initialize();
-		haloObject.SetModel(haloModel.get());
+	//弾モデル
+	bulletModel = std::make_unique<Model>();
+	bulletModel = Model::CreateModel("PlayerBullet");
+
+	for (std::unique_ptr<Object3d>& haloObject : haloObjects) {
+		haloObject = std::make_unique<Object3d>();
+		haloObject->Initialize();
+		haloObject->SetModel(haloModel.get());
 	}
 
 	//スポーン処理
@@ -69,9 +78,9 @@ void Player::Spawn()
 {
 	for (size_t i = 0; i < haloMax; i++) {
 		float sc = Random(1.0f, 3.0f);
-		haloObjects[i].scale = { sc ,sc ,sc };
+		haloObjects[i]->scale = { sc ,sc ,sc };
 
-		haloObjects[i].color.z = Random(0.8f, 1.0f);
+		haloObjects[i]->color.z = Random(0.8f, 1.0f);
 
 		//大きさの速度をランダムに
 		haloScaleVel[i] = Random(0.5f, 2.5f);
@@ -83,10 +92,10 @@ void Player::Spawn()
 		haloRotaVel[i] = { Random(0,PI / 16.0f),Random(0,PI / 16.0f) ,Random(0,PI / 16.0f) };
 
 		//角度もランダムに
-		haloObjects[i].rotation = { Random(-PI,PI),Random(-PI,PI) ,Random(-PI,PI) };
-		haloObjects[i].parent = this;
-		haloObjects[i].color.w = 1.0f;
-		haloObjects[i].Update();
+		haloObjects[i]->rotation = { Random(-PI,PI),Random(-PI,PI) ,Random(-PI,PI) };
+		haloObjects[i]->parent = this;
+		haloObjects[i]->color.w = 1.0f;
+		haloObjects[i]->Update();
 
 	}
 
@@ -127,12 +136,12 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 
 	//アルファ値をUIに適用
 	Vector4 uiColor;
-	uiColor = healthSprite.GetColor();
+	uiColor = healthSprite->GetColor();
 	uiColor.w = UIAlpha;
-	healthSprite.SetColor(uiColor);
-	uiColor = reticleSprite.GetColor();
+	healthSprite->SetColor(uiColor);
+	uiColor = reticleSprite->GetColor();
 	uiColor.w = UIAlpha;
-	reticleSprite.SetColor(uiColor);
+	reticleSprite->SetColor(uiColor);
 
 
 
@@ -171,7 +180,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 	//obj3dの更新
 	Object3d::Update();
 	//命中時パーティクル更新
-	hitParticle.Update();
+	hitParticle->Update();
 	//HPバーの更新
 	HealthUpdate();
 
@@ -197,8 +206,8 @@ void Player::Draw()
 
 	//スポーン時の光輪
 	if (isSpawn) {
-		for (Object3d& haloObject : haloObjects) {
-			haloObject.Draw();
+		for (std::unique_ptr<Object3d>& haloObject : haloObjects) {
+			haloObject->Draw();
 		}
 	}
 
@@ -207,14 +216,14 @@ void Player::Draw()
 
 void Player::DrawParticle()
 {
-	hitParticle.Draw();
+	hitParticle->Draw();
 	
 }
 
 void Player::DrawUI()
 {
-	reticleSprite.Draw();
-	healthSprite.Draw();
+	reticleSprite->Draw();
+	healthSprite->Draw();
 }
 
 void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
@@ -232,7 +241,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
 
 
 		//パーティクル追加
-		hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
+		hitParticle->Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
 	}
 
 	//ダメージを受ける
@@ -337,13 +346,13 @@ void Player::Attack()
 			const float bulletSpdBase = 32.0f;
 			Vector3 velocity(0, 0, bulletSpdBase);
 
-			velocity = reticleObj.GetWorldPosition() - Object3d::GetWorldPosition();
+			velocity = reticleObj->GetWorldPosition() - Object3d::GetWorldPosition();
 			velocity.normalize();
 			velocity *= bulletSpdBase;
 
 			//弾の生成と初期化
 			std::unique_ptr< PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-			newBullet->Initialize(bulletModel, GetWorldPosition(), velocity);
+			newBullet->Initialize(bulletModel.get(), GetWorldPosition(), velocity);
 
 			//弾の登録
 			bullets.push_back(std::move(newBullet));
@@ -358,7 +367,7 @@ void Player::Attack()
 
 void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 {
-	reticleObj.SetModel(bulletModel);
+	reticleObj->SetModel(bulletModel.get());
 
 	//ビューポート行列
 	Matrix4 matViewPort;
@@ -419,10 +428,10 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	}
 
 	//座標をスプライトにセット
-	reticleSprite.SetPos(reticlePosScreen);
+	reticleSprite->SetPos(reticlePosScreen);
 
 	//レティクルの色を初期化
-	reticleColor = reticleSprite.GetColor();
+	reticleColor = reticleSprite->GetColor();
 
 	
 
@@ -485,7 +494,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	}
 
 	//レティクルの色を設定
-	reticleSprite.SetColor(reticleColor);
+	reticleSprite->SetColor(reticleColor);
 
 //	ImGui::Text("distance retilce3d %f", distanceReticle3D);
 
@@ -505,8 +514,8 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	Vector3 direction = posFar - posNear;
 	direction.normalize();
 
-	reticleObj.position = posNear + direction * distanceReticle3D;
-	reticleObj.Update();
+	reticleObj->position = posNear + direction * distanceReticle3D;
+	reticleObj->Update();
 
 }
 
@@ -534,9 +543,9 @@ void Player::HealthUpdate()
 	//現在のHPに掛け算して横幅を割り出す
 	float nowWidth = widthOnce * health;
 	//HPバーサイズ取得
-	Vector2 hp = healthSprite.GetSize();
+	Vector2 hp = healthSprite->GetSize();
 	hp.x = nowWidth;
-	healthSprite.SetSize(hp);
+	healthSprite->SetSize(hp);
 
 
 }
@@ -582,7 +591,7 @@ void Player::UpdateDeath()
 	Vector3 vel = { 0,0,0 };
 	Vector3 acc = { Random(-2.0f,2.0f),Random(-2.0f,2.0f) ,Random(-2.0f,2.0f) };
 
-		hitParticle.Add((int)Random(10,20),GetWorldPosition(),vel,acc,3.0f,0.0f);
+		hitParticle->Add((int)Random(10,20),GetWorldPosition(),vel,acc,3.0f,0.0f);
 	}
 }
 
@@ -599,7 +608,7 @@ void Player::UpdateSpawn()
 		Vector3 pos = { Random(-absPos, absPos),Random(-absPos, absPos),Random(-absPos, absPos) };
 		pos += GetWorldPosition();
 
-		hitParticle.AddLerp(15, pos, GetWorldPosition(), 8.0f, 0.0f,InterType::EaseOut);
+		hitParticle->AddLerp(15, pos, GetWorldPosition(), 8.0f, 0.0f,InterType::EaseOut);
 
 		Vector3 vel = { 0,0,0 };
 		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
@@ -615,8 +624,8 @@ void Player::UpdateSpawn()
 		//光輪がおおきくなりながら薄く
 		for (size_t i = 0; i < haloMax; i++) {
 
-			haloObjects[i].scale += {haloScaleVel[i], haloScaleVel[i], haloScaleVel[i]};
-			haloObjects[i].color.w -= haloAlphaVel[i];
+			haloObjects[i]->scale += {haloScaleVel[i], haloScaleVel[i], haloScaleVel[i]};
+			haloObjects[i]->color.w -= haloAlphaVel[i];
 			
 		}
 
@@ -630,8 +639,8 @@ void Player::UpdateSpawn()
 	}
 
 	for (size_t i = 0; i < haloMax; i++) {
-		haloObjects[i].rotation += haloRotaVel[i];
-		haloObjects[i].Update();
+		haloObjects[i]->rotation += haloRotaVel[i];
+		haloObjects[i]->Update();
 	}
 	
 
