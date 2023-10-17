@@ -30,3 +30,4 @@ float In(float t);
 
 float InOut(float t);
 float OutBounce(float t);
+float InBounce(float t);

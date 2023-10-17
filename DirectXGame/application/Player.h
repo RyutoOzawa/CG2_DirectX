@@ -100,6 +100,9 @@ private://ƒƒ“ƒo•Ï”
 	bool isAlive = false;
 
 	bool isSpawn = false;
+	EasingData easeUIAlpha;
+	float UIAlpha = 0.0f;
+
 
 private://“à•”ˆ——pƒƒ“ƒoŠÖ”
 

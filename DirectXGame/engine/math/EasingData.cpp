@@ -65,3 +65,8 @@ float OutBounce(float t)
 		return n1 * (t -= 2.625f / d1) * t + 0.984375f;
 	}
 }
+
+float InBounce(float t)
+{
+	return 1 -OutBounce(1 - t);
+}

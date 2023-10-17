@@ -15,7 +15,7 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	Object3d::Initialize();
 	SetModel(model_);
 
-	position = { 0,0,distanceCamera };
+	position = { 0,-5.0f,distanceCamera };
 
 	//コライダーの追加
 	float radius = 1.0f;
@@ -109,32 +109,31 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		ImGui::Text("alive false");
 	}
 
-	Vector3 w = scale;
 
-	ImGui::Text("world pos %f,%f,%f", w.x, w.y, w.z);
 
 	if (Input::GetInstance()->IsKeyTrigger(DIK_2)) {
 		Spawn();
 	}
 
-	//if (Input::GetInstance()->IsKeyTrigger(DIK_3)) {
-	//	//パーティクルの速度
-	//	for (int i = 0; i < 25; i++) {
-	//		Vector3 vel = { 0,0,0 };
-	//		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
-	//		//acc = { 0.1f,0,0.1f };
+	//UIのアルファ値を更新
+	easeUIAlpha.Update();
+	UIAlpha = Lerp(0.0f, 1.0f,  InBounce(easeUIAlpha.GetTimeRate()));
 
-	//		//パーティクル追加
-	//		hitParticle.Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
-	//	}
-	//}
 
 	if (isSpawn) {
 		UpdateSpawn();
+		UIAlpha = 0.0f;
 	}
 
-	eDataPlayerScale.Update();
-	ImGui::Text("scale timerate %f", eDataPlayerScale.GetTimeRate());
+	//アルファ値をUIに適用
+	Vector4 uiColor;
+	uiColor = healthSprite.GetColor();
+	uiColor.w = UIAlpha;
+	healthSprite.SetColor(uiColor);
+	uiColor = reticleSprite.GetColor();
+	uiColor.w = UIAlpha;
+	reticleSprite.SetColor(uiColor);
+
 
 
 	//死んでる弾を消す
@@ -423,7 +422,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	reticleSprite.SetPos(reticlePosScreen);
 
 	//レティクルの色を初期化
-	reticleColor = { 1,1,1,1 };
+	reticleColor = reticleSprite.GetColor();
 
 	
 
@@ -476,7 +475,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 			//レティクルが動いているならロックオン
 			if (inputHorizontal != 0 || inputVertical != 0) {
 				reticlePosScreen = posEnemyScreen;
-				reticleColor = { 1,1,0,1 };
+				reticleColor.z = 0.0f;
 			}
 
 
@@ -589,10 +588,15 @@ void Player::UpdateDeath()
 
 void Player::UpdateSpawn()
 {
+	eDataPlayerScale.Update();
+
+	ImGui::Text("scale timerate %f", eDataPlayerScale.GetTimeRate());
 
 	//パーティクルが収束する
 	if(spawnTimer > 0){
-		Vector3 pos = { Random(-50.0f, 50.0f),Random(-50.0f, 50.0f),Random(-50.0f, 50.0f) };
+		float absPos = 30.0f;
+
+		Vector3 pos = { Random(-absPos, absPos),Random(-absPos, absPos),Random(-absPos, absPos) };
 		pos += GetWorldPosition();
 
 		hitParticle.AddLerp(15, pos, GetWorldPosition(), 8.0f, 0.0f,InterType::EaseOut);
@@ -619,6 +623,8 @@ void Player::UpdateSpawn()
 		//自機が大きくなりきったらスポーン処理おわり
 		if (eDataPlayerScale.GetTimeRate() >= 1.0f) {
 			isSpawn = false;
+			//UI系のα値のイージング開始
+			easeUIAlpha.Start(60.0f);
 		}
 
 	}
