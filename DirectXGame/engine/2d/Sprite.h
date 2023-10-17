@@ -43,7 +43,11 @@ protected://静的メンバ変数
 public://静的メンバ関数
 	static void StaticInitialize(ID3D12Device* device_, ID3D12GraphicsCommandList* cmdList_, int windowWidth, int windowHeight);
 
-	static void BeginDraw();
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
+	/// <param name="offset">描画オフセット</param>
+	static void BeginDraw(const Vector2& offset = { 0,0 });
 
 
 

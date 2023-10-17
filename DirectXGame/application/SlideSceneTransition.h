@@ -48,5 +48,10 @@ private:
 	const uint16_t easeCooltimeMax = 60;
 	uint16_t easeCooltime = easeCooltimeMax;
 
+	//画面シェイク関係
+	const Vector2 absShakeMax = { 64.0f,64.0f };
+	Vector2 absShake{ 0.0f,0.0f };
+	EasingData easeCameraShake;
+	Vector2 cameraOffset{ 0.0f,0.0f };
 };
 

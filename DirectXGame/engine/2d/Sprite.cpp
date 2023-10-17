@@ -38,8 +38,14 @@ void Sprite::StaticInitialize(ID3D12Device* device_, ID3D12GraphicsCommandList* 
 	
 }
 
-void Sprite::BeginDraw()
+void Sprite::BeginDraw(const Vector2& offset)
 {
+	//ウィンドウ幅にオフセットを足して射影行列作成
+	Vector2 window = { WindowsAPI::winW,WindowsAPI::winH };
+	window += offset;
+	matProjection = matProjection.CreateParallelProjection(window.x, window.y);
+
+
 	//パイプラインステートの設定
 	cmdList->SetPipelineState(pipelineState.Get());
 	//ルートシグネチャの設定

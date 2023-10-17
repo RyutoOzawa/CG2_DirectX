@@ -57,6 +57,8 @@ void SlideSceneTransition::Update()
 			//ロゴを落とすイージング開始
 			easeLogoPos.Start(60.0f);
 			isLogoFall = true;
+			//画面シェイク開始
+			easeCameraShake.Start(30.0f);
 		}
 
 		break;
@@ -108,6 +110,15 @@ void SlideSceneTransition::Update()
 			titleLogoSprite->SetPos(logoPos);
 		}
 
+		//カメラシェイク
+		easeCameraShake.Update();
+		//振動幅を調節
+		absShake.x = Lerp(absShakeMax.x,0.0f , Out(easeCameraShake.GetTimeRate()));
+		absShake.y = Lerp( absShakeMax.y,0.0f, Out(easeCameraShake.GetTimeRate()));
+		//カメラの振れ幅を設定
+		cameraOffset.x = Random(-absShake.x, absShake.x);
+		cameraOffset.y = Random(-absShake.y, absShake.y);
+
 		break;
 	case TransitionPhase::Open:
 
@@ -136,7 +147,7 @@ void SlideSceneTransition::Update()
 
 void SlideSceneTransition::Draw()
 {
-	Sprite::BeginDraw();
+	Sprite::BeginDraw(cameraOffset);
 
 	slideSprite->Draw();
 	titleLogoSprite->Draw();
