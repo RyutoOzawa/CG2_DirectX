@@ -564,14 +564,16 @@ void Player::Damage()
 	//hpを減らす
 	health--;
 
+	//次食らうクールタイムを設定
+	damageInterval = damageCooltime;
+
 	//HPが0になったら死亡させる
 	if (health == 0) {
 		Death();
 		return;
 	}
 
-	//次食らうクールタイムを設定
-	damageInterval = damageCooltime;
+
 }
 
 void Player::Death()
