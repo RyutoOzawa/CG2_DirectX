@@ -476,27 +476,18 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		//レティクルが敵に当たっているなら
 		if (Collision::ColCircleToCircle(reticleC, enemyC)) {
 			
-
-
 			//カメラから敵の距離が自機との距離より小さいなら狙わない
 			if (matEnemyView.m[3][2] < distanceCamera) {
 				continue;
 			}
 
-
 			//distanceReticle3D = matEnemyView.z;
-
-
 			//レティクルが動いているならロックオン
 			if (inputHorizontal != 0 || inputVertical != 0) {
 				reticlePosScreen = posEnemyScreen;
 				reticleColor.z = 0.0f;
 			}
-
-
-			
 		}
-
 	}
 
 	//レティクルの色を設定
