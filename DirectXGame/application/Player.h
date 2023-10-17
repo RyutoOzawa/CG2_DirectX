@@ -99,6 +99,7 @@ private://ƒƒ“ƒo•Ï”
 	bool isSpawn = false;
 	EasingData easeUIAlpha;
 	float UIAlpha = 0.0f;
+	std::unique_ptr<Sprite> damageSprite = nullptr;
 
 
 private://“à•”ˆ——pƒƒ“ƒoŠÖ”

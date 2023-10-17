@@ -54,6 +54,10 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	damageInterval = 0;
 	isAlive = true;
 
+	Vector2 window = { WindowsAPI::winW,WindowsAPI::winH };
+	damageSprite = std::make_unique<Sprite>();
+	damageSprite->Initialize(Texture::LoadTexture("player_lowhp.png"));
+	damageSprite->SetSize(window);
 
 	//光輪モデル生成
 	haloModel = std::make_unique<Model>();
@@ -224,6 +228,7 @@ void Player::DrawUI()
 {
 	reticleSprite->Draw();
 	healthSprite->Draw();
+	damageSprite->Draw();
 }
 
 void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
@@ -237,11 +242,12 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
 	//パーティクルの速度
 	for (int i = 0; i < 25; i++) {
 		Vector3 vel = { 0,0,0 };
-		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+		float absAcc = 0.5f;
+		Vector3 acc = { Random(-absAcc,absAcc),Random(-absAcc,absAcc) ,Random(-absAcc,absAcc) };
 
 
 		//パーティクル追加
-		hitParticle->Add(15, GetWorldPosition(), vel, acc, 3.0f, 0.0f);
+		hitParticle->Add(15, GetWorldPosition(), vel, acc, 6.0f, 0.0f);
 	}
 
 	//ダメージを受ける
@@ -431,7 +437,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	reticleSprite->SetPos(reticlePosScreen);
 
 	//レティクルの色を初期化
-	reticleColor = reticleSprite->GetColor();
+	reticleColor.z = 1.0f;
 
 	
 
@@ -547,7 +553,10 @@ void Player::HealthUpdate()
 	hp.x = nowWidth;
 	healthSprite->SetSize(hp);
 
-
+	float dmgSpriteAlpha = (float)damageInterval / (float)damageCooltime;
+	Vector4 dmgColor = damageSprite->GetColor();
+	dmgColor.w = dmgSpriteAlpha / 2.0f;
+	damageSprite->SetColor(dmgColor);
 }
 
 void Player::Damage()
