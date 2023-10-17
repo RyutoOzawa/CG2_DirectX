@@ -25,7 +25,7 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 
 
 	//命中パーティクル
-	hitParticle.Initialize(healthTexture);
+	hitParticle.Initialize(Texture::LoadTexture("particle.png"));
 
 	//レティクルオブジェクト
 	reticleObj.Initialize();
@@ -196,10 +196,11 @@ void Player::Draw()
 		bullet->Draw();
 	}
 
-
-
-	for (Object3d& haloObject : haloObjects) {
-		haloObject.Draw();
+	//スポーン時の光輪
+	if (isSpawn) {
+		for (Object3d& haloObject : haloObjects) {
+			haloObject.Draw();
+		}
 	}
 
 	//reticleObj.Draw();
@@ -594,7 +595,7 @@ void Player::UpdateSpawn()
 		Vector3 pos = { Random(-50.0f, 50.0f),Random(-50.0f, 50.0f),Random(-50.0f, 50.0f) };
 		pos += GetWorldPosition();
 
-		hitParticle.AddLerp(15, pos, GetWorldPosition(), 3.0f, 0.0f,InterType::EaseOut);
+		hitParticle.AddLerp(15, pos, GetWorldPosition(), 8.0f, 0.0f,InterType::EaseOut);
 
 		Vector3 vel = { 0,0,0 };
 		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
