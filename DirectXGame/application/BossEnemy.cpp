@@ -20,9 +20,9 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	healthTexture = Texture::LoadTexture("white1x1.png");
 	healthSprite = std::make_unique<Sprite>();
 	healthSprite->Initialize(healthTexture);
-	Vector2 healthSize, healthPos,window;
+	Vector2 healthSize, healthPos, window;
 	window = { WindowsAPI::winW,WindowsAPI::winH };
-	
+
 	healthSize = { window.x - 64.0f,32.0f };
 	//サイズの横幅をとっておく
 	healthSizeWidth = healthSize.x;
@@ -271,10 +271,10 @@ void BossEnemy::Finalize()
 {
 }
 
-void BossEnemy::Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos)
+void BossEnemy::Spawn(const Matrix4& cameraMatWorld, const Vector3& spawnPos)
 {
 	//目玉の移動開始地点を設定(カメラ行列と掛ける)
-	Vector3 posFirst = Matrix4::transform( spawnPos, cameraMatWorld);
+	Vector3 posFirst = Matrix4::transform(spawnPos, cameraMatWorld);
 	//生存フラグとライフの設定
 	isAlive = true;
 	life = lifeMax;
@@ -298,7 +298,7 @@ void BossEnemy::UpdateSpawn()
 	if (easeProgress < 40) {
 		//10%ごとにイージングを開始していく
 		ImGui::Text("mod %d", easeProgress % 10);
-		ImGui::Text("index %d",easeProgress / 10);
+		ImGui::Text("index %d", easeProgress / 10);
 		ImGui::Text("count %d", count);
 
 		position = movePosBefore;
@@ -306,7 +306,7 @@ void BossEnemy::UpdateSpawn()
 		//rotation.y = -PI;
 
 		if (easeProgress % 10 == 0) {
-			size_t index = (size_t)easeProgress / 10;	
+			size_t index = (size_t)easeProgress / 10;
 			eDataBarrelMove[index].Start(actTime[(INT32)BossAct::Spawn] / 10.0f);
 			count++;
 
@@ -318,15 +318,15 @@ void BossEnemy::UpdateSpawn()
 
 
 		for (size_t i = 0; i < barrelMax; i++) {
-		eDataBarrelMove[i].Update();
-		Vector3 pos = Vector3::Lerp(movePosBeforeBarrel[i], movePosAfterBarrel[i], eDataBarrelMove[i].GetTimeRate());
-		barrelObject[i].position = pos;
+			eDataBarrelMove[i].Update();
+			Vector3 pos = Vector3::Lerp(movePosBeforeBarrel[i], movePosAfterBarrel[i], eDataBarrelMove[i].GetTimeRate());
+			barrelObject[i].position = pos;
 		}
 
 	}
 	else if (easeProgress < 80) {
 		//最初の移動
-		float t = (easeProgress - 40.0f) /40.0f;
+		float t = (easeProgress - 40.0f) / 40.0f;
 
 		Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, EaseOut(t));
 		position = pos;
@@ -350,14 +350,14 @@ void BossEnemy::UpdateSpawn()
 
 	//HPをスポーン演出に依存しておおきくする
 	Vector2 sizeUI = healthSprite->GetSize();
-	sizeUI.x = Lerp(0.0f, healthSizeWidth,  eDataMove.GetTimeRate());
+	sizeUI.x = Lerp(0.0f, healthSizeWidth, eDataMove.GetTimeRate());
 	healthSprite->SetSize(sizeUI);
 
 
 
 	//親と砲台オブジェクト更新
 	Object3d::Update();
-	for (size_t i = 0; i < barrelMax;i++) {
+	for (size_t i = 0; i < barrelMax; i++) {
 
 		barrelObject[i].Update();
 
@@ -443,17 +443,17 @@ void BossEnemy::UpdateAtkShot()
 	ImGui::Text("target %f,%f,%f", targetPos.x, targetPos.y, targetPos.z);
 
 	//射撃ごとの時間
-	INT32 shotTimeOnce = (actTime[(INT32)BossAct::AttackShot]-30) / shotPosMax;
+	INT32 shotTimeOnce = (actTime[(INT32)BossAct::AttackShot] - 30) / shotPosMax;
 	//何度目の射撃か
 	size_t currentPosIndex = shotPosMax - (INT32)nowActTime / shotTimeOnce;
 	if (nowActTime % shotTimeOnce == 0) {
 		if (currentPosIndex < 3) {
 			//movePosAfter = shotPos[currentPosIndex];
 			movePosBefore = shotPos[currentPosIndex];
-			movePosAfter = shotPos[currentPosIndex+1];
+			movePosAfter = shotPos[currentPosIndex + 1];
 			eDataMove.Start(20.0f);
 		}
-		else if(currentPosIndex == 3){
+		else if (currentPosIndex == 3) {
 			movePosBefore = shotPos[currentPosIndex];
 			movePosAfter = lastPosActMove;
 			eDataMove.Start(30.0f);
@@ -464,7 +464,7 @@ void BossEnemy::UpdateAtkShot()
 	else if (nowActTime % shotTimeOnce == 22) {
 		//砲台の数だけ行う
 		for (size_t i = 0; i < barrelMax; i++) {
-			
+
 			Vector3 outPos = Matrix4::transform(bulletOutOffset, barrelObject[i].matWorld) + barrelObject[i].GetWorldPosition();
 			float bulletSpd = 4.0f;
 			Vector3 vel = targetPos - outPos;
@@ -484,8 +484,8 @@ void BossEnemy::UpdateAtkShot()
 		position = Vector3::Lerp(movePosBefore, movePosAfter, t);
 	}
 
-	ImGui::Text("current index %d",currentPosIndex);
-	ImGui::Text("before %f,%f,%f",movePosBefore.x,movePosBefore.y,movePosBefore.z);
+	ImGui::Text("current index %d", currentPosIndex);
+	ImGui::Text("before %f,%f,%f", movePosBefore.x, movePosBefore.y, movePosBefore.z);
 	ImGui::Text("after %f,%f,%f", movePosAfter.x, movePosAfter.y, movePosAfter.z);
 
 	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
@@ -506,6 +506,12 @@ void BossEnemy::UpdateAtkLaser()
 	position = pos;
 
 	Object3d::Update();
+	for (size_t i = 0; i < barrelMax; i++) {
+
+		barrelObject[i].Update();
+
+		ImGui::Text("pos %f,%f,%f", barrelObject[i].position.x, barrelObject[i].position.y, barrelObject[i].position.z);
+	}
 }
 
 void BossEnemy::UpdateDeath()
@@ -529,7 +535,7 @@ void BossEnemy::InitSpawn()
 	eDataMove.Start((float)actTime[(INT32)BossAct::Spawn]);
 
 	//砲台オブジェクトも親は一旦カメラobjにする(移動終わったら目玉objに戻す)
-	for (size_t i = 0; i < barrelMax;i++) {
+	for (size_t i = 0; i < barrelMax; i++) {
 		barrelObject[i].parent = parent;
 		//Zは目玉と同じ
 		//x,yは移動後とつじつまを合わせる
@@ -568,7 +574,7 @@ void BossEnemy::InitAtkShot()
 		shotPos[i].y = Random(0, randomPosAreaY);
 
 		shotPos[i].x = randomPosAreaX / 2;
-		shotPos[i].y = randomPosAreaY /2;
+		shotPos[i].y = randomPosAreaY / 2;
 	}
 	//オフセット
 	shotPos[1].y += randomPosAreaY;
@@ -594,7 +600,7 @@ void BossEnemy::InitAtkShot()
 		shotPos[i] = ConvertScreenToWorld({ shotPos[i].x,shotPos[i].y }, 240.0f, matVBV);
 		shotPos[i].z = posZ;
 	}
-	
+
 
 	//現在座標を移動用座標にセット
 	movePosBefore = position;
@@ -608,6 +614,11 @@ void BossEnemy::InitAtkShot()
 
 void BossEnemy::InitAtkLaser()
 {
+	//正面を向く
+	matRotBefore = matRotation;
+	matRotAfter.identity();
+
+	Object3d::Update();
 	//本体を真ん中に移動
 	eDataMove.Start(60.0f);
 	//移動前は今の座標、移動後はカメラ中央

@@ -150,7 +150,7 @@ void GamePlayScene::Update()
 	//----------------------ゲーム内ループはここから---------------------//
 
 
-	
+
 
 #pragma region デバッグ用コード
 
@@ -167,14 +167,11 @@ void GamePlayScene::Update()
 		railCamera->Start();
 	}
 
-	if (ImGui::Button("game start") ) {
+	if (ImGui::Button("game start")) {
 		railCamera->Start();
 	}
 
 #pragma endregion デバッグ用コード
-
-
-
 
 	////レールカメラの更新
 	//railCamera->Update();
@@ -275,8 +272,8 @@ void GamePlayScene::Update()
 	}
 
 	//現在のカメラ情報をレールカメラのものに
-currentCamera = railCamera->GetCamera();
-currentCamera->UpdateMatrix();
+	currentCamera = railCamera->GetCamera();
+	currentCamera->UpdateMatrix();
 
 	//当たり判定チェック
 	collisionManager->CheckAllCollisions();
@@ -317,11 +314,7 @@ void GamePlayScene::Draw()
 
 	//敵
 	for (std::unique_ptr<Enemy>& enemy : enemys) {
-
 		enemy->Draw();
-
-
-
 	}
 
 	//ボス
@@ -341,9 +334,7 @@ void GamePlayScene::Draw()
 	DebugLine::BeginDraw(currentCamera);
 
 	//DebugLine::Draw({ { -10,0,100 }, { 20,30,100 } }, { 1,0,0,1 });
-
 	//railCamera->DrawMoveLine({ 1,0,0,1 });
-
 
 	//-------前景スプライト描画処理-------//
 	Sprite::BeginDraw();
@@ -416,7 +407,7 @@ void GamePlayScene::EnemySpawn()
 
 	//リストに登録
 	enemys.push_back(std::move(newEnemy));
-	
+
 
 }
 
@@ -505,7 +496,7 @@ void GamePlayScene::UpdateMain()
 
 void GamePlayScene::UpdateBossSpawn()
 {
-	
+
 
 
 	//ボスの更新

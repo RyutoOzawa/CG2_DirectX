@@ -105,6 +105,9 @@ private:
 	Vector3 movePosBefore{ 0,0,0 };
 	Vector3 movePosAfter{ 0,0,0 };
 	Vector3 lastPosActMove{ 0,0,0 };//移動フェーズの最後の座標
+	//回転補間用行列
+	Matrix4 matRotBefore;
+	Matrix4 matRotAfter;
 
 	//生成処理関係
 	Vector3 spawnPosOffsetCamera;//スポーンするときのカメラからの距離(目玉)
