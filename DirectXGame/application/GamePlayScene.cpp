@@ -356,7 +356,7 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::EnemySpawn()
 {
-	float posZ = Random(150.0f, 200.0f);
+	float posZ = Random(100.0f, 150.0f);
 
 	//ZÀ•W‚ÍƒJƒƒ‰Šî€‚É
 	//posZ += railCamera->GetObject3d()->GetWorldPosition().z;
