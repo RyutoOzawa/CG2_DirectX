@@ -24,12 +24,15 @@ public:
 	//setter
 	inline void SetRadius(float radius_) { radius = radius_; }
 
+	Vector3 GetOldPos()const { return oldPos; }
+
 private:
 	//オブジェクト中心からのオフセット
 	Vector3 offset;
 	//半径
 	float radius;
-
+	//前フレーム座標
+	Vector3 oldPos;
 
 };
 

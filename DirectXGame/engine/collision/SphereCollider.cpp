@@ -4,6 +4,9 @@
 
 void SphereCollider::Update()
 {
+	//前フレーム座標保存
+	oldPos = pos;
+
 	//ワールド行列から座標を抽出
 	const Matrix4& matWorld = object3d->GetMatWorld();
 

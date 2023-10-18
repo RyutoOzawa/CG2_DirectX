@@ -129,24 +129,9 @@ void Object3d::Update()
 		matRot *= this->matRotation;
 	}
 
-
 	matTrans = matTrans.translate(position);
 
 	matWorld.identity();
-
-	//ビルボードフラグがtrueならビルボード行列更新と掛け算を行う
-	//if (isBillboard) {
-	//	matWorld.identity();
-	//	UpdateBillBoard();
-	//	matWorld *= matBillboard;
-	//}
-
-	//if (isBillboardY) {
-	//	matWorld.identity();
-	//	UpdatebillboardY();
-	//	matWorld *= matBillboardY;
-	//}
-
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
@@ -156,8 +141,6 @@ void Object3d::Update()
 	}
 
 	//定数バッファに転送
-	//constMap->mat = matWorld * matView * matProjection;
-
 	constMap->mat = matWorld;
 	constMap->color = color;
 
