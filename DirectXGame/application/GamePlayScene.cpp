@@ -340,9 +340,9 @@ void GamePlayScene::Draw()
 	//------デバッグ線描画処理------//
 	DebugLine::BeginDraw(currentCamera);
 
-	DebugLine::Draw({ { -10,0,100 }, { 20,30,100 } }, { 1,0,0,1 });
+	//DebugLine::Draw({ { -10,0,100 }, { 20,30,100 } }, { 1,0,0,1 });
 
-	railCamera->DrawMoveLine({ 1,0,0,1 });
+	//railCamera->DrawMoveLine({ 1,0,0,1 });
 
 
 	//-------前景スプライト描画処理-------//

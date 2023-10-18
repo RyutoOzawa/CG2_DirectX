@@ -60,7 +60,7 @@ private://ƒƒ“ƒo•Ï”
 
 	//’eŠÖ˜A
 	INT32 shotInterval = 0;
-	const INT32 shotCooltime = 5;
+	const INT32 shotCooltime = 15;
 	std::list<std::unique_ptr<PlayerBullet>> bullets;
 	std::unique_ptr<Model> bulletModel = nullptr;
 
