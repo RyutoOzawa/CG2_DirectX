@@ -30,10 +30,12 @@ void CollisionManager::CheckAllCollisions()
 			BaseCollider* colA = *itA;
 			BaseCollider* colB = *itB;
 
-			//‚»‚ê‚¼‚ê‚Ì‘®«‚ª“¯‚¶‚È‚çƒXƒLƒbƒv
-			if (colA->attribute == colB->attribute) {
+			//‘®«‚Å”rË
+			if ((colA->attribute & colB->attribute) != 0) {
+				//AND‚Å0‚Å‚È‚¢(‚Ç‚±‚©‚µ‚ç‘®«‚ªˆê’v)‚È‚ç”»’è‚µ‚È‚¢
 				continue;
 			}
+
 
 			//‚Æ‚à‚É‹…
 			if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
