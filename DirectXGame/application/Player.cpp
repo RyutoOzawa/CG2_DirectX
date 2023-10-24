@@ -440,6 +440,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	reticleSprite->SetPos(reticlePosScreen);
 
 	//レティクルの色を初期化
+	reticleColor = reticleSprite->GetColor();
 	reticleColor.z = 1.0f;
 
 	
