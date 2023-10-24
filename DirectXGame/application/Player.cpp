@@ -625,7 +625,6 @@ void Player::UpdateSpawn()
 		spawnTimer--;
 		eDataPlayerScale.Start(30);
 
-		//scale = { 0,0,0 };
 	}//Œõ—Ö‚ğo‚µ‚È‚ª‚ç‚¨‚¨‚«‚­‚È‚é
 	else {
 		Vector3 defaultScale = { 1,1,1 };
