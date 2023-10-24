@@ -171,7 +171,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 	}
 	//0なら死ぬアニメーション
 	else if (health == 0) {
-		UpdateDeath();S
+		UpdateDeath();
 	}
 
 	//弾の更新
@@ -197,7 +197,10 @@ void Player::Draw()
 	//自分の描画
 
 	//ダメージのクールタイムによって点滅
-	if (damageInterval % 4 < 1 && health != 0) {
+	//生存によっての描画フラグ
+	bool isPlayerDraw = (health != 0 || deathCount > 0);
+
+	if (damageInterval % 4 < 1 && isPlayerDraw) {
 		if (spawnTimer <= 0) {
 			Object3d::Draw();
 		}
@@ -590,10 +593,12 @@ void Player::UpdateDeath()
 	deathCount--;
 	//パーティクルの速度
 	for (int i = 0; i < 5; i++) {
-	Vector3 vel = { Random(-2.0f,2.0f),Random(-2.0f,2.0f) ,Random(-2.0f,2.0f) };
+	Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f) ,Random(-1.0f,1.0f) };
 	Vector3 acc = { 0.0f,Random(-0.1f,-1.0f),0.0f,};
+	Vector3 pos = GetWorldPosition();
+	pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
 
-		hitParticle->Add((int)Random(10,20),GetWorldPosition(),vel,acc,3.0f,0.0f);
+		hitParticle->Add((int)Random(10,20),pos,vel,acc,3.0f,0.0f);
 	}
 }
 
