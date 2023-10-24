@@ -174,7 +174,7 @@ void SlideSceneTransition::Close()
 {
 	//フェーズ変更
 	transitionPhase = TransitionPhase::Close;
-	easeSpritePos.Start(60.0f);
+	easeSpritePos.Start(30.0f);
 }
 
 void SlideSceneTransition::Open()
@@ -182,6 +182,6 @@ void SlideSceneTransition::Open()
 	//ﾌｪｰｽﾞ変更
 	transitionPhase = TransitionPhase::Open;
 	//イージング開始
-	easeSpritePos.Start(60.0f);
+	easeSpritePos.Start(30.0f);
 
 }
