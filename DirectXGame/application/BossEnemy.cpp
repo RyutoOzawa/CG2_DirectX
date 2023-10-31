@@ -101,7 +101,7 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 
 	//コライダーのセット
 	SetCollider(new SphereCollider({ 0,0,0 }, 12.0f));
-	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 
 
 }
@@ -159,6 +159,10 @@ void BossEnemy::Update(const Vector3& playerPos)
 	sizeHp.x = healthWidthOneHp * life;
 	healthSprite->SetSize(sizeHp);
 
+	//ダメージのインターバルを減らす
+	if (damageInterval > 0) {
+		damageInterval--;
+	}
 
 	//行動時間を減らす
 	if (nowActTime > 0) {
@@ -381,6 +385,7 @@ void BossEnemy::UpdateSpawn()
 
 	if (easeProgress >= 100.0f) {
 		ChangeAct(BossAct::Move);
+		collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 	}
 
 }
@@ -679,6 +684,12 @@ void BossEnemy::OnCollision([[maybe_unused]] const CollisionInfo& info)
 
 void BossEnemy::Damage(uint16_t damage)
 {
+	//ダメージのクールタイム中なら食らわない
+	if (damageInterval > 0) {
+		return;
+	}
+	damageInterval = damageIntervalMax;
+
 	life -= damage;
 	//HPが0以下なったら死亡処理
 	if (life <= 0) {

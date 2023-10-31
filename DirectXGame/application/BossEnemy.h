@@ -57,6 +57,8 @@ private:
 	TextureData* healthTexture = nullptr;
 	std::unique_ptr<Sprite> healthSprite = nullptr;
 	float healthWidthOneHp = 0.0f;
+	uint16_t damageInterval = 0;
+	uint16_t damageIntervalMax = 10;
 
 	//–C‘äŠÖŒW
 	static const INT32 barrelMax = 4;
