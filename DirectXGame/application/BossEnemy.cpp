@@ -6,6 +6,8 @@
 #include"Util.h"
 #include"DebugLine.h"
 #include"Input.h"
+#include"SphereCollider.h"
+#include"CollisionAttribute.h"
 
 void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* parent_)
 {
@@ -24,8 +26,8 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	window = { WindowsAPI::winW,WindowsAPI::winH };
 
 	healthSize = { window.x - 64.0f,32.0f };
-	//サイズの横幅をとっておく
-	healthSizeWidth = healthSize.x;
+	//1HP当たりのUIの横幅をとっておく
+	healthWidthOneHp = healthSize.x / lifeMax;
 	healthSize.x = 0.0f;
 
 	healthPos = { 32.0f,window.y - 80.0f };
@@ -97,6 +99,10 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 
 	//ChangeAct(BossAct::Spawn);
 
+	//コライダーのセット
+	SetCollider(new SphereCollider({ 0,0,0 }, 12.0f));
+	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+
 
 }
 
@@ -145,6 +151,13 @@ void BossEnemy::Update(const Vector3& playerPos)
 	if (!isAlive) {
 		return;
 	}
+
+	ImGui::Text("life %d", life);
+
+	//HPバーの更新
+	Vector2 sizeHp = healthSprite->GetSize();
+	sizeHp.x = healthWidthOneHp * life;
+	healthSprite->SetSize(sizeHp);
 
 
 	//行動時間を減らす
@@ -350,7 +363,7 @@ void BossEnemy::UpdateSpawn()
 
 	//HPをスポーン演出に依存しておおきくする
 	Vector2 sizeUI = healthSprite->GetSize();
-	sizeUI.x = Lerp(0.0f, healthSizeWidth, eDataMove.GetTimeRate());
+	sizeUI.x = Lerp(0.0f, healthWidthOneHp * lifeMax, eDataMove.GetTimeRate());
 	healthSprite->SetSize(sizeUI);
 
 
@@ -655,5 +668,20 @@ void BossEnemy::ChangeAct(BossAct nextAct)
 		break;
 	default:
 		break;
+	}
+}
+
+void BossEnemy::OnCollision([[maybe_unused]] const CollisionInfo& info)
+{
+	//ダメージを受ける処理
+	Damage();
+}
+
+void BossEnemy::Damage(uint16_t damage)
+{
+	life -= damage;
+	//HPが0以下なったら死亡処理
+	if (life <= 0) {
+		//TODO:死亡開始関数を呼ぶ
 	}
 }

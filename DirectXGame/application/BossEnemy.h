@@ -56,7 +56,7 @@ private:
 	INT32 life = lifeMax;
 	TextureData* healthTexture = nullptr;
 	std::unique_ptr<Sprite> healthSprite = nullptr;
-	float healthSizeWidth = 0.0f;
+	float healthWidthOneHp = 0.0f;
 
 	//砲台関係
 	static const INT32 barrelMax = 4;
@@ -138,6 +138,10 @@ private:
 	//行動変化
 	void ChangeAct(BossAct nextAct);
 
+	//当たり判定コールバック
+	void OnCollision([[maybe_unused]] const CollisionInfo& info)override;
+	//ダメージを受ける処理
+	void Damage(uint16_t damage = 1);
 	
 };
 
