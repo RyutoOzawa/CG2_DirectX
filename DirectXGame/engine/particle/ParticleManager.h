@@ -28,35 +28,6 @@ public:
 		float scale;//スケール
 	};
 
-	struct Particle {
-		//座標
-		Vector3 position = {};
-		//速度
-		Vector3 velocity = {};
-		//加速度
-		Vector3 accel = {};
-		//現在フレーム
-		int frame = 0;
-		//終了フレーム
-		int num_frame = 0;
-		//スケール現在値
-		float scale = 1.0f;
-		//スケール開始値
-		float scaleStart = 1.0f;
-		//スケール終了値
-		float scaleEnd = 0.0f;
-
-		//補間かどうか
-		float isInter = false;
-		//始点
-		Vector3 start = {};
-		//終点
-		Vector3 end = {};
-		//時間
-		float time = 0.0f;
-
-	};
-
 private:
 
 	static Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
@@ -108,7 +79,7 @@ public:
 	/// <param name="accel">加速度</param>
 	/// <param name="scaleStart">開始時スケール</param>
 	/// <param name="scaleEnd">終了時スケール</param>
-	void Add(int life, const Vector3& position_, const Vector3& velocity, const Vector3& accel,float scaleStart,float scaleEnd);
+	void Add(int life, const Vector3& position_, const Vector3& velocity, const Vector3& accel,float scaleStart,float scaleEnd,Vector4 color = {1,1,1,1});
 
 	/// <summary>
 	/// パーティクルの追加(線形補間ver)
@@ -118,7 +89,7 @@ public:
 	/// <param name="end">終点</param>
 	/// <param name="scaleStart">開始時スケール</param>
 	/// <param name="scaleEnd">終了時スケール</param>
-	void AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType = InterType::Lerp);
+	void AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType = InterType::Lerp, Vector4 color = { 1,1,1,1 });
 
 private:
 	//パイプライン生成

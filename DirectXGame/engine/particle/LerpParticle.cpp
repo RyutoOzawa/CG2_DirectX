@@ -38,7 +38,7 @@ void LerpParticle::Update()
 
 }
 
-void LerpParticle::Add(int t, const Vector3& start_, const Vector3& end_, float scaleStart_, float scaleEnd_, InterType type)
+void LerpParticle::Add(int t, const Vector3& start_, const Vector3& end_, float scaleStart_, float scaleEnd_, InterType type,Vector4 color_)
 {
 	start = start_;
 	end = end_;
@@ -47,4 +47,5 @@ void LerpParticle::Add(int t, const Vector3& start_, const Vector3& end_, float 
 	scaleEnd = scaleEnd_;
 	num_frame = t;
 	interType = type;
+	color = color_;
 }

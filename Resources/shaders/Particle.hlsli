@@ -1,6 +1,7 @@
 cbuffer cbuff0 : register(b0)
 {
 	matrix mat;//ビルボード変換行列
+	float4 color;//色
 }
 
 cbuffer cbuff1 : register(b1)
