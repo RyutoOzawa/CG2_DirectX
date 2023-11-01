@@ -408,7 +408,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	}
 
 	if (Input::GetInstance()->IsKeyPress(DIK_UP) || Input::GetInstance()->IsKeyPress(DIK_DOWN)) {
-		inputVertical = (float)Input::GetInstance()->IsKeyPress(DIK_UP) - (float)Input::GetInstance()->IsKeyPress(DIK_DOWN);
+		inputVertical = (float)Input::GetInstance()->IsKeyPress(DIK_DOWN) - (float)Input::GetInstance()->IsKeyPress(DIK_UP);
 	}
 
 
