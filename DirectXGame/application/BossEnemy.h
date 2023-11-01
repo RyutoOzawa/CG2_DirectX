@@ -9,6 +9,7 @@
 #include"BezierCurve.h"
 #include"Sprite.h"
 #include"EnemyBullet.h"
+#include"ParticleManager.h"
 
 //ボスの行動列挙クラス
 enum class BossAct {
@@ -35,6 +36,9 @@ public:
 
 	//スプライト描画
 	void DrawSprite();
+
+	//パーティクル描画
+	void DrawParticle();
 
 	//デバッグ線描画
 	void DrawDebugLine();
@@ -78,10 +82,8 @@ private:
 	static const INT32 bossActMax = (INT32)BossAct::BossActMax;
 	std::array<INT32, bossActMax> actTime;		//各行動に使う時間
 	std::array<INT32, bossActMax> moveCooltime;	//各行動の次行動までのクールタイム
-
 	INT32 nowActTime = 0;		//現在行動の残り時間
 	INT32 moveInterval = 0;		//次行動に移るまでの時間
-
 	int count = 0;
 
 	Sprite sp[4];
@@ -114,6 +116,9 @@ private:
 	//生成処理関係
 	Vector3 spawnPosOffsetCamera;//スポーンするときのカメラからの距離(目玉)
 
+	//パーティクルマネージャ
+	std::unique_ptr<ParticleManager> particleManager = nullptr;
+
 	//各行動の更新処理
 	//スポーン更新
 	void UpdateSpawn();
@@ -143,7 +148,7 @@ private:
 	//当たり判定コールバック
 	void OnCollision([[maybe_unused]] const CollisionInfo& info)override;
 	//ダメージを受ける処理
-	void Damage(uint16_t damage = 1);
+	void Damage(const Vector3& hitPos,uint16_t damage = 1);
 	
 };
 

@@ -330,6 +330,8 @@ void GamePlayScene::Draw()
 
 	Enemy::DrawParticle();
 
+	boss->DrawParticle();
+
 	//------デバッグ線描画処理------//
 	DebugLine::BeginDraw(currentCamera);
 

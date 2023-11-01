@@ -103,7 +103,9 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	SetCollider(new SphereCollider({ 0,0,0 }, 12.0f));
 	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 
-
+	//パーティクルマネージャ
+	particleManager = std::make_unique<ParticleManager>();
+	particleManager->Initialize(Texture::LoadTexture("white1x1.png"));
 }
 
 void BossEnemy::Update(const Vector3& playerPos)
@@ -163,6 +165,9 @@ void BossEnemy::Update(const Vector3& playerPos)
 	if (damageInterval > 0) {
 		damageInterval--;
 	}
+
+	//パーティクル更新
+	particleManager->Update();
 
 	//行動時間を減らす
 	if (nowActTime > 0) {
@@ -261,6 +266,11 @@ void BossEnemy::DrawSprite()
 	}
 
 	healthSprite->Draw();
+}
+
+void BossEnemy::DrawParticle()
+{
+	particleManager->Draw();
 }
 
 void BossEnemy::DrawDebugLine()
@@ -395,6 +405,8 @@ void BossEnemy::UpdateMove()
 	ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
 	ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
 	ImGui::SliderFloat("z", &position.z, -100.0f, 100.0f);
+
+	lThetaSpd = 0.1f;
 
 	lissajousTheta += lThetaSpd;
 	if (lissajousTheta > 360.0f) {
@@ -679,10 +691,11 @@ void BossEnemy::ChangeAct(BossAct nextAct)
 void BossEnemy::OnCollision([[maybe_unused]] const CollisionInfo& info)
 {
 	//ダメージを受ける処理
-	Damage();
+	Damage(info.inter);
+
 }
 
-void BossEnemy::Damage(uint16_t damage)
+void BossEnemy::Damage(const Vector3& hitPos,uint16_t damage)
 {
 	//ダメージのクールタイム中なら食らわない
 	if (damageInterval > 0) {
@@ -691,6 +704,15 @@ void BossEnemy::Damage(uint16_t damage)
 	damageInterval = damageIntervalMax;
 
 	life -= damage;
+	//衝突地点からパーティクルの発生
+	uint16_t particleCount = 32;
+	for (uint16_t i = 0; i < particleCount; i++) {
+		Vector3 particlePos = hitPos;
+		particlePos += {Random(-1.0f, 1.0f), Random(-1.0f, 1.0f), Random(-1.0f, 1.0f)};
+		Vector3 vel = { Random(-0.5f,0.5f),Random(-0.1f,-1.0f),0};
+		particleManager->Add(15, particlePos, vel, { 0,0,0 }, 10.0f, 0.0f);
+	}
+
 	//HPが0以下なったら死亡処理
 	if (life <= 0) {
 		//TODO:死亡開始関数を呼ぶ
