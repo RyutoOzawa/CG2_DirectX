@@ -83,12 +83,16 @@ public:
 	//Lスティックが下に倒れたか
 	bool IsDownLStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
 	//Rスティックが左に倒れたか
-	bool IsDownRStickLeft(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsDownRStickLeft(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 	//Rスティックが右に倒れたか
-	bool IsDownRStickRight(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsDownRStickRight(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 	//Rスティックが上に倒れたか
-	bool IsDownRStickUp(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsDownRStickUp(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 	//Rスティックが下に倒れたか
-	bool IsDownRStickDown(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	bool IsDownRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+
+	float GetDownRstickX(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	float GetDownRstickY(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+
 };
 

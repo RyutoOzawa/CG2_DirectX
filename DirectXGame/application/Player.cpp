@@ -20,7 +20,7 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	//コライダーの追加
 	float radius = 1.0f;
 	//半径分だけ浮いた座標を球の中心にする
-	SetCollider(new SphereCollider(Vector3(0, 0, 0),radius));
+	SetCollider(new SphereCollider(Vector3(0, 0, 0), radius));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 
@@ -91,7 +91,7 @@ void Player::Spawn()
 
 		//色の透過速度もランダムに
 		haloAlphaVel[i] = Random(0.01f, 0.05f);
-//		haloAlphaVel[i] = 0.01f;
+		//		haloAlphaVel[i] = 0.01f;
 
 		haloRotaVel[i] = { Random(0,PI / 16.0f),Random(0,PI / 16.0f) ,Random(0,PI / 16.0f) };
 
@@ -130,7 +130,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 
 	//UIのアルファ値を更新
 	easeUIAlpha.Update();
-	UIAlpha = Lerp(0.0f, 1.0f,  InBounce(easeUIAlpha.GetTimeRate()));
+	UIAlpha = Lerp(0.0f, 1.0f, InBounce(easeUIAlpha.GetTimeRate()));
 
 
 	if (isSpawn) {
@@ -158,7 +158,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		});
 
 	//自機のHPが0、スポーンアニメ中なら操作させない
-	if (health != 0  && !isSpawn) {
+	if (health != 0 && !isSpawn) {
 
 		//移動
 		Move();
@@ -224,7 +224,7 @@ void Player::Draw()
 void Player::DrawParticle()
 {
 	hitParticle->Draw();
-	
+
 }
 
 void Player::DrawUI()
@@ -286,7 +286,7 @@ void Player::Move()
 
 	spd.x += baseSpd * inputHorizontal;
 	spd.y += baseSpd * inputVertical;
-	
+
 
 
 
@@ -310,8 +310,8 @@ void Player::Move()
 		else if (rotation.z < 0 - bodyTurnBase) {
 			rotation.z += bodyTurnBase * 3.0f;
 		}
-		
-		if(fabs(rotation.z) <= bodyTurnBase*3.0f) {
+
+		if (fabs(rotation.z) <= bodyTurnBase * 3.0f) {
 			rotation.z = 0.0f;
 		}
 	}
@@ -323,7 +323,7 @@ void Player::Move()
 		else if (rotation.x < 0 - bodyTurnBase) {
 			rotation.x += bodyTurnBase * 3.0f;
 		}
-		
+
 		if (fabs(rotation.x) <= bodyTurnBase * 3.0f) {
 			rotation.x = 0.0f;
 		}
@@ -331,7 +331,7 @@ void Player::Move()
 
 
 	//傾きの限界を超えないように
-	if (fabs(rotation.x) > (float)PI /180.0f *15.0f) {
+	if (fabs(rotation.x) > (float)PI / 180.0f * 15.0f) {
 		rotation.x = -inputVertical * (float)PI / 180.0f * 15.0f;
 	}
 
@@ -348,7 +348,7 @@ void Player::Attack()
 	if (shotInterval == 0) {
 
 		if (Input::GetInstance()->IsKeyPress(DIK_SPACE) || Input::GetInstance()->IsPadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-			
+
 			shotInterval = shotCooltime;
 
 			//弾の速度
@@ -395,25 +395,24 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	float reticleSpdBase = 8.0f;
 
 	//入力
-	INT32 inputHorizontal = 0;
-	INT32 inputVertical = 0;
+	float inputHorizontal = 0;
+	float inputVertical = 0;
 
-	if (Input::GetInstance()->IsKeyPress(DIK_LEFT) || Input::GetInstance()->IsDownRStickLeft()) {
-		inputHorizontal = -1;
-	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_RIGHT) || Input::GetInstance()->IsDownRStickRight()) {
-		inputHorizontal = 1;
-	}
+	//パッドでの入力
+	inputHorizontal = Input::GetInstance()->GetDownRstickX(4000);
+	inputVertical = -Input::GetInstance()->GetDownRstickY(4000);
 
-	if (Input::GetInstance()->IsKeyPress(DIK_UP) || Input::GetInstance()->IsDownRStickUp()) {
-		inputVertical = -1;
-	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_DOWN) || Input::GetInstance()->IsDownRStickDown()) {
-		inputVertical = 1;
+	//キー入力があった場合そっちを使う
+	if (Input::GetInstance()->IsKeyPress(DIK_LEFT) || Input::GetInstance()->IsKeyPress(DIK_RIGHT)) {
+		inputHorizontal = (float)Input::GetInstance()->IsKeyPress(DIK_RIGHT)- (float)Input::GetInstance()->IsKeyPress(DIK_LEFT);
 	}
 
+	if (Input::GetInstance()->IsKeyPress(DIK_UP) || Input::GetInstance()->IsKeyPress(DIK_DOWN)) {
+		inputVertical = (float)Input::GetInstance()->IsKeyPress(DIK_UP) - (float)Input::GetInstance()->IsKeyPress(DIK_DOWN);
+	}
 
-	
+
+
 	//入力値×レティクルスピードで移動
 	reticleSpd.x = inputHorizontal * reticleSpdBase;
 	reticleSpd.y = inputVertical * reticleSpdBase;
@@ -443,7 +442,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	reticleColor = reticleSprite->GetColor();
 	reticleColor.z = 1.0f;
 
-	
+
 
 	//カメラからレティクル(3D)への距離
 	float distanceReticle3D = distanceCamera + 100.0f;
@@ -463,7 +462,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		//ビュー、プロジェクション、ビューポート行列を掛けてW除算
 		posEnemyWorld = Matrix4::transformDivW(posEnemyWorld, matViewProViewPort);
 		Vector2 posEnemyScreen = { posEnemyWorld.x,posEnemyWorld.y };
-		
+
 		//ImGui::Text("screen Z eyemy %f", posEnemyWorld.z)
 		Circle reticleC{ reticlePosScreen,reticleRadius };
 		Circle enemyC{ posEnemyScreen,1.0f };
@@ -479,7 +478,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 		//レティクルが敵に当たっているなら
 		if (Collision::ColCircleToCircle(reticleC, enemyC)) {
-			
+
 			//カメラから敵の距離が自機との距離より小さいなら狙わない
 			if (matEnemyView.m[3][2] < distanceCamera) {
 				continue;
@@ -497,9 +496,9 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	//レティクルの色を設定
 	reticleSprite->SetColor(reticleColor);
 
-//	ImGui::Text("distance retilce3d %f", distanceReticle3D);
+	//	ImGui::Text("distance retilce3d %f", distanceReticle3D);
 
-	//ビュー、射影、ビューポートの行列を合成
+		//ビュー、射影、ビューポートの行列を合成
 	Matrix4 matVBVInverse = matViewProViewPort;
 	matVBVInverse.Inverse();
 
@@ -578,7 +577,7 @@ void Player::Death()
 	//次シーンに移行するまでのカウントダウン開始
 	deathCount = deathCountMax;
 
-	
+
 }
 
 void Player::UpdateDeath()
@@ -594,12 +593,12 @@ void Player::UpdateDeath()
 	deathCount--;
 	//パーティクルの速度
 	for (int i = 0; i < 5; i++) {
-	Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f) ,Random(-1.0f,1.0f) };
-	Vector3 acc = { 0.0f,Random(-0.1f,-1.0f),0.0f,};
-	Vector3 pos = GetWorldPosition();
-	pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
+		Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f) ,Random(-1.0f,1.0f) };
+		Vector3 acc = { 0.0f,Random(-0.1f,-1.0f),0.0f, };
+		Vector3 pos = GetWorldPosition();
+		pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
 
-		hitParticle->Add((int)Random(10,20),pos,vel,acc,3.0f,0.0f);
+		hitParticle->Add((int)Random(10, 20), pos, vel, acc, 3.0f, 0.0f);
 	}
 }
 
@@ -610,14 +609,14 @@ void Player::UpdateSpawn()
 	ImGui::Text("scale timerate %f", eDataPlayerScale.GetTimeRate());
 
 	//パーティクルが収束する
-	if(spawnTimer > 0){
+	if (spawnTimer > 0) {
 		float absPos = 30.0f;
 
 		Vector3 pos = { Random(-absPos, absPos),Random(-absPos, absPos),Random(-absPos, absPos) };
 		pos += GetWorldPosition();
 		float startScale = Random(6.0f, 8.0f);
 
-		hitParticle->AddLerp(15, pos, GetWorldPosition(), startScale, 0.0f,InterType::EaseOut);
+		hitParticle->AddLerp(15, pos, GetWorldPosition(), startScale, 0.0f, InterType::EaseOut);
 
 		Vector3 vel = { 0,0,0 };
 		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
@@ -634,7 +633,7 @@ void Player::UpdateSpawn()
 
 			haloObjects[i]->scale += {haloScaleVel[i], haloScaleVel[i], haloScaleVel[i]};
 			haloObjects[i]->color.w -= haloAlphaVel[i];
-			
+
 		}
 
 		//自機が大きくなりきったらスポーン処理おわり
@@ -650,7 +649,7 @@ void Player::UpdateSpawn()
 		haloObjects[i]->rotation += haloRotaVel[i];
 		haloObjects[i]->Update();
 	}
-	
+
 
 	//if (haloObject.color.w < 0.0f) {
 	//	isSpawn = false;
