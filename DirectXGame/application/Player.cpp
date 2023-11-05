@@ -595,7 +595,7 @@ void Player::UpdateDeath()
 	//パーティクルの速度
 	for (int i = 0; i < 5; i++) {
 	Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f) ,Random(-1.0f,1.0f) };
-	Vector3 acc = { 0.0f,Random(-0.1f,-1.0f),0.0f,};
+	Vector3 acc = { Random(-0.1f,0.1f),Random(0.1f,0.5f),Random(-0.1f,0.1f) };
 	Vector3 pos = GetWorldPosition();
 	pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
 

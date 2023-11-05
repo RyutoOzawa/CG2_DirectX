@@ -13,6 +13,9 @@ void GameOverScene::Initialize()
 	//スプライト
 	gameoverSprite = new Sprite();
 	gameoverSprite->Initialize(gameoverTexture);
+
+	//次シーンへのタイマーをセット
+	nextSceneTimer = nextSceneTimerMax;
 }
 
 void GameOverScene::Finalize()
@@ -22,7 +25,13 @@ void GameOverScene::Finalize()
 
 void GameOverScene::Update()
 {
-	
+	if (nextSceneTimer > 0) {
+		nextSceneTimer--;
+	}
+	else {
+		//シーンの切り替えを依頼
+		sceneManager->ChangeScene("TITLE");
+	}
 
 	//スペースキーでメインゲームへ
 	if (Input::GetInstance()->IsKeyTrigger(DIK_SPACE) || Input::GetInstance()->IsPadTrigger(XINPUT_GAMEPAD_START))
