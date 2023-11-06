@@ -8,6 +8,7 @@
 #include"Input.h"
 #include"SphereCollider.h"
 #include"CollisionAttribute.h"
+#include"GameSceneManager.h"
 
 void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* parent_)
 {
@@ -95,7 +96,7 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	actTime[(INT32)BossAct::Move] = 120;
 	actTime[(INT32)BossAct::AttackShot] = 200;
 	actTime[(INT32)BossAct::AttackLaser] = 200;
-	actTime[(INT32)BossAct::Death] = 30;
+	actTime[(INT32)BossAct::Death] = 300;
 
 	//ChangeAct(BossAct::Spawn);
 
@@ -546,6 +547,66 @@ void BossEnemy::UpdateAtkLaser()
 
 void BossEnemy::UpdateDeath()
 {
+
+	eDataMove.Update();
+	float moveRate = eDataMove.GetTimeRate();
+
+	if (moveRate < 1.0f) {
+
+		//移動中
+		if (deathPhase == BossDeathPhase::Move) {
+			//数fに1回爆発させる
+			if (explosionCount > 0) {
+				explosionCount--;
+			}
+			else {
+				explosionCount = explosionCountMax;
+				for (size_t i = 0; i < 32; i++) {
+					Vector3 pos = GetWorldPosition();
+					pos += {Random(-5.0f, 5.0f), Random(-5.0f, 5.0f), Random(-5.0f, 5.0f)};
+					Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f),Random(-1.0f,1.0f) };
+					Vector3 acc = { Random(0.25f,-0.1f),Random(0.1f,-0.1f) ,Random(0.1f,-0.1f) };
+					particleManager->Add(20, pos, vel, acc, 0.0f, 10.0f);
+				}
+			}
+		}
+		else if (deathPhase == BossDeathPhase::Fall) {
+			//降下ﾌｪｰｽﾞならtimerateはイージングかける
+			moveRate = In(moveRate);
+		}
+
+		//座標補間
+		position = Vector3::Lerp(movePosBefore, movePosAfter, moveRate);
+	}
+	else {
+		//イージング終わったら死亡させたりﾌｪｰｽﾞ変えたり
+		if (deathPhase == BossDeathPhase::Move) {
+			//次行動までのクールタイム消化
+			if (nextPhaseInterval > 0) {
+				nextPhaseInterval--;
+			}
+			else {
+				nextPhaseInterval = nextPhaseIntervalMax;
+				//ﾌｪｰｽﾞ変えて2秒で落とす
+				deathPhase = BossDeathPhase::Fall;
+				eDataMove.Start(120.0f);
+				movePosBefore = position;
+				movePosAfter = movePosBefore;
+				movePosAfter.y -= 300.0f;
+			}
+		}
+		else if (deathPhase == BossDeathPhase::Fall) {
+			//生存フラグを下す
+			isAlive = false;
+			
+		}
+	}
+
+	Object3d::Update();
+
+	for (size_t i = 0; i < barrelMax; i++) {
+		barrelObject[i].Update();
+	}
 }
 
 void BossEnemy::InitSpawn()
@@ -563,6 +624,8 @@ void BossEnemy::InitSpawn()
 	movePosBefore = spawnPosOffsetCamera;
 	movePosAfter = Matrix4::transform({ 0,0,240 }, parent->matWorld);
 	eDataMove.Start((float)actTime[(INT32)BossAct::Spawn]);
+
+	life = 1;
 
 	//砲台オブジェクトも親は一旦カメラobjにする(移動終わったら目玉objに戻す)
 	for (size_t i = 0; i < barrelMax; i++) {
@@ -660,6 +723,19 @@ void BossEnemy::InitAtkLaser()
 
 void BossEnemy::InitDeath()
 {
+	//現在の座標を移動前座標として保存
+	movePosBefore = position;
+	//移動後の座標は中央に
+	movePosAfter = movePosBefore;
+	movePosAfter.x = 0.0f;
+	movePosAfter.y = 0.0f;
+
+	//座標補間の開始
+	eDataMove.Start(120.0f);
+
+	//ﾌｪｰｽﾞ設定
+	deathPhase = BossDeathPhase::Move;
+
 }
 
 void BossEnemy::ChangeAct(BossAct nextAct)
@@ -715,6 +791,7 @@ void BossEnemy::Damage(const Vector3& hitPos,uint16_t damage)
 
 	//HPが0以下なったら死亡処理
 	if (life <= 0) {
-		//TODO:死亡開始関数を呼ぶ
+		//行動を死亡に
+		ChangeAct(BossAct::Death);
 	}
 }

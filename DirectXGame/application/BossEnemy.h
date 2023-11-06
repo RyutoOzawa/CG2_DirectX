@@ -21,6 +21,12 @@ enum class BossAct {
 	BossActMax,
 };
 
+enum class BossDeathPhase {
+	Move,
+	Fall,
+	Dead,
+};
+
 class BossEnemy : public Object3d
 {
 public: 
@@ -49,6 +55,9 @@ public:
 	//ボスのスポーン
 	void Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos = {0,0,240.0f});
 
+	//getter
+	bool IsAlive()const { return isAlive; }
+
 private:
 	Model* bodyModel;
 	Model* barrelModel;
@@ -63,6 +72,13 @@ private:
 	float healthWidthOneHp = 0.0f;
 	uint16_t damageInterval = 0;
 	uint16_t damageIntervalMax = 10;
+	
+	//死亡演出関係
+	uint16_t explosionCountMax = 10;
+	uint16_t explosionCount = explosionCountMax;
+	uint16_t nextPhaseIntervalMax = 30;
+	uint16_t nextPhaseInterval = nextPhaseIntervalMax;
+	BossDeathPhase deathPhase = BossDeathPhase::Move;
 
 	//砲台関係
 	static const INT32 barrelMax = 4;
@@ -75,7 +91,6 @@ private:
 	std::array<Vector3,barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
 	std::array<Vector3,barrelMax> movePosAfterBarrel;	//バレルの移動後座標
 
-	//イベントシーン制御用
 
 	//ボスの行動管理
 	BossAct bossAct = BossAct::Move;

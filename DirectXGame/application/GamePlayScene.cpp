@@ -514,6 +514,11 @@ void GamePlayScene::UpdateBoss()
 
 	//
 	boss->Update(player->GetWorldPosition());
+
+	//ボスの死亡を確認したらゲームクリアへ
+	if (!boss->IsAlive()) {
+		sceneManager->ChangeScene("GAMECLEAR");
+	}
 }
 
 void GamePlayScene::UpdateClear()
