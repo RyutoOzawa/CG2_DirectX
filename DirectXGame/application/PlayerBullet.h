@@ -31,6 +31,9 @@ private:
 	//¶‘¶ƒtƒ‰ƒO
 	bool isAlive = true;
 
+	//“–‚½‚è”»’è
+	void OnCollision([[maybe_unused]] const CollisionInfo& info) override;
+
 
 
 };

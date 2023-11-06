@@ -134,7 +134,6 @@ void ParticleManager::Update()
 
 		BaseParticle* p = *it;
 		p->Update();
-
 	}
 	//頂点バッファへデータ転送
 	VertexPosScale* vertMap = nullptr;
@@ -183,7 +182,7 @@ void ParticleManager::Draw()
 	matBillboard = matCameraRot;
 
 	constMap->matBillboard = matBillboard;
-
+	//constMap->color = 
 
 	ID3D12GraphicsCommandList* commandList = directX->GetCommandList();
 	//h定数バッファビュー(CBV)の設定コマンド
@@ -205,7 +204,7 @@ void ParticleManager::Draw()
 	commandList->DrawInstanced((UINT)std::distance(particles.begin(),particles.end()), 1, 0, 0);
  }
 
-void ParticleManager::Add(int life, const Vector3& position_, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd) {
+void ParticleManager::Add(int life, const Vector3& position_, const Vector3& velocity, const Vector3& accel, float scaleStart, float scaleEnd, Vector4 color) {
 	//パーティクルの数が最大なら追加しない
 	if (std::distance(particles.begin(), particles.end()) >= vertexCount) {
 		return;
@@ -214,12 +213,12 @@ void ParticleManager::Add(int life, const Vector3& position_, const Vector3& vel
 
 	//追加した要素の参照
 	BaseParticle* p = new BaseParticle();
-	p->Add(life, position_, velocity, accel, scaleStart,scaleEnd);
+	p->Add(life, position_, velocity, accel, scaleStart,scaleEnd,color);
 	//リストに要素を追加
 	particles.push_front(p);
 }
 
-void ParticleManager::AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType)
+void ParticleManager::AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType,Vector4 color)
 {//パーティクルの数が最大なら追加しない
 	if (std::distance(particles.begin(), particles.end()) >= vertexCount) {
 		return;
@@ -228,7 +227,7 @@ void ParticleManager::AddLerp(int t, const Vector3& start, const Vector3& end, f
 
 	//追加した要素の参照
 	LerpParticle* p = new LerpParticle();
-	p->Add(t, start, end, scaleStart, scaleEnd,interType);
+	p->Add(t, start, end, scaleStart, scaleEnd,interType,color);
 	//リストに要素を追加
 	particles.push_front(p);
 

@@ -9,6 +9,7 @@
 #include"BezierCurve.h"
 #include"Sprite.h"
 #include"EnemyBullet.h"
+#include"ParticleManager.h"
 
 //ボスの行動列挙クラス
 enum class BossAct {
@@ -36,6 +37,9 @@ public:
 	//スプライト描画
 	void DrawSprite();
 
+	//パーティクル描画
+	void DrawParticle();
+
 	//デバッグ線描画
 	void DrawDebugLine();
 
@@ -56,7 +60,9 @@ private:
 	INT32 life = lifeMax;
 	TextureData* healthTexture = nullptr;
 	std::unique_ptr<Sprite> healthSprite = nullptr;
-	float healthSizeWidth = 0.0f;
+	float healthWidthOneHp = 0.0f;
+	uint16_t damageInterval = 0;
+	uint16_t damageIntervalMax = 10;
 
 	//砲台関係
 	static const INT32 barrelMax = 4;
@@ -76,10 +82,8 @@ private:
 	static const INT32 bossActMax = (INT32)BossAct::BossActMax;
 	std::array<INT32, bossActMax> actTime;		//各行動に使う時間
 	std::array<INT32, bossActMax> moveCooltime;	//各行動の次行動までのクールタイム
-
 	INT32 nowActTime = 0;		//現在行動の残り時間
 	INT32 moveInterval = 0;		//次行動に移るまでの時間
-
 	int count = 0;
 
 	Sprite sp[4];
@@ -112,6 +116,9 @@ private:
 	//生成処理関係
 	Vector3 spawnPosOffsetCamera;//スポーンするときのカメラからの距離(目玉)
 
+	//パーティクルマネージャ
+	std::unique_ptr<ParticleManager> particleManager = nullptr;
+
 	//各行動の更新処理
 	//スポーン更新
 	void UpdateSpawn();
@@ -138,6 +145,10 @@ private:
 	//行動変化
 	void ChangeAct(BossAct nextAct);
 
+	//当たり判定コールバック
+	void OnCollision([[maybe_unused]] const CollisionInfo& info)override;
+	//ダメージを受ける処理
+	void Damage(const Vector3& hitPos,uint16_t damage = 1);
 	
 };
 

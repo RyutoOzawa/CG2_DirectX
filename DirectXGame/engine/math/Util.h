@@ -28,3 +28,6 @@ float EaseOut(float t);
 
 //üŒ`•âŠÔ
 float Lerp(float before, float after, float t);
+
+//ƒNƒ‰ƒ“ƒv
+float Clump(float num, float min, float max);

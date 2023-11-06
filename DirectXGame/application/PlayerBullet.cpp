@@ -40,3 +40,9 @@ void PlayerBullet::Update()
 	//object3dの更新
 	Object3d::Update();
 }
+
+void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info)
+{
+	//衝突の重複を避けるため当たったら無敵に　
+	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
+}

@@ -3,6 +3,7 @@
 //マネージャによって生成されるパーティクルのパラメータ等を持つ
 
 #include"Vector3.h"
+#include"Vector4.h"
 
 class BaseParticle
 {
@@ -17,6 +18,8 @@ protected:
 	int frame = 0;
 	//終了フレーム
 	int num_frame = 0;
+	//色
+	Vector4 color = { 1,1,1,1 };
 
 public:
 	//更新
@@ -32,7 +35,7 @@ public:
 	/// <param name="scaleStart_">開始スケール</param>
 	/// <param name="scaleEnd_">終了スケール</param>
 	virtual void Add(int life, const Vector3& position_, const Vector3& velocity_,
-		const Vector3& accel_, float scaleStart_, float scaleEnd_);
+		const Vector3& accel_, float scaleStart_, float scaleEnd_, Vector4 color_ ={1,1,1,1});
 
 	//生存フラグ
 	bool IsAlive() { return frame > num_frame; }

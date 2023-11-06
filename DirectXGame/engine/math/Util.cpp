@@ -78,3 +78,15 @@ float Lerp(float before, float after, float t)
 {
 	return before * (1.0f - t) + after * t;
 }
+
+float Clump(float num, float min, float max)
+{
+	if (num >= max) {
+		return max;
+	}
+	else if (num <= min) {
+		return min;
+	}
+
+	return num;
+}

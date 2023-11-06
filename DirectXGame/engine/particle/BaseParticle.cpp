@@ -19,7 +19,7 @@ void BaseParticle::Update()
 }
 
 void BaseParticle::Add(int life, const Vector3& position_, const Vector3& velocity_,
-	const Vector3& accel_, float scaleStart_, float scaleEnd_)
+	const Vector3& accel_, float scaleStart_, float scaleEnd_,Vector4 color_)
 {
 	position = position_;
 	velocity = velocity_;
@@ -28,4 +28,5 @@ void BaseParticle::Add(int life, const Vector3& position_, const Vector3& veloci
 	scale = scaleStart_;
 	scaleStart = scaleStart_;
 	scaleEnd = scaleEnd_;
+	color = color_;
 }
