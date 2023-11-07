@@ -14,6 +14,12 @@
 
 class Enemy;
 
+enum class PlayerPhase {
+	Spawn,
+	Alive,
+	Death,
+	Leave,
+};
 
 //3Dオブジェクトなのでobj3dクラスを継承
 class Player :public Object3d
@@ -45,6 +51,9 @@ public:	//メンバ関数
 	bool IsAlive()const { return isAlive; }
 	//getter
 	INT32 GetSpawnTimer() const { return spawnTimer; }
+
+	//自機脱出処理
+	void Leave();
 
 private://メンバ変数
 
@@ -95,8 +104,13 @@ private://メンバ変数
 	const int deathCountMax = 180;
 	int deathCount = deathCountMax;
 	bool isAlive = false;
-
 	bool isSpawn = false;
+	//自機のフェーズ
+	PlayerPhase phase = PlayerPhase::Spawn;
+
+	//脱出演出関係	
+	static const uint16_t leaveHaloMax = 5;
+
 	EasingData easeUIAlpha;
 	float UIAlpha = 0.0f;
 	std::unique_ptr<Sprite> damageSprite = nullptr;
@@ -127,6 +141,9 @@ private://内部処理用メンバ関数
 
 	//生成更新処理
 	void UpdateSpawn();
+
+	//脱出更新処理
+	void UpdateLeave();
 
 };
 

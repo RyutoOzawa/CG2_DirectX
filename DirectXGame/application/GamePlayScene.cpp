@@ -515,8 +515,11 @@ void GamePlayScene::UpdateBoss()
 	//
 	boss->Update(player->GetWorldPosition());
 
-	//ボスの死亡を確認したらゲームクリアへ
+	//ボスの死亡を確認したら自機の脱出モーションへ
 	if (!boss->IsAlive()) {
+		
+
+
 		sceneManager->ChangeScene("GAMECLEAR");
 	}
 }

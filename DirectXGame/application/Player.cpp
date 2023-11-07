@@ -258,6 +258,22 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
 
 }
 
+void Player::Leave()
+{
+	//各オブジェクトの座標のセット。光輪はスポーンで使ったものを再利用
+	float haloPos[leaveHaloMax]{ -50.0f,-30.0f,0.0f,30.0f,50.0f };
+	for (size_t i = 0; i < leaveHaloMax; i++) {
+		haloObjects[i]->position = { 0,0,0 };
+		haloObjects[i]->rotation = { 0,0,0 };
+		haloObjects[i]->position.y = haloPos[i];
+		haloObjects[i]->Update();
+	}
+
+
+	//レティクルを消し始める
+
+}
+
 
 void Player::Move()
 {
@@ -404,7 +420,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 	//キー入力があった場合そっちを使う
 	if (Input::GetInstance()->IsKeyPress(DIK_LEFT) || Input::GetInstance()->IsKeyPress(DIK_RIGHT)) {
-		inputHorizontal = (float)Input::GetInstance()->IsKeyPress(DIK_RIGHT)- (float)Input::GetInstance()->IsKeyPress(DIK_LEFT);
+		inputHorizontal = (float)Input::GetInstance()->IsKeyPress(DIK_RIGHT) - (float)Input::GetInstance()->IsKeyPress(DIK_LEFT);
 	}
 
 	if (Input::GetInstance()->IsKeyPress(DIK_UP) || Input::GetInstance()->IsKeyPress(DIK_DOWN)) {
@@ -593,10 +609,10 @@ void Player::UpdateDeath()
 	deathCount--;
 	//パーティクルの速度
 	for (int i = 0; i < 5; i++) {
-	Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f) ,Random(-1.0f,1.0f) };
-	Vector3 acc = { Random(-0.1f,0.1f),Random(0.1f,0.5f),Random(-0.1f,0.1f) };
-	Vector3 pos = GetWorldPosition();
-	pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
+		Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f) ,Random(-1.0f,1.0f) };
+		Vector3 acc = { Random(-0.1f,0.1f),Random(0.1f,0.5f),Random(-0.1f,0.1f) };
+		Vector3 pos = GetWorldPosition();
+		pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
 
 		hitParticle->Add((int)Random(10, 20), pos, vel, acc, 3.0f, 0.0f);
 	}
@@ -655,5 +671,9 @@ void Player::UpdateSpawn()
 	//	isSpawn = false;
 	//}
 
+}
+
+void Player::UpdateLeave()
+{
 }
 
