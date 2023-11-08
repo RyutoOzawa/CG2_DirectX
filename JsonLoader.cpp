@@ -93,7 +93,7 @@ void JsonLoader::ScanObjects(const std::string& dataName, LevelData& leveldata, 
 {
 	//const nlohmann::json& a = daserialized["objects"];
 
-	auto& obj = daserialized[dataName];
+	//auto& obj = daserialized[dataName];
 
 	//データ名の全オブジェクトを走査
 	for (nlohmann::json& object : daserialized[dataName]) {
