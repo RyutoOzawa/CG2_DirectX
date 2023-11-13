@@ -625,7 +625,7 @@ void BossEnemy::InitSpawn()
 	movePosAfter = Matrix4::transform({ 0,0,240 }, parent->matWorld);
 	eDataMove.Start((float)actTime[(INT32)BossAct::Spawn]);
 
-	life = 1;
+	//life = 1;
 
 	//砲台オブジェクトも親は一旦カメラobjにする(移動終わったら目玉objに戻す)
 	for (size_t i = 0; i < barrelMax; i++) {

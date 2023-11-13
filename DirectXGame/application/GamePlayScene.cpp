@@ -125,6 +125,8 @@ void GamePlayScene::Initialize()
 	boss = std::make_unique<BossEnemy>();
 	boss->Initialize(bossBodyModel.get(), bossBarrelModel.get(), railCamera->GetObject3d());
 
+	//ステージのobjデータ読み込み
+	stageData = JsonLoader::LoadJsonFile("gameStageData");
 }
 
 void GamePlayScene::Finalize()
@@ -319,6 +321,9 @@ void GamePlayScene::Draw()
 
 	//ボス
 	boss->Draw();
+
+	//ステージのobj描画
+	//for(Object3d& obj:stageData.objects)
 
 	//FBX
 	//object1->Draw();
