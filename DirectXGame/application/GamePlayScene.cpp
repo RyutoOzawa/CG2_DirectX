@@ -127,6 +127,9 @@ void GamePlayScene::Initialize()
 
 	//ステージのobjデータ読み込み
 	stageData = JsonLoader::LoadJsonFile("gameStageData");
+
+	//読み込んだデータでモデル、obj生成
+	JsonLoader::CreateObjectFromLevelData(stageData, stageObjects, stageModels);
 }
 
 void GamePlayScene::Finalize()
@@ -323,7 +326,9 @@ void GamePlayScene::Draw()
 	boss->Draw();
 
 	//ステージのobj描画
-	//for(Object3d& obj:stageData.objects)
+	for (int i = 0; i < stageObjects.size(); i++) {
+		stageObjects[i]->Draw();
+	}
 
 	//FBX
 	//object1->Draw();

@@ -88,6 +88,8 @@ private://メンバ変数
 
 	//ステージデータ
 	LevelData stageData;
+	std::vector<std::unique_ptr<Object3d>> stageObjects;
+	std::vector<std::unique_ptr<Model>> stageModels;
 
 	Camera* currentCamera = nullptr;
 	RailCamera* railCamera = nullptr;
