@@ -20,6 +20,9 @@ int RGBColorCode(const Vector3& rgb);
 //(R,G,B)をカラーコードに変換
 Vector3 ColorCodeRGB(int colorCode);
 
+//0~255の色を0~1に変換
+Vector3 ConvertColor(const Vector3& color);
+
 //スクリーン座標からワールド座標に変換
 Vector3 ConvertScreenToWorld(const Vector2& v,float distanceZ, const Matrix4& matViewProjectionViewPort);
 

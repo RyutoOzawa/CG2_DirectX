@@ -53,6 +53,16 @@ Vector3 ColorCodeRGB(int colorCode)
 	return rgb / 256.0f;
 }
 
+Vector3 ConvertColor(const Vector3& color)
+{
+	Vector3 result = color;
+	result.x /= 256.0f;
+	result.y /= 256.0f;
+	result.z /= 256.0f;
+
+	return result;
+}
+
 Vector3 ConvertScreenToWorld(const Vector2& v, float distanceZ, const Matrix4& matViewProjectionViewPort)
 {
 	Vector3 posNear = { v.x,v.y,0 };

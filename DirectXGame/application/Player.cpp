@@ -613,8 +613,9 @@ void Player::UpdateDeath()
 		Vector3 acc = { Random(-0.1f,0.1f),Random(0.1f,0.5f),Random(-0.1f,0.1f) };
 		Vector3 pos = GetWorldPosition();
 		pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
-
-		hitParticle->Add((int)Random(10, 20), pos, vel, acc, 3.0f, 0.0f);
+		Vector3 rgb = { 255,Random(0,128),Random(0,64) };
+		rgb = ConvertColor(rgb);
+		hitParticle->Add((int)Random(10, 20), pos, vel, acc, 3.0f, 0.0f,{rgb.x,rgb.y,rgb.z,1.0f});
 	}
 }
 
