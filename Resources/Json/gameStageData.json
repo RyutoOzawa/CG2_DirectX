@@ -43,7 +43,7 @@
                     4.840316295623779
                 ]
             },
-            "file_name": "stone"
+            "file_name": "star"
         },
         {
             "type": "MESH",
@@ -51,7 +51,7 @@
             "transform": {
                 "translation": [
                     63.7648811340332,
-                    84.53556823730469,
+                    -390.6082763671875,
                     0.6292858123779297
                 ],
                 "rotation": [
@@ -65,7 +65,7 @@
                     11.423873901367188
                 ]
             },
-            "file_name": "stone"
+            "file_name": "star"
         },
         {
             "type": "MESH",

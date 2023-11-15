@@ -61,7 +61,7 @@ void JsonLoader::CreateObjectFromLevelData(const LevelData& levelData, std::vect
 
 		//3dオブジェクト生成
 		std::unique_ptr<Object3d> newObject = nullptr;
-		newObject = std::make_unique<Object3d>();
+			newObject = std::make_unique<Object3d>();
 		newObject->Initialize();
 		//各オブジェクト情報
 		Vector3 pos, rot, scale;

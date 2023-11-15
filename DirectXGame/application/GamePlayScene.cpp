@@ -43,9 +43,6 @@ void GamePlayScene::Initialize()
 	testTex2 = Texture::LoadTexture("mario.jpg");
 	testTex3 = Texture::LoadTexture("mario.jpg");
 
-	static int a = 0;
-	a++;
-
 	skydome = std::make_unique<Model>();
 	skydome = Model::CreateModel("skydome");
 
@@ -130,6 +127,10 @@ void GamePlayScene::Initialize()
 
 	//読み込んだデータでモデル、obj生成
 	JsonLoader::CreateObjectFromLevelData(stageData, stageObjects, stageModels);
+
+	static int a = 0;
+	a++;
+
 }
 
 void GamePlayScene::Finalize()
