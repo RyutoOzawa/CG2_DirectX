@@ -43,6 +43,7 @@ public:
 	//getter
 	Vector3 GetPosition()const { return position; }
 	float GetScale()const { return scale; }
+	Vector4 GetColor()const { return color; }
 
 private:
 	//スケール開始値

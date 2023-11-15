@@ -78,7 +78,7 @@ void ParticleManager::Initialize(TextureData* texData_)
 	
 
 	//頂点データ全体のサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosScale) * vertexCount);
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosScaleColor) * vertexCount);
 
 	// リソース設定
 	D3D12_RESOURCE_DESC resDesc{};
@@ -105,7 +105,7 @@ void ParticleManager::Initialize(TextureData* texData_)
 	assert(SUCCEEDED(result));
 
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
-	VertexPosScale* vertMap = nullptr;
+	VertexPosScaleColor* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
@@ -121,7 +121,7 @@ void ParticleManager::Initialize(TextureData* texData_)
 	// 頂点バッファのサイズ
 	vbView.SizeInBytes = sizeVB;
 	// 頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(VertexPosScale);
+	vbView.StrideInBytes = sizeof(VertexPosScaleColor);
 }
 
 void ParticleManager::Update()
@@ -136,7 +136,7 @@ void ParticleManager::Update()
 		p->Update();
 	}
 	//頂点バッファへデータ転送
-	VertexPosScale* vertMap = nullptr;
+	VertexPosScaleColor* vertMap = nullptr;
 	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		//パーティクルの情報を1つずつ反映
@@ -147,6 +147,8 @@ void ParticleManager::Update()
 			vertMap->pos = p->GetPosition();
 			//スケール
 			vertMap->scale = p->GetScale();
+			//色
+			vertMap->color = p->GetColor();
 			//次の順番へ
 			vertMap++;
 		}
@@ -330,6 +332,13 @@ void ParticleManager::CreatePipeline3D()
 	inputLayout.push_back(
 		{
 			"TEXCOORD",0,DXGI_FORMAT_R32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		});
+
+	inputLayout.push_back(
+		{
+			"COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		});

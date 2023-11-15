@@ -23,9 +23,10 @@ public:
 	};
 
 	//頂点データ構造体
-	struct VertexPosScale {
+	struct VertexPosScaleColor {
 		Vector3 pos;//xyz座標
 		float scale;//スケール
+		Vector4 color;//色
 	};
 
 private:

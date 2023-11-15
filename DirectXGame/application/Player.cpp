@@ -631,8 +631,9 @@ void Player::UpdateSpawn()
 		Vector3 pos = { Random(-absPos, absPos),Random(-absPos, absPos),Random(-absPos, absPos) };
 		pos += GetWorldPosition();
 		float startScale = Random(6.0f, 8.0f);
+		Vector4 particleColor = { Random(0.0f,1.0f),Random(0.0f,1.0f) ,Random(0.0f,1.0f) ,1.0f };
 
-		hitParticle->AddLerp(15, pos, GetWorldPosition(), startScale, 0.0f, InterType::EaseOut);
+		hitParticle->AddLerp(15, pos, GetWorldPosition(), startScale, 0.0f, InterType::EaseOut, particleColor);
 
 		Vector3 vel = { 0,0,0 };
 		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };

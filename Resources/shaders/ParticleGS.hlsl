@@ -40,6 +40,7 @@ void main(
 		//ƒrƒ…[AË‰e•ÏŠ·
 		element.svpos = mul(mul(projection,view), element.svpos);
 		element.uv = uv_array[i];
+		element.color = input[0].color;
 		output.Append(element);
 	}
 }
