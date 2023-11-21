@@ -147,7 +147,8 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 	uiColor.w = UIAlpha;
 	reticleSprite->SetColor(uiColor);
 
-
+	//退避の更新
+	UpdateLeave();
 
 	//死んでる弾を消す
 	bullets.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
@@ -212,7 +213,7 @@ void Player::Draw()
 	}
 
 	//スポーン時の光輪
-	if (isSpawn) {
+	if (isSpawn || phase == PlayerPhase::Leave) {
 		for (std::unique_ptr<Object3d>& haloObject : haloObjects) {
 			haloObject->Draw();
 		}
@@ -260,6 +261,14 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
 
 void Player::Leave()
 {
+	//既に退避フェーズなら再初期化はしない
+	if (phase == PlayerPhase::Leave) {
+		return;
+	}
+
+	//フェーズの変更
+	phase = PlayerPhase::Leave;
+
 	//各オブジェクトの座標のセット。光輪はスポーンで使ったものを再利用
 	float haloPos[leaveHaloMax]{ -50.0f,-30.0f,0.0f,30.0f,50.0f };
 	for (size_t i = 0; i < leaveHaloMax; i++) {
@@ -677,5 +686,32 @@ void Player::UpdateSpawn()
 
 void Player::UpdateLeave()
 {
+	//フェーズがLeaveでないなら行わない
+	if (phase != PlayerPhase::Leave) {
+		return;
+	}
+
+	//モーションのタイマー管理
+	if (leaveTimer < leaveTimerMax) {
+		leaveTimer++;
+	}
+
+	
+
+	//最初の1秒間は光輪の巨大化
+	uint16_t haloHugeTimer = 200;
+
+	if (leaveTimer < haloHugeTimer) {
+		eDataPlayerScale.Update();
+		float haloScale[leaveHaloMax] = { 0,0,0,0,0 };
+		ImGui::SliderFloat("scale", &haloScale[0], 0.0f, 100.0f);
+
+		for (size_t i = 0; i < leaveHaloMax; i++) {
+			haloObjects[i]->scale = { haloScale[0],haloScale[0] ,haloScale[0] };
+			haloObjects[i]->Update();
+		}
+	}
+
+
 }
 

@@ -93,6 +93,11 @@ private://メンバ変数
 	INT32 spawnTimerMax = 120;
 	EasingData eDataPlayerScale;
 
+	//脱出演出関係	
+	static const uint16_t leaveHaloMax = 5;
+	uint16_t leaveTimer = 0;
+	const uint16_t leaveTimerMax = 120;
+
 	//HP関連
 	std::unique_ptr<Sprite> healthSprite = nullptr;
 	const int healthMax = 2;
@@ -108,8 +113,7 @@ private://メンバ変数
 	//自機のフェーズ
 	PlayerPhase phase = PlayerPhase::Spawn;
 
-	//脱出演出関係	
-	static const uint16_t leaveHaloMax = 5;
+
 
 	EasingData easeUIAlpha;
 	float UIAlpha = 0.0f;

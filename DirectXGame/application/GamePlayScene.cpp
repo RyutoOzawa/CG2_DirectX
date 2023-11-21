@@ -529,9 +529,11 @@ void GamePlayScene::UpdateBoss()
 	//ボスの死亡を確認したら自機の脱出モーションへ
 	if (!boss->IsAlive()) {
 		
+		//自機の演出開始
+		player->Leave();
 
-
-		sceneManager->ChangeScene("GAMECLEAR");
+		
+		//sceneManager->ChangeScene("GAMECLEAR");
 	}
 }
 
