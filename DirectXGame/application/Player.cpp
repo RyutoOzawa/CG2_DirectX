@@ -62,7 +62,7 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	//光輪モデル生成
 	haloModel = std::make_unique<Model>();
 	haloModel = Model::CreateModel(MODEL_PLANE);
-	haloModel->SetTexture(Texture::LoadTexture("halo.png"));
+	haloModel->SetTexture(Texture::LoadTexture("smallHalo.png"));
 
 	//弾モデル
 	bulletModel = std::make_unique<Model>();
@@ -693,7 +693,7 @@ void Player::UpdateLeave()
 
 	//モーションのタイマー管理
 	if (leaveTimer < leaveTimerMax) {
-		leaveTimer++;
+		//leaveTimer++;
 	}
 
 	
@@ -703,11 +703,20 @@ void Player::UpdateLeave()
 
 	if (leaveTimer < haloHugeTimer) {
 		eDataPlayerScale.Update();
-		float haloScale[leaveHaloMax] = { 0,0,0,0,0 };
+	
 		ImGui::SliderFloat("scale", &haloScale[0], 0.0f, 100.0f);
+		Vector3 haloR = haloObjects[0]->rotation;
+		ImGui::SliderFloat("rotX", &haloR.x, -PI, PI);
+		ImGui::SliderFloat("rotY", &haloR.y, -PI, PI);
+		ImGui::SliderFloat("rotZ", &haloR.z, -PI, PI);
+		if (ImGui::Button("rot Reset")) {
+			haloR = { 0,0,0 };
+		}
+
 
 		for (size_t i = 0; i < leaveHaloMax; i++) {
 			haloObjects[i]->scale = { haloScale[0],haloScale[0] ,haloScale[0] };
+			haloObjects[i]->rotation = haloR;
 			haloObjects[i]->Update();
 		}
 	}

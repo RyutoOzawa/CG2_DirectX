@@ -97,6 +97,7 @@ private://ƒƒ“ƒo•Ï”
 	static const uint16_t leaveHaloMax = 5;
 	uint16_t leaveTimer = 0;
 	const uint16_t leaveTimerMax = 120;
+	float haloScale[leaveHaloMax] = { 0,0,0,0,0 };
 
 	//HPŠÖ˜A
 	std::unique_ptr<Sprite> healthSprite = nullptr;
