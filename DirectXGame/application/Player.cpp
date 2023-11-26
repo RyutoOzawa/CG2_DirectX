@@ -290,17 +290,19 @@ void Player::Move()
 	INT32 inputHorizontal = 0;
 	INT32 inputVertical = 0;
 
-	if (Input::GetInstance()->IsKeyPress(DIK_A) || Input::GetInstance()->IsDownLStickLeft()) {
+	Vector2 absMoveLimit = { 35.0f,20.0f };
+
+	if (Input::GetInstance()->IsKeyPress(DIK_A) || Input::GetInstance()->IsDownLStickLeft() && position.x >= -absMoveLimit.x) {
 		inputHorizontal = -1;
 	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_D) || Input::GetInstance()->IsDownLStickRight()) {
+	else if (Input::GetInstance()->IsKeyPress(DIK_D) || Input::GetInstance()->IsDownLStickRight() && position.x <= absMoveLimit.x) {
 		inputHorizontal = 1;
 	}
 
-	if (Input::GetInstance()->IsKeyPress(DIK_W) || Input::GetInstance()->IsDownLStickUp()) {
+	if (Input::GetInstance()->IsKeyPress(DIK_W) || Input::GetInstance()->IsDownLStickUp() && position.y <= absMoveLimit.y) {
 		inputVertical = 1;
 	}
-	else if (Input::GetInstance()->IsKeyPress(DIK_S) || Input::GetInstance()->IsDownLStickDown()) {
+	else if (Input::GetInstance()->IsKeyPress(DIK_S) || Input::GetInstance()->IsDownLStickDown() && position.y >= -absMoveLimit.y) {
 		inputVertical = -1;
 	}
 
@@ -309,10 +311,13 @@ void Player::Move()
 	float baseSpd = 0.5f;
 
 
+
+
 	spd.x += baseSpd * inputHorizontal;
 	spd.y += baseSpd * inputVertical;
 
 
+	ImGui::Text("pos:%f,%f", position.x, position.y);
 
 
 	//Œ»İÀ•W‚ğæ“¾
@@ -624,7 +629,7 @@ void Player::UpdateDeath()
 		pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
 		Vector3 rgb = { 255,Random(0,128),Random(0,64) };
 		rgb = ConvertColor(rgb);
-		hitParticle->Add((int)Random(10, 20), pos, vel, acc, 3.0f, 0.0f,{rgb.x,rgb.y,rgb.z,1.0f});
+		hitParticle->Add((int)Random(10, 20), pos, vel, acc, 3.0f, 0.0f, { rgb.x,rgb.y,rgb.z,1.0f });
 	}
 }
 
@@ -696,14 +701,14 @@ void Player::UpdateLeave()
 		//leaveTimer++;
 	}
 
-	
+
 
 	//Å‰‚Ì1•bŠÔ‚ÍŒõ—Ö‚Ì‹‘å‰»
 	uint16_t haloHugeTimer = 200;
 
 	if (leaveTimer < haloHugeTimer) {
 		eDataPlayerScale.Update();
-	
+
 		ImGui::SliderFloat("scale", &haloScale[0], 0.0f, 100.0f);
 		Vector3 haloR = haloObjects[0]->rotation;
 		ImGui::SliderFloat("rotX", &haloR.x, -PI, PI);
