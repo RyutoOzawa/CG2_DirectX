@@ -568,7 +568,7 @@ void BossEnemy::UpdateDeath()
 					Vector3 acc = { Random(0.25f,-0.1f),Random(0.1f,-0.1f) ,Random(0.1f,-0.1f) };
 					Vector3 rgb = { 255,Random(0,128),Random(0,64) };
 					rgb = ConvertColor(rgb);
-					particleManager->Add(20, pos, vel, acc, 0.0f, 10.0f,{rgb.x,rgb.y,rgb.z,1.0f});
+					particleManager->Add(20, pos, vel, acc, 0.0f, 10.0f, { rgb.x,rgb.y,rgb.z,1.0f });
 				}
 			}
 		}
@@ -600,7 +600,7 @@ void BossEnemy::UpdateDeath()
 		else if (deathPhase == BossDeathPhase::Fall) {
 			//生存フラグを下す
 			isAlive = false;
-			
+
 		}
 	}
 
@@ -627,7 +627,7 @@ void BossEnemy::InitSpawn()
 	movePosAfter = Matrix4::transform({ 0,0,240 }, parent->matWorld);
 	eDataMove.Start((float)actTime[(INT32)BossAct::Spawn]);
 
-	//life = 3;
+	life = 3;
 
 	//砲台オブジェクトも親は一旦カメラobjにする(移動終わったら目玉objに戻す)
 	for (size_t i = 0; i < barrelMax; i++) {
@@ -776,7 +776,7 @@ void BossEnemy::OnCollision([[maybe_unused]] const CollisionInfo& info)
 
 }
 
-void BossEnemy::Damage(const Vector3& hitPos,uint16_t damage)
+void BossEnemy::Damage(const Vector3& hitPos, uint16_t damage)
 {
 	//ダメージのクールタイム中なら食らわない
 	if (damageInterval > 0) {
@@ -790,11 +790,11 @@ void BossEnemy::Damage(const Vector3& hitPos,uint16_t damage)
 	for (uint16_t i = 0; i < particleCount; i++) {
 		Vector3 particlePos = hitPos;
 		particlePos += {Random(-1.0f, 1.0f), Random(-1.0f, 1.0f), Random(-1.0f, 1.0f)};
-		Vector3 vel = { Random(-0.5f,0.5f),Random(-0.1f,-1.0f),0};
+		Vector3 vel = { Random(-0.5f,0.5f),Random(-0.1f,-1.0f),0 };
 		float rgbBase = Random(0.0f, 128.0f);
 		Vector3 rgb = { rgbBase,rgbBase ,rgbBase };
 		rgb = ConvertColor(rgb);
-		particleManager->Add(15, particlePos, vel, { 0,0,0 }, 10.0f, 0.0f,{rgb.x,rgb.y,rgb.z ,1.0f});
+		particleManager->Add(15, particlePos, vel, { 0,0,0 }, 10.0f, 0.0f, { rgb.x,rgb.y,rgb.z ,1.0f });
 	}
 
 	//HPが0以下なったら死亡処理
