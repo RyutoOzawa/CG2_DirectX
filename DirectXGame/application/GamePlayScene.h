@@ -92,7 +92,7 @@ private://メンバ変数
 	std::vector<std::unique_ptr<Model>> stageModels;
 
 	Camera* currentCamera = nullptr;
-	RailCamera* railCamera = nullptr;
+	std::unique_ptr<RailCamera> railCamera = nullptr;
 
 	//ゲームフェーズ
 	GamePhase gamePhase = GamePhase::Event_GameStart;

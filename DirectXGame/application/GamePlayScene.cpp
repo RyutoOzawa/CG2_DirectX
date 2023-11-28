@@ -61,13 +61,6 @@ void GamePlayScene::Initialize()
 
 	Enemy::EnemyInitialize(particleGraph, enemyModel.get(), bulletModel.get());
 
-	//カメラ初期化
-	Vector3 eye(0, 20, -20);	//視点座標
-	Vector3 target(0, 0, 6);	//注視点座標
-	Vector3 up(0, 1, 0);		//上方向ベクトル
-
-	currentCamera = new Camera();
-	currentCamera->Initialize(eye, target, up);
 
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
@@ -98,17 +91,18 @@ void GamePlayScene::Initialize()
 	object1->Initialize();
 	object1->SetModel(model1.get());
 
+
+
+	//レールカメラの初期化とセット
+	railCamera = std::make_unique< RailCamera>();
+	railCamera->Initialize({ 0,0,0 }, { 0,0,0 });
+
+	//現在のカメラ情報をレールカメラのものに
+	currentCamera = railCamera->GetCamera();
+	currentCamera->UpdateMatrix();
+
 	//デバイスセット
 	FbxObject3d::SetCamera(currentCamera);
-
-
-	currentCamera->target = { 0,0,0 };
-	//	camera->eye = { 0,0,-20 };
-	currentCamera->eye = { 0,0,-50 };
-
-
-	railCamera = new RailCamera();
-	railCamera->Initialize({ 0,0,0 }, { 0,0,0 });
 
 	//obj3dクラスにカメラをセット
 	Object3d::SetCamera(railCamera->GetCamera());
@@ -138,7 +132,6 @@ void GamePlayScene::Finalize()
 
 	//delete sprite;
 	//delete skyDome;
-	delete currentCamera;
 
 	//delete railCamera;
 
