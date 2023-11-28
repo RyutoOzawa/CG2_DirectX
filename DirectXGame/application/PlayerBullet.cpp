@@ -19,8 +19,9 @@ void PlayerBullet::Initialize(Model* model_, const Vector3& position_, const Vec
 	//引数の座標をセット
 	position = position_;
 	velocity = velocity_;
+	float bulletColSize = 1.0f;
 
-	SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
+	SetCollider(new SphereCollider({ 0,0,0 }, bulletColSize));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 }
 

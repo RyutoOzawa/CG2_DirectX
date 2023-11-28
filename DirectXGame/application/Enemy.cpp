@@ -37,7 +37,9 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 
 	moveLine.SetPositions(points);
 
-	SetCollider(new SphereCollider({ 0,0,0 }, 9.0f));
+	float enemyColSize = 9.0f;
+
+	SetCollider(new SphereCollider({ 0,0,0 }, enemyColSize));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 	scale = baseScale;
 	shotInterval = shotCoolTime;
@@ -156,8 +158,10 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 		//ìoò^
 		bullets.push_back(std::move(newBullet));
 
-		//ÉXÉPÅ[ÉãÇ3î{Ç…
-		scale *= 2.5f;
+		//Ç≈Ç©Ç≠Ç∑ÇÈ
+		float atkScaleSize = 2.5f;
+
+		scale *= atkScaleSize;
 
 		//âÒì]
 		easeAtkRot.Start(30.0f);

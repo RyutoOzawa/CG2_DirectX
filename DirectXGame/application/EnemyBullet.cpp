@@ -19,7 +19,9 @@ void EnemyBullet::Initialize(Model* model_, const Vector3& position_, const Vect
 	position = position_;
 	velocity = velocity_;
 
-	SetCollider(new SphereCollider({ 0,0,0 }, 1.0f));
+	float enemyBulletSize = 1.0f;
+
+	SetCollider(new SphereCollider({ 0,0,0 }, enemyBulletSize));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 }
 

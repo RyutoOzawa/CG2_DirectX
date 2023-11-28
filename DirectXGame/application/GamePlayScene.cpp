@@ -72,7 +72,8 @@ void GamePlayScene::Initialize()
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
-	skydomeObj->scale = { 1000,1000,1000 };
+	Vector3 skydomeScale = { 1000.0f, 1000.0f,1000.0f};
+	skydomeObj->scale = {skydomeScale };
 
 
 	player = std::make_unique<Player>();
@@ -128,8 +129,6 @@ void GamePlayScene::Initialize()
 	//読み込んだデータでモデル、obj生成
 	JsonLoader::CreateObjectFromLevelData(stageData, stageObjects, stageModels);
 
-	static int a = 0;
-	a++;
 
 }
 
