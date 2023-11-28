@@ -627,7 +627,7 @@ void BossEnemy::InitSpawn()
 	movePosAfter = Matrix4::transform({ 0,0,240 }, parent->matWorld);
 	eDataMove.Start((float)actTime[(INT32)BossAct::Spawn]);
 
-	life = 3;
+	//life = 3;
 
 	//砲台オブジェクトも親は一旦カメラobjにする(移動終わったら目玉objに戻す)
 	for (size_t i = 0; i < barrelMax; i++) {
@@ -734,6 +734,9 @@ void BossEnemy::InitDeath()
 
 	//座標補間の開始
 	eDataMove.Start(120.0f);
+
+	//属性を無敵に
+	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 
 	//ﾌｪｰｽﾞ設定
 	deathPhase = BossDeathPhase::Move;
