@@ -62,7 +62,8 @@ void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData*
 	//Œõ—Öƒ‚ƒfƒ‹¶¬
 	haloModel = std::make_unique<Model>();
 	haloModel = Model::CreateModel(MODEL_PLANE);
-	haloModel->SetTexture(Texture::LoadTexture("smallHalo.png"));
+	//haloModel->SetTexture(Texture::LoadTexture("smallHalo.png"));
+	haloModel->SetTexture(Texture::LoadTexture("halo.png"));
 
 	//’eƒ‚ƒfƒ‹
 	bulletModel = std::make_unique<Model>();
@@ -274,7 +275,7 @@ void Player::Leave()
 	for (size_t i = 0; i < leaveHaloMax; i++) {
 		haloObjects[i]->position = { 0,0,0 };
 		haloObjects[i]->rotation = { 0,0,0 };
-		haloObjects[i]->position.y = haloPos[i];
+		//haloObjects[i]->position.y = haloPos[i];
 		haloObjects[i]->Update();
 	}
 
