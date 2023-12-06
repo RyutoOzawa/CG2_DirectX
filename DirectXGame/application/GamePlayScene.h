@@ -20,6 +20,7 @@
 #include"CollisionManager.h"
 #include"BossEnemy.h"
 #include"JsonLoader.h"
+#include"EventCamera.h"
 
 enum class GamePhase {
 	Event_GameStart,//ゲーム開始イベント(自機の出撃)
@@ -93,6 +94,7 @@ private://メンバ変数
 
 	Camera* currentCamera = nullptr;
 	std::unique_ptr<RailCamera> railCamera = nullptr;
+	std::unique_ptr<EventCamera> eventCamera = nullptr;
 
 	//ゲームフェーズ
 	GamePhase gamePhase = GamePhase::Event_GameStart;

@@ -231,7 +231,7 @@
     <ClCompile Include="DirectXGame\engine\3d\JsonLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EventCamera.cpp">
+    <ClCompile Include="DirectXGame\application\EventCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -477,7 +477,7 @@
     <ClInclude Include="DirectXGame\engine\3d\JsonLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EventCamera.h">
+    <ClInclude Include="DirectXGame\application\EventCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

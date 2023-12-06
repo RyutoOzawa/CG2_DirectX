@@ -101,6 +101,10 @@ void GamePlayScene::Initialize()
 	currentCamera = railCamera->GetCamera();
 	currentCamera->UpdateMatrix();
 
+	//イベントシーン用カメラ
+	eventCamera = std::make_unique<EventCamera>();
+	eventCamera->Initialize({ 0,0,0 }, { 0,0,1 }, { 0,1,0 });
+
 	//デバイスセット
 	FbxObject3d::SetCamera(currentCamera);
 
@@ -254,6 +258,9 @@ void GamePlayScene::Update()
 	case GamePhase::Game_Main:
 		UpdateGamePhase();
 		UpdateMain();
+		//現在のカメラ情報をレールカメラのものに
+		currentCamera = railCamera->GetCamera();
+		currentCamera->UpdateMatrix();
 		break;
 	case GamePhase::Event_BossSpawn:
 		UpdateBossSpawn();
@@ -261,17 +268,20 @@ void GamePlayScene::Update()
 	case GamePhase::Game_Boss:
 		UpdateGamePhase();
 		UpdateBoss();
+		//現在のカメラ情報をレールカメラのものに
+		currentCamera = railCamera->GetCamera();
+		currentCamera->UpdateMatrix();
 		break;
 	case GamePhase::Event_GameClear:
 		UpdateClear();
+		currentCamera = eventCamera->GetCamera();
+		currentCamera->UpdateMatrix();
 		break;
 	default:
 		break;
 	}
 
-	//現在のカメラ情報をレールカメラのものに
-	currentCamera = railCamera->GetCamera();
-	currentCamera->UpdateMatrix();
+
 
 	//当たり判定チェック
 	collisionManager->CheckAllCollisions();
@@ -526,9 +536,24 @@ void GamePlayScene::UpdateBoss()
 
 		
 		//sceneManager->ChangeScene("GAMECLEAR");
+
+		//イベントカメラの移動とセット
+		eventCamera->SetEye(railCamera->GetCamera()->eye);
+		eventCamera->SetTarget(railCamera->GetCamera()->target);
+		Vector3 cameraPosAfter = eventCamera->GetCamera()->eye;
+		cameraPosAfter += {10, 20, 30};
+		eventCamera->MoveEye(cameraPosAfter, 60, InterType::EaseIn);
+		currentCamera = eventCamera->GetCamera();
+		currentCamera->UpdateMatrix();
+		//ゲームフェーズの変更
+		gamePhase = GamePhase::Event_GameClear;
+
 	}
 }
 
 void GamePlayScene::UpdateClear()
 {
+	//イベントカメラの更新
+	eventCamera->Update();
+
 }

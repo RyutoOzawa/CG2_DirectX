@@ -311,9 +311,6 @@ void Player::Move()
 	Vector3 spd{};
 	float baseSpd = 0.5f;
 
-
-
-
 	spd.x += baseSpd * inputHorizontal;
 	spd.y += baseSpd * inputVertical;
 

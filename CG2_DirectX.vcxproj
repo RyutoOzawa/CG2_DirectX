@@ -152,7 +152,7 @@
     <ClCompile Include="DirectXGame\application\FadeSceneTransition.cpp" />
     <ClCompile Include="DirectXGame\application\SlideSceneTransition.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\JsonLoader.cpp" />
-    <ClCompile Include="EventCamera.cpp" />
+    <ClCompile Include="DirectXGame\application\EventCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -322,7 +322,7 @@
     <ClInclude Include="DirectXGame\application\FadeSceneTransition.h" />
     <ClInclude Include="DirectXGame\application\SlideSceneTransition.h" />
     <ClInclude Include="DirectXGame\engine\3d\JsonLoader.h" />
-    <ClInclude Include="EventCamera.h" />
+    <ClInclude Include="DirectXGame\application\EventCamera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

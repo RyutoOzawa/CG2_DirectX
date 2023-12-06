@@ -3,12 +3,9 @@
 //基本のパーティクルクラスを継承し、パーティクルの移動を線形補間で行うクラス
 
 #include"BaseParticle.h"
+#include"EasingData.h"
 
-enum class InterType {
-	Lerp,		//線形補間
-	EaseIn,		//イージング(遅→早)
-	EaseOut,	//イージング(早→遅)
-};
+
 
 //パーティクル基盤クラスを継承
 class LerpParticle : public BaseParticle

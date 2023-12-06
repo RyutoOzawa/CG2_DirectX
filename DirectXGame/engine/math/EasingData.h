@@ -2,6 +2,12 @@
 //イージングデータクラス1
 //イージングで使う時間の管理や開始等を行う
 
+enum class InterType {
+	Lerp,		//線形補間
+	EaseIn,		//イージング(遅→早)
+	EaseOut,	//イージング(早→遅)
+};
+
 class EasingData
 {
 private:
