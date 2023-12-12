@@ -56,6 +56,8 @@ void EventCamera::MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter, 
 
 	//注視点が動かないなら処理終わり
 	if (!followTarget) {
+		targetBefore = camera->target;
+		targetAfter = camera->target;
 		return;
 	}
 
@@ -65,5 +67,30 @@ void EventCamera::MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter, 
 	targetBefore = camera->target;
 	targetAfter = targetBefore + targetLen;
 	targetInterType = targetInter;
+
+}
+
+void EventCamera::MoveTarget(const Vector3& target, uint16_t time, InterType targetInter, bool followEye, InterType eyeInter)
+{
+	//補間開始
+	eMoveTarget.Start((float)time);
+	//座標セット
+	targetAfter = target;
+	targetBefore = camera->target;
+	targetInterType = targetInter;
+
+	//視点を動かさないなら処理終わり
+	if (!followEye) {
+		eyeBefore = camera->eye;
+		eyeAfter = camera->eye;
+		return;
+	}
+
+	eMoveEye.Start((float)time);
+	//視点座標の差で注視点をどれだけ動かすか計算
+	Vector3 eyeLen = targetAfter - targetBefore;
+	eyeBefore = camera->eye;
+	eyeAfter = eyeBefore + eyeLen;
+	eyeInterType = eyeInter;
 
 }

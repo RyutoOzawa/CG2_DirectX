@@ -25,6 +25,16 @@ public:
 	/// <param name="targetInter">注視点の補間の種類</param>
 	void MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter = InterType::Lerp, bool followTarget = true,InterType targetInter = InterType::Lerp);
 
+	/// <summary>
+	/// カメラ注視点移動
+	/// </summary>
+	/// <param name="target">移動後の注視点</param>
+	/// <param name="time">移動時間</param>
+	/// <param name="targetInter">注視点の補間種類</param>
+	/// <param name="followEye">視点が追従するかどうか</param>
+	/// <param name="eyeInter">視点の</param>
+	void MoveTarget(const Vector3& target, uint16_t time, InterType targetInter = InterType::Lerp, bool followEye = false, InterType eyeInter = InterType::Lerp);
+
 	//getter
 	Camera* GetCamera()const { return camera.get(); }
 

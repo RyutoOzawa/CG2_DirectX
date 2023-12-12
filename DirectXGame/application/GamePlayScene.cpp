@@ -260,7 +260,7 @@ void GamePlayScene::Update()
 		UpdateMain();
 		//現在のカメラ情報をレールカメラのものに
 		currentCamera = railCamera->GetCamera();
-		currentCamera->UpdateMatrix();
+		
 		break;
 	case GamePhase::Event_BossSpawn:
 		UpdateBossSpawn();
@@ -270,17 +270,28 @@ void GamePlayScene::Update()
 		UpdateBoss();
 		//現在のカメラ情報をレールカメラのものに
 		currentCamera = railCamera->GetCamera();
-		currentCamera->UpdateMatrix();
 		break;
 	case GamePhase::Event_GameClear:
 		UpdateClear();
 		currentCamera = eventCamera->GetCamera();
-		currentCamera->UpdateMatrix();
 		break;
 	default:
 		break;
 	}
 
+	currentCamera->UpdateMatrix();
+
+	ImGui::Begin("camera");
+	ImGui::Text("current");
+	ImGui::Text("eye %f,%f,%f", currentCamera->eye.x, currentCamera->eye.y, currentCamera->eye.z);
+	ImGui::Text("target %f,%f,%f", currentCamera->target.x, currentCamera->target.y, currentCamera->target.z);
+	ImGui::Text("rail");
+	ImGui::Text("eye %f,%f,%f", railCamera->GetCamera()->eye.x, railCamera->GetCamera()->eye.y, railCamera->GetCamera()->eye.z);
+	ImGui::Text("target %f,%f,%f", railCamera->GetCamera()->target.x, railCamera->GetCamera()->target.y, railCamera->GetCamera()->target.z);
+	ImGui::Text("event");
+	ImGui::Text("eye %f,%f,%f", eventCamera->GetCamera()->eye.x, eventCamera->GetCamera()->eye.y, eventCamera->GetCamera()->eye.z);
+	ImGui::Text("target %f,%f,%f", eventCamera->GetCamera()->target.x, eventCamera->GetCamera()->target.y, eventCamera->GetCamera()->target.z);
+	ImGui::End();
 
 
 	//当たり判定チェック
@@ -535,18 +546,16 @@ void GamePlayScene::UpdateBoss()
 		player->Leave();
 
 		
-		sceneManager->ChangeScene("GAMECLEAR");
+		//sceneManager->ChangeScene("GAMECLEAR");
 
 		//イベントカメラの移動とセット
-		//eventCamera->SetEye(railCamera->GetCamera()->eye);
-		//eventCamera->SetTarget(railCamera->GetCamera()->target);
-		//Vector3 cameraPosAfter = eventCamera->GetCamera()->eye;
-		//cameraPosAfter += {10, 20, 30};
-		//eventCamera->MoveEye(cameraPosAfter, 60, InterType::EaseIn);
-		//currentCamera = eventCamera->GetCamera();
-		//currentCamera->UpdateMatrix();
-		////ゲームフェーズの変更
-		//gamePhase = GamePhase::Event_GameClear;
+		eventCamera->SetEye(railCamera->GetCamera()->eye);
+		eventCamera->SetTarget(railCamera->GetCamera()->target);
+		Vector3 cameraTargetAfter = eventCamera->GetCamera()->target;
+		cameraTargetAfter += {10, 20, 30};
+		eventCamera->MoveTarget(cameraTargetAfter, 60, InterType::EaseIn);
+		//ゲームフェーズの変更
+		gamePhase = GamePhase::Event_GameClear;
 
 	}
 }
