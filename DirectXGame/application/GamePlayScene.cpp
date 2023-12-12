@@ -535,18 +535,18 @@ void GamePlayScene::UpdateBoss()
 		player->Leave();
 
 		
-		//sceneManager->ChangeScene("GAMECLEAR");
+		sceneManager->ChangeScene("GAMECLEAR");
 
 		//イベントカメラの移動とセット
-		eventCamera->SetEye(railCamera->GetCamera()->eye);
-		eventCamera->SetTarget(railCamera->GetCamera()->target);
-		Vector3 cameraPosAfter = eventCamera->GetCamera()->eye;
-		cameraPosAfter += {10, 20, 30};
-		eventCamera->MoveEye(cameraPosAfter, 60, InterType::EaseIn);
-		currentCamera = eventCamera->GetCamera();
-		currentCamera->UpdateMatrix();
-		//ゲームフェーズの変更
-		gamePhase = GamePhase::Event_GameClear;
+		//eventCamera->SetEye(railCamera->GetCamera()->eye);
+		//eventCamera->SetTarget(railCamera->GetCamera()->target);
+		//Vector3 cameraPosAfter = eventCamera->GetCamera()->eye;
+		//cameraPosAfter += {10, 20, 30};
+		//eventCamera->MoveEye(cameraPosAfter, 60, InterType::EaseIn);
+		//currentCamera = eventCamera->GetCamera();
+		//currentCamera->UpdateMatrix();
+		////ゲームフェーズの変更
+		//gamePhase = GamePhase::Event_GameClear;
 
 	}
 }

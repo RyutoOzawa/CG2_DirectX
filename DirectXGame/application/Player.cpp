@@ -420,7 +420,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 
 	//画面上のレティクル座標を動かす
 	Vector2 reticleSpd = { 0,0 };
-	float reticleSpdBase = 8.0f;
+	float reticleSpdBase = 24.0f;
 
 	//入力
 	float inputHorizontal = 0;
