@@ -10,6 +10,7 @@
 #include"Sprite.h"
 #include"EnemyBullet.h"
 #include"ParticleManager.h"
+#include"EventCamera.h"
 
 //ボスの行動列挙クラス
 enum class BossAct {
@@ -35,7 +36,7 @@ public:
 	void Initialize(Model* bodyModel_,Model* barrelModel_,Object3d* parent_);
 
 	//更新
-	void Update(const Vector3& playerPos = {0.0f,0.0f,0.0f});
+	void Update(const Vector3& playerPos = {0.0f,0.0f,0.0f},EventCamera* eventCamera = nullptr);
 
 	//描画
 	void Draw();
@@ -62,6 +63,9 @@ private:
 	Model* bodyModel;
 	Model* barrelModel;
 	std::unique_ptr<Model> bulletModel=nullptr;
+
+	//カメラワーク用イベントカメラのポインタ
+	EventCamera* eCamera = nullptr;
 
 	//命関係
 	bool isAlive = false;

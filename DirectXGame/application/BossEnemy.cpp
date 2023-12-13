@@ -1,5 +1,5 @@
 //ボス敵クラス
-//ゲーム最後に登場するボスの処理を行う
+//ゲーム最後に登場するボスの処理を行うp
 
 #include "BossEnemy.h"
 #include"ImguiManager.h"
@@ -109,9 +109,11 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	particleManager->Initialize(Texture::LoadTexture("white1x1.png"));
 }
 
-void BossEnemy::Update(const Vector3& playerPos)
+void BossEnemy::Update(const Vector3& playerPos, EventCamera* eventCamera)
 {
 	targetPos = playerPos;
+	eCamera = eventCamera;
+
 
 	//デバッグ用:キーで各行動開始
 	if (Input::GetInstance()->IsKeyTrigger(DIK_1)) {

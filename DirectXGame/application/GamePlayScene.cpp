@@ -526,7 +526,7 @@ void GamePlayScene::UpdateBossSpawn()
 
 
 	//ボスの更新
-	boss->Update(player->GetWorldPosition());
+	boss->Update(player->GetWorldPosition(),eventCamera.get());
 }
 
 void GamePlayScene::UpdateBoss()
@@ -537,7 +537,7 @@ void GamePlayScene::UpdateBoss()
 
 
 	//
-	boss->Update(player->GetWorldPosition());
+	boss->Update(player->GetWorldPosition(), eventCamera.get());
 
 	//ボスの死亡を確認したら自機の脱出モーションへ
 	if (!boss->IsAlive()) {
