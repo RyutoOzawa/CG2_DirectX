@@ -1,5 +1,7 @@
 #include "EventCamera.h"
 #include"Util.h"
+using namespace Utility;
+using namespace Easing;
 
 void EventCamera::Initialize(const Vector3& eye, const Vector3& target, const Vector3& up)
 {

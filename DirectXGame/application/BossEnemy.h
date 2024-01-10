@@ -91,7 +91,7 @@ private:
 	std::array<Vector3, barrelMax> barrelDistance;
 	std::array<float, barrelMax> barrelRadian;
 	Vector3 bulletOutOffset{ 0,0,0 };//モデルの弾が出る部分のオフセット
-	std::array<EasingData,barrelMax> eDataBarrelMove;	//バレルの移動をイージングにするよう
+	std::array<Easing::EasingData,barrelMax> eDataBarrelMove;	//バレルの移動をイージングにするよう
 	std::array<Vector3,barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
 	std::array<Vector3,barrelMax> movePosAfterBarrel;	//バレルの移動後座標
 
@@ -123,7 +123,7 @@ private:
 	std::list < std::unique_ptr<EnemyBullet>> bullets;
 	static const INT32 shotPosMax = 4;
 	std::array<Vector3, shotPosMax> shotPos;//射撃を行う座標配列(0:leftTop 1:leftBottom 2:rightTop 3:rightBottom)
-	EasingData eDataMove;//移動用イージングデータ
+	Easing::EasingData eDataMove;//移動用イージングデータ
 	//移動補完用座標2つ
 	Vector3 movePosBefore{ 0,0,0 };
 	Vector3 movePosAfter{ 0,0,0 };

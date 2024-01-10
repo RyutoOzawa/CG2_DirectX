@@ -33,7 +33,7 @@ private:
 	std::unique_ptr<Sprite> blackSprite = nullptr;
 	TextureData* whiteTex = nullptr;
 
-	EasingData  easeSpriteAlpha;
+	Easing::EasingData  easeSpriteAlpha;
 
 };
 

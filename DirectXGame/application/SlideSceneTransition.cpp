@@ -3,6 +3,7 @@
 
 #include "SlideSceneTransition.h"
 #include"Util.h"
+using namespace Utility;
 
 void SlideSceneTransition::Initialize()
 {
@@ -47,7 +48,7 @@ void SlideSceneTransition::Update()
 		//イージング更新
 		easeSpritePos.Update();
 		//座標移動
-		slidePos.x = Lerp(slidePosOpen.x, slidePosClose.x, EaseOut(easeSpritePos.GetTimeRate()));
+		slidePos.x = Lerp(slidePosOpen.x, slidePosClose.x, Easing::Out(easeSpritePos.GetTimeRate()));
 		//spritePos.x = Lerp(spritePosOpen.x, spritePosClose.x, easeSpirtePos.GetTimeRate());
 
 		//イージング終わったらﾌｪｰｽﾞ変える
@@ -69,16 +70,16 @@ void SlideSceneTransition::Update()
 			}
 
 			Vector2 logoPos;
-			logoPos.x = Lerp(logoPosTop.x, logoPosBottom.x, OutBounce(easeLogoPos.GetTimeRate()));
-			logoPos.y = Lerp(logoPosTop.y, logoPosBottom.y, OutBounce(easeLogoPos.GetTimeRate()));
+			logoPos.x = Lerp(logoPosTop.x, logoPosBottom.x, Easing::OutBounce(easeLogoPos.GetTimeRate()));
+			logoPos.y = Lerp(logoPosTop.y, logoPosBottom.y, Easing::OutBounce(easeLogoPos.GetTimeRate()));
 
 			titleLogoSprite->SetPos(logoPos);
 
 			//カメラシェイク
 			easeCameraShake.Update();
 			//振動幅を調節
-			absShake.x = Lerp(absShakeMax.x, 0.0f, Out(easeCameraShake.GetTimeRate()));
-			absShake.y = Lerp(absShakeMax.y, 0.0f, Out(easeCameraShake.GetTimeRate()));
+			absShake.x = Lerp(absShakeMax.x, 0.0f, Easing::Out(easeCameraShake.GetTimeRate()));
+			absShake.y = Lerp(absShakeMax.y, 0.0f, Easing::Out(easeCameraShake.GetTimeRate()));
 			//カメラの振れ幅を設定
 			cameraOffset.x = Random(-absShake.x, absShake.x);
 			cameraOffset.y = Random(-absShake.y, absShake.y);
@@ -118,11 +119,11 @@ void SlideSceneTransition::Update()
 			Vector2 before, after;
 			before = logoPosBottom;
 			after = logoPosTop;
-			float t = Out(easeLogoPos.GetTimeRate());
+			float t = Easing::Out(easeLogoPos.GetTimeRate());
 			if (isLogoFall) {
 				before = logoPosTop;
 				after = logoPosBottom;
-				t = OutBounce(easeLogoPos.GetTimeRate());
+				t = Easing::OutBounce(easeLogoPos.GetTimeRate());
 			}
 
 			//ロゴ移動
@@ -142,7 +143,7 @@ void SlideSceneTransition::Update()
 		//イージング更新
 		easeSpritePos.Update();
 		//座標移動
-		slidePos.x = Lerp(slidePosClose.x, slidePosOpen.x, In(easeSpritePos.GetTimeRate()));
+		slidePos.x = Lerp(slidePosClose.x, slidePosOpen.x, Easing::In(easeSpritePos.GetTimeRate()));
 		//spritePos.x = Lerp(spritePosOpen.x, spritePosClose.x, easeSpirtePos.GetTimeRate());
 
 		//イージング終わったらﾌｪｰｽﾞ変える

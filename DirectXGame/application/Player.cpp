@@ -9,6 +9,8 @@
 #include"Enemy.h"
 #include"Collision.h"
 #include"ImguiManager.h"
+using namespace Utility;
+using namespace Easing;
 
 void Player::Initialize(Model* model_, TextureData* reticleTexture, TextureData* healthTexture)
 {
@@ -657,7 +659,7 @@ void Player::UpdateSpawn()
 	}//Œõ—Ö‚ğo‚µ‚È‚ª‚ç‚¨‚¨‚«‚­‚È‚é
 	else {
 		Vector3 defaultScale = { 1,1,1 };
-		scale = defaultScale * EaseOut(eDataPlayerScale.GetTimeRate());
+		scale = defaultScale * Out(eDataPlayerScale.GetTimeRate());
 		//Œõ—Ö‚ª‚¨‚¨‚«‚­‚È‚è‚È‚ª‚ç”–‚­
 		for (size_t i = 0; i < haloMax; i++) {
 

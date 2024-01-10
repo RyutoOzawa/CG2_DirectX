@@ -9,6 +9,8 @@
 #include"SphereCollider.h"
 #include"CollisionAttribute.h"
 #include"GameSceneManager.h"
+using namespace Utility;
+using namespace Easing;
 
 void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* parent_)
 {
@@ -358,7 +360,7 @@ void BossEnemy::UpdateSpawn()
 		//ç≈èâÇÃà⁄ìÆ
 		float t = (easeProgress - 40.0f) / 40.0f;
 
-		Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, EaseOut(t));
+		Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, Out(t));
 		position = pos;
 	}
 	else {
@@ -374,7 +376,7 @@ void BossEnemy::UpdateSpawn()
 
 		//âÒì]
 		float t = (easeProgress - 80) / 20.0f;
-		rotation.y = Lerp(0, PI, EaseOut(t));
+		rotation.y = Lerp(0, PI, Out(t));
 
 	}
 
@@ -513,7 +515,7 @@ void BossEnemy::UpdateAtkShot()
 
 	eDataMove.Update();
 	if (eDataMove.GetTimeRate() < 1.0f) {
-		float t = EaseOut(eDataMove.GetTimeRate());
+		float t = Out(eDataMove.GetTimeRate());
 		position = Vector3::Lerp(movePosBefore, movePosAfter, t);
 	}
 
@@ -742,6 +744,8 @@ void BossEnemy::InitDeath()
 
 	//Ã™∞Ωﬁê›íË
 	deathPhase = BossDeathPhase::Move;
+
+
 
 }
 

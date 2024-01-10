@@ -3,6 +3,8 @@
 
 #include "LerpParticle.h"
 #include"Util.h"
+using namespace Utility;
+using namespace Easing;
 
 void LerpParticle::Update()
 {
@@ -25,7 +27,7 @@ void LerpParticle::Update()
 
 		break;
 	case InterType::EaseOut:
-		f = EaseOut(f);
+		f = Out(f);
 
 		break;
 	default:

@@ -90,7 +90,8 @@ public:
 	/// <param name="end">終点</param>
 	/// <param name="scaleStart">開始時スケール</param>
 	/// <param name="scaleEnd">終了時スケール</param>
-	void AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,InterType interType = InterType::Lerp, Vector4 color = { 1,1,1,1 });
+	void AddLerp(int t, const Vector3& start, const Vector3& end, float scaleStart, float scaleEnd,
+		Easing::InterType interType = Easing::InterType::Lerp, Vector4 color = { 1,1,1,1 });
 
 private:
 	//パイプライン生成

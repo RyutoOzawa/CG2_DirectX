@@ -16,7 +16,7 @@ private:
 	//現在座標
 	Vector3 currentPos{};
 	//補完用データ
-	EasingData eData;
+	Easing::EasingData eData;
 	//ループするか
 	bool isLoop = false;
 	//進行度

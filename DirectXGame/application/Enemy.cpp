@@ -5,6 +5,8 @@
 #include"SphereCollider.h"
 #include"Util.h"
 #include"CollisionAttribute.h"
+using namespace Utility;
+using namespace Easing;
 
 ParticleManager Enemy::particleManager{};
 const INT32 Enemy::shotCoolTime = 120;

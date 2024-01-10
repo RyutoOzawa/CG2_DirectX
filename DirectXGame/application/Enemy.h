@@ -73,7 +73,7 @@ private:
 	void Spin();
 
 	//攻撃時回転のイージングデータ
-	EasingData easeAtkRot;
+	Easing::EasingData easeAtkRot;
 
 	Vector3 baseScale = { 3,3,3 };
 };

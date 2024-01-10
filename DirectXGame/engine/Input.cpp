@@ -7,6 +7,8 @@
 using namespace Microsoft::WRL;
 #include"ImguiManager.h"
 #include"Util.h"
+using namespace Utility;
+
 
 Input::Input()
 {

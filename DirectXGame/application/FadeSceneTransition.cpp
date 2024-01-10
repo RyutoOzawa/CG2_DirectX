@@ -4,6 +4,8 @@
 #include "FadeSceneTransition.h"
 #include"Util.h"
 #include"ImguiManager.h"
+using namespace Utility;
+
 
 void FadeSceneTransition::Initialize()
 {

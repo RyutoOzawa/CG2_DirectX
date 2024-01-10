@@ -19,7 +19,7 @@ private:
 	//現在どの制御点から補間を行っているか
 	int32_t startIndex = 0;
 	//補完用データ
-	EasingData eData;
+	Easing::EasingData eData;
 	//一区間当たりの補間時間
 	float allTimeOnce = 0.0f;
 	//始点と終点をつないでループするかどうか

@@ -59,6 +59,6 @@ private://ƒƒ“ƒo•Ï”
 
 	const uint16_t logoRotTimeMax = 180;
 	uint16_t logoRotTimer = logoRotTimeMax;
-	EasingData easeLogoRot;
+	Easing::EasingData easeLogoRot;
 };
 

@@ -13,6 +13,8 @@
 #include"DebugLine.h"
 
 using namespace DirectX;
+using namespace Utility;
+using namespace Easing;
 
 void GamePlayScene::Initialize()
 {

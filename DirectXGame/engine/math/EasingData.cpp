@@ -2,6 +2,7 @@
 //イージングで使う時間の管理や開始等を行う
 
 #include "EasingData.h"
+using namespace Easing;
 #include<cmath>
 
 void EasingData::Update()
@@ -32,22 +33,22 @@ void EasingData::Start(float allFrame)
 	maxTime = allFrame;
 }
 
-float Out(float t)
+float Easing::Out(float t)
 {
 	return 1 - powf(1 - t, 3);
 }
 
-float In(float t)
+float Easing::In(float t)
 {
 	return t * t * t;
 }
 
-float InOut(float t)
+float Easing::InOut(float t)
 {
 	return t < 0.5f ? 4 * t * t * t : 1 - powf(-2 * t + 2, 3) / 2.0f;
 }
 
-float OutBounce(float t)
+float Easing::OutBounce(float t)
 {
 	const float n1 = 7.5625f;
 	const float d1 = 2.75f;
@@ -66,7 +67,7 @@ float OutBounce(float t)
 	}
 }
 
-float InBounce(float t)
+float Easing::InBounce(float t)
 {
 	return 1 -OutBounce(1 - t);
 }

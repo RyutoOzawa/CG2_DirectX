@@ -1,36 +1,39 @@
 //ユーティリティクラス
 //色々便利な関数達をまとめたクラス
-
-#define PI 3.1415926f
 #include"Vector2.h"
 #include"Vector3.h"
 #include"Matrix4.h"
 
-/// <summary>
-/// ランダム
-/// </summary>
-/// <param name="num1">値1</param>
-/// <param name="num2">値2</param>
-/// <returns>1と2の間からランダムな値</returns>
-float Random(float num1, float num2);
 
-//カラーコードを(R,G,B)に変換
-int RGBColorCode(const Vector3& rgb);
+namespace Utility {
 
-//(R,G,B)をカラーコードに変換
-Vector3 ColorCodeRGB(int colorCode);
+#define PI 3.1415926f
 
-//0~255の色を0~1に変換
-Vector3 ConvertColor(const Vector3& color);
 
-//スクリーン座標からワールド座標に変換
-Vector3 ConvertScreenToWorld(const Vector2& v,float distanceZ, const Matrix4& matViewProjectionViewPort);
+	/// <summary>
+	/// ランダム
+	/// </summary>
+	/// <param name="num1">値1</param>
+	/// <param name="num2">値2</param>
+	/// <returns>1と2の間からランダムな値</returns>
+	float Random(float num1, float num2);
 
-//イージングアウト
-float EaseOut(float t);
+	//カラーコードを(R,G,B)に変換
+	int RGBColorCode(const Vector3& rgb);
 
-//線形補間
-float Lerp(float before, float after, float t);
+	//(R,G,B)をカラーコードに変換
+	Vector3 ColorCodeRGB(int colorCode);
 
-//クランプ
-float Clump(float num, float min, float max);
+	//0~255の色を0~1に変換
+	Vector3 ConvertColor(const Vector3& color);
+
+	//スクリーン座標からワールド座標に変換
+	Vector3 ConvertScreenToWorld(const Vector2& v, float distanceZ, const Matrix4& matViewProjectionViewPort);
+
+	//線形補間
+	float Lerp(float before, float after, float t);
+
+	//クランプ
+	float Clump(float num, float min, float max);
+
+}

@@ -36,14 +36,14 @@ private:
 	Vector2 slidePosOpen = { -WindowsAPI::winW,0.0f };
 	Vector2 slidePosClose = { 0.0f,0.0f };
 
-	EasingData easeSpritePos;
+	Easing::EasingData easeSpritePos;
 
 	//É^ÉCÉgÉãÉçÉSä÷åW
 	std::unique_ptr<Sprite> titleLogoSprite = nullptr;
 	TextureData* titleLogoTex = nullptr;
 	Vector2 logoPosTop = { (float)WindowsAPI::winW / 2.0f,-160.0f };
 	Vector2 logoPosBottom = { logoPosTop.x,WindowsAPI::winH / 2.0f };
-	EasingData easeLogoPos;
+	Easing::EasingData easeLogoPos;
 	bool isLogoFall = false;//ÉçÉSÇ™ç~â∫Ç∑ÇÈÇ©
 	const uint16_t easeCooltimeMax = 60;
 	uint16_t easeCooltime = easeCooltimeMax;
@@ -51,7 +51,7 @@ private:
 	//âÊñ ÉVÉFÉCÉNä÷åW
 	const Vector2 absShakeMax = { 64.0f,64.0f };
 	Vector2 absShake{ 0.0f,0.0f };
-	EasingData easeCameraShake;
+	Easing::EasingData easeCameraShake;
 	Vector2 cameraOffset{ 0.0f,0.0f };
 };
 

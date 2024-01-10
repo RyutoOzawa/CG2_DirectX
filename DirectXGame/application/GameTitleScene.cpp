@@ -9,6 +9,8 @@ using namespace DirectX;
 #include"WindowsAPI.h"
 #include"Util.h"
 #include"ImguiManager.h"
+using namespace Utility;
+using namespace Easing;
 
 void GameTitleScene::Initialize()
 {

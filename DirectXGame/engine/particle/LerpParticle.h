@@ -22,7 +22,7 @@ private:
 	float scaleEnd = 0.0f;
 
 	//補間の種類
-	InterType interType = InterType::Lerp;
+	Easing::InterType interType = Easing::InterType::Lerp;
 
 public:
 	//更新
@@ -37,6 +37,7 @@ public:
 	/// <param name="scaleStart_">開始スケール</param>
 	/// <param name="scaleEnd_">終了スケール</param>
 	/// <param name="type">補間の種類</param>
-	void Add(int t, const Vector3& start_, const Vector3& end_, float scaleStart_, float scaleEnd_, InterType type = InterType::Lerp, Vector4 color_ = {1,1,1,1});
+	void Add(int t, const Vector3& start_, const Vector3& end_, float scaleStart_, float scaleEnd_, 
+		Easing::InterType type = Easing::InterType::Lerp, Vector4 color_ = {1,1,1,1});
 };
 

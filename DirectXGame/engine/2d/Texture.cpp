@@ -9,7 +9,7 @@
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
-
+using namespace Utility;
 
 std::string Texture::defaultBaseDirectory = "Resources/";
 ComPtr<ID3D12DescriptorHeap>Texture::descHeap;			//デスクリプタヒープ

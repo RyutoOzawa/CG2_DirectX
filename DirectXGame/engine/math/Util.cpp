@@ -1,9 +1,10 @@
 //ユーティリティクラス
 //色々便利な関数達をまとめたクラス
 #include"Util.h"
+
 #include<random>
 
-float Random(float num1, float num2) {
+float Utility::Random(float num1, float num2) {
 
 	float min, max;
 
@@ -27,7 +28,7 @@ float Random(float num1, float num2) {
 	return dist(engine);
 }
 
-int RGBColorCode(const Vector3& rgb)
+int Utility::RGBColorCode(const Vector3& rgb)
 {
 	int code = 0x000000;
 
@@ -46,14 +47,14 @@ int RGBColorCode(const Vector3& rgb)
 
 }
 
-Vector3 ColorCodeRGB(int colorCode)
+Vector3 Utility::ColorCodeRGB(int colorCode)
 {
 	Vector3 rgb = { (float)(colorCode >> 16),(float)(colorCode >> 8),(float)(colorCode & 0xff) };
 
 	return rgb / 256.0f;
 }
 
-Vector3 ConvertColor(const Vector3& color)
+Vector3 Utility::ConvertColor(const Vector3& color)
 {
 	Vector3 result = color;
 	result.x /= 256.0f;
@@ -63,7 +64,7 @@ Vector3 ConvertColor(const Vector3& color)
 	return result;
 }
 
-Vector3 ConvertScreenToWorld(const Vector2& v, float distanceZ, const Matrix4& matViewProjectionViewPort)
+Vector3 Utility::ConvertScreenToWorld(const Vector2& v, float distanceZ, const Matrix4& matViewProjectionViewPort)
 {
 	Vector3 posNear = { v.x,v.y,0 };
 	Vector3 posFar = { v.x,v.y,1 };
@@ -79,17 +80,14 @@ Vector3 ConvertScreenToWorld(const Vector2& v, float distanceZ, const Matrix4& m
 	return posNear + direction * distanceZ;
 }
 
-float EaseOut(float t)
-{
-	return 1.0f - powf(1-t,5);
-}
 
-float Lerp(float before, float after, float t)
+
+float Utility::Lerp(float before, float after, float t)
 {
 	return before * (1.0f - t) + after * t;
 }
 
-float Clump(float num, float min, float max)
+float Utility::Clump(float num, float min, float max)
 {
 	if (num >= max) {
 		return max;

@@ -8,6 +8,8 @@ using namespace Microsoft::WRL;
 #include"GpPipeline.h"
 #include"Util.h"
 #include"Texture.h"
+using namespace Utility;
+using namespace Easing;
 
 ComPtr<ID3D12PipelineState> ParticleManager::pipelineState;
 ComPtr<ID3D12RootSignature> ParticleManager::rootSignature;

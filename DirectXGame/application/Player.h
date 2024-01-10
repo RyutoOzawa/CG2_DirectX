@@ -91,7 +91,7 @@ private://メンバ変数
 	std::array<Vector3, haloMax> haloRotaVel;
 	INT32 spawnTimer = 0;
 	INT32 spawnTimerMax = 120;
-	EasingData eDataPlayerScale;
+	Easing::EasingData eDataPlayerScale;
 
 	//脱出演出関係	
 	static const uint16_t leaveHaloMax = 5;
@@ -116,7 +116,7 @@ private://メンバ変数
 
 
 
-	EasingData easeUIAlpha;
+	Easing::EasingData easeUIAlpha;
 	float UIAlpha = 0.0f;
 	std::unique_ptr<Sprite> damageSprite = nullptr;
 
