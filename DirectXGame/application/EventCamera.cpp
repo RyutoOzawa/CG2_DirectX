@@ -56,6 +56,8 @@ void EventCamera::MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter, 
 	eyeBefore = camera->eye;
 	eyeInterType = eyeInter;
 
+
+
 	//’‹“_‚ª“®‚©‚È‚¢‚È‚çˆ—I‚í‚è
 	if (!followTarget) {
 		targetBefore = camera->target;

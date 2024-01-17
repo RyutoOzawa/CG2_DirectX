@@ -444,6 +444,9 @@ void GamePlayScene::UpdateAllPhase()
 	//レールカメラの更新
 	railCamera->Update();
 
+	//レールカメラの座標をイベントカメラにもコピー
+	eventCamera->SetEye(railCamera->GetCamera()->eye);
+
 	//レールカメラを親にする
 	player->parent = railCamera->GetObject3d();
 	player->Update(&enemys);
@@ -468,7 +471,7 @@ void GamePlayScene::UpdateGameStart()
 {
 	//自機のスポーン終了でレールカメラを開始
 	if (player->GetSpawnTimer() == 0) {
-		railCamera->Start();
+		railCamera->Start(600.0f);
 
 		//ﾌｪｰｽﾞをメインゲームに移行
 		gamePhase = GamePhase::Game_Main;
@@ -541,21 +544,21 @@ void GamePlayScene::UpdateBoss()
 	//
 	boss->Update(player->GetWorldPosition(), eventCamera.get());
 
-	//ボスの死亡を確認したら自機の脱出モーションへ
-	if (!boss->IsAlive()) {
+	//ボスのHPが0になったらゲームクリア演出開始
+	if (boss->GetHealth() == 0) {
 		
 		//自機の演出開始
-		player->Leave();
+		//player->Leave();
 
 		
 		//sceneManager->ChangeScene("GAMECLEAR");
 
 		//イベントカメラの移動とセット
-		eventCamera->SetEye(railCamera->GetCamera()->eye);
-		eventCamera->SetTarget(railCamera->GetCamera()->target);
+		//eventCamera->SetEye(railCamera->GetCamera()->eye);
+		//eventCamera->SetTarget(railCamera->GetCamera()->target);
 		Vector3 cameraTargetAfter = eventCamera->GetCamera()->target;
 		cameraTargetAfter += {10, 20, 30};
-		eventCamera->MoveTarget(cameraTargetAfter, 60, InterType::EaseIn);
+		//eventCamera->MoveTarget(cameraTargetAfter, 60, InterType::EaseIn);
 		//ゲームフェーズの変更
 		gamePhase = GamePhase::Event_GameClear;
 
@@ -564,6 +567,10 @@ void GamePlayScene::UpdateBoss()
 
 void GamePlayScene::UpdateClear()
 {
+
+	//ボス
+	//boss->Update(player->GetWorldPosition(), eventCamera.get());
+
 	//イベントカメラの更新
 	eventCamera->Update();
 

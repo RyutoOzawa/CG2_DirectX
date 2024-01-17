@@ -58,6 +58,7 @@ public:
 
 	//getter
 	bool IsAlive()const { return isAlive; }
+	INT32 GetHealth() const { return life; }
 
 private:
 	Model* bodyModel;

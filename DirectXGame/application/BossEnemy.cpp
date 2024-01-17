@@ -668,7 +668,7 @@ void BossEnemy::InitAtkShot()
 	float randomPosAreaY = WindowsAPI::winH / 2;
 
 	for (size_t i = 0; i < shotPosMax; i++) {
-		//x,y座標のみ決める(スクリーン座標で決めるので)
+		//x,y座標のみ決める(スクリーン座標で決める)
 		shotPos[i].x = Random(0, randomPosAreaX);
 		shotPos[i].y = Random(0, randomPosAreaY);
 
@@ -745,8 +745,14 @@ void BossEnemy::InitDeath()
 	//ﾌｪｰｽﾞ設定
 	deathPhase = BossDeathPhase::Move;
 
+	//イベントカメラの移動後座標と注視点の設定
+	Vector3 cameraEye, cameraTarget;
+	cameraTarget = GetWorldPosition();
+	cameraEye = cameraTarget;
+	cameraEye.z -= 125.0f;
 
-
+	eCamera->SetTarget(cameraTarget);
+	eCamera->MoveEye(cameraEye, 30, InterType::EaseOut, false);
 }
 
 void BossEnemy::ChangeAct(BossAct nextAct)
@@ -807,5 +813,7 @@ void BossEnemy::Damage(const Vector3& hitPos, uint16_t damage)
 	if (life <= 0) {
 		//行動を死亡に
 		ChangeAct(BossAct::Death);
+
+
 	}
 }

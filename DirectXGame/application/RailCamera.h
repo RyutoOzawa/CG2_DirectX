@@ -21,7 +21,7 @@ public://メンバ関数
 	void Initialize(const Vector3& position,const Vector3& rotation);
 
 	//レール開始
-	void Start();
+	void Start(float time = 300.0f);
 
 	/// <summary>
 	/// 更新
