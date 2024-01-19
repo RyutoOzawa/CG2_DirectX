@@ -99,7 +99,7 @@ x64/*/*.obj
 *.pidb
 *.svclog
 *.scc
-/imgui.ini
+imgui.ini
 
 # Chutzpah Test files
 _Chutzpah*
