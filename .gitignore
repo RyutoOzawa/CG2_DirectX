@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.ini
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -97,7 +99,6 @@ x64/*/*.obj
 *.pidb
 *.svclog
 *.scc
-*.ini
 
 # Chutzpah Test files
 _Chutzpah*
