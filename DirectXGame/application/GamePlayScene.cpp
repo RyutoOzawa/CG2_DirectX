@@ -444,8 +444,7 @@ void GamePlayScene::UpdateAllPhase()
 	//レールカメラの更新
 	railCamera->Update();
 
-	//レールカメラの座標をイベントカメラにもコピー
-	eventCamera->SetEye(railCamera->GetCamera()->eye);
+
 
 	//レールカメラを親にする
 	player->parent = railCamera->GetObject3d();
@@ -562,6 +561,8 @@ void GamePlayScene::UpdateBoss()
 		//ゲームフェーズの変更
 		gamePhase = GamePhase::Event_GameClear;
 
+		//レールカメラの座標をイベントカメラにもコピー
+		eventCamera->SetEye(railCamera->GetCamera()->eye);
 	}
 }
 
@@ -569,7 +570,7 @@ void GamePlayScene::UpdateClear()
 {
 
 	//ボス
-	//boss->Update(player->GetWorldPosition(), eventCamera.get());
+	boss->Update(player->GetWorldPosition(), eventCamera.get());
 
 	//イベントカメラの更新
 	eventCamera->Update();

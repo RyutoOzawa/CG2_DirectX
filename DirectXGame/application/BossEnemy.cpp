@@ -555,10 +555,22 @@ void BossEnemy::UpdateDeath()
 	eDataMove.Update();
 	float moveRate = eDataMove.GetTimeRate();
 
+
+	Vector3 cEye = GetWorldPosition();
+	cEye.z -= 125.0f;
+	//eCamera->SetEye(cEye);
+
+
 	if (moveRate < 1.0f) {
+
+
 
 		//移動中
 		if (deathPhase == BossDeathPhase::Move) {
+
+			//イベントカメラセット
+			eCamera->SetTarget(GetWorldPosition());
+
 			//数fに1回爆発させる
 			if (explosionCount > 0) {
 				explosionCount--;
@@ -599,6 +611,12 @@ void BossEnemy::UpdateDeath()
 				movePosBefore = position;
 				movePosAfter = movePosBefore;
 				movePosAfter.y -= 300.0f;
+
+				//カメラの移動
+				Vector3 cPos = targetPos;
+				cPos.z -= 50.0f;
+
+				eCamera->MoveEye(cPos, 60, InterType::EaseOut, false);
 			}
 		}
 		else if (deathPhase == BossDeathPhase::Fall) {

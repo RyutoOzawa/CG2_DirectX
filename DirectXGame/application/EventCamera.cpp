@@ -1,5 +1,6 @@
 #include "EventCamera.h"
 #include"Util.h"
+#include"ImguiManager.h"
 using namespace Utility;
 using namespace Easing;
 
@@ -23,6 +24,10 @@ void EventCamera::Update()
 	float eyeRate = eMoveEye.GetTimeRate();
 	float targetRate = eMoveTarget.GetTimeRate();
 
+	ImGui::Text("pos before %f,%f,%f", eyeBefore.x, eyeBefore.y, eyeBefore.z);
+	ImGui::Text("pos after %f,%f,%f", eyeAfter.x, eyeAfter.y, eyeAfter.z);
+	ImGui::Text("camera eyeeeeeee %f,%f,%f", camera->eye.x, camera->eye.y, camera->eye.z);
+
 	//補間の形によってtimerateを変形
 	if (eyeInterType == InterType::EaseIn) {
 		eyeRate = In(eyeRate);
@@ -38,11 +43,20 @@ void EventCamera::Update()
 		targetRate = Out(targetRate);
 	}
 
-	Vector3 eye = Vector3::Lerp(eyeBefore, eyeAfter, eyeRate);
-	Vector3 target = Vector3::Lerp(targetBefore, targetAfter, targetRate);
+	if (eyeRate < 1.0f && eyeRate > 0.0f) {
+		Vector3 eye = Vector3::Lerp(eyeBefore, eyeAfter, eyeRate);
+		camera->eye = eye;
+	}
+	else if (eyeRate >= 1.0f) {
+		camera->eye = eyeAfter;
+		eyeBefore = camera->eye;
+	}
 
-	camera->eye = eye;
-	camera->target = target;
+	if (targetRate < 1.0f && targetRate > 0.0f) {
+		Vector3 target = Vector3::Lerp(targetBefore, targetAfter, targetRate);
+		camera->target = target;
+	}
+
 	camera->UpdateMatrix();
 
 }
@@ -55,7 +69,6 @@ void EventCamera::MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter, 
 	eyeAfter = eye;
 	eyeBefore = camera->eye;
 	eyeInterType = eyeInter;
-
 
 
 	//注視点が動かないなら処理終わり
