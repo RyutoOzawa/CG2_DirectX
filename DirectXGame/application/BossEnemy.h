@@ -23,6 +23,7 @@ enum class BossAct {
 };
 
 enum class BossDeathPhase {
+	Burst,
 	Move,
 	Fall,
 	Dead,

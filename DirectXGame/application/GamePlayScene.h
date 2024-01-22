@@ -64,7 +64,7 @@ private://ƒƒ“ƒo•Ï”
 	TextureData* testTex1 = nullptr;
 	TextureData* testTex2 = nullptr;
 	TextureData* testTex3 = nullptr;
-
+	TextureData* texUIPlay = nullptr;
 
 	std::unique_ptr<Sprite> backGroundSprite = nullptr;
 	std::unique_ptr<Model> skydome = nullptr;
@@ -78,6 +78,7 @@ private://ƒƒ“ƒo•Ï”
 	std::unique_ptr<Player> player = nullptr;
 	std::list< std::unique_ptr<Enemy>> enemys;
 	std::unique_ptr<Object3d> colTestObj = nullptr;
+	std::unique_ptr<Sprite> spriteUIPlay = nullptr;
 
 	std::unique_ptr<AudioManager> newAudio = nullptr;
 

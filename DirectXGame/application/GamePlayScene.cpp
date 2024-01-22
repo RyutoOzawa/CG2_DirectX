@@ -45,6 +45,12 @@ void GamePlayScene::Initialize()
 	testTex2 = Texture::LoadTexture("mario.jpg");
 	testTex3 = Texture::LoadTexture("mario.jpg");
 
+	texUIPlay = Texture::LoadTexture("UI_play.png");
+	spriteUIPlay = std::make_unique<Sprite>();
+	spriteUIPlay->Initialize(texUIPlay);
+	spriteUIPlay->SetAnchorPoint({ 1.0f,0.0f });
+	spriteUIPlay->SetPos({ WindowsAPI::winW,0.0f });
+
 	skydome = std::make_unique<Model>();
 	skydome = Model::CreateModel("skydome");
 
@@ -368,6 +374,8 @@ void GamePlayScene::Draw()
 	Sprite::BeginDraw();
 
 	player->DrawUI();
+
+	spriteUIPlay->Draw();
 
 	boss->DrawSprite();
 
