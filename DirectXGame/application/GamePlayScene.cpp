@@ -272,6 +272,8 @@ void GamePlayScene::Update()
 		break;
 	case GamePhase::Event_BossSpawn:
 		UpdateBossSpawn();
+		currentCamera = eventCamera->GetCamera();
+
 		break;
 	case GamePhase::Game_Boss:
 		UpdateGamePhase();
@@ -506,7 +508,12 @@ void GamePlayScene::UpdateMain()
 		if (enemys.empty()) {
 
 			boss->Spawn(railCamera->GetObject3d()->matWorld);
-			gamePhase = GamePhase::Game_Boss;
+			
+			//ボススポーンへ遷移
+			gamePhase = GamePhase::Event_BossSpawn;
+
+			//レールカメラの座標をイベントカメラにもコピー
+			eventCamera->SetEye(railCamera->GetCamera()->eye);
 		}
 	}
 	else {
@@ -539,6 +546,14 @@ void GamePlayScene::UpdateBossSpawn()
 
 	//ボスの更新
 	boss->Update(player->GetWorldPosition(),eventCamera.get());
+	//カメラ更新
+	eventCamera->Update();
+
+	//条件でボス戦へ遷移
+	if (ImGui::Button("go boss battle")) {
+		gamePhase = GamePhase::Game_Boss;
+	}
+
 }
 
 void GamePlayScene::UpdateBoss()
