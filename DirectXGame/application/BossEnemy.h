@@ -171,5 +171,8 @@ private:
 	//ダメージを受ける処理
 	void Damage(const Vector3& hitPos,uint16_t damage = 1);
 	
+	//ボススポーンのカメラワーク開始
+	void StartCameraSpawn();
+
 };
 

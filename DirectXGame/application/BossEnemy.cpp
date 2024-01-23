@@ -835,3 +835,21 @@ void BossEnemy::Damage(const Vector3& hitPos, uint16_t damage)
 
 	}
 }
+
+void BossEnemy::StartCameraSpawn()
+{
+	//1つ目の砲台と最後の砲台の中点からカメラの俯瞰座標を算出
+	Vector3 cameraEye = barrelObject.front().GetWorldPosition() - barrelObject.back().GetWorldPosition();
+
+	//左側にずらす
+	cameraEye.x += 100.0f;
+
+	//移動前後の座標の中点に注目
+	Vector3 cameraTarget = cameraEye;
+	cameraTarget -= (cameraEye / 2.0f);
+
+	//移動開始
+	eCamera->MoveEye(cameraEye, 60, InterType::Lerp,false);
+	eCamera->MoveTarget(cameraTarget, 60, InterType::EaseOut, false);
+
+}
