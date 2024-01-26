@@ -509,11 +509,13 @@ void GamePlayScene::UpdateMain()
 
 			boss->Spawn(railCamera->GetObject3d()->matWorld);
 			
-			//ボススポーンへ遷移
-			gamePhase = GamePhase::Event_BossSpawn;
+			////ボススポーンへ遷移
+			//gamePhase = GamePhase::Event_BossSpawn;
+			////レールカメラの座標をイベントカメラにもコピー
+			//eventCamera->SetEye(railCamera->GetCamera()->eye);
 
-			//レールカメラの座標をイベントカメラにもコピー
-			eventCamera->SetEye(railCamera->GetCamera()->eye);
+			gamePhase = GamePhase::Game_Boss;
+
 		}
 	}
 	else {
@@ -541,7 +543,6 @@ void GamePlayScene::UpdateMain()
 
 void GamePlayScene::UpdateBossSpawn()
 {
-
 
 
 	//ボスの更新
@@ -599,5 +600,10 @@ void GamePlayScene::UpdateClear()
 
 	//イベントカメラの更新
 	eventCamera->Update();
+
+	//ボスが死んだらクリアシーンへ
+	if (!boss->IsAlive()) {
+		sceneManager->ChangeScene("GAMECLEAR");
+	}
 
 }

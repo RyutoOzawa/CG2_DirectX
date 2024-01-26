@@ -344,7 +344,7 @@ void BossEnemy::UpdateSpawn()
 
 			//2ŒÂ–Ú‚Ì–C‘ä‚ªˆÚ“®‚µn‚ß‚½‚çƒJƒƒ‰“®‚©‚µn‚ß‚é
 			if (index == 1) {
-				StartCameraSpawn();
+			//	StartCameraSpawn();
 			}
 		}
 
