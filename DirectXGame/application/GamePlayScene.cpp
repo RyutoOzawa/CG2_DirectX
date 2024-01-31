@@ -510,11 +510,9 @@ void GamePlayScene::UpdateMain()
 			boss->Spawn(railCamera->GetObject3d()->matWorld);
 			
 			////ボススポーンへ遷移
-			//gamePhase = GamePhase::Event_BossSpawn;
+			gamePhase = GamePhase::Event_BossSpawn;
 			////レールカメラの座標をイベントカメラにもコピー
-			//eventCamera->SetEye(railCamera->GetCamera()->eye);
-
-			gamePhase = GamePhase::Game_Boss;
+			eventCamera->SetEye(railCamera->GetCamera()->eye);
 
 		}
 	}

@@ -344,7 +344,7 @@ void BossEnemy::UpdateSpawn()
 
 			//2個目の砲台が移動し始めたらカメラ動かし始める
 			if (index == 1) {
-			//	StartCameraSpawn();
+				StartCameraSpawn();
 			}
 		}
 
@@ -852,6 +852,6 @@ void BossEnemy::StartCameraSpawn()
 
 	//移動開始
 	eCamera->MoveEye(cameraEye, 60, InterType::Lerp,false);
-	//eCamera->MoveTarget(cameraTarget, 60, InterType::EaseOut, false);
+	eCamera->MoveTarget(cameraTarget, 60, InterType::EaseOut, false);
 
 }

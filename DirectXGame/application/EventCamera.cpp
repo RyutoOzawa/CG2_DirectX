@@ -11,6 +11,7 @@ void EventCamera::Initialize(const Vector3& eye, const Vector3& target, const Ve
 	//カメラの初期化
 	camera = std::make_unique<Camera>();
 	camera->Initialize(eye, target, up);
+	camera->farZ = 2000.0f;
 
 }
 
@@ -73,8 +74,8 @@ void EventCamera::MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter, 
 
 	//注視点が動かないなら処理終わり
 	if (!followTarget) {
-		targetBefore = camera->target;
-		targetAfter = camera->target;
+		//targetBefore = camera->target;
+		//targetAfter = camera->target;
 		return;
 	}
 
@@ -98,8 +99,8 @@ void EventCamera::MoveTarget(const Vector3& target, uint16_t time, InterType tar
 
 	//視点を動かさないなら処理終わり
 	if (!followEye) {
-		eyeBefore = camera->eye;
-		eyeAfter = camera->eye;
+		//eyeBefore = camera->eye;
+		//eyeAfter = camera->eye;
 		return;
 	}
 
