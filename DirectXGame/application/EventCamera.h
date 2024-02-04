@@ -4,6 +4,7 @@
 
 #include"Camera.h"
 #include"EasingData.h"
+#include"BezierCurve.h"
 
 class EventCamera
 {
@@ -26,6 +27,16 @@ public:
 	void MoveEye(const Vector3& eye, uint16_t time, Easing::InterType eyeInter = Easing::InterType::Lerp,
 		bool followTarget = true,Easing::InterType targetInter = Easing::InterType::Lerp);
 
+	/// <summary>
+	/// ベジエ曲線によるカメラ移動
+	/// </summary>
+	/// <param name="curve">ベジエ曲線</param>
+	/// <param name="time">移動時間</param>
+	/// <param name="eyeInter">視点の補間種類</param>
+	/// <param name="followTarget">注視点が追従するか？</param>
+	/// <param name="targetInter">注視点の補間の種類</param>
+	void MoveEye(const BezierCurve& curve, uint16_t time, Easing::InterType eyeInter = Easing::InterType::Lerp,
+		bool followTarget = true, Easing::InterType targetInter = Easing::InterType::Lerp);
 	/// <summary>
 	/// カメラ注視点移動
 	/// </summary>
@@ -57,6 +68,8 @@ private:
 	Vector3 targetAfter{ 0,0,0 };
 	Easing::InterType targetInterType = Easing::InterType::Lerp;
 
+	BezierCurve eyeBezire;
+	bool useBezire = false;
 
 };
 

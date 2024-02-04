@@ -513,6 +513,7 @@ void GamePlayScene::UpdateMain()
 			gamePhase = GamePhase::Event_BossSpawn;
 			////レールカメラの座標をイベントカメラにもコピー
 			eventCamera->SetEye(railCamera->GetCamera()->eye);
+			eventCamera->SetTarget(railCamera->GetCamera()->target);
 
 		}
 	}

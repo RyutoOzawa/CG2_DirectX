@@ -844,11 +844,14 @@ void BossEnemy::StartCameraSpawn()
 	cameraEye += barrelObject.back().GetWorldPosition();
 
 	//左側にずらす
-	cameraEye.x += 200.0f;
+	cameraEye.x -= 100.0f;
 
 	//移動前後の座標の中点に注目
-	Vector3 cameraTarget = cameraEye;
-	cameraTarget.x -= 200.0f;
+	Vector3 cameraTarget = targetPos;
+	//cameraTarget.x;
+
+	cameraEye = cameraTarget;
+	cameraEye.x -= 100.0f;
 
 	//移動開始
 	eCamera->MoveEye(cameraEye, 60, InterType::Lerp,false);

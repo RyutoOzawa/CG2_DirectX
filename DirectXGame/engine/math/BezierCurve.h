@@ -39,7 +39,7 @@ public:
 
 	//getter
 	Vector3 GetPosition()const { return currentPos; }
-
+	float GetTimeRate() { return eData.GetTimeRate(); }
 
 	/// <summary>
 	/// ‹Èü•`‰æ
