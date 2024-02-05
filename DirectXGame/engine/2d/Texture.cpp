@@ -6,6 +6,7 @@
 #include<cassert>
 #include"Util.h"
 #include<utility>
+#include"TextureConverter.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -55,25 +56,40 @@ TextureData* Texture::LoadTexture(std::string filename)
 		DirectX::ScratchImage scratchImg{};
 		DirectX::ScratchImage mipChain{};
 
+		//拡張子の検索
+		std::string fileExt_;
+		size_t pos1;
+		pos1 = filename.rfind('.');
+		if (pos1 != std::string::npos) {
+			fileExt_ = filename.substr(pos1 + 1, filename.size() - pos1 - 1);
+		}
+
 		HRESULT result;
-		result = LoadFromWICFile(
-			wfilepath,
-			WIC_FLAGS_NONE,
-			&metadata, scratchImg);
+		if (fileExt_ == "dds") {
+			//DDSテクスチャロード
+			result = LoadFromDDSFile(wfilepath, DDS_FLAGS_NONE, &metadata, scratchImg);
+		}
+		else {
+			//WICテクスチャロード
+			result = LoadFromWICFile(wfilepath,WIC_FLAGS_NONE,&metadata, scratchImg);
+		}
+
+		assert(SUCCEEDED(result));
+	
 
 		Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 		D3D12_RESOURCE_DESC textureResourceDesc{};
 
 		//ファイルが見つかったら通常のファイル読み込み
 		if (filename != "NULL") {
-			//ミップマップ生成
-			result = GenerateMipMaps(
-				scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-				TEX_FILTER_DEFAULT, 0, mipChain);
-			if (SUCCEEDED(result)) {
-				scratchImg = std::move(mipChain);
-				metadata = scratchImg.GetMetadata();
-			}
+			////ミップマップ生成
+			//result = GenerateMipMaps(
+			//	scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+			//	TEX_FILTER_DEFAULT, 0, mipChain);
+			//if (SUCCEEDED(result)) {
+			//	scratchImg = std::move(mipChain);
+			//	metadata = scratchImg.GetMetadata();
+			//}
 			// 読み込んだディフューズテクスチャをSRGBとして扱う
 			metadata.format = MakeSRGB(metadata.format);
 			//ヒープ設定

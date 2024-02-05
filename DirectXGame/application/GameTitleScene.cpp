@@ -23,7 +23,9 @@ void GameTitleScene::Initialize()
 
 	//テクスチャデータ初期化
 	titleTexture = Texture::LoadTexture("dummyTitle.png");
-	texTextTitleLogo = Texture::LoadTexture("titleLogo.png");
+	//titleTexture = Texture::LoadTexture("mari.dds");
+	//texTextTitleLogo = Texture::LoadTexture("titleLogo.png");
+	texTextTitleLogo = Texture::LoadTexture("mari.dds");
 	texTextPressA = Texture::LoadTexture("textPressA.png");
 
 	titleSprite = new Sprite();

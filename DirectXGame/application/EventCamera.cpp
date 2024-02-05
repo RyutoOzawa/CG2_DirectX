@@ -88,15 +88,15 @@ void EventCamera::MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter, 
 
 }
 
-void EventCamera::MoveEye(const BezierCurve& curve, uint16_t time, Easing::InterType eyeInter, bool followTarget, Easing::InterType targetInter)
-{
-	//曲線移動開始
-	eyeBezire = curve;
-	eyeBezire.Start((float)time, false);
-
-	//移動にベジエ曲線を使うよう変更
-	useBezire = true;
-}
+//void EventCamera::MoveEye(const BezierCurve& curve, uint16_t time, Easing::InterType eyeInter, bool followTarget, Easing::InterType targetInter)
+//{
+//	//曲線移動開始
+//	eyeBezire = curve;
+//	eyeBezire.Start((float)time, false);
+//
+//	//移動にベジエ曲線を使うよう変更
+//	useBezire = true;
+//}
 
 void EventCamera::MoveTarget(const Vector3& target, uint16_t time, InterType targetInter, bool followEye, InterType eyeInter)
 {
