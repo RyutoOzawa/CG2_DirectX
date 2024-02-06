@@ -44,6 +44,7 @@ void EventCamera::Update()
 		targetRate = Out(targetRate);
 	}
 
+	//視点の移動
 	if (eyeRate < 1.0f && eyeRate > 0.0f) {
 		Vector3 eye = Vector3::Lerp(eyeBefore, eyeAfter, eyeRate);
 		camera->eye = eye;
@@ -52,7 +53,19 @@ void EventCamera::Update()
 		camera->eye = eyeAfter;
 		eyeBefore = camera->eye;
 	}
+	//移動にベジエ曲線を使ってるなら上書き
+	if (useBezire) {
+		eyeBezire.Update();
+		camera->eye = eyeBezire.GetPosition();
+		//ベジエ曲線移動終わったらフラグおろす
+		if (eyeBezire.GetTimeRate() >= 1.0f) {
+			useBezire = false;
+		}
 
+	}
+	
+
+	//注視点の移動
 	if (targetRate < 1.0f && targetRate > 0.0f) {
 		Vector3 target = Vector3::Lerp(targetBefore, targetAfter, targetRate);
 		camera->target = target;
@@ -88,15 +101,24 @@ void EventCamera::MoveEye(const Vector3& eye, uint16_t time,InterType eyeInter, 
 
 }
 
-//void EventCamera::MoveEye(const BezierCurve& curve, uint16_t time, Easing::InterType eyeInter, bool followTarget, Easing::InterType targetInter)
-//{
-//	//曲線移動開始
-//	eyeBezire = curve;
-//	eyeBezire.Start((float)time, false);
-//
-//	//移動にベジエ曲線を使うよう変更
-//	useBezire = true;
-//}
+void EventCamera::MoveEye(const BezierCurve& curve, uint16_t time, Easing::InterType eyeInter, bool followTarget, Easing::InterType targetInter)
+{
+	//曲線移動開始
+	eyeBezire = curve;
+	eyeBezire.Start((float)time, false);
+	eyeInterType = eyeInter;
+
+	//移動にベジエ曲線を使うよう変更
+	useBezire = true;
+
+	//注視点が動かないなら処理おわり
+	if (!followTarget) {
+		return;
+	}
+
+	eMoveTarget.Start((float)time);
+	targetInterType = targetInter;
+}
 
 void EventCamera::MoveTarget(const Vector3& target, uint16_t time, InterType targetInter, bool followEye, InterType eyeInter)
 {

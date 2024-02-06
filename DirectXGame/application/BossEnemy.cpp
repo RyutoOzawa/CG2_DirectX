@@ -853,8 +853,23 @@ void BossEnemy::StartCameraSpawn()
 	cameraEye = cameraTarget;
 	cameraEye.x -= 100.0f;
 
+	//カメラワーク用ベジエ曲線
+	BezierCurve bezireCurve;
+	std::vector<Vector3> positions{ cameraTarget ,cameraTarget ,cameraTarget ,cameraTarget ,cameraTarget };
+	//回転できるように座標を少しずつずらす
+	positions[1].x -= 100.0f;
+	positions[2].z += 100.0f;
+	positions[3].x += 100.0f;
+	positions[4].z -= 100.0f;
+
+	bezireCurve.SetPositions(positions);
+
+
+
 	//移動開始
-	eCamera->MoveEye(cameraEye, 60, InterType::Lerp,false);
-	eCamera->MoveTarget(cameraTarget, 60, InterType::EaseOut, false);
+//	eCamera->MoveEye(cameraEye, 60, InterType::Lerp,false);
+
+	eCamera->MoveEye(bezireCurve, 120, InterType::Lerp, false);
+	eCamera->MoveTarget(cameraTarget, 120, InterType::EaseOut, false);
 
 }

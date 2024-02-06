@@ -153,7 +153,6 @@
     <ClCompile Include="DirectXGame\application\SlideSceneTransition.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\JsonLoader.cpp" />
     <ClCompile Include="DirectXGame\application\EventCamera.cpp" />
-    <ClCompile Include="DirectXGame\engine\2d\TextureConverter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -324,7 +323,6 @@
     <ClInclude Include="DirectXGame\application\SlideSceneTransition.h" />
     <ClInclude Include="DirectXGame\engine\3d\JsonLoader.h" />
     <ClInclude Include="DirectXGame\application\EventCamera.h" />
-    <ClInclude Include="DirectXGame\engine\2d\TextureConverter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

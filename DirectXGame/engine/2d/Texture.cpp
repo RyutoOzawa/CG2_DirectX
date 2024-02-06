@@ -6,7 +6,6 @@
 #include<cassert>
 #include"Util.h"
 #include<utility>
-#include"TextureConverter.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -74,7 +73,7 @@ TextureData* Texture::LoadTexture(std::string filename)
 			result = LoadFromWICFile(wfilepath,WIC_FLAGS_NONE,&metadata, scratchImg);
 		}
 
-		assert(SUCCEEDED(result));
+		//assert(SUCCEEDED(result));
 	
 
 		Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
