@@ -126,6 +126,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 	}
 
 
+	ImGui::Text("pos %f,%f,%f", Object3d::GetWorldPosition().x, Object3d::GetWorldPosition().y, Object3d::GetWorldPosition().z);
 
 	if (Input::GetInstance()->IsKeyTrigger(DIK_2)) {
 		Spawn();

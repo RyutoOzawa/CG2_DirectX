@@ -25,7 +25,7 @@ private:
 	TextureData* gameoverTexture = 0;
 	Sprite* gameoverSprite = nullptr;
 
-	const uint16_t nextSceneTimerMax = 120;
+const uint16_t nextSceneTimerMax = 120;
 	uint16_t nextSceneTimer = 0;
 };
 

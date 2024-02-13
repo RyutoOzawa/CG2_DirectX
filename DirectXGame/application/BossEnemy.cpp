@@ -542,11 +542,11 @@ void BossEnemy::UpdateAtkLaser()
 
 	Object3d::Update();
 	for (size_t i = 0; i < barrelMax; i++) {
-
 		barrelObject[i].Update();
-
 		ImGui::Text("pos %f,%f,%f", barrelObject[i].position.x, barrelObject[i].position.y, barrelObject[i].position.z);
 	}
+
+
 }
 
 void BossEnemy::UpdateDeath()
@@ -848,6 +848,8 @@ void BossEnemy::StartCameraSpawn()
 
 	//ˆÚ“®‘OŒã‚ÌÀ•W‚Ì’†“_‚É’–Ú
 	Vector3 cameraTarget = targetPos;
+	targetPos.x = 0.0f;
+	targetPos.y = 0.0f;
 	//cameraTarget.x;
 
 	cameraEye = cameraTarget;
