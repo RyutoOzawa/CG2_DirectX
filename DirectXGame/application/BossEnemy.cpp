@@ -219,6 +219,7 @@ void BossEnemy::Update(const Vector3& playerPos, EventCamera* eventCamera)
 
 			//今はとりあえず確定で射撃
 			nextAct = BossAct::AttackShot;
+			//nextAct = BossAct::AttackLaser;
 
 			break;
 		case BossAct::AttackShot:
@@ -718,7 +719,6 @@ void BossEnemy::InitAtkShot()
 		shotPos[i].z = posZ;
 	}
 
-
 	//現在座標を移動用座標にセット
 	movePosBefore = position;
 	lastPosActMove = position;
@@ -743,6 +743,9 @@ void BossEnemy::InitAtkLaser()
 	movePosAfter = movePosBefore;
 	movePosAfter.x = 0.0f;
 	movePosAfter.y = 0.0f;
+
+	//攻撃フェーズをロックオンに設定
+	
 }
 
 void BossEnemy::InitDeath()

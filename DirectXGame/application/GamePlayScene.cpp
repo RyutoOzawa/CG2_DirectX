@@ -550,7 +550,7 @@ void GamePlayScene::UpdateBossSpawn()
 	eventCamera->Update();
 
 	//ðŒ‚Åƒ{ƒXí‚Ö‘JˆÚ
-	if (ImGui::Button("go boss battle")) {
+	if (boss->GetBossAct() == BossAct::Move) {
 		gamePhase = GamePhase::Game_Boss;
 	}
 

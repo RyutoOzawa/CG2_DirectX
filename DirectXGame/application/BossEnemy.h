@@ -22,11 +22,18 @@ enum class BossAct {
 	BossActMax,
 };
 
+//死亡演出のフェーズ遷移
 enum class BossDeathPhase {
 	Burst,
 	Move,
 	Fall,
 	Dead,
+};
+
+enum class BossAtkLaserPhase {
+	RockOn,//狙う
+	Charge,//チャージ
+	Shot//撃つ
 };
 
 class BossEnemy : public Object3d
@@ -60,6 +67,7 @@ public:
 	//getter
 	bool IsAlive()const { return isAlive; }
 	INT32 GetHealth() const { return life; }
+	BossAct GetBossAct() const { return bossAct; }
 
 private:
 	Model* bodyModel;
@@ -126,6 +134,10 @@ private:
 	static const INT32 shotPosMax = 4;
 	std::array<Vector3, shotPosMax> shotPos;//射撃を行う座標配列(0:leftTop 1:leftBottom 2:rightTop 3:rightBottom)
 	Easing::EasingData eDataMove;//移動用イージングデータ
+
+	//レーザー攻撃用
+	BossAtkLaserPhase laserPhase = BossAtkLaserPhase::RockOn;
+
 	//移動補完用座標2つ
 	Vector3 movePosBefore{ 0,0,0 };
 	Vector3 movePosAfter{ 0,0,0 };
