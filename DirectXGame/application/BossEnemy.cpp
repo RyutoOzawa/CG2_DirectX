@@ -218,8 +218,8 @@ void BossEnemy::Update(const Vector3& playerPos, EventCamera* eventCamera)
 			//TODO:ランダムで射撃かレーザーか決める
 
 			//今はとりあえず確定で射撃
-			nextAct = BossAct::AttackShot;
-			//nextAct = BossAct::AttackLaser;
+			//nextAct = BossAct::AttackShot;
+			nextAct = BossAct::AttackLaser;
 
 			break;
 		case BossAct::AttackShot:
@@ -536,10 +536,31 @@ void BossEnemy::UpdateAtkShot()
 
 void BossEnemy::UpdateAtkLaser()
 {
-	eDataMove.Update();
-	Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, eDataMove.GetTimeRate());
+	//RockOnフェーズ
+	if (laserPhase == BossAtkLaserPhase::RockOn) {
+		eDataMove.Update();
+		Vector3 pos = Vector3::Lerp(movePosBefore, movePosAfter, Easing::Out(eDataMove.GetTimeRate()));
 
-	position = pos;
+		position = pos;
+
+	}//Chargeフェーズ
+	else if (laserPhase == BossAtkLaserPhase::Charge) {
+		//砲台が回転しながら中央に寄ってくる
+
+	}
+
+
+	
+	//イージングによる移動が終わったら
+	if (eDataMove.GetTimeRate() >= 1.0f) {
+		//フェーズがRockOnならフェーズをChargeに
+		if (laserPhase == BossAtkLaserPhase::RockOn) {
+			laserPhase = BossAtkLaserPhase::Charge;
+		}
+	}
+
+	//プレイヤーを向くように
+	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
 
 	Object3d::Update();
 	for (size_t i = 0; i < barrelMax; i++) {
@@ -737,7 +758,7 @@ void BossEnemy::InitAtkLaser()
 
 	Object3d::Update();
 	//本体を真ん中に移動
-	eDataMove.Start(60.0f);
+	eDataMove.Start(45.0f);
 	//移動前は今の座標、移動後はカメラ中央
 	movePosBefore = position;
 	movePosAfter = movePosBefore;
