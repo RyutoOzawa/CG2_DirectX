@@ -33,7 +33,8 @@ enum class BossDeathPhase {
 enum class BossAtkLaserPhase {
 	RockOn,//狙う
 	Charge,//チャージ
-	Shot//撃つ
+	Shot,//撃つ
+	ReturnMove,//移動に戻る
 };
 
 class BossEnemy : public Object3d
@@ -104,6 +105,7 @@ private:
 	std::array<Easing::EasingData,barrelMax> eDataBarrelMove;	//バレルの移動をイージングにするよう
 	std::array<Vector3,barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
 	std::array<Vector3,barrelMax> movePosAfterBarrel;	//バレルの移動後座標
+	Easing::EasingData eDataBarrelRot;//バレルの回転速度遷移
 
 
 	//ボスの行動管理
@@ -137,6 +139,12 @@ private:
 
 	//レーザー攻撃用
 	BossAtkLaserPhase laserPhase = BossAtkLaserPhase::RockOn;
+	std::unique_ptr<Model> laserModel = nullptr;
+	std::unique_ptr<Object3d> laserObj = nullptr;
+	Vector2 rotSpdTemp = {};
+	Vector2 barrelDistanceTemp = { };
+	Vector2 laserScaleTemp = {};
+	uint16_t laserTime = 0;
 
 	//移動補完用座標2つ
 	Vector3 movePosBefore{ 0,0,0 };

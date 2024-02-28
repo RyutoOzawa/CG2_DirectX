@@ -52,6 +52,7 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	bulletModel = std::make_unique<Model>();
 	bulletModel = Model::CreateModel("PlayerBullet");
 
+
 	//砲台オブジェクトの初期化、モデルセット
 	for (int i = 0; i < barrelObject.size(); i++) {
 		barrelObject[i].Initialize();
@@ -66,6 +67,16 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 		barrelObject[i].position = pos;
 
 	}
+
+	//レーザーのオブジェクト
+	laserModel = std::make_unique<Model>();
+	laserModel = Model::CreateModel("laser");
+	laserModel->SetTexture(Texture::LoadTexture("white1x1.png"));
+
+	laserObj = std::make_unique<Object3d>();
+	laserObj->Initialize();
+	laserObj->SetModel(laserModel.get());
+	laserObj->parent = this;
 
 	//弾射出座標のオフセットを設定
 	bulletOutOffset = { 0,0,17.0f };
@@ -97,7 +108,7 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	actTime[(INT32)BossAct::Spawn] = 300;
 	actTime[(INT32)BossAct::Move] = 120;
 	actTime[(INT32)BossAct::AttackShot] = 200;
-	actTime[(INT32)BossAct::AttackLaser] = 200;
+	actTime[(INT32)BossAct::AttackLaser] = 1000;
 	actTime[(INT32)BossAct::Death] = 300;
 
 	//ChangeAct(BossAct::Spawn);
@@ -255,9 +266,14 @@ void BossEnemy::Draw()
 	//モデルの描画
 	Object3d::Draw();
 
-	//TODO: 砲台の描画
+	//砲台の描画
 	for (Object3d& barrel : barrelObject) {
 		barrel.Draw();
+	}
+
+	//レーザーの時にレーザー描画
+	if (bossAct == BossAct::AttackLaser) {
+		laserObj->Draw();
 	}
 }
 
@@ -408,9 +424,9 @@ void BossEnemy::UpdateSpawn()
 
 void BossEnemy::UpdateMove()
 {
-	ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
-	ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
-	ImGui::SliderFloat("z", &position.z, -100.0f, 100.0f);
+	//ImGui::SliderFloat("x", &position.x, -100.0f, 100.0f);
+	//ImGui::SliderFloat("y", &position.y, -100.0f, 100.0f);
+	//ImGui::SliderFloat("z", &position.z, -100.0f, 100.0f);
 
 	lThetaSpd = 0.1f;
 
@@ -420,29 +436,29 @@ void BossEnemy::UpdateMove()
 	}
 
 
-	ImGui::SliderFloat("amplitude X", &amplitudeX, 0.0f, 200.0f);
-	ImGui::SliderFloat("amplitude Y", &amplitudeY, 0.0f, 200.0f);
+	//ImGui::SliderFloat("amplitude X", &amplitudeX, 0.0f, 200.0f);
+	//ImGui::SliderFloat("amplitude Y", &amplitudeY, 0.0f, 200.0f);
 
-	if (ImGui::Button("X+")) {
-		radianX++;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("X-")) {
-		radianX--;
-	}
-	ImGui::SameLine();
-	ImGui::Text("radX:%1f", radianX);
+	//if (ImGui::Button("X+")) {
+	//	radianX++;
+	//}
+	//ImGui::SameLine();
+	//if (ImGui::Button("X-")) {
+	//	radianX--;
+	//}
+	//ImGui::SameLine();
+	//ImGui::Text("radX:%1f", radianX);
 
 
-	if (ImGui::Button("Y+")) {
-		radianY++;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Y-")) {
-		radianY--;
-	}
-	ImGui::SameLine();
-	ImGui::Text("radY:%1f", radianY);
+	//if (ImGui::Button("Y+")) {
+	//	radianY++;
+	//}
+	//ImGui::SameLine();
+	//if (ImGui::Button("Y-")) {
+	//	radianY--;
+	//}
+	//ImGui::SameLine();
+	//ImGui::Text("radY:%1f", radianY);
 
 	Vector3 point;
 	point.x = sinf(lissajousTheta * radianX * (float)PI / 180.0f) * amplitudeX;
@@ -536,6 +552,12 @@ void BossEnemy::UpdateAtkShot()
 
 void BossEnemy::UpdateAtkLaser()
 {
+	Vector3 laserScale = { 1,1,1 };
+
+	float barrelRotSpd = 1.0f;
+	float currentBarrelDistance = 1.0f;
+	uint16_t laserTimeMax = 300;
+
 	//RockOnフェーズ
 	if (laserPhase == BossAtkLaserPhase::RockOn) {
 		eDataMove.Update();
@@ -543,12 +565,88 @@ void BossEnemy::UpdateAtkLaser()
 
 		position = pos;
 
+		//レーザーの大きさを0に
+		laserScale = { 0,0,1 };
+
 	}//Chargeフェーズ
 	else if (laserPhase == BossAtkLaserPhase::Charge) {
 		//砲台が回転しながら中央に寄ってくる
+		//回転の速度
+		rotSpdTemp = { 0.0f,16.0f };
+		barrelDistanceTemp = { baseBarrelDistance,6.5f };
+		laserScale = { 0.05f,0.05f,1 };
+
+		ImGui::SliderFloat("barrelDistance", &currentBarrelDistance, 1.0f, 20.0f);
+
+		//回転をどんどん早く
+		eDataBarrelRot.Update();
+		//イージングの進行度で回転速度とバレルの距離を決定
+		barrelRotSpd = Utility::Lerp(rotSpdTemp.x,rotSpdTemp.y, Easing::In(eDataBarrelRot.GetTimeRate()));
+		currentBarrelDistance = Utility::Lerp(barrelDistanceTemp.x, barrelDistanceTemp.y, Easing::Inback(eDataBarrelRot.GetTimeRate()));
+
+
+		for (size_t i = 0; i < barrelObject.size(); i++) {
+			barrelRadian[i] += barrelRotSpd;
+			if (barrelRadian[i] >= 360.0f) {
+				barrelRadian[i] -= 360.0f;
+			}
+			Vector3 barrelPos{};
+			barrelPos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
+			barrelPos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
+			barrelObject[i].position = barrelPos;
+
+		}
+
+		//回転の速度が最大になったらレーザー発射フェーズへ
+		if (barrelRotSpd >= rotSpdTemp.y) {
+			laserPhase = BossAtkLaserPhase::Shot;
+			eDataBarrelRot.Start(15.0f);
+			laserTime = laserTimeMax;
+
+		}
+
+	}
+	else if (laserPhase == BossAtkLaserPhase::Shot) {
+		if (laserTime > 0) {
+			eDataBarrelRot.Update();
+
+			//回転速度とかを設定しなおす
+			barrelDistanceTemp = { currentBarrelDistance,20.0f };
+			laserScaleTemp = { laserScale.x,8.0f };
+			barrelRotSpd = rotSpdTemp.y;
+
+			//バレルの間隔とレーザーを広げる
+			currentBarrelDistance = Utility::Lerp(barrelDistanceTemp.x, barrelDistanceTemp.y, Easing::Out(eDataBarrelRot.GetTimeRate()));
+			laserScale.x = Utility::Lerp(laserScaleTemp.x, laserScaleTemp.y, Easing::Out(eDataBarrelRot.GetTimeRate()));
+			laserScale.y = Utility::Lerp(laserScaleTemp.x, laserScaleTemp.y, Easing::Out(eDataBarrelRot.GetTimeRate()));
+
+			//バレル更新
+			for (size_t i = 0; i < barrelObject.size(); i++) {
+				barrelRadian[i] += barrelRotSpd;
+				if (barrelRadian[i] >= 360.0f) {
+					barrelRadian[i] -= 360.0f;
+				}
+				Vector3 barrelPos{};
+				barrelPos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
+				barrelPos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
+				barrelObject[i].position = barrelPos;
+
+			}
+
+			laserTime--;
+		}
+		else if (laserTime <= 0) {
+			//最終フェーズに移動
+			laserPhase = BossAtkLaserPhase::ReturnMove;
+
+		}
+
+	}
+	else if (laserPhase == BossAtkLaserPhase::ReturnMove) {
 
 	}
 
+	laserObj->scale = laserScale;
 
 	
 	//イージングによる移動が終わったら
@@ -556,6 +654,8 @@ void BossEnemy::UpdateAtkLaser()
 		//フェーズがRockOnならフェーズをChargeに
 		if (laserPhase == BossAtkLaserPhase::RockOn) {
 			laserPhase = BossAtkLaserPhase::Charge;
+			//2秒で回転速度を最大に
+			eDataBarrelRot.Start(120.0f);
 		}
 	}
 
@@ -568,6 +668,7 @@ void BossEnemy::UpdateAtkLaser()
 		ImGui::Text("pos %f,%f,%f", barrelObject[i].position.x, barrelObject[i].position.y, barrelObject[i].position.z);
 	}
 
+	laserObj->Update();
 
 }
 

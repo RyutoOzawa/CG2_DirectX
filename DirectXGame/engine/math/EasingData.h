@@ -39,4 +39,5 @@ namespace Easing {
 	float InOut(float t);
 	float OutBounce(float t);
 	float InBounce(float t);
+	float Inback(float t);
 }

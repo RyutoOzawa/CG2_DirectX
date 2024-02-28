@@ -71,3 +71,11 @@ float Easing::InBounce(float t)
 {
 	return 1 -OutBounce(1 - t);
 }
+
+float Easing::Inback(float t)
+{
+	const float a = 1.70158f;
+	const float b = a + 1.0f;
+
+	return b * t * t * t - a * t * t;
+}

@@ -85,6 +85,13 @@ Vector3 Vector3::Lerp(const Vector3& p1, const Vector3& p2, float t)
 	return p1 * (1.0f - t) + p2 * t;
 }
 
+void Vector3::Swap(Vector3& v1, Vector3& v2)
+{
+	Vector3 dummy = v1;
+	v1 = v2;
+	v2 = dummy;
+}
+
 const Vector3 operator+(const Vector3& v1, const Vector3& v2)
 {
 	Vector3 temp(v1);

@@ -31,6 +31,7 @@ public:
 
 
 	static Vector3 Lerp(const Vector3& p1, const Vector3& p2, float t);
+	static void Swap(Vector3& v1, Vector3& v2);
 
 };
 
