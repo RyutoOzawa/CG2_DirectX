@@ -556,7 +556,7 @@ void BossEnemy::UpdateAtkLaser()
 
 	float barrelRotSpd = 1.0f;
 	float currentBarrelDistance = 1.0f;
-	uint16_t laserTimeMax = 300;
+	uint16_t laserTimeMax = 200;
 
 	//RockOnフェーズ
 	if (laserPhase == BossAtkLaserPhase::RockOn) {
@@ -567,6 +567,20 @@ void BossEnemy::UpdateAtkLaser()
 
 		//レーザーの大きさを0に
 		laserScale = { 0,0,1 };
+
+		//イージングによる移動が終わったら
+		if (eDataMove.GetTimeRate() >= 1.0f) {
+			//フェーズをChargeに
+			laserPhase = BossAtkLaserPhase::Charge;
+			//2秒で回転速度を最大に
+			eDataBarrelRot.Start(120.0f);
+			//現在の砲台角度をレーザー後の回転後角度として保存しておく
+			for (size_t i = 0; i < barrelObject.size(); i++) {
+				barrelRadAfter[i] = barrelRadian[i];
+			}
+
+		}
+
 
 	}//Chargeフェーズ
 	else if (laserPhase == BossAtkLaserPhase::Charge) {
@@ -581,7 +595,7 @@ void BossEnemy::UpdateAtkLaser()
 		//回転をどんどん早く
 		eDataBarrelRot.Update();
 		//イージングの進行度で回転速度とバレルの距離を決定
-		barrelRotSpd = Utility::Lerp(rotSpdTemp.x,rotSpdTemp.y, Easing::In(eDataBarrelRot.GetTimeRate()));
+		barrelRotSpd = Utility::Lerp(rotSpdTemp.x, rotSpdTemp.y, Easing::In(eDataBarrelRot.GetTimeRate()));
 		currentBarrelDistance = Utility::Lerp(barrelDistanceTemp.x, barrelDistanceTemp.y, Easing::Inback(eDataBarrelRot.GetTimeRate()));
 
 
@@ -612,7 +626,7 @@ void BossEnemy::UpdateAtkLaser()
 
 			//回転速度とかを設定しなおす
 			barrelDistanceTemp = { currentBarrelDistance,20.0f };
-			laserScaleTemp = { laserScale.x,8.0f };
+			laserScaleTemp = { laserScale.x,6.0f };
 			barrelRotSpd = rotSpdTemp.y;
 
 			//バレルの間隔とレーザーを広げる
@@ -634,30 +648,64 @@ void BossEnemy::UpdateAtkLaser()
 			}
 
 			laserTime--;
+			ImGui::Text("laser time %d", laserTime);
+
 		}
 		else if (laserTime <= 0) {
 			//最終フェーズに移動
 			laserPhase = BossAtkLaserPhase::ReturnMove;
+			//全砲台の角度に360加算したものを回転の前座標として保存
+			for (size_t i = 0; i < barrelObject.size(); i++) {
+				barrelRadBefore[i] = barrelRadian[i] + 720.0f;
+			}
+			laserScaleTemp.x = laserScale.x;
+
+			//定位置への移動+レーザーの縮小の補間開始
+			eDataBarrelRot.Start(60.0f);
+
+			//移動用座標をスワップ
+			Vector3::Swap(movePosBefore, movePosAfter);
+
+
+		}
+	}
+	else if (laserPhase == BossAtkLaserPhase::ReturnMove) {
+		eDataBarrelRot.Update();
+
+		//バレルの距離はデフォに
+		currentBarrelDistance = baseBarrelDistance;
+
+		//回転と座標の補間
+		for (size_t i = 0; i < barrelObject.size(); i++) {
+			barrelRadian[i] = Utility::Lerp(barrelRadBefore[i], barrelRadAfter[i],Easing::Out( eDataBarrelRot.GetTimeRate()));
+
+			Vector3 barrelPos{};
+			barrelPos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
+			barrelPos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
+			barrelObject[i].position = barrelPos;
+
 
 		}
 
-	}
-	else if (laserPhase == BossAtkLaserPhase::ReturnMove) {
+		laserScale.x = Utility::Lerp(laserScaleTemp.x,0.0f,Easing::Out(eDataBarrelRot.GetTimeRate()));
+		laserScale.y = Utility::Lerp(laserScaleTemp.x,0.0f,Easing::Out(eDataBarrelRot.GetTimeRate()));
+
+		Vector3 pos{};
+		pos = Vector3::Lerp(movePosBefore, movePosAfter, Easing::Out(eDataBarrelRot.GetTimeRate()));
+
+		position = pos;
+
+		//イージング終わりでﾌｪｰｽﾞ終了
+		if (eDataBarrelRot.GetTimeRate() >= 1.0f) {
+			ChangeAct(BossAct::Move);
+		}
 
 	}
 
 	laserObj->scale = laserScale;
 
-	
-	//イージングによる移動が終わったら
-	if (eDataMove.GetTimeRate() >= 1.0f) {
-		//フェーズがRockOnならフェーズをChargeに
-		if (laserPhase == BossAtkLaserPhase::RockOn) {
-			laserPhase = BossAtkLaserPhase::Charge;
-			//2秒で回転速度を最大に
-			eDataBarrelRot.Start(120.0f);
-		}
-	}
+
+
 
 	//プレイヤーを向くように
 	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
@@ -867,7 +915,8 @@ void BossEnemy::InitAtkLaser()
 	movePosAfter.y = 0.0f;
 
 	//攻撃フェーズをロックオンに設定
-	
+	laserPhase = BossAtkLaserPhase::RockOn;
+
 }
 
 void BossEnemy::InitDeath()

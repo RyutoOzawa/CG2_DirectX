@@ -101,6 +101,8 @@ private:
 	std::array<Object3d, barrelMax> barrelObject;
 	std::array<Vector3, barrelMax> barrelDistance;
 	std::array<float, barrelMax> barrelRadian;
+	std::array<float, barrelMax> barrelRadBefore;
+	std::array<float, barrelMax> barrelRadAfter;
 	Vector3 bulletOutOffset{ 0,0,0 };//モデルの弾が出る部分のオフセット
 	std::array<Easing::EasingData,barrelMax> eDataBarrelMove;	//バレルの移動をイージングにするよう
 	std::array<Vector3,barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
