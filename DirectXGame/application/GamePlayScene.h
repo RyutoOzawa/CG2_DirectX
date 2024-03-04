@@ -21,6 +21,7 @@
 #include"BossEnemy.h"
 #include"JsonLoader.h"
 #include"EventCamera.h"
+#include"EnemyLoader.h"
 
 enum class GamePhase {
 	Event_GameStart,//ゲーム開始イベント(自機の出撃)
@@ -92,6 +93,9 @@ private://メンバ変数
 	LevelData stageData;
 	std::vector<std::unique_ptr<Object3d>> stageObjects;
 	std::vector<std::unique_ptr<Model>> stageModels;
+
+	//敵の配置データ
+	std::vector<EnemyData> enemyData;
 
 	Camera* currentCamera = nullptr;
 	std::unique_ptr<RailCamera> railCamera = nullptr;

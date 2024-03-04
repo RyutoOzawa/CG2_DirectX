@@ -135,6 +135,8 @@ void GamePlayScene::Initialize()
 	//読み込んだデータでモデル、obj生成
 	JsonLoader::CreateObjectFromLevelData(stageData, stageObjects, stageModels);
 
+	//敵の配置データ読み込み
+ 	enemyData = EnemyLoader::LoadEnemyData("enemyData.txt");
 
 }
 

@@ -7,13 +7,6 @@
 #include"ParticleManager.h"
 #include"EnemyBullet.h"
 
-/// <summary>
-/// “G‚Ì”­¶î•ñ
-/// </summary>
-struct EnemyData {
-	float spawnTime = 0.0f;
-
-};
 
 class Enemy : public Object3d
 {
