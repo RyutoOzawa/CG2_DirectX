@@ -87,6 +87,8 @@ private:
 	float healthWidthOneHp = 0.0f;
 	uint16_t damageInterval = 0;
 	uint16_t damageIntervalMax = 10;
+	std::unique_ptr<ParticleManager> damageParticle = nullptr;
+
 	
 	//死亡演出関係
 	uint16_t explosionCountMax = 10;
@@ -108,6 +110,7 @@ private:
 	std::array<Vector3,barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
 	std::array<Vector3,barrelMax> movePosAfterBarrel;	//バレルの移動後座標
 	Easing::EasingData eDataBarrelRot;//バレルの回転速度遷移
+	std::unique_ptr<ParticleManager> chargeParticle = nullptr;
 
 
 	//ボスの行動管理
@@ -159,8 +162,7 @@ private:
 	//生成処理関係
 	Vector3 spawnPosOffsetCamera;//スポーンするときのカメラからの距離(目玉)
 
-	//パーティクルマネージャ
-	std::unique_ptr<ParticleManager> particleManager = nullptr;
+
 
 	//各行動の更新処理
 	//スポーン更新

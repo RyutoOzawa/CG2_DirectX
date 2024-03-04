@@ -118,8 +118,12 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 
 	//パーティクルマネージャ
-	particleManager = std::make_unique<ParticleManager>();
-	particleManager->Initialize(Texture::LoadTexture("white1x1.png"));
+	damageParticle = std::make_unique<ParticleManager>();
+	damageParticle->Initialize(Texture::LoadTexture("white1x1.png"));
+
+	chargeParticle = std::make_unique<ParticleManager>();
+	chargeParticle->Initialize(Texture::LoadTexture("particle.png"));
+
 }
 
 void BossEnemy::Update(const Vector3& playerPos, EventCamera* eventCamera)
@@ -183,7 +187,9 @@ void BossEnemy::Update(const Vector3& playerPos, EventCamera* eventCamera)
 	}
 
 	//パーティクル更新
-	particleManager->Update();
+	damageParticle->Update();
+	chargeParticle->Update();
+
 
 	//行動時間を減らす
 	if (nowActTime > 0) {
@@ -292,7 +298,9 @@ void BossEnemy::DrawSprite()
 
 void BossEnemy::DrawParticle()
 {
-	particleManager->Draw();
+	damageParticle->Draw();
+
+	chargeParticle->Draw();
 }
 
 void BossEnemy::DrawDebugLine()
@@ -573,7 +581,7 @@ void BossEnemy::UpdateAtkLaser()
 			//フェーズをChargeに
 			laserPhase = BossAtkLaserPhase::Charge;
 			//2秒で回転速度を最大に
-			eDataBarrelRot.Start(120.0f);
+			eDataBarrelRot.Start(240.0f);
 			//現在の砲台角度をレーザー後の回転後角度として保存しておく
 			for (size_t i = 0; i < barrelObject.size(); i++) {
 				barrelRadAfter[i] = barrelRadian[i];
@@ -598,6 +606,28 @@ void BossEnemy::UpdateAtkLaser()
 		barrelRotSpd = Utility::Lerp(rotSpdTemp.x, rotSpdTemp.y, Easing::In(eDataBarrelRot.GetTimeRate()));
 		currentBarrelDistance = Utility::Lerp(barrelDistanceTemp.x, barrelDistanceTemp.y, Easing::Inback(eDataBarrelRot.GetTimeRate()));
 
+		//パーティクルを生成し続ける
+		//毎フレーム0~10の間でランダムな数のパーティクルを生成
+		uint16_t particleCount = (uint16_t)Utility::Lerp(0, 20, Easing::In(eDataBarrelRot.GetTimeRate()));
+
+		ImGui::Text("particleCount %d", particleCount);
+
+		uint16_t particleLife = (uint16_t)Utility::Lerp(30, 10, eDataBarrelRot.GetTimeRate());
+
+
+		for (uint16_t i = 0; i < particleCount; i++) {
+			Vector3 particlePosBefore, particlePosAfter, random;
+			float rgb = Utility::Lerp(0.0f, 1.0f, eDataBarrelRot.GetTimeRate());
+
+			particlePosAfter = laserObj->GetWorldPosition();
+			float randParam = 60.0f;
+			random = { Utility::Random(-randParam,randParam),Utility::Random(-randParam,randParam) ,Utility::Random(-randParam,randParam) };
+			particlePosBefore = particlePosAfter + random;
+
+			chargeParticle->AddLerp(particleLife, particlePosBefore, particlePosAfter,
+				4.0f, 20.0f, InterType::EaseOut,{ rgb ,rgb ,rgb ,1.0f});
+
+		}
 
 		for (size_t i = 0; i < barrelObject.size(); i++) {
 			barrelRadian[i] += barrelRotSpd;
@@ -612,7 +642,7 @@ void BossEnemy::UpdateAtkLaser()
 		}
 
 		//回転の速度が最大になったらレーザー発射フェーズへ
-		if (barrelRotSpd >= rotSpdTemp.y) {
+		if (eDataBarrelRot.GetTimeRate() >= 1.0f) {
 			laserPhase = BossAtkLaserPhase::Shot;
 			eDataBarrelRot.Start(15.0f);
 			laserTime = laserTimeMax;
@@ -677,7 +707,7 @@ void BossEnemy::UpdateAtkLaser()
 
 		//回転と座標の補間
 		for (size_t i = 0; i < barrelObject.size(); i++) {
-			barrelRadian[i] = Utility::Lerp(barrelRadBefore[i], barrelRadAfter[i],Easing::Out( eDataBarrelRot.GetTimeRate()));
+			barrelRadian[i] = Utility::Lerp(barrelRadBefore[i], barrelRadAfter[i], Easing::Out(eDataBarrelRot.GetTimeRate()));
 
 			Vector3 barrelPos{};
 			barrelPos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
@@ -687,8 +717,8 @@ void BossEnemy::UpdateAtkLaser()
 
 		}
 
-		laserScale.x = Utility::Lerp(laserScaleTemp.x,0.0f,Easing::Out(eDataBarrelRot.GetTimeRate()));
-		laserScale.y = Utility::Lerp(laserScaleTemp.x,0.0f,Easing::Out(eDataBarrelRot.GetTimeRate()));
+		laserScale.x = Utility::Lerp(laserScaleTemp.x, 0.0f, Easing::Out(eDataBarrelRot.GetTimeRate()));
+		laserScale.y = Utility::Lerp(laserScaleTemp.x, 0.0f, Easing::Out(eDataBarrelRot.GetTimeRate()));
 
 		Vector3 pos{};
 		pos = Vector3::Lerp(movePosBefore, movePosAfter, Easing::Out(eDataBarrelRot.GetTimeRate()));
@@ -755,7 +785,7 @@ void BossEnemy::UpdateDeath()
 					Vector3 acc = { Random(0.25f,-0.1f),Random(0.1f,-0.1f) ,Random(0.1f,-0.1f) };
 					Vector3 rgb = { 255,Random(0,128),Random(0,64) };
 					rgb = ConvertColor(rgb);
-					particleManager->Add(20, pos, vel, acc, 0.0f, 10.0f, { rgb.x,rgb.y,rgb.z,1.0f });
+					damageParticle->Add(20, pos, vel, acc, 0.0f, 10.0f, { rgb.x,rgb.y,rgb.z,1.0f });
 				}
 			}
 		}
@@ -998,7 +1028,7 @@ void BossEnemy::Damage(const Vector3& hitPos, uint16_t damage)
 		float rgbBase = Random(0.0f, 128.0f);
 		Vector3 rgb = { rgbBase,rgbBase ,rgbBase };
 		rgb = ConvertColor(rgb);
-		particleManager->Add(15, particlePos, vel, { 0,0,0 }, 10.0f, 0.0f, { rgb.x,rgb.y,rgb.z ,1.0f });
+		damageParticle->Add(15, particlePos, vel, { 0,0,0 }, 10.0f, 0.0f, { rgb.x,rgb.y,rgb.z ,1.0f });
 	}
 
 	//HPが0以下なったら死亡処理
