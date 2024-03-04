@@ -618,6 +618,7 @@ void BossEnemy::UpdateAtkLaser()
 		for (uint16_t i = 0; i < particleCount; i++) {
 			Vector3 particlePosBefore, particlePosAfter, random;
 			float rgb = Utility::Lerp(0.0f, 1.0f, eDataBarrelRot.GetTimeRate());
+			float scaleAfter = Utility::Random(10.0f, 15.0f);
 
 			particlePosAfter = laserObj->GetWorldPosition();
 			float randParam = 60.0f;
@@ -625,7 +626,7 @@ void BossEnemy::UpdateAtkLaser()
 			particlePosBefore = particlePosAfter + random;
 
 			chargeParticle->AddLerp(particleLife, particlePosBefore, particlePosAfter,
-				4.0f, 20.0f, InterType::EaseOut,{ rgb ,rgb ,rgb ,1.0f});
+				4.0f, scaleAfter, InterType::EaseOut,{ rgb ,rgb ,rgb ,1.0f});
 
 		}
 
@@ -663,6 +664,22 @@ void BossEnemy::UpdateAtkLaser()
 			currentBarrelDistance = Utility::Lerp(barrelDistanceTemp.x, barrelDistanceTemp.y, Easing::Out(eDataBarrelRot.GetTimeRate()));
 			laserScale.x = Utility::Lerp(laserScaleTemp.x, laserScaleTemp.y, Easing::Out(eDataBarrelRot.GetTimeRate()));
 			laserScale.y = Utility::Lerp(laserScaleTemp.x, laserScaleTemp.y, Easing::Out(eDataBarrelRot.GetTimeRate()));
+
+			//パーティクル出す
+			for (uint16_t i = 0; i < 20; i++) {
+				Vector3 particlePosBefore, particlePosAfter, random;
+				float rgb = Utility::Random(0.5f, 1.0f);
+				float scaleBefore = Utility::Random(10.0f, 20.0f);
+
+				particlePosBefore = laserObj->GetWorldPosition();
+				float randParam = 90.0f;
+				random = { Utility::Random(-randParam,randParam),Utility::Random(-randParam,randParam) ,Utility::Random(-randParam,randParam) };
+				particlePosAfter = particlePosBefore+ random;
+
+				chargeParticle->AddLerp(30, particlePosBefore, particlePosAfter,
+					scaleBefore, 0.0f, InterType::EaseOut, { 0.5f ,0.5f ,rgb ,1.0f });
+
+			}
 
 			//バレル更新
 			for (size_t i = 0; i < barrelObject.size(); i++) {
@@ -713,8 +730,6 @@ void BossEnemy::UpdateAtkLaser()
 			barrelPos.x = sinf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
 			barrelPos.y = cosf((float)PI / 180.0f * barrelRadian[i]) * currentBarrelDistance;
 			barrelObject[i].position = barrelPos;
-
-
 		}
 
 		laserScale.x = Utility::Lerp(laserScaleTemp.x, 0.0f, Easing::Out(eDataBarrelRot.GetTimeRate()));
@@ -729,13 +744,9 @@ void BossEnemy::UpdateAtkLaser()
 		if (eDataBarrelRot.GetTimeRate() >= 1.0f) {
 			ChangeAct(BossAct::Move);
 		}
-
 	}
 
 	laserObj->scale = laserScale;
-
-
-
 
 	//プレイヤーを向くように
 	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
