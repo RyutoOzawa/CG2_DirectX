@@ -405,8 +405,6 @@ void GamePlayScene::EnemySpawn()
 	rTop = { 60,30,posZ };
 	rBtm = { 60,-30,posZ };
 
-
-
 	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
 	std::vector<Vector3> rightForLeftUpper;//上側右から左
 	std::vector<Vector3> rightForLeftLower;//下側右から左
@@ -556,16 +554,15 @@ void GamePlayScene::UpdateBossSpawn()
 		gamePhase = GamePhase::Game_Boss;
 	}
 
+	//最後の敵が死んでもパーティクルが更新されるように
+	Enemy::EnemyParticleUpdate();
+
 }
 
 void GamePlayScene::UpdateBoss()
 {
-	//TODO:この辺の処理はボス登場のカメラワークが完成したらボス登場更新に持ってく
-	//最後の敵が死んでもパーティクルが更新されるように
-	Enemy::EnemyParticleUpdate();
-
-
-	//
+	
+	
 	boss->Update(player->GetWorldPosition(), eventCamera.get());
 
 	//ボスのHPが0になったらゲームクリア演出開始

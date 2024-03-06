@@ -27,16 +27,23 @@ std::vector<EnemyData> EnemyLoader::LoadEnemyData(const std::string& textfilenam
 		//ストリームに変換
 		std::istringstream line_stream(line);
 
-		line_stream >> newEnemyData.spawnTime;
-		//カンマを飛ばしながら座標を読む
-		line_stream >> newEnemyData.spawnPos.x;
-		line_stream.seekg(1, ios_base::cur);
-		line_stream >> newEnemyData.spawnPos.y;
-		line_stream.seekg(1, ios_base::cur);
-		line_stream >> newEnemyData.spawnPos.z;
+		//先頭文字取得
+		char firstStr = line.data()[0];
+		//先頭文字が'#'か終端文字なら無視
+		if (firstStr == '#' || firstStr == '\0') {
 
-		//出来た配置データを配列に挿入
-		enemyData.push_back(newEnemyData);
+		}else {
+			line_stream >> newEnemyData.spawnTime;
+			//カンマを飛ばしながら座標を読む
+			line_stream >> newEnemyData.spawnPos.x;
+			line_stream.ignore();
+			line_stream >> newEnemyData.spawnPos.y;
+			line_stream.seekg(1, ios_base::cur);
+			line_stream >> newEnemyData.spawnPos.z;
+
+			//出来た配置データを配列に挿入
+			enemyData.push_back(newEnemyData);
+		}
 
 	}
 
