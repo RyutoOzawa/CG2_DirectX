@@ -233,10 +233,18 @@ void BossEnemy::Update(const Vector3& playerPos, EventCamera* eventCamera)
 		case BossAct::Move:
 
 			//TODO:ランダムで射撃かレーザーか決める
+			
+			if (Utility::Random(0, 100.0f) > 50.0f) {
+				nextAct = BossAct::AttackLaser;
+			}
+			else {
+				nextAct = BossAct::AttackShot;
+			}
+
 
 			//今はとりあえず確定で射撃
 			//nextAct = BossAct::AttackShot;
-			nextAct = BossAct::AttackLaser;
+			//nextAct = BossAct::AttackLaser;
 
 			break;
 		case BossAct::AttackShot:
