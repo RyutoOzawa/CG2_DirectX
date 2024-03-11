@@ -32,7 +32,7 @@ public:
 	/// </summary>
 	/// <param name="spawnPos">座標</param>
 	/// <param name="leaveTime">退避までのフレーム</param>
-	void Initialive(const Vector3& spawnPos, uint16_t leaveTime_);
+	void Initialize(const Vector3& spawnPos, uint16_t leaveTime_);
 
 
 	//更新

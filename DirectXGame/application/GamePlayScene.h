@@ -103,6 +103,7 @@ private://メンバ変数
 
 	//ゲームフェーズ
 	GamePhase gamePhase = GamePhase::Event_GameStart;
+	uint16_t frameCount = 0;
 
 private:
 

@@ -73,8 +73,8 @@ void GamePlayScene::Initialize()
 	skydomeObj = std::make_unique<Object3d>();
 	skydomeObj->Initialize();
 	skydomeObj->SetModel(skydome.get());
-	Vector3 skydomeScale = { 1000.0f, 1000.0f,1000.0f};
-	skydomeObj->scale = {skydomeScale };
+	Vector3 skydomeScale = { 1000.0f, 1000.0f,1000.0f };
+	skydomeObj->scale = { skydomeScale };
 
 
 	player = std::make_unique<Player>();
@@ -136,7 +136,7 @@ void GamePlayScene::Initialize()
 	JsonLoader::CreateObjectFromLevelData(stageData, stageObjects, stageModels);
 
 	//敵の配置データ読み込み
- 	enemyData = EnemyLoader::LoadEnemyData("enemyData.txt");
+	enemyData = EnemyLoader::LoadEnemyData("enemyData.txt");
 
 }
 
@@ -270,7 +270,7 @@ void GamePlayScene::Update()
 		UpdateMain();
 		//現在のカメラ情報をレールカメラのものに
 		currentCamera = railCamera->GetCamera();
-		
+
 		break;
 	case GamePhase::Event_BossSpawn:
 		UpdateBossSpawn();
@@ -387,64 +387,88 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::EnemySpawn()
 {
-	float posZ = Random(100.0f, 150.0f);
+	float posZ = 0.0f;
+	
 
 	//Z座標はカメラ基準に
 	//posZ += railCamera->GetObject3d()->GetWorldPosition().z;
 
-	Vector3 start{ -60,0,posZ };
-	Vector3 p1 = { 0,30,posZ };
-	Vector3 p2 = { -30,0,posZ };
-	Vector3 p3 = { 0,-30,posZ };
-	Vector3 p4 = { 30,0,posZ };
-	Vector3 end = { 60,0,posZ };
+	//Vector3 start{ -60,0,posZ };
+	//Vector3 p1 = { 0,30,posZ };
+	//Vector3 p2 = { -30,0,posZ };
+	//Vector3 p3 = { 0,-30,posZ };
+	//Vector3 p4 = { 30,0,posZ };
+	//Vector3 end = { 60,0,posZ };
 
-	Vector3 lTop, lBtm, rTop, rBtm;
-	lTop = { -60,30,posZ };
-	lBtm = { -60,-30,posZ };
-	rTop = { 60,30,posZ };
-	rBtm = { 60,-30,posZ };
+	//Vector3 lTop, lBtm, rTop, rBtm;
+	//lTop = { -60,30,posZ };
+	//lBtm = { -60,-30,posZ };
+	//rTop = { 60,30,posZ };
+	//rBtm = { 60,-30,posZ };
 
-	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
-	std::vector<Vector3> rightForLeftUpper;//上側右から左
-	std::vector<Vector3> rightForLeftLower;//下側右から左
-	std::vector<Vector3> leftForRightUpper;//上側左から右
-	std::vector<Vector3> leftForRightLower;//下側左から右
+	//std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
+	//std::vector<Vector3> rightForLeftUpper;//上側右から左
+	//std::vector<Vector3> rightForLeftLower;//下側右から左
+	//std::vector<Vector3> leftForRightUpper;//上側左から右
+	//std::vector<Vector3> leftForRightLower;//下側左から右
 
-	rightForLeftUpper = { rTop, rTop,lTop,lTop };
-	rightForLeftLower = { rBtm, rBtm,lBtm,lBtm };
-	leftForRightUpper = { lTop, lTop,rTop,rTop };
-	leftForRightLower = { lBtm, lBtm,rBtm,rBtm };
+	//rightForLeftUpper = { rTop, rTop,lTop,lTop };
+	//rightForLeftLower = { rBtm, rBtm,lBtm,lBtm };
+	//leftForRightUpper = { lTop, lTop,rTop,rTop };
+	//leftForRightLower = { lBtm, lBtm,rBtm,rBtm };
 
 
-	//曲線をカメラ基準に
-	//for (auto& p : enemyMovePoints) {
-	//	//p += railCamera->GetObject3d()->GetWorldPosition();
+	////曲線をカメラ基準に
+	////for (auto& p : enemyMovePoints) {
+	////	//p += railCamera->GetObject3d()->GetWorldPosition();
+	////}
+
+	//int pasent = (INT32)Random(0, 100) % 4;
+
+	//if (pasent == 0) {
+	//	enemyMovePoints = rightForLeftUpper;
+	//}
+	//else if (pasent == 1) {
+	//	enemyMovePoints = rightForLeftLower;
+	//}
+	//else if (pasent == 2) {
+	//	enemyMovePoints = leftForRightUpper;
+	//}
+	//else {
+	//	enemyMovePoints = leftForRightLower;
 	//}
 
-	int pasent = (INT32)Random(0, 100) % 4;
 
-	if (pasent == 0) {
-		enemyMovePoints = rightForLeftUpper;
-	}
-	else if (pasent == 1) {
-		enemyMovePoints = rightForLeftLower;
-	}
-	else if (pasent == 2) {
-		enemyMovePoints = leftForRightUpper;
-	}
-	else {
-		enemyMovePoints = leftForRightLower;
-	}
+	////敵の生成と初期化
+	//std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+	//newEnemy->Initialize(enemyMovePoints);
+	//newEnemy->Spawn();
+
+	//敵のデータ配列を走査
+	for (size_t i = 0; i < enemyData.size(); i++) {
+		//フレームカウントでスポーンする敵がいればスポーンさせる
+		if (enemyData[i].spawnTime == frameCount) {
+
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+			Vector3 newEnemyPosition = enemyData[i].spawnPos;
 
 
-	//敵の生成と初期化
-	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-	newEnemy->Initialize(enemyMovePoints);
-	newEnemy->Spawn();
+			newEnemy->Initialize(enemyData[i].spawnPos, enemyData[i].leaveTime);
+			newEnemy->Spawn();
 
-	//リストに登録
-	enemys.push_back(std::move(newEnemy));
+			//リストに登録
+			enemys.push_back(std::move(newEnemy));
+
+			//データ配列から該当データを削除+for文を1回巻き戻す
+			enemyData.erase(enemyData.begin() + i);
+			i--;
+
+		}
+
+	
+	}
+
+	
 
 
 }
@@ -484,6 +508,9 @@ void GamePlayScene::UpdateGameStart()
 
 		//ﾌｪｰｽﾞをメインゲームに移行
 		gamePhase = GamePhase::Game_Main;
+
+		//フレームカウントをリセット
+		frameCount = 0;
 	}
 
 }
@@ -508,7 +535,7 @@ void GamePlayScene::UpdateMain()
 		if (enemys.empty()) {
 
 			boss->Spawn(railCamera->GetObject3d()->matWorld);
-			
+
 			////ボススポーンへ遷移
 			gamePhase = GamePhase::Event_BossSpawn;
 			////レールカメラの座標をイベントカメラにもコピー
@@ -518,11 +545,14 @@ void GamePlayScene::UpdateMain()
 		}
 	}
 	else {
+		//敵出現制御用のフレームカウントを進める
+		frameCount++;
+
 		//レールカメラが5%進むごとに敵を一体スポーン
 		float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
-		if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
-			EnemySpawn();
-		}
+		//if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
+		EnemySpawn();
+		//}
 	}
 
 	//死んでる敵を消す
@@ -545,7 +575,7 @@ void GamePlayScene::UpdateBossSpawn()
 
 
 	//ボスの更新
-	boss->Update(player->GetWorldPosition(),eventCamera.get());
+	boss->Update(player->GetWorldPosition(), eventCamera.get());
 	//カメラ更新
 	eventCamera->Update();
 
@@ -561,17 +591,17 @@ void GamePlayScene::UpdateBossSpawn()
 
 void GamePlayScene::UpdateBoss()
 {
-	
-	
+
+
 	boss->Update(player->GetWorldPosition(), eventCamera.get());
 
 	//ボスのHPが0になったらゲームクリア演出開始
 	if (boss->GetHealth() == 0) {
-		
+
 		//自機の演出開始
 		//player->Leave();
 
-		
+
 		//sceneManager->ChangeScene("GAMECLEAR");
 
 		//イベントカメラの移動とセット

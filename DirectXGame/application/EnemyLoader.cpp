@@ -29,11 +29,15 @@ std::vector<EnemyData> EnemyLoader::LoadEnemyData(const std::string& textfilenam
 
 		//先頭文字取得
 		char firstStr = line.data()[0];
-		//先頭文字が'#'か終端文字なら無視
+		//先頭文字が'#'か終端文字(改行)なら無視
 		if (firstStr == '#' || firstStr == '\0') {
 
 		}else {
+
+			//スポーンするフレ―ム
 			line_stream >> newEnemyData.spawnTime;
+			//退避までのフレーム
+			line_stream >> newEnemyData.leaveTime;
 			//カンマを飛ばしながら座標を読む
 			line_stream >> newEnemyData.spawnPos.x;
 			line_stream.ignore();

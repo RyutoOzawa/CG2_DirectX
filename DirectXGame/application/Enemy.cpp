@@ -48,7 +48,7 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 
 }
 
-void Enemy::Initialive(const Vector3& spawnPos, uint16_t leaveTime_)
+void Enemy::Initialize(const Vector3& spawnPos, uint16_t leaveTime_)
 {
 	//Obj3D‚Ì‰Šú‰»
 	Object3d::Initialize();
