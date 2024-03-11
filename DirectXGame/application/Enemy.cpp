@@ -39,7 +39,7 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 
 	moveLine.SetPositions(points);
 
-	float enemyColSize = 9.0f;
+	
 
 	SetCollider(new SphereCollider({ 0,0,0 }, enemyColSize));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
@@ -48,15 +48,31 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 
 }
 
+void Enemy::Initialive(const Vector3& spawnPos, uint16_t leaveTime_)
+{
+	//Obj3Dの初期化
+	Object3d::Initialize();
+	SetModel(model);
+
+	stayPosition = spawnPos;
+	leaveTime = leaveTime_;
+
+	SetCollider(new SphereCollider({ 0,0,0 }, enemyColSize));
+	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	scale = baseScale;
+	shotInterval = shotCoolTime;
+}
+
 void Enemy::Update(const Vector3& playerWorldPos, const Matrix4& cameraMat)
 {
-	moveLine.Update();
 
 	//曲線にカメラ行列を掛けてカメラ基準にする
 	Vector3 cameraPos = { cameraMat.m[3][0],cameraMat.m[3][1] ,cameraMat.m[3][2] };
 
-	position = Matrix4::transform( moveLine.GetPosition(),cameraMat) + cameraPos;
+	//移動
+	Move(cameraMat, cameraPos);
 
+	//攻撃
 	Attack(playerWorldPos);
 
 	//弾の更新
@@ -177,6 +193,69 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 void Enemy::Death()
 {
 	isAlive = false;
+}
+
+void Enemy::Move(const Matrix4& camMat, const Vector3& camPos)
+{
+	//移動用曲線が設定されていれば曲線の更新
+	if (moveLine.GetCPosCount() > 0) {
+		moveLine.Update();
+
+		position = Matrix4::transform(moveLine.GetPosition(), camMat) + camPos;
+	}
+	else {//設定されていなければ設定された退避時間を減らす
+		position = stayPosition;
+		if (leaveTime > 0) {
+			leaveTime--;
+		}
+		else if (leaveTime == 0) {	//退避時間が0になったら退避行動に移行
+
+			Leave();
+
+		}
+	}
+
+}
+
+void Enemy::Leave()
+{
+	//退避用ベクトルの算出
+	//ビューポート行列
+	Matrix4 viewPort;
+	viewPort.identity();
+	viewPort.m[0][0] = WindowsAPI::winW / 2.0f;
+	viewPort.m[1][1] = -(WindowsAPI::winH / 2.0f);
+	viewPort.m[3][0] = WindowsAPI::winW / 2.0f;
+	viewPort.m[3][1] = WindowsAPI::winH / 2.0f;
+
+	//カメラ行列と合わせる
+	Matrix4 matViewProViewPort = Object3d::camera->GetViewProjection() * viewPort;
+	//スクリーン座標変換
+	Vector3 posScreen = Matrix4::transformDivW(GetWorldPosition(), matViewProViewPort);
+	//画面上のどこにいるかで退避ベクトルを計算
+	if (posScreen.x >= WindowsAPI::winW / 2.0f) {
+		leaveSpd.x = 1.0f;
+	}
+	else {
+		leaveSpd.x = -1.0f;
+	}
+
+	if (posScreen.y > WindowsAPI::winH / 2.0f) {
+		leaveSpd.y = -1.0f;
+	}
+	else {
+		leaveSpd.y = 1.0f;
+	}
+	//Z方向には移動しない
+	leaveSpd.z = 0.0f;
+
+	//正規化して基本速度に直す
+	leaveSpd.normalize();
+	leaveSpd *= leaveSpdBase;
+
+	//座標に加算
+	position += leaveSpd;
+
 }
 
 void Enemy::ScaleControll()

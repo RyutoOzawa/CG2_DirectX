@@ -49,8 +49,11 @@ public:
 	//getter
 	Vector3 GetPosition()const { return currentPos; }
 	float GetProgress()const { return progress; }
+	size_t GetCPosCount()const { return controllPoints.size(); }
 
 	//曲線描画(デバッグ用)
 	void DrawCurve(const Vector4& color,const Vector3& offset = {0,0,0});
+
+
 };
 

@@ -5,7 +5,8 @@
 
 //敵の配置データ
 struct EnemyData {
-	int spawnTime = 0;
+	uint16_t spawnTime = 0;
+	uint16_t leaveTime = 0;
 	Vector3 spawnPos = {0,0,0};
 };
 
