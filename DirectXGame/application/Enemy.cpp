@@ -127,7 +127,9 @@ void Enemy::Draw()
 
 void Enemy::Spawn()
 {
-	moveLine.Start(600, true);
+	if (moveLine.GetCPosCount() > 0) {
+		moveLine.Start(600, true);
+	}
 
 	isAlive = true;
 }

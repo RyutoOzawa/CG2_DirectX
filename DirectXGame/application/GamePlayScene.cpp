@@ -451,9 +451,10 @@ void GamePlayScene::EnemySpawn()
 
 			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
 			Vector3 newEnemyPosition = enemyData[i].spawnPos;
+			posZ = Utility::Random(100.0f, 150.0f);
+			newEnemyPosition.z = posZ;
 
-
-			newEnemy->Initialize(enemyData[i].spawnPos, enemyData[i].leaveTime);
+			newEnemy->Initialize(newEnemyPosition, enemyData[i].leaveTime);
 			newEnemy->Spawn();
 
 			//リストに登録
@@ -549,7 +550,7 @@ void GamePlayScene::UpdateMain()
 		frameCount++;
 
 		//レールカメラが5%進むごとに敵を一体スポーン
-		float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
+		//float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
 		//if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
 		EnemySpawn();
 		//}
