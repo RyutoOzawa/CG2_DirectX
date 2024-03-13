@@ -1,5 +1,5 @@
 #pragma once
-#include"Vector3.h"
+#include"Vector2.h"
 #include<vector>
 #include<string>
 
@@ -7,7 +7,7 @@
 struct EnemyData {
 	uint16_t spawnTime = 0;
 	uint16_t leaveTime = 0;
-	Vector3 spawnPos = {0,0,0};
+	Vector2 spawnPos = {0,0};
 };
 
 class EnemyLoader

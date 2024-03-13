@@ -42,8 +42,6 @@ std::vector<EnemyData> EnemyLoader::LoadEnemyData(const std::string& textfilenam
 			line_stream >> newEnemyData.spawnPos.x;
 			line_stream.ignore();
 			line_stream >> newEnemyData.spawnPos.y;
-			line_stream.seekg(1, ios_base::cur);
-			line_stream >> newEnemyData.spawnPos.z;
 
 			//出来た配置データを配列に挿入
 			enemyData.push_back(newEnemyData);

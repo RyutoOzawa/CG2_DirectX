@@ -206,14 +206,12 @@ void Enemy::Move(const Matrix4& camMat, const Vector3& camPos)
 		position = Matrix4::transform(moveLine.GetPosition(), camMat) + camPos;
 	}
 	else {//İ’è‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Îİ’è‚³‚ê‚½‘Ş”ğŠÔ‚ğŒ¸‚ç‚·
-		position = stayPosition;
+		position = Matrix4::transform(stayPosition,camMat) + camPos;
 		if (leaveTime > 0) {
 			leaveTime--;
 		}
 		else if (leaveTime == 0) {	//‘Ş”ğŠÔ‚ª0‚É‚È‚Á‚½‚ç‘Ş”ğs“®‚ÉˆÚs
-
 			Leave();
-
 		}
 	}
 
@@ -256,7 +254,7 @@ void Enemy::Leave()
 	leaveSpd *= leaveSpdBase;
 
 	//À•W‚É‰ÁZ
-	position += leaveSpd;
+	stayPosition += leaveSpd;
 
 }
 

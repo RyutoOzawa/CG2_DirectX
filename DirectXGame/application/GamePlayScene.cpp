@@ -450,7 +450,25 @@ void GamePlayScene::EnemySpawn()
 		if (enemyData[i].spawnTime == frameCount) {
 
 			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-			Vector3 newEnemyPosition = enemyData[i].spawnPos;
+			Vector3 newEnemyPosition = {0,0,1};
+			newEnemyPosition.x= enemyData[i].spawnPos.x;
+			newEnemyPosition.y= enemyData[i].spawnPos.y;
+			
+			//スクリーンからワールドに変換
+			Matrix4 matScreen2World;
+			matScreen2World.identity();
+			matScreen2World.m[0][0] = WindowsAPI::winW / 2.0f;
+			matScreen2World.m[1][1] = -(WindowsAPI::winH / 2.0f);
+			matScreen2World.m[3][0] = WindowsAPI::winW / 2.0f;
+			matScreen2World.m[3][1] = WindowsAPI::winH / 2.0f;
+
+			matScreen2World = Object3d::camera->GetViewProjection() * matScreen2World;
+
+			matScreen2World.Inverse();
+
+			newEnemyPosition = Matrix4::transformDivW(newEnemyPosition, matScreen2World);
+			
+
 			posZ = Utility::Random(100.0f, 150.0f);
 			newEnemyPosition.z = posZ;
 
@@ -466,11 +484,7 @@ void GamePlayScene::EnemySpawn()
 
 		}
 
-	
 	}
-
-	
-
 
 }
 
