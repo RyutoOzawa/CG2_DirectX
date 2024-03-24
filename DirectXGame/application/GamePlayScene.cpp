@@ -388,7 +388,7 @@ void GamePlayScene::Draw()
 void GamePlayScene::EnemySpawn()
 {
 	float posZ = 0.0f;
-	
+
 
 	//Z座標はカメラ基準に
 	//posZ += railCamera->GetObject3d()->GetWorldPosition().z;
@@ -450,10 +450,10 @@ void GamePlayScene::EnemySpawn()
 		if (enemyData[i].spawnTime == frameCount) {
 
 			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-			Vector3 newEnemyPosition = {0,0,1};
-			newEnemyPosition.x= enemyData[i].spawnPos.x;
-			newEnemyPosition.y= enemyData[i].spawnPos.y;
-			
+			Vector3 newEnemyPosition = { 0,0,1 };
+			newEnemyPosition.x = enemyData[i].spawnPos.x;
+			newEnemyPosition.y = enemyData[i].spawnPos.y;
+
 			//スクリーンからワールドに変換
 			Matrix4 matScreen2World;
 			matScreen2World.identity();
@@ -467,10 +467,14 @@ void GamePlayScene::EnemySpawn()
 			matScreen2World.Inverse();
 
 			newEnemyPosition = Matrix4::transformDivW(newEnemyPosition, matScreen2World);
-			
+
 
 			posZ = Utility::Random(100.0f, 150.0f);
 			newEnemyPosition.z = posZ;
+			
+			newEnemyPosition.x = enemyData[i].spawnPos.x;
+			newEnemyPosition.y = enemyData[i].spawnPos.y;
+
 
 			newEnemy->Initialize(newEnemyPosition, enemyData[i].leaveTime);
 			newEnemy->Spawn();
@@ -486,6 +490,69 @@ void GamePlayScene::EnemySpawn()
 
 	}
 
+}
+
+void GamePlayScene::EnemySpawnRandom()
+{
+	float posZ = Utility::Random(100.0f, 150.0f);
+
+
+	//Z座標はカメラ基準に
+	//posZ += railCamera->GetObject3d()->GetWorldPosition().z;
+
+	Vector3 start{ -60,0,posZ };
+	Vector3 p1 = { 0,30,posZ };
+	Vector3 p2 = { -30,0,posZ };
+	Vector3 p3 = { 0,-30,posZ };
+	Vector3 p4 = { 30,0,posZ };
+	Vector3 end = { 60,0,posZ };
+
+	Vector3 lTop, lBtm, rTop, rBtm;
+	lTop = { -60,30,posZ };
+	lBtm = { -60,-30,posZ };
+	rTop = { 60,30,posZ };
+	rBtm = { 60,-30,posZ };
+
+	std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
+	std::vector<Vector3> rightForLeftUpper;//上側右から左
+	std::vector<Vector3> rightForLeftLower;//下側右から左
+	std::vector<Vector3> leftForRightUpper;//上側左から右
+	std::vector<Vector3> leftForRightLower;//下側左から右
+
+	rightForLeftUpper = { rTop, rTop,lTop,lTop };
+	rightForLeftLower = { rBtm, rBtm,lBtm,lBtm };
+	leftForRightUpper = { lTop, lTop,rTop,rTop };
+	leftForRightLower = { lBtm, lBtm,rBtm,rBtm };
+
+
+	//曲線をカメラ基準に
+	//for (auto& p : enemyMovePoints) {
+	//	//p += railCamera->GetObject3d()->GetWorldPosition();
+	//}
+
+	int pasent = (INT32)Random(0, 100) % 4;
+
+	if (pasent == 0) {
+		enemyMovePoints = rightForLeftUpper;
+	}
+	else if (pasent == 1) {
+		enemyMovePoints = rightForLeftLower;
+	}
+	else if (pasent == 2) {
+		enemyMovePoints = leftForRightUpper;
+	}
+	else {
+		enemyMovePoints = leftForRightLower;
+	}
+
+
+	//敵の生成と初期化
+	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+	newEnemy->Initialize(enemyMovePoints);
+	newEnemy->Spawn();
+
+	//リストに登録
+	enemys.push_back(std::move(newEnemy));
 }
 
 void GamePlayScene::UpdateAllPhase()
@@ -563,11 +630,12 @@ void GamePlayScene::UpdateMain()
 		//敵出現制御用のフレームカウントを進める
 		frameCount++;
 
-		//レールカメラが5%進むごとに敵を一体スポーン
-		//float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
-		//if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
 		EnemySpawn();
-		//}
+		//レールカメラが5%進むごとに敵を一体スポーン
+		float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
+		if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
+			//EnemySpawnRandom();
+		}
 	}
 
 	//死んでる敵を消す
