@@ -47,8 +47,7 @@ public:
 	//描画
 	void Draw()override;
 
-	//敵の生成
-	void EnemySpawn();
+
 
 
 private://メンバ変数
@@ -122,6 +121,12 @@ private:
 	void UpdateBoss();		
 	//ゲームクリア
 	void UpdateClear();		
+
+	//敵の生成
+	void EnemySpawn();
+
+	//ランダムな配置で敵生成
+	void EnemySpawnRandom();
 
 };
 
