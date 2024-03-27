@@ -39,13 +39,13 @@ enum class BossAtkLaserPhase {
 
 class BossEnemy : public Object3d
 {
-public: 
+public:
 
 	//初期化
-	void Initialize(Model* bodyModel_,Model* barrelModel_,Object3d* parent_);
+	void Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* parent_);
 
 	//更新
-	void Update(const Vector3& playerPos = {0.0f,0.0f,0.0f},EventCamera* eventCamera = nullptr);
+	void Update(const Vector3& playerPos = { 0.0f,0.0f,0.0f }, EventCamera* eventCamera = nullptr);
 
 	//描画
 	void Draw();
@@ -63,7 +63,7 @@ public:
 	void Finalize();
 
 	//ボスのスポーン
-	void Spawn(const Matrix4& cameraMatWorld,const Vector3& spawnPos = {0,0,240.0f});
+	void Spawn(const Matrix4& cameraMatWorld, const Vector3& spawnPos = { 0,0,240.0f });
 
 	//getter
 	bool IsAlive()const { return isAlive; }
@@ -73,7 +73,7 @@ public:
 private:
 	Model* bodyModel;
 	Model* barrelModel;
-	std::unique_ptr<Model> bulletModel=nullptr;
+	std::unique_ptr<Model> bulletModel = nullptr;
 
 	//カメラワーク用イベントカメラのポインタ
 	EventCamera* eCamera = nullptr;
@@ -89,7 +89,7 @@ private:
 	uint16_t damageIntervalMax = 10;
 	std::unique_ptr<ParticleManager> damageParticle = nullptr;
 
-	
+
 	//死亡演出関係
 	uint16_t explosionCountMax = 10;
 	uint16_t explosionCount = explosionCountMax;
@@ -106,9 +106,9 @@ private:
 	std::array<float, barrelMax> barrelRadBefore;
 	std::array<float, barrelMax> barrelRadAfter;
 	Vector3 bulletOutOffset{ 0,0,0 };//モデルの弾が出る部分のオフセット
-	std::array<Easing::EasingData,barrelMax> eDataBarrelMove;	//バレルの移動をイージングにするよう
-	std::array<Vector3,barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
-	std::array<Vector3,barrelMax> movePosAfterBarrel;	//バレルの移動後座標
+	std::array<Easing::EasingData, barrelMax> eDataBarrelMove;	//バレルの移動をイージングにするよう
+	std::array<Vector3, barrelMax> movePosBeforeBarrel;	//バレルの移動前座標
+	std::array<Vector3, barrelMax> movePosAfterBarrel;	//バレルの移動後座標
 	Easing::EasingData eDataBarrelRot;//バレルの回転速度遷移
 	std::unique_ptr<ParticleManager> chargeParticle = nullptr;
 
@@ -150,6 +150,7 @@ private:
 	Vector2 barrelDistanceTemp = { };
 	Vector2 laserScaleTemp = {};
 	uint16_t laserTime = 0;
+	Vector2 laserPosScreen = {};
 
 	//移動補完用座標2つ
 	Vector3 movePosBefore{ 0,0,0 };
@@ -193,8 +194,8 @@ private:
 	//当たり判定コールバック
 	void OnCollision([[maybe_unused]] const CollisionInfo& info)override;
 	//ダメージを受ける処理
-	void Damage(const Vector3& hitPos,uint16_t damage = 1);
-	
+	void Damage(const Vector3& hitPos, uint16_t damage = 1);
+
 	//ボススポーンのカメラワーク開始
 	void StartCameraSpawn();
 
