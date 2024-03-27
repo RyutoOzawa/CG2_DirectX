@@ -757,7 +757,7 @@ void BossEnemy::UpdateAtkLaser()
 	laserObj->scale = laserScale;
 
 	//ƒvƒŒƒCƒ„[‚ðŒü‚­‚æ‚¤‚É
-	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
+	//matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
 
 	Object3d::Update();
 	for (size_t i = 0; i < barrelMax; i++) {
