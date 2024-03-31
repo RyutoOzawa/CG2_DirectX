@@ -65,7 +65,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine/particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame\engine\collision;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine\particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\application\camera;$(ProjectDir)DirectXGame\application\enemy;$(ProjectDir)DirectXGame\application\player;$(ProjectDir)DirectXGame\application\scene;$(ProjectDir)DirectXGame\engine\collision;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame\engine</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -85,7 +85,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine/particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\engine\collision;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame\engine;$(ProjectDir)DirectXGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\application;$(ProjectDir)DirectXGame\engine\2d;$(ProjectDir)DirectXGame\engine\3d;$(ProjectDir)DirectXGame\engine\base;$(ProjectDir)DirectXGame\engine\particle;$(ProjectDir)DirectXGame\engine\math;$(ProjectDir)DirectXGame\application\camera;$(ProjectDir)DirectXGame\application\enemy;$(ProjectDir)DirectXGame\application\player;$(ProjectDir)DirectXGame\application\scene;$(ProjectDir)DirectXGame\engine\collision;$(ProjectDir)DirectXGame\engine\scene;$(ProjectDir)DirectXGame\engine</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -100,14 +100,14 @@
     <ClCompile Include="DirectXGame\engine\scene\BaseSceneTransition.cpp" />
     <ClCompile Include="DirectXGame\engine\particle\BaseParticle.cpp" />
     <ClCompile Include="DirectXGame\engine\math\BezierCurve.cpp" />
-    <ClCompile Include="DirectXGame\application\BossEnemy.cpp" />
-    <ClCompile Include="DirectXGame\application\Enemy.cpp" />
-    <ClCompile Include="DirectXGame\application\GamePlayScene.cpp" />
-    <ClCompile Include="DirectXGame\application\GameTitleScene.cpp" />
+    <ClCompile Include="DirectXGame\application\enemy\BossEnemy.cpp" />
+    <ClCompile Include="DirectXGame\application\enemy\Enemy.cpp" />
+    <ClCompile Include="DirectXGame\application\scene\GamePlayScene.cpp" />
+    <ClCompile Include="DirectXGame\application\scene\GameTitleScene.cpp" />
     <ClCompile Include="DirectXGame\application\MyGame.cpp" />
-    <ClCompile Include="DirectXGame\application\Player.cpp" />
-    <ClCompile Include="DirectXGame\application\PlayerBullet.cpp" />
-    <ClCompile Include="DirectXGame\application\RailCamera.cpp" />
+    <ClCompile Include="DirectXGame\application\player\Player.cpp" />
+    <ClCompile Include="DirectXGame\application\player\PlayerBullet.cpp" />
+    <ClCompile Include="DirectXGame\application\camera\RailCamera.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\ImguiManager.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\Sprite.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\Texture.cpp" />
@@ -144,16 +144,16 @@
     <ClCompile Include="DirectXGame\engine\particle\ParticleManager.cpp" />
     <ClCompile Include="DirectXGame\engine\2d\PostEffect.cpp" />
     <ClCompile Include="DirectXGame\engine\math\SplineCurve.cpp" />
-    <ClCompile Include="DirectXGame\application\GameOverScene.cpp" />
-    <ClCompile Include="DirectXGame\application\EnemyBullet.cpp" />
-    <ClCompile Include="DirectXGame\application\TestScene.cpp" />
+    <ClCompile Include="DirectXGame\application\scene\GameOverScene.cpp" />
+    <ClCompile Include="DirectXGame\application\enemy\EnemyBullet.cpp" />
+    <ClCompile Include="DirectXGame\application\scene\TestScene.cpp" />
     <ClCompile Include="DirectXGame\engine\particle\LerpParticle.cpp" />
-    <ClCompile Include="DirectXGame\application\GameClearScene.cpp" />
-    <ClCompile Include="DirectXGame\application\FadeSceneTransition.cpp" />
-    <ClCompile Include="DirectXGame\application\SlideSceneTransition.cpp" />
+    <ClCompile Include="DirectXGame\application\scene\GameClearScene.cpp" />
+    <ClCompile Include="DirectXGame\application\scene\FadeSceneTransition.cpp" />
+    <ClCompile Include="DirectXGame\application\scene\SlideSceneTransition.cpp" />
     <ClCompile Include="DirectXGame\engine\3d\JsonLoader.cpp" />
-    <ClCompile Include="DirectXGame\application\EventCamera.cpp" />
-    <ClCompile Include="DirectXGame\application\EnemyLoader.cpp" />
+    <ClCompile Include="DirectXGame\application\camera\EventCamera.cpp" />
+    <ClCompile Include="DirectXGame\application\enemy\EnemyLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -271,14 +271,14 @@
     <ClInclude Include="DirectXGame\engine\particle\BaseParticle.h" />
     <ClInclude Include="DirectXGame\engine\particle\ParticleManager.h" />
     <ClInclude Include="DirectXGame\engine\math\BezierCurve.h" />
-    <ClInclude Include="DirectXGame\application\BossEnemy.h" />
-    <ClInclude Include="DirectXGame\application\Enemy.h" />
-    <ClInclude Include="DirectXGame\application\GamePlayScene.h" />
-    <ClInclude Include="DirectXGame\application\GameTitleScene.h" />
+    <ClInclude Include="DirectXGame\application\enemy\BossEnemy.h" />
+    <ClInclude Include="DirectXGame\application\enemy\Enemy.h" />
+    <ClInclude Include="DirectXGame\application\scene\GamePlayScene.h" />
+    <ClInclude Include="DirectXGame\application\scene\GameTitleScene.h" />
     <ClInclude Include="DirectXGame\application\MyGame.h" />
-    <ClInclude Include="DirectXGame\application\Player.h" />
-    <ClInclude Include="DirectXGame\application\PlayerBullet.h" />
-    <ClInclude Include="DirectXGame\application\RailCamera.h" />
+    <ClInclude Include="DirectXGame\application\player\Player.h" />
+    <ClInclude Include="DirectXGame\application\player\PlayerBullet.h" />
+    <ClInclude Include="DirectXGame\application\camera\RailCamera.h" />
     <ClInclude Include="DirectXGame\engine\2d\ImguiManager.h" />
     <ClInclude Include="DirectXGame\engine\2d\PostEffect.h" />
     <ClInclude Include="DirectXGame\engine\2d\Sprite.h" />
@@ -315,16 +315,16 @@
     <ClInclude Include="DirectXGame\engine\scene\GameBaseScene.h" />
     <ClInclude Include="DirectXGame\engine\scene\GameSceneManager.h" />
     <ClInclude Include="DirectXGame\engine\scene\SceneFactory.h" />
-    <ClInclude Include="DirectXGame\application\GameOverScene.h" />
-    <ClInclude Include="DirectXGame\application\EnemyBullet.h" />
-    <ClInclude Include="DirectXGame\application\TestScene.h" />
+    <ClInclude Include="DirectXGame\application\scene\GameOverScene.h" />
+    <ClInclude Include="DirectXGame\application\enemy\EnemyBullet.h" />
+    <ClInclude Include="DirectXGame\application\scene\TestScene.h" />
     <ClInclude Include="DirectXGame\engine\particle\LerpParticle.h" />
-    <ClInclude Include="DirectXGame\application\GameClearScene.h" />
-    <ClInclude Include="DirectXGame\application\FadeSceneTransition.h" />
-    <ClInclude Include="DirectXGame\application\SlideSceneTransition.h" />
+    <ClInclude Include="DirectXGame\application\scene\GameClearScene.h" />
+    <ClInclude Include="DirectXGame\application\scene\FadeSceneTransition.h" />
+    <ClInclude Include="DirectXGame\application\scene\SlideSceneTransition.h" />
     <ClInclude Include="DirectXGame\engine\3d\JsonLoader.h" />
-    <ClInclude Include="DirectXGame\application\EventCamera.h" />
-    <ClInclude Include="DirectXGame\application\EnemyLoader.h" />
+    <ClInclude Include="DirectXGame\application\camera\EventCamera.h" />
+    <ClInclude Include="DirectXGame\application\enemy\EnemyLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

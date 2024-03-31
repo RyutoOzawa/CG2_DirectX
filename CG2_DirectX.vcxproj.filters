@@ -66,22 +66,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectXGame\application\Enemy.cpp">
+    <ClCompile Include="DirectXGame\application\enemy\Enemy.cpp">
       <Filter>ソース ファイル\application</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\GamePlayScene.cpp">
+    <ClCompile Include="DirectXGame\application\scene\GamePlayScene.cpp">
       <Filter>ソース ファイル\application</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\GameTitleScene.cpp">
+    <ClCompile Include="DirectXGame\application\scene\GameTitleScene.cpp">
       <Filter>ソース ファイル\application</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\application\MyGame.cpp">
       <Filter>ソース ファイル\application</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\Player.cpp">
+    <ClCompile Include="DirectXGame\application\player\Player.cpp">
       <Filter>ソース ファイル\application</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\PlayerBullet.cpp">
+    <ClCompile Include="DirectXGame\application\player\PlayerBullet.cpp">
       <Filter>ソース ファイル\application</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\2d\ImguiManager.cpp">
@@ -162,7 +162,7 @@
     <ClCompile Include="DirectXGame\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\RailCamera.cpp">
+    <ClCompile Include="DirectXGame\application\camera\RailCamera.cpp">
       <Filter>ソース ファイル\engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\2d\PostEffect.cpp">
@@ -195,16 +195,16 @@
     <ClCompile Include="DirectXGame\engine\collision\SphereCollider.cpp">
       <Filter>ソース ファイル\engine\collision</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\GameOverScene.cpp">
+    <ClCompile Include="DirectXGame\application\scene\GameOverScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\EnemyBullet.cpp">
+    <ClCompile Include="DirectXGame\application\enemy\EnemyBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\TestScene.cpp">
+    <ClCompile Include="DirectXGame\application\scene\TestScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\BossEnemy.cpp">
+    <ClCompile Include="DirectXGame\application\enemy\BossEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\math\BezierCurve.cpp">
@@ -216,25 +216,25 @@
     <ClCompile Include="DirectXGame\engine\particle\LerpParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\GameClearScene.cpp">
+    <ClCompile Include="DirectXGame\application\scene\GameClearScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\scene\BaseSceneTransition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\FadeSceneTransition.cpp">
+    <ClCompile Include="DirectXGame\application\scene\FadeSceneTransition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\SlideSceneTransition.cpp">
+    <ClCompile Include="DirectXGame\application\scene\SlideSceneTransition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\engine\3d\JsonLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\EventCamera.cpp">
+    <ClCompile Include="DirectXGame\application\camera\EventCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\application\EnemyLoader.cpp">
+    <ClCompile Include="DirectXGame\application\enemy\EnemyLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -312,19 +312,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectXGame\application\GamePlayScene.h">
+    <ClInclude Include="DirectXGame\application\scene\GamePlayScene.h">
       <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\GameTitleScene.h">
+    <ClInclude Include="DirectXGame\application\scene\GameTitleScene.h">
       <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\Enemy.h">
+    <ClInclude Include="DirectXGame\application\enemy\Enemy.h">
       <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\Player.h">
+    <ClInclude Include="DirectXGame\application\player\Player.h">
       <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\PlayerBullet.h">
+    <ClInclude Include="DirectXGame\application\player\PlayerBullet.h">
       <Filter>ヘッダー ファイル\application</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\application\MyGame.h">
@@ -339,7 +339,7 @@
     <ClInclude Include="DirectXGame\engine\2d\Sprite.h">
       <Filter>ヘッダー ファイル\engine\2D</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\RailCamera.h">
+    <ClInclude Include="DirectXGame\application\camera\RailCamera.h">
       <Filter>ヘッダー ファイル\engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\2d\ImguiManager.h">
@@ -441,16 +441,16 @@
     <ClInclude Include="DirectXGame\engine\collision\CollisionAttribute.h">
       <Filter>ヘッダー ファイル\engine\collision</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\GameOverScene.h">
+    <ClInclude Include="DirectXGame\application\scene\GameOverScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\EnemyBullet.h">
+    <ClInclude Include="DirectXGame\application\enemy\EnemyBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\TestScene.h">
+    <ClInclude Include="DirectXGame\application\scene\TestScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\BossEnemy.h">
+    <ClInclude Include="DirectXGame\application\enemy\BossEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\math\BezierCurve.h">
@@ -465,25 +465,25 @@
     <ClInclude Include="DirectXGame\engine\particle\LerpParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\GameClearScene.h">
+    <ClInclude Include="DirectXGame\application\scene\GameClearScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\scene\BaseSceneTransition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\FadeSceneTransition.h">
+    <ClInclude Include="DirectXGame\application\scene\FadeSceneTransition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\SlideSceneTransition.h">
+    <ClInclude Include="DirectXGame\application\scene\SlideSceneTransition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\engine\3d\JsonLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\EventCamera.h">
+    <ClInclude Include="DirectXGame\application\camera\EventCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\application\EnemyLoader.h">
+    <ClInclude Include="DirectXGame\application\enemy\EnemyLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
