@@ -757,8 +757,10 @@ void BossEnemy::UpdateAtkLaser()
 	laserObj->scale = laserScale;
 
 	//ゆっくり自機に向く処理
-	float laserSpdBase = 0.5f;
+	float laserSpdBase = 0.25f;
 	Vector2 laserSpd{ 0,0 };
+
+
 
 	//プレイヤー座標をスクリーン変換
 		//ビューポート行列
@@ -775,11 +777,42 @@ void BossEnemy::UpdateAtkLaser()
 	Vector3 pPosScreen = Matrix4::transformDivW(targetPos, matViewProViewPort);
 
 	//プレイヤーがいる方向にレティクルを向ける
+	
+	if (laserPosScreen.x < pPosScreen.x) {
+		laserSpd.x = laserSpdBase;
+	}
+	else {
+		laserSpd.x = -laserSpdBase;
+	}
+
+	if (laserPosScreen.y > pPosScreen.y) {
+		laserSpd.y = -laserSpdBase;
+	}
+	else {
+		laserSpd.y = laserSpdBase;
+	}
+
+	laserSpd.normalize();
+
+	laserPosScreen += laserSpd;
+
+	//ワールド→スクリーン用の行列を逆に
+	matViewProViewPort.Inverse();
+
+	Vector3 lPosNear = { laserPosScreen.x,laserPosScreen.y,0 };
+	Vector3 lPosFar = { laserPosScreen.x,laserPosScreen.y,1 };
+
+	lPosNear = Matrix4::transformDivW(lPosNear, matViewProViewPort);
+	lPosFar = Matrix4::transformDivW(lPosFar, matViewProViewPort);
+	
+	Vector3 dir = lPosFar - lPosNear;
+	dir.normalize();
+	
+	Vector3 laserPos = lPosNear + dir * 50.0f;
 
 
-
-	//プレイヤーを向くように
-	//matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
+	//レーザーの座標を向くように
+	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), laserPos, camera->up);
 
 	Object3d::Update();
 	for (size_t i = 0; i < barrelMax; i++) {

@@ -51,6 +51,7 @@ public:	//ƒƒ“ƒoŠÖ”
 	bool IsAlive()const { return isAlive; }
 	//getter
 	INT32 GetSpawnTimer() const { return spawnTimer; }
+	float GetDistanceCam()const { return distanceCamera; }
 
 	//©‹@’Eoˆ—
 	void Leave();

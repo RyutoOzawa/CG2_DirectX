@@ -409,6 +409,16 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 {
 	reticleObj->SetModel(bulletModel.get());
 
+	//ビューポート行列
+	Matrix4 matViewPort;
+	matViewPort.identity();
+	matViewPort.m[0][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[1][1] = -(WindowsAPI::winH / 2.0f);
+	matViewPort.m[3][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[3][1] = WindowsAPI::winH / 2.0f;
+
+	//カメラ行列との合成
+	Matrix4 matViewProViewPort = Object3d::camera->GetViewProjection() * matViewPort;
 
 
 	//画面上のレティクル座標を動かす
