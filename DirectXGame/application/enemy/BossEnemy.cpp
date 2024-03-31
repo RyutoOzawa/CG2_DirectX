@@ -756,8 +756,30 @@ void BossEnemy::UpdateAtkLaser()
 
 	laserObj->scale = laserScale;
 
+	//ゆっくり自機に向く処理
+	float laserSpdBase = 0.5f;
+	Vector2 laserSpd{ 0,0 };
+
+	//プレイヤー座標をスクリーン変換
+		//ビューポート行列
+	Matrix4 matViewPort;
+	matViewPort.identity();
+	matViewPort.m[0][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[1][1] = -(WindowsAPI::winH / 2.0f);
+	matViewPort.m[3][0] = WindowsAPI::winW / 2.0f;
+	matViewPort.m[3][1] = WindowsAPI::winH / 2.0f;
+
+	//カメラ行列との合成
+	Matrix4 matViewProViewPort = Object3d::camera->GetViewProjection() * matViewPort;
+
+	Vector3 pPosScreen = Matrix4::transformDivW(targetPos, matViewProViewPort);
+
+	//プレイヤーがいる方向にレティクルを向ける
+
+
+
 	//プレイヤーを向くように
-	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
+	//matRotation = Matrix4::CreateMatRot(GetWorldPosition(), targetPos, camera->up);
 
 	Object3d::Update();
 	for (size_t i = 0; i < barrelMax; i++) {
@@ -953,6 +975,9 @@ void BossEnemy::InitAtkLaser()
 	//正面を向く
 	matRotBefore = matRotation;
 	matRotAfter.identity();
+
+	//レーザーのスクリーン座標を中央に
+	laserPosScreen = { (float)WindowsAPI::winW / 2.0f,(float)WindowsAPI::winH / 2.0f };
 
 	Object3d::Update();
 	//本体を真ん中に移動
