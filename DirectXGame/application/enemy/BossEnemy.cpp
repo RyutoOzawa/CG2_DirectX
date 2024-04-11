@@ -114,7 +114,7 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	//ChangeAct(BossAct::Spawn);
 
 	//コライダーのセット
-	SetCollider(new SphereCollider({ 0,0,0 }, 12.0f));
+	SetCollider(new SphereCollider({ 0,0,0 }, 24.0f));
 	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 
 	//パーティクルマネージャ
