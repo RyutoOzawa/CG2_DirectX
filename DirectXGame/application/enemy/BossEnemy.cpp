@@ -665,7 +665,7 @@ void BossEnemy::UpdateAtkLaser()
 
 			//回転速度とかを設定しなおす
 			barrelDistanceTemp = { currentBarrelDistance,20.0f };
-			laserScaleTemp = { laserScale.x,6.0f };
+			laserScaleTemp = { laserScale.x,3.0f };
 			barrelRotSpd = rotSpdTemp.y;
 
 			//バレルの間隔とレーザーを広げる
