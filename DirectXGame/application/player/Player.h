@@ -53,6 +53,10 @@ public:	//メンバ関数
 	INT32 GetSpawnTimer() const { return spawnTimer; }
 	float GetDistanceCam()const { return distanceCamera; }
 
+	//setter
+	void SetBossPosWorld(const Vector3& posBossWorld_) { posBossWorld = posBossWorld_; }
+	void SetBossAlive(bool bossAlive) { bossIsAlive = bossAlive; }
+
 	//自機脱出処理
 	void Leave();
 
@@ -115,7 +119,9 @@ private://メンバ変数
 	//自機のフェーズ
 	PlayerPhase phase = PlayerPhase::Spawn;
 
-
+	//判定とるようの敵座標
+	Vector3 posBossWorld = { 0,0,0 };
+	bool bossIsAlive = false;
 
 	Easing::EasingData easeUIAlpha;
 	float UIAlpha = 0.0f;

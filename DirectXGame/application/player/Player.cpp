@@ -114,6 +114,7 @@ void Player::Spawn()
 
 void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 {
+
 	ImGui::Begin("Player");
 
 	ImGui::Text("health %d", health);
@@ -161,6 +162,7 @@ void Player::Update(std::list<std::unique_ptr<Enemy>>* enemys)
 		}
 		return false;
 		});
+
 
 	//自機のHPが0、スポーンアニメ中なら操作させない
 	if (health != 0 && !isSpawn) {
@@ -486,6 +488,8 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	//敵の座標をスクリーン座標に変換
 	std::list<std::unique_ptr<Enemy>>::iterator itE;
 	itE = enemys->begin();
+	Circle reticleC{ reticlePosScreen,reticleRadius };
+
 	for (; itE != enemys->end(); itE++) {
 		//敵のワールド座標を取得
 		Vector3 posEnemyWorld = itE->get()->GetWorldPosition();
@@ -495,7 +499,7 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		Vector2 posEnemyScreen = { posEnemyWorld.x,posEnemyWorld.y };
 
 		//ImGui::Text("screen Z eyemy %f", posEnemyWorld.z)
-		Circle reticleC{ reticlePosScreen,reticleRadius };
+
 		Circle enemyC{ posEnemyScreen,1.0f };
 
 		//カメラからレティクルの距離を(敵のワールド×ビュー)のzにする
@@ -519,6 +523,23 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 			//レティクルが動いているならロックオン
 			if (inputHorizontal != 0 || inputVertical != 0) {
 				reticlePosScreen = posEnemyScreen;
+				reticleColor.z = 0.0f;
+			}
+		}
+	}
+
+	//ボスのレティクルロックオン
+	//Matrix4 matBossView = posBossWorld * camera->GetViewProjection();
+
+	if (bossIsAlive) {
+
+		posBossWorld = Matrix4::transformDivW(posBossWorld, matViewProViewPort);
+		Vector2 posBossScreen = { posBossWorld.x, posBossWorld.y };
+		Circle bossC{ posBossScreen,1.0f };
+
+		if (Collision::ColCircleToCircle(reticleC, bossC)) {
+			if (inputHorizontal != 0 || inputVertical != 0) {
+				reticlePosScreen = posBossScreen;
 				reticleColor.z = 0.0f;
 			}
 		}

@@ -84,6 +84,7 @@ private://メンバ変数
 
 	//ボス　
 	std::unique_ptr<BossEnemy> boss = nullptr;
+	Vector3 bossPosWorld;
 
 	std::unique_ptr<Model> bossBodyModel = nullptr;
 	std::unique_ptr<Model> bossBarrelModel = nullptr;

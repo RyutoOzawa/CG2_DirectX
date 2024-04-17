@@ -471,7 +471,7 @@ void GamePlayScene::EnemySpawn()
 
 			posZ = Utility::Random(100.0f, 150.0f);
 			newEnemyPosition.z = posZ;
-			
+
 			newEnemyPosition.x = enemyData[i].spawnPos.x;
 			newEnemyPosition.y = enemyData[i].spawnPos.y;
 
@@ -677,6 +677,10 @@ void GamePlayScene::UpdateBoss()
 
 
 	boss->Update(player->GetWorldPosition(), eventCamera.get());
+
+	player->SetBossPosWorld(boss->GetWorldPosition());
+	player->SetBossAlive(boss->IsAlive());
+
 
 	//ボスのHPが0になったらゲームクリア演出開始
 	if (boss->GetHealth() == 0) {
