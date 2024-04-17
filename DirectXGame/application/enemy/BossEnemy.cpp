@@ -114,7 +114,7 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	//ChangeAct(BossAct::Spawn);
 
 	//コライダーのセット
-	SetCollider(new SphereCollider({ 0,0,0 }, 12.0f));
+	SetCollider(new SphereCollider({ 0,0,0 }, 24.0f));
 	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 
 	//パーティクルマネージャ
@@ -665,7 +665,7 @@ void BossEnemy::UpdateAtkLaser()
 
 			//回転速度とかを設定しなおす
 			barrelDistanceTemp = { currentBarrelDistance,20.0f };
-			laserScaleTemp = { laserScale.x,6.0f };
+			laserScaleTemp = { laserScale.x,3.0f };
 			barrelRotSpd = rotSpdTemp.y;
 
 			//バレルの間隔とレーザーを広げる
