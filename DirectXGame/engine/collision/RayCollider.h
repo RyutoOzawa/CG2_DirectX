@@ -10,7 +10,7 @@
 class RayCollider : public BaseCollider,public Ray
 {
 public:
-	RayCollider(Vector3 offset_ = { 0,0,0 }) : offset(offset_) {
+	RayCollider(const Vector3& offset_ = { 0,0,0 },const Vector3& dir_ = {0,0,1}) : offset(offset_),dir(dir_) {
 		//形状をセット
 		shapeType = COLLISIONSHAPE_RAY;
 	}
@@ -26,6 +26,8 @@ private:
 	//中心からのオフセット
 	Vector3 offset;
 
+	//レイの向き
+	Vector3 dir;
 
 };
 

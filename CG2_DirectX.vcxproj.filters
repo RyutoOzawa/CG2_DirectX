@@ -237,7 +237,7 @@
     <ClCompile Include="DirectXGame\application\enemy\EnemyLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="RayCollider.cpp">
+    <ClCompile Include="DirectXGame\engine\collision\RayCollider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -489,7 +489,7 @@
     <ClInclude Include="DirectXGame\application\enemy\EnemyLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="RayCollider.h">
+    <ClInclude Include="DirectXGame\engine\collision\RayCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

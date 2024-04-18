@@ -154,7 +154,7 @@
     <ClCompile Include="DirectXGame\engine\3d\JsonLoader.cpp" />
     <ClCompile Include="DirectXGame\application\camera\EventCamera.cpp" />
     <ClCompile Include="DirectXGame\application\enemy\EnemyLoader.cpp" />
-    <ClCompile Include="RayCollider.cpp" />
+    <ClCompile Include="DirectXGame\engine\collision\RayCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\DebugLinePS.hlsl">
@@ -326,7 +326,7 @@
     <ClInclude Include="DirectXGame\engine\3d\JsonLoader.h" />
     <ClInclude Include="DirectXGame\application\camera\EventCamera.h" />
     <ClInclude Include="DirectXGame\application\enemy\EnemyLoader.h" />
-    <ClInclude Include="RayCollider.h" />
+    <ClInclude Include="DirectXGame\engine\collision\RayCollider.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
