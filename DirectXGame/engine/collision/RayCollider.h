@@ -19,6 +19,7 @@ public:
 	//XV
 	void Update();
 
+	void SetDirection(const Vector3& dir_) { dir = dir_; }
 	
 
 private:

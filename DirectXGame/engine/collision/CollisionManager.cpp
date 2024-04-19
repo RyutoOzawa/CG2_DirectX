@@ -6,6 +6,7 @@
 #include"Collision.h"
 #include"ImguiManager.h"
 #include"SphereCollider.h"
+#include"RayCollider.h"
 
 CollisionManager* CollisionManager::GetInstance()
 {
@@ -45,13 +46,10 @@ void CollisionManager::CheckAllCollisions()
 				Sphere sphereA = static_cast<Sphere>(*spColA);
 				Sphere sphereB = static_cast<Sphere>(*spColB);
 				Vector3 inter;
-				
+
 				//colA‚ÌˆÚ“®•ª
 				Vector3 move = spColA->pos - spColA->GetOldPos();
 				uint16_t count = (uint16_t)move.length();
-				if (count >= 100) {
-					ImGui::Text("count %d", count);
-				}
 
 				for (uint16_t i = 0; i < count; i++) {
 					//‹…‚ð­‚µ‚¸‚ÂˆÚ“®‚³‚¹‚Ä”»’è‚·‚é
@@ -87,6 +85,48 @@ void CollisionManager::CheckAllCollisions()
 					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
 				}*/
+
+			}
+
+			//‹…‚ÆƒŒƒC
+			if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
+				colB->GetShapeType() == COLLISIONSHAPE_RAY) {
+				SphereCollider* spCol = dynamic_cast<SphereCollider*>(colA);
+				RayCollider* rCol = dynamic_cast<RayCollider*>(colB);
+				Sphere sphere = static_cast<Sphere>(*spCol);
+				Ray ray = static_cast<Ray>(*rCol);
+				Vector3 inter;
+				Sphere sp2;
+				sp2.pos = ray.start;
+				sp2.radius = sphere.radius;
+				Vector3 p = ray.dir;
+
+				//‹…‚ÌˆÚ“®•ª
+				Vector3 move = spCol->pos - spCol->GetOldPos();
+				uint16_t count = (uint16_t)move.length();
+
+
+
+				for (uint16_t i = 0; i < count; i++) {
+					//‹…‚ð­‚µ‚¸‚Â“®‚©‚µ‚Ä”»’è‚·‚é
+					sphere.pos -= (move / count) * i;
+					for (uint16_t j = 0; j < 100; j++) {
+						sp2.pos += p;
+
+						if (Collision::ColSphereToSphere(sp2, sphere, nullptr, &inter)) {
+							colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
+							//colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+							break;
+						}
+					}
+				}
+
+				//if (Collision::ColRayToSphere(ray, sphere, nullptr, &inter)) {
+				//	colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
+				//	//colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+				//	break;
+				//}
+
 
 			}
 		}

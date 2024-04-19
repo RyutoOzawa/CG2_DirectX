@@ -11,6 +11,7 @@
 #include"EnemyBullet.h"
 #include"ParticleManager.h"
 #include"EventCamera.h"
+#include"RayCollider.h"
 
 //ボスの行動列挙クラス
 enum class BossAct {
@@ -36,6 +37,8 @@ enum class BossAtkLaserPhase {
 	Shot,//撃つ
 	ReturnMove,//移動に戻る
 };
+
+//class Player;
 
 class BossEnemy : public Object3d
 {
@@ -80,7 +83,7 @@ private:
 
 	//命関係
 	bool isAlive = false;
-	INT32 lifeMax = 10;
+	INT32 lifeMax = 30;
 	INT32 life = lifeMax;
 	TextureData* healthTexture = nullptr;
 	std::unique_ptr<Sprite> healthSprite = nullptr;
@@ -151,6 +154,9 @@ private:
 	Vector2 laserScaleTemp = {};
 	uint16_t laserTime = 0;
 	Vector2 laserPosScreen = {};
+	RayCollider* rayCollider = nullptr;
+	uint16_t laserCt = 120;
+	uint16_t laserInterval = 0;
 
 	//移動補完用座標2つ
 	Vector3 movePosBefore{ 0,0,0 };

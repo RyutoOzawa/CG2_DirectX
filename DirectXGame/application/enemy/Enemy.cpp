@@ -42,7 +42,7 @@ void Enemy::Initialize(std::vector<Vector3>& points)
 	
 
 	SetCollider(new SphereCollider({ 0,0,0 }, enemyColSize));
-	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 	scale = baseScale;
 	shotInterval = shotCoolTime;
 
@@ -58,7 +58,7 @@ void Enemy::Initialize(const Vector3& spawnPos, uint16_t leaveTime_)
 	leaveTime = leaveTime_;
 
 	SetCollider(new SphereCollider({ 0,0,0 }, enemyColSize));
-	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 	scale = baseScale;
 	shotInterval = shotCoolTime;
 }
@@ -189,6 +189,9 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 	}
 	else {
 		shotInterval--;
+		if (shotInterval < 110) {
+			collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+		}
 	}
 }
 

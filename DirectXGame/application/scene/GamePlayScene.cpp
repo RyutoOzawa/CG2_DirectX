@@ -469,7 +469,7 @@ void GamePlayScene::EnemySpawn()
 			newEnemyPosition = Matrix4::transformDivW(newEnemyPosition, matScreen2World);
 
 
-			posZ = Utility::Random(100.0f, 150.0f);
+			posZ = Utility::Random(150.0f, 200.0f);
 			newEnemyPosition.z = posZ;
 
 			newEnemyPosition.x = enemyData[i].spawnPos.x;
@@ -562,9 +562,7 @@ void GamePlayScene::UpdateAllPhase()
 
 
 
-	//レールカメラを親にする
-	player->parent = railCamera->GetObject3d();
-	player->Update(&enemys);
+
 
 
 
@@ -580,6 +578,10 @@ void GamePlayScene::UpdateGamePhase()
 		sceneManager->ChangeScene("GAMEOVER");
 	}
 
+	//レールカメラを親にする
+	player->parent = railCamera->GetObject3d();
+	player->Update(&enemys);
+
 }
 
 void GamePlayScene::UpdateGameStart()
@@ -594,6 +596,10 @@ void GamePlayScene::UpdateGameStart()
 		//フレームカウントをリセット
 		frameCount = 0;
 	}
+
+	//レールカメラを親にする
+	player->parent = railCamera->GetObject3d();
+	player->Update(&enemys);
 
 }
 

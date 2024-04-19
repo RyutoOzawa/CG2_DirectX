@@ -33,7 +33,9 @@ public:
 	/// </summary>
 	virtual void Update() = 0;
 	//形状タイプ取得
-	inline CollisionShapeType GetShapeType() { return shapeType; }
+	inline CollisionShapeType GetShapeType() const { return shapeType; }
+
+	inline unsigned short GetAttribute()const { return attribute; }
 
 	/// <summary>
 	/// 衝突時コールバック関数
@@ -41,7 +43,7 @@ public:
 	/// <param name="info">衝突情報</param>
 	inline void OnCollision([[maybe_unused]] const CollisionInfo& info) {
 		object3d->OnCollision(info);
-	
+
 	}
 
 	inline void SetAttribute(unsigned short attribute_) { attribute = attribute_; }

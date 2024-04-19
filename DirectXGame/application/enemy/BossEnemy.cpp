@@ -7,6 +7,7 @@
 #include"DebugLine.h"
 #include"Input.h"
 #include"SphereCollider.h"
+#include"Player.h"
 #include"CollisionAttribute.h"
 #include"GameSceneManager.h"
 using namespace Utility;
@@ -78,6 +79,12 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	laserObj->SetModel(laserModel.get());
 	laserObj->parent = this;
 
+	rayCollider = new RayCollider();
+	rayCollider->SetObject(this);
+	rayCollider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
+	CollisionManager::GetInstance()->AddCollider(rayCollider);
+	rayCollider->Update();
+
 	//弾射出座標のオフセットを設定
 	bulletOutOffset = { 0,0,17.0f };
 
@@ -114,7 +121,7 @@ void BossEnemy::Initialize(Model* bodyModel_, Model* barrelModel_, Object3d* par
 	//ChangeAct(BossAct::Spawn);
 
 	//コライダーのセット
-	SetCollider(new SphereCollider({ 0,0,0 }, 24.0f));
+	SetCollider(new SphereCollider({ 0,0,0 }, 36.0f));
 	collider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 
 	//パーティクルマネージャ
@@ -334,6 +341,7 @@ void BossEnemy::DrawDebugLine()
 
 void BossEnemy::Finalize()
 {
+	delete rayCollider;
 }
 
 void BossEnemy::Spawn(const Matrix4& cameraMatWorld, const Vector3& spawnPos)
@@ -634,7 +642,7 @@ void BossEnemy::UpdateAtkLaser()
 			particlePosBefore = particlePosAfter + random;
 
 			chargeParticle->AddLerp(particleLife, particlePosBefore, particlePosAfter,
-				4.0f, scaleAfter, InterType::EaseOut,{ rgb ,rgb ,rgb ,1.0f});
+				4.0f, scaleAfter, InterType::EaseOut, { rgb ,rgb ,rgb ,1.0f });
 
 		}
 
@@ -655,6 +663,10 @@ void BossEnemy::UpdateAtkLaser()
 			laserPhase = BossAtkLaserPhase::Shot;
 			eDataBarrelRot.Start(15.0f);
 			laserTime = laserTimeMax;
+
+			//レーザーに当たり判定を付ける+向きをセット
+			rayCollider->SetAttribute(COLLISION_ATTR_ENEMYS);
+			laserInterval = 0;
 
 		}
 
@@ -682,7 +694,7 @@ void BossEnemy::UpdateAtkLaser()
 				particlePosBefore = laserObj->GetWorldPosition();
 				float randParam = 90.0f;
 				random = { Utility::Random(-randParam,randParam),Utility::Random(-randParam,randParam) ,Utility::Random(-randParam,randParam) };
-				particlePosAfter = particlePosBefore+ random;
+				particlePosAfter = particlePosBefore + random;
 
 				chargeParticle->AddLerp(30, particlePosBefore, particlePosAfter,
 					scaleBefore, 0.0f, InterType::EaseOut, { 0.5f ,0.5f ,rgb ,1.0f });
@@ -721,7 +733,7 @@ void BossEnemy::UpdateAtkLaser()
 			//移動用座標をスワップ
 			Vector3::Swap(movePosBefore, movePosAfter);
 
-
+			rayCollider->SetAttribute(COLLISION_ATTR_INVINCIBLE);
 		}
 	}
 	else if (laserPhase == BossAtkLaserPhase::ReturnMove) {
@@ -777,7 +789,7 @@ void BossEnemy::UpdateAtkLaser()
 	Vector3 pPosScreen = Matrix4::transformDivW(targetPos, matViewProViewPort);
 
 	//プレイヤーがいる方向にレティクルを向ける
-	
+
 	if (laserPosScreen.x < pPosScreen.x) {
 		laserSpd.x = laserSpdBase;
 	}
@@ -796,6 +808,23 @@ void BossEnemy::UpdateAtkLaser()
 
 	laserPosScreen += laserSpd;
 
+	float rp = 160.0f, rb = 64.0f;
+	Vector2 pPosS = {pPosScreen.x, pPosScreen.y};
+	float len = fabs(pPosS.length() - laserPosScreen.length());
+	if (len <= rp + rb && rayCollider->GetAttribute() == COLLISION_ATTR_ENEMYS && laserInterval == 0) {
+		std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+		newBullet->Initialize(bulletModel.get(), targetPos, {0,0,0});
+
+		bullets.push_back(std::move(newBullet));
+		laserInterval = laserCt;
+	}
+
+	if (laserInterval > 0) {
+		laserInterval--;
+	}
+	
+
+
 	//ワールド→スクリーン用の行列を逆に
 	matViewProViewPort.Inverse();
 
@@ -810,9 +839,27 @@ void BossEnemy::UpdateAtkLaser()
 	
 	Vector3 laserPos = lPosNear + dir * 50.0f;
 
+	
+
+
 
 	//レーザーの座標を向くように
 	matRotation = Matrix4::CreateMatRot(GetWorldPosition(), laserPos, camera->up);
+
+	Vector3 d = { 0,0,1 };
+
+	d = Matrix4::transform(d, matRotation);
+	d.normalize();
+	d += GetWorldPosition();
+
+	//レーザーに判定がある間は更新する
+	if (rayCollider->GetAttribute() == COLLISION_ATTR_ENEMYS) {
+		dir = laserPos - GetWorldPosition();
+		//dir.normalize();
+		rayCollider->SetDirection(d);
+		//rayCollider->SetDirection({0,0,1});
+		rayCollider->Update();
+	}
 
 	Object3d::Update();
 	for (size_t i = 0; i < barrelMax; i++) {
@@ -821,7 +868,6 @@ void BossEnemy::UpdateAtkLaser()
 	}
 
 	laserObj->Update();
-
 }
 
 void BossEnemy::UpdateDeath()

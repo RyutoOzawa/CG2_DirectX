@@ -106,7 +106,7 @@ private://メンバ変数
 
 	//HP関連
 	std::unique_ptr<Sprite> healthSprite = nullptr;
-	const int healthMax = 2;
+	const int healthMax = 10;
 	int health = healthMax;
 	int healthWidthMax = 0;
 	int healthWidth = healthWidthMax;
@@ -118,6 +118,7 @@ private://メンバ変数
 	bool isSpawn = false;
 	//自機のフェーズ
 	PlayerPhase phase = PlayerPhase::Spawn;
+
 
 	//判定とるようの敵座標
 	Vector3 posBossWorld = { 0,0,0 };

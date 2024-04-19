@@ -249,16 +249,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info)
 		return;
 	}
 
-	//パーティクルの速度
-	for (int i = 0; i < 25; i++) {
-		Vector3 vel = { 0,0,0 };
-		float absAcc = 0.5f;
-		Vector3 acc = { Random(-absAcc,absAcc),Random(-absAcc,absAcc) ,Random(-absAcc,absAcc) };
 
-
-		//パーティクル追加
-		hitParticle->Add(15, GetWorldPosition(), vel, acc, 6.0f, 0.0f);
-	}
 
 	//ダメージを受ける
 	Damage();
@@ -609,6 +600,17 @@ void Player::Damage()
 {
 	//hpを減らす
 	health--;
+
+	//パーティクルの速度
+	for (int i = 0; i < 25; i++) {
+		Vector3 vel = { 0,0,0 };
+		float absAcc = 0.5f;
+		Vector3 acc = { Random(-absAcc,absAcc),Random(-absAcc,absAcc) ,Random(-absAcc,absAcc) };
+
+
+		//パーティクル追加
+		hitParticle->Add(15, GetWorldPosition(), vel, acc, 6.0f, 0.0f);
+	}
 
 	//次食らうクールタイムを設定
 	damageInterval = damageCooltime;

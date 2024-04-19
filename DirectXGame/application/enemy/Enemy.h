@@ -56,7 +56,7 @@ private:
 
 	static ParticleManager particleManager;
 
-	const float enemyColSize = 9.0f;
+	const float enemyColSize = 16.0f;
 
 	//“®ü
 	SplineCurve moveLine;
