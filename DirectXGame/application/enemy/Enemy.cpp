@@ -5,6 +5,7 @@
 #include"SphereCollider.h"
 #include"Util.h"
 #include"CollisionAttribute.h"
+#include"ImguiManager.h"
 using namespace Utility;
 using namespace Easing;
 
@@ -53,6 +54,24 @@ void Enemy::Initialize(const Vector3& spawnPos, uint16_t leaveTime_)
 	//Obj3Dの初期化
 	Object3d::Initialize();
 	SetModel(model);
+
+	//留まる座標に応じて移動前の座標を設定
+	spawnPosBefore = spawnPos;
+	if (spawnPos.x > 0.0f) {
+		spawnPosBefore.x = 300.0f;
+	}
+	else {
+		spawnPosBefore.x = -300.0f;
+	}
+
+	if (spawnPos.y > 0.0f) {
+		spawnPosBefore.y = 150.0f;
+	}
+	else {
+		spawnPosBefore.y = -150.0f;
+	}
+
+	easeMove.Start(60.0f);
 
 	stayPosition = spawnPos;
 	leaveTime = leaveTime_;
@@ -208,9 +227,18 @@ void Enemy::Move(const Matrix4& camMat, const Vector3& camPos)
 
 		position = Matrix4::transform(moveLine.GetPosition(), camMat) + camPos;
 	}
-	else {//設定されていなければ設定された退避時間を減らす
-		position = Matrix4::transform(stayPosition,camMat) + camPos;
-		if (leaveTime > 0) {
+	else{//設定されていなければ設定された退避時間を減らす
+		easeMove.Update();
+
+		Vector3 currentPos = Vector3::Lerp(spawnPosBefore, stayPosition, easeMove.GetTimeRate());
+
+		//currentPos = stayPosition;
+
+		ImGui::Text("current %f,%f,%f", currentPos.x, currentPos.y, currentPos.z);
+
+		position = Matrix4::transform(currentPos,camMat) + camPos;
+
+		if (leaveTime > 0 && easeMove.GetTimeRate() >= 1.0f) {
 			leaveTime--;
 		}
 		else if (leaveTime == 0) {	//退避時間が0になったら退避行動に移行

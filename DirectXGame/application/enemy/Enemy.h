@@ -61,8 +61,10 @@ private:
 	//“®ü
 	SplineCurve moveLine;
 	uint16_t leaveTime = 0;
+	Vector3 spawnPosBefore{};
 	Vector3 stayPosition = {};
 	Vector3 leaveSpd = {};
+	Easing::EasingData easeMove;
 	const float leaveSpdBase = 5.0f;
 
 	bool isAlive = false;
