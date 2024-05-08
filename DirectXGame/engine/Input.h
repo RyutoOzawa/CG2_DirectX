@@ -91,8 +91,14 @@ public:
 	//Rスティックが下に倒れたか
 	bool IsDownRStickDown(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
+	//Rスティックが左右どちらかに倒れたか
 	float GetDownRstickX(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	//Rスティックが上下どちらかに倒れたか
 	float GetDownRstickY(int deadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
-};
+	//Lスティックが左右どちらかに倒れたか
+	float GetDownLstickX(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	//Lスティックが上下どちらかに倒れたか
+	float GetDownLstickY(int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
 
+};

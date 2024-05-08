@@ -174,3 +174,37 @@ float Input::GetDownRstickY(int deadZone)
 
 	return 0.0f;
 }
+
+float Input::GetDownLstickX(int deadZone)
+{
+	//“|‚ê‚½Žž‚ÌÅ‘å’l
+	int downMax = 32768;
+	//“|‚ê‚½‘å‚«‚³‚ªƒfƒbƒhƒ][ƒ“‚ð’´‚¦‚½‚ç‚»‚±‚©‚ç-1~1‚Å•âŠÔ
+	if (fabs(padState.Gamepad.sThumbLX) > deadZone) {
+
+		downMax -= deadZone;
+		int stickDown = (int)fabs(padState.Gamepad.sThumbLX) - deadZone;
+		float stickRate = (float)stickDown / (float)downMax;
+		stickRate *= Clump(padState.Gamepad.sThumbLX, -1.0f, 1.0f);
+		return stickRate;
+	}
+
+	return 0.0f;
+}
+
+float Input::GetDownLstickY(int deadZone)
+{
+	//“|‚ê‚½Žž‚ÌÅ‘å’l
+	int downMax = 32768;
+	//“|‚ê‚½‘å‚«‚³‚ªƒfƒbƒhƒ][ƒ“‚ð’´‚¦‚½‚ç‚»‚±‚©‚ç-1~1‚Å•âŠÔ
+	if (fabs(padState.Gamepad.sThumbLY) > deadZone) {
+
+		downMax -= deadZone;
+		int stickDown = (int)fabs(padState.Gamepad.sThumbLY) - deadZone;
+		float stickRate = (float)stickDown / (float)downMax;
+		stickRate *= Clump(padState.Gamepad.sThumbLY, -1.0f, 1.0f);
+		return stickRate;
+	}
+
+	return 0.0f;
+}
