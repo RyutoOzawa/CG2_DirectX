@@ -640,7 +640,7 @@ void GamePlayScene::UpdateMain()
 		//レールカメラが5%進むごとに敵を一体スポーン
 		float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
 		if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
-			//EnemySpawnRandom();
+			EnemySpawnRandom();
 		}
 	}
 
