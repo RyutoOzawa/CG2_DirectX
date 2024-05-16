@@ -414,17 +414,29 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	Matrix4 matViewProViewPort = Object3d::camera->GetViewProjection() * matViewPort;
 
 
+	//スクリーン座標変換した自機の座標
+	Vector3 posPlayerScreen = Matrix4::transformDivW(GetWorldPosition(), matViewProViewPort);
+
 	//画面上のレティクル座標を動かす
 	Vector2 reticleSpd = { 0,0 };
-	float reticleSpdBase = 24.0f;
+	float reticleSpdBase = 18.0f;
+	//レティクルの移動限界
+	Vector2 reticleMoveMax = { 160.0f,160.0f };
+
 
 	//入力
 	float inputHorizontal = 0;
 	float inputVertical = 0;
 
 	//パッドでの入力
-	inputHorizontal = Input::GetInstance()->GetDownRstickX(4000);
-	inputVertical = -Input::GetInstance()->GetDownRstickY(4000);
+	//inputHorizontal = Input::GetInstance()->GetDownRstickX(4000);
+	//inputVertical = -Input::GetInstance()->GetDownRstickY(4000);
+
+	inputHorizontal = Input::GetInstance()->GetDownLstickX(4000);
+	inputVertical = -Input::GetInstance()->GetDownLstickY(4000);
+
+	ImGui::Text("inputX %f", inputVertical);
+	ImGui::Text("inputY %f", inputHorizontal);
 
 	//キー入力があった場合そっちを使う
 	if (Input::GetInstance()->IsKeyPress(DIK_LEFT) || Input::GetInstance()->IsKeyPress(DIK_RIGHT)) {
@@ -435,12 +447,61 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 		inputVertical = (float)Input::GetInstance()->IsKeyPress(DIK_DOWN) - (float)Input::GetInstance()->IsKeyPress(DIK_UP);
 	}
 
-
-
-	//入力値×レティクルスピードで移動
+	//入力値×レティクルスピードで速度計算
 	reticleSpd.x = inputHorizontal * reticleSpdBase;
 	reticleSpd.y = inputVertical * reticleSpdBase;
-	reticlePosScreen += reticleSpd;
+
+
+	//レティクルが操作されているなら
+	const float inputDeadZone = 0.05f;
+	if (fabs(inputHorizontal) > inputDeadZone || fabs(inputVertical) > inputDeadZone) {
+
+		ImGui::Text("reticle moving");
+		 
+		//レティクルの座標が移動限界を超えるなら加算しない
+		//if(fabs(reticlePosScreen.x) >= posPlayerScreen.x + )
+
+		//座標加算
+		reticlePosScreen += reticleSpd;
+	}
+	else {//操作されていなければ自機に戻っていく
+
+		if (fabs(inputVertical) < inputDeadZone){
+
+			if (reticlePosScreen.x > posPlayerScreen.x + reticleSpdBase) {
+				reticleSpd.x = -reticleSpdBase;
+				reticlePosScreen.x += reticleSpd.x;
+			}
+			else if (reticlePosScreen.x < posPlayerScreen.x - reticleSpdBase) {
+				//速度はそのままなので変更なし
+				reticleSpd.x = reticleSpdBase;
+				reticlePosScreen.x += reticleSpd.x;
+			}
+			else {
+				//レティクルがそもそも自機に近いなら動かさない
+				reticleSpd.x = 0.0f;
+			}
+		}
+
+		if (fabs(inputHorizontal) < inputDeadZone) {
+
+			if (reticlePosScreen.y > posPlayerScreen.y + reticleSpdBase) {
+				reticleSpd.y = -reticleSpdBase;
+				reticlePosScreen.y += reticleSpd.y;
+			}
+			else if (reticlePosScreen.y < posPlayerScreen.y - reticleSpdBase) {
+				//速度はそのままなので変更なし
+				reticleSpd.y = reticleSpdBase;
+				reticlePosScreen.y += reticleSpd.y;
+			}
+			else {
+				//レティクルがそもそも自機に近いなら動かさない
+				reticleSpd.y = 0.0f;
+			}
+		}
+	}
+	
+
 
 	//レティクル座標の移動制限
 	Vector2 reticlePosMin = { reticleRadius,reticleRadius };
@@ -471,8 +532,6 @@ void Player::ReticleUpdate(std::list<std::unique_ptr<Enemy>>* enemys)
 	//カメラからレティクル(3D)への距離
 	float distanceReticle3D = distanceCamera + 100.0f;
 
-	//スクリーン座標変換した自機の座標
-	Vector3 posPlayerScreen = Matrix4::transformDivW(GetWorldPosition(), matViewProViewPort);
 
 	//ImGui::Text("screen Z player %f", posPlayerScreen.z);
 
@@ -604,6 +663,7 @@ void Player::Damage()
 	//パーティクルの速度
 	for (int i = 0; i < 25; i++) {
 		Vector3 vel = { 0,0,0 };
+		//基本加速度
 		float absAcc = 0.5f;
 		Vector3 acc = { Random(-absAcc,absAcc),Random(-absAcc,absAcc) ,Random(-absAcc,absAcc) };
 
@@ -650,7 +710,9 @@ void Player::UpdateDeath()
 		Vector3 vel = { Random(-1.0f,1.0f),Random(-1.0f,1.0f) ,Random(-1.0f,1.0f) };
 		Vector3 acc = { Random(-0.1f,0.1f),Random(0.1f,0.5f),Random(-0.1f,0.1f) };
 		Vector3 pos = GetWorldPosition();
-		pos += {Random(-3.0f, 3.0f), Random(-3.0f, 3.0f), Random(-3.0f, 3.0f)};
+		float randPosTemp = 3.0f;
+
+		pos += {Random(-randPosTemp, randPosTemp), Random(-randPosTemp, randPosTemp), Random(-randPosTemp, randPosTemp)};
 		Vector3 rgb = { 255,Random(0,128),Random(0,64) };
 		rgb = ConvertColor(rgb);
 		hitParticle->Add((int)Random(10, 20), pos, vel, acc, 3.0f, 0.0f, { rgb.x,rgb.y,rgb.z,1.0f });
@@ -665,9 +727,10 @@ void Player::UpdateSpawn()
 
 	//パーティクルが収束する
 	if (spawnTimer > 0) {
-		float absPos = 30.0f;
+		float randPosTemp = 30.0f;
+		float randAccTemp = 10.0f;
 
-		Vector3 pos = { Random(-absPos, absPos),Random(-absPos, absPos),Random(-absPos, absPos) };
+		Vector3 pos = { Random(-randPosTemp, randPosTemp),Random(-randPosTemp, randPosTemp),Random(-randPosTemp, randPosTemp) };
 		pos += GetWorldPosition();
 		float startScale = Random(6.0f, 8.0f);
 		Vector4 particleColor = { Random(0.0f,1.0f),Random(0.0f,1.0f) ,Random(0.0f,1.0f) ,1.0f };
@@ -675,7 +738,7 @@ void Player::UpdateSpawn()
 		hitParticle->AddLerp(15, pos, GetWorldPosition(), startScale, 0.0f, InterType::EaseOut, particleColor);
 
 		Vector3 vel = { 0,0,0 };
-		Vector3 acc = { Random(-10.0f,10.0f),Random(-10.0f,10.0f) ,Random(-10.0f,10.0f) };
+		Vector3 acc = { Random(-randAccTemp,randAccTemp),Random(-randAccTemp,randAccTemp) ,Random(-randAccTemp,randAccTemp) };
 
 		spawnTimer--;
 		eDataPlayerScale.Start(30);
