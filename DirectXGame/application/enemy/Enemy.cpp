@@ -207,8 +207,9 @@ void Enemy::Attack(const Vector3& playerWorldPos)
 
 	}
 	else {
+		const uint16_t invincibleTime = 110;
 		shotInterval--;
-		if (shotInterval < 110) {
+		if (shotInterval < invincibleTime) {
 			collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 		}
 	}

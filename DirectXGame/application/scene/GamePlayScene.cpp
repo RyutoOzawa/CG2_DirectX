@@ -185,40 +185,6 @@ void GamePlayScene::Update()
 
 #pragma endregion デバッグ用コード
 
-	////レールカメラの更新
-	//railCamera->Update();
-
-	////レールカメラを親にする
-	//player->parent = railCamera->GetObject3d();
-	//player->Update(&enemys);
-
-	////自機の死亡が確認されたらシーン移動
-	//if (!player->IsAlive()) {
-	//	//シーンの切り替えを依頼
-	//	sceneManager->ChangeScene("GAMEOVER");
-	//}
-
-	////敵配列の更新
-	//for (std::unique_ptr<Enemy>& enemy : enemys) {
-	//	enemy->Update(player->GetWorldPosition(), railCamera->GetObject3d()->matWorld);
-	//}
-
-	////死んでる敵を消す
-	//enemys.remove_if([](std::unique_ptr<Enemy>& enemy) {
-	//	if (!enemy->IsAlive()) {
-	//		return true;
-	//	}
-	//	return false;
-	//	});
-
-
-
-
-	////レールカメラが5%進むごとに敵を一体スポーン
-	//float cameraProgressPercent = railCamera->GetProgress() * 100.0f;
-	//if (fmodf(cameraProgressPercent, 10.0f) == 0.0f && cameraProgressPercent != 0) {
-	//	EnemySpawn();
-	//}
 
 	//Enemy::EnemyParticleUpdate();
 
@@ -388,61 +354,6 @@ void GamePlayScene::Draw()
 void GamePlayScene::EnemySpawn()
 {
 	float posZ = 0.0f;
-
-
-	//Z座標はカメラ基準に
-	//posZ += railCamera->GetObject3d()->GetWorldPosition().z;
-
-	//Vector3 start{ -60,0,posZ };
-	//Vector3 p1 = { 0,30,posZ };
-	//Vector3 p2 = { -30,0,posZ };
-	//Vector3 p3 = { 0,-30,posZ };
-	//Vector3 p4 = { 30,0,posZ };
-	//Vector3 end = { 60,0,posZ };
-
-	//Vector3 lTop, lBtm, rTop, rBtm;
-	//lTop = { -60,30,posZ };
-	//lBtm = { -60,-30,posZ };
-	//rTop = { 60,30,posZ };
-	//rBtm = { 60,-30,posZ };
-
-	//std::vector<Vector3> enemyMovePoints = { start,p1,p2,p3,p4,end };
-	//std::vector<Vector3> rightForLeftUpper;//上側右から左
-	//std::vector<Vector3> rightForLeftLower;//下側右から左
-	//std::vector<Vector3> leftForRightUpper;//上側左から右
-	//std::vector<Vector3> leftForRightLower;//下側左から右
-
-	//rightForLeftUpper = { rTop, rTop,lTop,lTop };
-	//rightForLeftLower = { rBtm, rBtm,lBtm,lBtm };
-	//leftForRightUpper = { lTop, lTop,rTop,rTop };
-	//leftForRightLower = { lBtm, lBtm,rBtm,rBtm };
-
-
-	////曲線をカメラ基準に
-	////for (auto& p : enemyMovePoints) {
-	////	//p += railCamera->GetObject3d()->GetWorldPosition();
-	////}
-
-	//int pasent = (INT32)Random(0, 100) % 4;
-
-	//if (pasent == 0) {
-	//	enemyMovePoints = rightForLeftUpper;
-	//}
-	//else if (pasent == 1) {
-	//	enemyMovePoints = rightForLeftLower;
-	//}
-	//else if (pasent == 2) {
-	//	enemyMovePoints = leftForRightUpper;
-	//}
-	//else {
-	//	enemyMovePoints = leftForRightLower;
-	//}
-
-
-	////敵の生成と初期化
-	//std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-	//newEnemy->Initialize(enemyMovePoints);
-	//newEnemy->Spawn();
 
 	//敵のデータ配列を走査
 	for (size_t i = 0; i < enemyData.size(); i++) {
