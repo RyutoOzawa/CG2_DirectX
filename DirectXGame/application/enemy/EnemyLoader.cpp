@@ -45,6 +45,8 @@ std::vector<EnemyData> EnemyLoader::LoadEnemyData(const std::string& textfilenam
 
 			//出来た配置データを配列に挿入
 			enemyData.push_back(newEnemyData);
+
+			//文字列に応じて挙動タイプ変える
 		}
 
 	}
